@@ -1,7 +1,7 @@
 # Header
 menu:
-  Home: /
-  Archives: /archives
+  主页: /
+  归档: /archives
 rss: /atom.xml
 
 # Content
@@ -12,7 +12,7 @@ fancybox: true
 sidebar: right
 widgets:
 - category
-- tag
+# - tag
 - tagcloud
 - archive
 - recent_posts

@@ -1,5 +1,6 @@
 ---
 title: 使用 Hexo 搭建 GitPage 静态博客
+tags: [Hexo,GitPage]
 ---
 ## 必要工具的安装(Mac)
 
@@ -74,3 +75,9 @@ $ hexo deploy // 部署到 github page 上
 ```
 
 观察了以下目录文件夹，部署到 GitPage 上应该为 `hexo g` 生成的 public 文件夹下的内容。
+
+----
+
+**知识链接：**
+
+  &nbsp;&nbsp;&nbsp;&nbsp;[Hexo建站](https://cherryblog.site/categories/Hexo%E5%BB%BA%E7%AB%99/)
