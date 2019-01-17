@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Enjoy">
 <meta property="og:description" content="一、What is Dagger2 ? Dagger2 是一个谷歌开源的依赖注入(Dependency Injection)框架，简称DI。Dagger2 是 Google 出的依赖注入框架。肯定有小伙伴疑问，为什么会有个 2 呢。该框架是基于 Square 开发的 Dagger 基础上开发的。 那么 什么是 依赖注入 呢？ 1.1 何为依赖注入（控制反转 – IOC（Inversion of C">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-01-17T07:03:55.664Z">
+<meta property="og:updated_time" content="2019-01-17T07:13:38.913Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Dagger2 前奏篇:依赖注入概念">
 <meta name="twitter:description" content="一、What is Dagger2 ? Dagger2 是一个谷歌开源的依赖注入(Dependency Injection)框架，简称DI。Dagger2 是 Google 出的依赖注入框架。肯定有小伙伴疑问，为什么会有个 2 呢。该框架是基于 Square 开发的 Dagger 基础上开发的。 那么 什么是 依赖注入 呢？ 1.1 何为依赖注入（控制反转 – IOC（Inversion of C">
@@ -105,6 +105,7 @@
 <li>Setter方式注入。 </li>
 <li>接口注入。</li>
 </ul>
+<a id="more"></a>
 <h2 id="二、Why-Dagger2"><a href="#二、Why-Dagger2" class="headerlink" title="二、Why Dagger2"></a>二、Why Dagger2</h2><p>Dagger2 的原理是在<code>编译期生成相应的依赖注入代码</code>。这也是和其他依赖注入框架不同的地方，其他框架是在运行时期反射获取注解内容，影响了运行效率。</p>
 <p><strong>栗子</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class MainClass &#123;</span><br><span class="line">    private  void main(String [] args)&#123;</span><br><span class="line">        John john = new John(&quot;john&quot;,12);</span><br><span class="line">        john.introduceSelf();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>上面例子面临着一个问题，一旦 <code>John</code> 的创建方式（如构造参数）发生改变，那么你不但需要修改 <code>MainClass</code> 中创建<code>John</code>的代码，还要修改其他所有地方创建 <code>John</code> 的代码。如果我们使用了<code>Dagger2</code> 的话，就不需要管这些了，只需要在需要<code>John</code>的地方写下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@Inject</span><br><span class="line">John john;</span><br></pre></td></tr></table></figure></p>
@@ -113,7 +114,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/01/17/Dagger2 前奏篇：依赖注入概念/" data-id="cjr09rlfc0000o9fyyfehel2e" class="article-share-link">分享</a>
+      <a data-url="https://mllgy.github.io/2019/01/17/Dagger2 前奏篇：依赖注入概念/" data-id="cjr0a4c8r0000ubfyf39voi4o" class="article-share-link">分享</a>
       
       
       

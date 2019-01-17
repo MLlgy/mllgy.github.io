@@ -16,7 +16,7 @@
 <meta property="og:description" content="1. 概述Java 不像 C/C++ 需要程序员自己管理内存，Java 把内存控制的权利交给类 Java 虚拟机。 2. 运行时数据区域JVM 在 Java 程序运行时把它所管理的内存划分为几个不同的数据区域。   2.1 程序计数器程序计数器是一块较小的内存，它可以看作 当前线程 所执行的字节码的行号指示器。在虚拟机的概念模型里，字节码解释器的工作就是通过改变这个 计数器的值 来选取下一条需要执">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://mllgy.github.io/images/2019_01_16.jpg">
-<meta property="og:updated_time" content="2019-01-17T02:26:59.918Z">
+<meta property="og:updated_time" content="2019-01-17T07:13:44.098Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java 内存空间类别">
 <meta name="twitter:description" content="1. 概述Java 不像 C/C++ 需要程序员自己管理内存，Java 把内存控制的权利交给类 Java 虚拟机。 2. 运行时数据区域JVM 在 Java 程序运行时把它所管理的内存划分为几个不同的数据区域。   2.1 程序计数器程序计数器是一块较小的内存，它可以看作 当前线程 所执行的字节码的行号指示器。在虚拟机的概念模型里，字节码解释器的工作就是通过改变这个 计数器的值 来选取下一条需要执">
@@ -99,10 +99,9 @@
 <!-- (https://img-blog.csdnimg.cn/20190111154945144.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1N0cmFuZ2VfTW9ua2V5,size_16,color_FFFFFF,t_70) -->
 <h3 id="2-1-程序计数器"><a href="#2-1-程序计数器" class="headerlink" title="2.1 程序计数器"></a>2.1 程序计数器</h3><p>程序计数器是一块较小的内存，它可以看作 <strong>当前线程</strong> 所执行的字节码的行号指示器。<strong>在虚拟机的概念模型里，字节码解释器的工作就是通过改变这个 </strong>计数器的值<strong> 来选取下一条需要执行的字节码，分支、循环、跳转、异常处理、线程恢复等基础功能都需要这个计数器来完成</strong>。</p>
 <p>如上图所示，程序计数器是线程私有的。</p>
-<blockquote>
 <p><strong>如何执行工作</strong></p>
-</blockquote>
 <p>如果线程正在执行一个 Java 方法，这个计数器记录的正是执行的虚拟机字节码指令的地址，如果执行的是 Native 方法，这个计数器值为空。</p>
+<a id="more"></a>
 <h3 id="2-2-Java-虚拟机栈"><a href="#2-2-Java-虚拟机栈" class="headerlink" title="2.2 Java 虚拟机栈"></a>2.2 Java 虚拟机栈</h3><p><strong>Java 虚拟机栈是线程私有的，其生命周期与线程相同。</strong></p>
 <p>虚拟机栈描述的是 Java 方法执行的内存模型： 每个 Java 方法执行的同时都会创建一个 <strong>栈帧(stack frame)</strong> 用于存储局部变量表、操作数栈、动态链接、方法出口等信息。每一个方法从调用到执行完成的过程，就对应着一个栈帧在虚拟机栈中入栈到出栈的过程。</p>
 <p>平时的把 Java 内存分为 堆内存(heap) 和 栈内存(stack) 的分类方法是比较粗糙的，实际分类方法十分复杂。这种分类方法中栈即为虚拟机栈，或为虚拟机中的局部变量表。</p>
@@ -190,7 +189,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/01/16/Java 内存空间类别/" data-id="cjr09rlfh0001o9fyfu6w5uhv" class="article-share-link">分享</a>
+      <a data-url="https://mllgy.github.io/2019/01/16/Java 内存空间类别/" data-id="cjr0a4c920003ubfyx1i6pj7h" class="article-share-link">分享</a>
       
       
       
