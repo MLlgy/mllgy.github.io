@@ -28,6 +28,8 @@ $ npm install
 ```
 编辑 `_config.yml` 文件，进行相关配置。
 
+<!--more-->
+
 ## 文章编写
 
 ### Create a new post

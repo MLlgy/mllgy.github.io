@@ -1,7 +1,7 @@
 ---
 title: hexo 博客维护
 date: 2019-01-17 10:26:43
-tags: [hexo]
+tags: [Hexo]
 ---
 
 ### 关于 Hexo 博客建站

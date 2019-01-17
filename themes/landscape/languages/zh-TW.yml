@@ -10,10 +10,10 @@ archive_a: 彙整
 archive_b: 彙整：%s
 page: 第 %d 頁
 recent_posts: 最新文章
-newer: Newer
-older: Older
-share: Share
-powered_by: Powered by
-rss_feed: RSS Feed
-category: Category
-tag: Tag
+newer: 这些东西可能太新了
+older: 这些东西可能过时了
+share: 分享
+powered_by: 巨大能量来源
+rss_feed: RSS 流
+category: 类别
+tag: 标签
