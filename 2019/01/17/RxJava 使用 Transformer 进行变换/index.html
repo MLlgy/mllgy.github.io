@@ -11,11 +11,11 @@
 <meta name="keywords" content="RxJava,Transformer">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RxJava Transformer">
-<meta property="og:url" content="https://mllgy.github.io/2019/01/17/RxJava-Transformer/index.html">
+<meta property="og:url" content="https://mllgy.github.io/2019/01/17/RxJava 使用 Transformer 进行变换/index.html">
 <meta property="og:site_name" content="Enjoy">
 <meta property="og:description" content="0x81 Observable、Observer 线程切换在 Retrofit 结合 RxJava 进行开发时，我们可以通过 subscribeOn()、observeOn() 分别设置被订阅者和订阅者的线程。在此场景中，我们要在应用中的所有请求中执行上面操作，这下重复工作就需要 Transformer 来优化。 0x82 Transformer 实现对调用链的处理我们可能有以下实现方式： 123">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-01-17T10:38:08.688Z">
+<meta property="og:updated_time" content="2019-01-17T10:40:31.867Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RxJava Transformer">
 <meta name="twitter:description" content="0x81 Observable、Observer 线程切换在 Retrofit 结合 RxJava 进行开发时，我们可以通过 subscribeOn()、observeOn() 分别设置被订阅者和订阅者的线程。在此场景中，我们要在应用中的所有请求中执行上面操作，这下重复工作就需要 Transformer 来优化。 0x82 Transformer 实现对调用链的处理我们可能有以下实现方式： 123">
@@ -69,9 +69,9 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-RxJava-Transformer" class="article article-type-post" itemscope="" itemprop="blogPost">
+        <section id="main"><article id="post-RxJava 使用 Transformer 进行变换" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/01/17/RxJava-Transformer/" class="article-date">
+    <a href="/2019/01/17/RxJava 使用 Transformer 进行变换/" class="article-date">
   <time datetime="2019-01-17T09:26:13.000Z" itemprop="datePublished">2019-01-17</time>
 </a>
     
@@ -94,7 +94,8 @@
         <h3 id="0x81-Observable、Observer-线程切换"><a href="#0x81-Observable、Observer-线程切换" class="headerlink" title="0x81 Observable、Observer 线程切换"></a>0x81 Observable、Observer 线程切换</h3><p>在 Retrofit 结合 RxJava 进行开发时，我们可以通过 subscribeOn()、observeOn() 分别设置被订阅者和订阅者的线程。在此场景中，我们要在应用中的所有请求中执行上面操作，这下重复工作就需要 Transformer 来优化。</p>
 <h3 id="0x82-Transformer-实现对调用链的处理"><a href="#0x82-Transformer-实现对调用链的处理" class="headerlink" title="0x82 Transformer 实现对调用链的处理"></a>0x82 Transformer 实现对调用链的处理</h3><p>我们可能有以下实现方式：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">abstract class SchedulerTransformer&lt;T&gt; protected constructor(private val subscribeOnScheduler: Scheduler = Schedulers.io(), </span><br><span class="line">                                                      private val observeOnScheduler: Scheduler = AndroidSchedulers.mainThread()) : ObservableTransformer&lt;T, T&gt;,</span><br><span class="line">        SingleTransformer&lt;T, T&gt;,</span><br><span class="line">        MaybeTransformer&lt;T, T&gt;,</span><br><span class="line">        CompletableTransformer,</span><br><span class="line">        FlowableTransformer&lt;T, T&gt; &#123;</span><br><span class="line"></span><br><span class="line">    override fun apply(upstream: Completable): CompletableSource &#123;</span><br><span class="line">        return upstream.subscribeOn(subscribeOnScheduler)</span><br><span class="line">                .observeOn(observeOnScheduler)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun apply(upstream: Flowable&lt;T&gt;): Publisher&lt;T&gt; &#123;</span><br><span class="line">        return upstream.subscribeOn(subscribeOnScheduler)</span><br><span class="line">                .observeOn(observeOnScheduler)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun apply(upstream: Maybe&lt;T&gt;): MaybeSource&lt;T&gt; &#123;</span><br><span class="line">        return upstream.subscribeOn(subscribeOnScheduler)</span><br><span class="line">                .observeOn(observeOnScheduler)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun apply(upstream: Observable&lt;T&gt;): ObservableSource&lt;T&gt; &#123;</span><br><span class="line">        return upstream.subscribeOn(subscribeOnScheduler)</span><br><span class="line">                .observeOn(observeOnScheduler)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun apply(upstream: Single&lt;T&gt;): SingleSource&lt;T&gt; &#123;</span><br><span class="line">        return upstream.subscribeOn(subscribeOnScheduler)</span><br><span class="line">                .observeOn(observeOnScheduler)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用</p>
+<a id="more"></a>
+<p>在具体业务中使用：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Observable.create(ObservableOnSubscribe&lt;Int&gt; &#123; emitter -&gt; emitter.onNext(1) &#125;).compose(SchedulerTransformer(Schedulers.io(),AndroidSchedulers.mainThread())).subscribe(...);</span><br></pre></td></tr></table></figure>
 <p></p>
 <h3 id="0x83-RxLifeCycle2-中的实现"><a href="#0x83-RxLifeCycle2-中的实现" class="headerlink" title="0x83 RxLifeCycle2 中的实现"></a>0x83 RxLifeCycle2 中的实现</h3><p>RxLifeCycle2 中使用相同的机制，在事件处理过程中对针对生命周期做出处理。</p>
@@ -108,7 +109,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/01/17/RxJava-Transformer/" data-id="cjr0hfibm0004i2fypsj9697z" class="article-share-link">分享</a>
+      <a data-url="https://mllgy.github.io/2019/01/17/RxJava 使用 Transformer 进行变换/" data-id="cjr0hj3np0005k6fypsaynlq9" class="article-share-link">分享</a>
       
       
       
@@ -165,7 +166,7 @@
       <ul>
         
           <li>
-            <a href="/2019/01/17/RxJava-Transformer/">RxJava Transformer</a>
+            <a href="/2019/01/17/RxJava 使用 Transformer 进行变换/">RxJava Transformer</a>
           </li>
         
           <li>
