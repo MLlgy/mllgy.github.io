@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Enjoy">
 <meta property="og:description" content="一、What is Dagger2 ? Dagger2 是一个谷歌开源的依赖注入(Dependency Injection)框架，简称DI。Dagger2 是 Google 出的依赖注入框架。肯定有小伙伴疑问，为什么会有个 2 呢。该框架是基于 Square 开发的 Dagger 基础上开发的。 那么 什么是 依赖注入 呢？ 1.1 何为依赖注入（控制反转 – IOC（Inversion of C">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-01-17T07:00:16.427Z">
+<meta property="og:updated_time" content="2019-01-17T07:03:55.664Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Dagger2 前奏篇:依赖注入概念">
 <meta name="twitter:description" content="一、What is Dagger2 ? Dagger2 是一个谷歌开源的依赖注入(Dependency Injection)框架，简称DI。Dagger2 是 Google 出的依赖注入框架。肯定有小伙伴疑问，为什么会有个 2 呢。该框架是基于 Square 开发的 Dagger 基础上开发的。 那么 什么是 依赖注入 呢？ 1.1 何为依赖注入（控制反转 – IOC（Inversion of C">
@@ -95,11 +95,9 @@
 <h3 id="1-1-何为依赖注入（控制反转-–-IOC（Inversion-of-Control））"><a href="#1-1-何为依赖注入（控制反转-–-IOC（Inversion-of-Control））" class="headerlink" title="1.1 何为依赖注入（控制反转 – IOC（Inversion of Control））"></a>1.1 何为依赖注入（控制反转 – IOC（Inversion of Control））</h3><p>我在网上搜索了相关内容，觉得以下解释相对容易理解（自定义后）：</p>
 <ol>
 <li>在一个类的具体业务逻辑中，需要另一个类的实例进行相应的操作时，在传统的设计中，通常由调用者来创建被调用者的实例（一般的，我们通过 new 的方式创建），然而依赖注入的方式，创建被调用者不再由调用者创建实例，创建被调用者的实例的工作由 <code>IOC 容器</code> 来完成，然后<code>注入</code>到调用者。因此也被称为 <strong><code>依赖注入</code></strong>。</li>
-<li><strong><code>依赖注入</code></strong> 就是调用者需要的另一个对象实例不在调用者内部实现，而是通过一定的方式从外部传入实例，<code>解决了各个类之间的耦合</code>。那么这个外部，到底指的是哪里，如果指的是另一个类，那么，另一个类内部就耦合了,这种拆东墙补西墙的做法我们是不推荐的。能不能有一种方式，将这些构造的对象放到一个容器中，具体需要哪个实例时，就从这个容器中取就行了。那么，类的实例和使用就不在有联系了，而是通过一个容器将他们联系起来。实现了解耦。<blockquote>
-<p>个人理解：<strong>控制反转</strong> – 把自己新建实例对象的权利由交给了第三方工具或容器。<br>目标类将创建其他实例类的权利交给了第三方工具，也就是说，原来需要程序员把自主在目标类通过 new 的方式创建相关类的实例的权利，交给具体的业务（所谓的 IOC 容器） ，该容器在需要的时候通过它自己的方式创建该类的实例，即：<code>创建类实例权利的移交</code>。</p>
-</blockquote>
-</li>
+<li><strong><code>依赖注入</code></strong> 就是调用者需要的另一个对象实例不在调用者内部实现，而是通过一定的方式从外部传入实例，<code>解决了各个类之间的耦合</code>。那么这个外部，到底指的是哪里，如果指的是另一个类，那么，另一个类内部就耦合了,这种拆东墙补西墙的做法我们是不推荐的。能不能有一种方式，将这些构造的对象放到一个容器中，具体需要哪个实例时，就从这个容器中取就行了。那么，类的实例和使用就不在有联系了，而是通过一个容器将他们联系起来。实现了解耦。</li>
 </ol>
+<p>个人理解：<strong>控制反转</strong> ,把自己新建实例对象的权利由交给了第三方工具或容器。<br>目标类将创建其他实例类的权利交给了第三方工具，也就是说，原来需要程序员把自主在目标类通过 new 的方式创建相关类的实例的权利，交给具体的业务（所谓的 IOC 容器） ，该容器在需要的时候通过它自己的方式创建该类的实例，即：<code>创建类实例权利的移交</code>。</p>
 <h2 id="1-2-依赖注入的好处"><a href="#1-2-依赖注入的好处" class="headerlink" title="1.2 依赖注入的好处"></a>1.2 依赖注入的好处</h2><p><code>依赖注入</code>就是调用者需要的另一个对象实例不在调用者内部实现，而是通过一定的方式从外部传入实例，<code>解决了各个类之间的耦合</code>。</p>
 <p>通俗一点讲：将该对象的实例化交给其调用者，通过某种方式传入进来，这种模式就是依赖注入。常见的降低耦合的方式： </p>
 <ul>
@@ -110,16 +108,12 @@
 <h2 id="二、Why-Dagger2"><a href="#二、Why-Dagger2" class="headerlink" title="二、Why Dagger2"></a>二、Why Dagger2</h2><p>Dagger2 的原理是在<code>编译期生成相应的依赖注入代码</code>。这也是和其他依赖注入框架不同的地方，其他框架是在运行时期反射获取注解内容，影响了运行效率。</p>
 <p><strong>栗子</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class MainClass &#123;</span><br><span class="line">    private  void main(String [] args)&#123;</span><br><span class="line">        John john = new John(&quot;john&quot;,12);</span><br><span class="line">        john.introduceSelf();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>上面例子面临着一个问题，一旦 <code>John</code> 的创建方式（如构造参数）发生改变，那么你不但需要修改 <code>MainClass</code> 中创建<code>John</code>的代码，还要修改其他所有地方创建 <code>John</code> 的代码。如果我们使用了<code>Dagger2</code> 的话，就不需要管这些了，只需要在需要<code>John</code>的地方写下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@Inject</span><br><span class="line">John john;</span><br></pre></td></tr></table></figure></p>
-<h3 id="知识链接"><a href="#知识链接" class="headerlink" title="知识链接"></a>知识链接</h3><p><a href="https://www.jianshu.com/p/269c3f70ec1e" target="_blank" rel="noopener">Dagger 详解</a></p>
-<p><a href="http://www.qingpingshan.com/rjbc/az/170191.html" target="_blank" rel="noopener">这就是Dagger2</a></p>
-<p><a href="https://juejin.im/entry/589bd2cf8d6d8100585fd86c" target="_blank" rel="noopener">Dagger2 入门实践</a></p>
-<p><a href="https://blog.csdn.net/lisdye2/article/details/51942511" target="_blank" rel="noopener">最简单的Dagger2入门教程</a></p>
-<p><a href="https://www.jianshu.com/p/65737ac39c44" target="_blank" rel="noopener">Android：dagger2让你爱不释手-终结篇</a></p>
+<h3 id="知识链接"><a href="#知识链接" class="headerlink" title="知识链接"></a>知识链接</h3><p><a href="https://www.jianshu.com/p/269c3f70ec1e" target="_blank" rel="noopener">Dagger 详解</a>、<br><a href="http://www.qingpingshan.com/rjbc/az/170191.html" target="_blank" rel="noopener">这就是Dagger2</a>、<br><a href="https://juejin.im/entry/589bd2cf8d6d8100585fd86c" target="_blank" rel="noopener">Dagger2 入门实践</a>、<br><a href="https://blog.csdn.net/lisdye2/article/details/51942511" target="_blank" rel="noopener">最简单的Dagger2入门教程</a>、<br><a href="https://www.jianshu.com/p/65737ac39c44" target="_blank" rel="noopener">Android：dagger2让你爱不释手-终结篇</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/01/17/Dagger2 前奏篇：依赖注入概念/" data-id="cjr09mxab0000mafyrxa1s3do" class="article-share-link">分享</a>
+      <a data-url="https://mllgy.github.io/2019/01/17/Dagger2 前奏篇：依赖注入概念/" data-id="cjr09rlfc0000o9fyyfehel2e" class="article-share-link">分享</a>
       
       
       
