@@ -7,19 +7,19 @@
   
   <title>Java 异常机制浅析 | Enjoy</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="处理错误异常分类所有的异常都是继承于 Throwable   Error 类层次结构描述了 Java 运行时内部的错误以及资源耗尽错误，应用程序不应该抛出这种类型的对象，而是让程序来处理，一般情况下程序会直接中断，并报出错误以及堆栈信息。 关于 Exception 派生的两个分支的依据：  RuntimeException: 由程序错误导致导致的异常。  其他 Exception： 程序本身没问题">
+  <meta name="description" content="处理错误异常分类所有的异常都是继承于 Throwable   Error 类层次结构描述了 Java 运行时内部的错误以及资源耗尽错误，应用程序不应该抛出这种类型的对象，而是让程序来处理，一般情况下程序会直接中断，并报出错误以及堆栈信息。">
 <meta name="keywords" content="Exception">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java 异常机制浅析">
 <meta property="og:url" content="https://mllgy.github.io/2019/01/26/Java-异常机制浅析/index.html">
 <meta property="og:site_name" content="Enjoy">
-<meta property="og:description" content="处理错误异常分类所有的异常都是继承于 Throwable   Error 类层次结构描述了 Java 运行时内部的错误以及资源耗尽错误，应用程序不应该抛出这种类型的对象，而是让程序来处理，一般情况下程序会直接中断，并报出错误以及堆栈信息。 关于 Exception 派生的两个分支的依据：  RuntimeException: 由程序错误导致导致的异常。  其他 Exception： 程序本身没问题">
+<meta property="og:description" content="处理错误异常分类所有的异常都是继承于 Throwable   Error 类层次结构描述了 Java 运行时内部的错误以及资源耗尽错误，应用程序不应该抛出这种类型的对象，而是让程序来处理，一般情况下程序会直接中断，并报出错误以及堆栈信息。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://mllgy.github.io/images/2019_01_26.jpg">
-<meta property="og:updated_time" content="2019-01-26T10:49:17.150Z">
+<meta property="og:updated_time" content="2019-01-26T11:08:34.066Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java 异常机制浅析">
-<meta name="twitter:description" content="处理错误异常分类所有的异常都是继承于 Throwable   Error 类层次结构描述了 Java 运行时内部的错误以及资源耗尽错误，应用程序不应该抛出这种类型的对象，而是让程序来处理，一般情况下程序会直接中断，并报出错误以及堆栈信息。 关于 Exception 派生的两个分支的依据：  RuntimeException: 由程序错误导致导致的异常。  其他 Exception： 程序本身没问题">
+<meta name="twitter:description" content="处理错误异常分类所有的异常都是继承于 Throwable   Error 类层次结构描述了 Java 运行时内部的错误以及资源耗尽错误，应用程序不应该抛出这种类型的对象，而是让程序来处理，一般情况下程序会直接中断，并报出错误以及堆栈信息。">
 <meta name="twitter:image" content="https://mllgy.github.io/images/2019_01_26.jpg">
   
     <link rel="alternate" href="/atom.xml" title="Enjoy" type="application/atom+xml">
@@ -96,6 +96,7 @@
         <h3 id="处理错误"><a href="#处理错误" class="headerlink" title="处理错误"></a>处理错误</h3><h4 id="异常分类"><a href="#异常分类" class="headerlink" title="异常分类"></a>异常分类</h4><p>所有的异常都是继承于 Throwable</p>
 <p><img src="/images/2019_01_26.jpg" alt="运行时内存区域"></p>
 <p> Error 类层次结构描述了 Java 运行时内部的错误以及资源耗尽错误，应用程序不应该抛出这种类型的对象，而是让程序来处理，一般情况下程序会直接中断，并报出错误以及堆栈信息。</p>
+<a id="more"></a>
 <p>关于 Exception 派生的两个分支的依据：</p>
 <ul>
 <li><p><strong>RuntimeException: 由程序错误导致导致的异常。</strong></p>
@@ -109,7 +110,6 @@
 <p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>IndexOutOfBoundsException:</strong> 索引越界异常</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>NoSuchElementException:</strong>  表明枚举中没有更多的元素</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>NullPointerException:</strong> 空指针异常</p>
-<a id="more"></a>
 <p>对于这些异常，我们可以选择进行处理(捕获、抛出)，也可以选择不处理。如果我们不处理的话，那么异常会交给 Java 虚拟机，不断的向上层传递，那么在不同条件下导致的情况是  <strong>当前运行的线程中断或程序中断</strong>。</p>
 <p>一般情况下我们对这类情况是不作处理的，如上文所说 <strong>“RuntimeException: 由程序错误导致导致的异常”</strong>，我们在写代码时应该尽力避免这种异常，而不应该通过 try/catch 、抛出等操作来隐藏异常。</p>
 <p><strong>如果出现了 RuntimeException 异常，那么就一定是你的问题。</strong></p>
@@ -307,7 +307,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/01/26/Java-异常机制浅析/" data-id="cjrdcw276000teu71c3be22s2" class="article-share-link">分享</a>
+      <a data-url="https://mllgy.github.io/2019/01/26/Java-异常机制浅析/" data-id="cjrddgu6z000ti371v891vli3" class="article-share-link">分享</a>
       
       
       
