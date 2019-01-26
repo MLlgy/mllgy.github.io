@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Java 异常机制浅析 | Enjoy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="处理错误异常分类所有的异常都是继承于 Throwable   Error 类层次结构描述了 Java 运行时内部的错误以及资源耗尽错误，应用程序不应该抛出这种类型的对象，而是让程序来处理，一般情况下程序会直接中断，并报出错误以及堆栈信息。 关于 Exception 派生的两个分支的依据：  RuntimeException: 由程序错误导致导致的异常。  其他 Exception： 程序本身没问题">
+<meta name="keywords" content="Exception">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 异常机制浅析">
+<meta property="og:url" content="https://mllgy.github.io/2019/01/26/Java-异常机制浅析/index.html">
+<meta property="og:site_name" content="Enjoy">
+<meta property="og:description" content="处理错误异常分类所有的异常都是继承于 Throwable   Error 类层次结构描述了 Java 运行时内部的错误以及资源耗尽错误，应用程序不应该抛出这种类型的对象，而是让程序来处理，一般情况下程序会直接中断，并报出错误以及堆栈信息。 关于 Exception 派生的两个分支的依据：  RuntimeException: 由程序错误导致导致的异常。  其他 Exception： 程序本身没问题">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://mllgy.github.io/images/2019_01_26.jpg">
+<meta property="og:updated_time" content="2019-01-26T10:49:17.150Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 异常机制浅析">
+<meta name="twitter:description" content="处理错误异常分类所有的异常都是继承于 Throwable   Error 类层次结构描述了 Java 运行时内部的错误以及资源耗尽错误，应用程序不应该抛出这种类型的对象，而是让程序来处理，一般情况下程序会直接中断，并报出错误以及堆栈信息。 关于 Exception 派生的两个分支的依据：  RuntimeException: 由程序错误导致导致的异常。  其他 Exception： 程序本身没问题">
+<meta name="twitter:image" content="https://mllgy.github.io/images/2019_01_26.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Enjoy" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.proxy.ustclug.org/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Enjoy</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Enjoy the technology，Enjoy the code.</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">主页</a>
+        
+          <a class="main-nav-link" href="/archives/">文章</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 流"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://mllgy.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Java-异常机制浅析" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/26/Java-异常机制浅析/" class="article-date">
+  <time datetime="2019-01-26T10:23:46.000Z" itemprop="datePublished">2019-01-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Java 异常机制浅析
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="处理错误"><a href="#处理错误" class="headerlink" title="处理错误"></a>处理错误</h3><h4 id="异常分类"><a href="#异常分类" class="headerlink" title="异常分类"></a>异常分类</h4><p>所有的异常都是继承于 Throwable</p>
+<p><img src="/images/2019_01_26.jpg" alt="运行时内存区域"></p>
+<p> Error 类层次结构描述了 Java 运行时内部的错误以及资源耗尽错误，应用程序不应该抛出这种类型的对象，而是让程序来处理，一般情况下程序会直接中断，并报出错误以及堆栈信息。</p>
+<p>关于 Exception 派生的两个分支的依据：</p>
+<ul>
+<li><p><strong>RuntimeException: 由程序错误导致导致的异常。</strong></p>
+</li>
+<li><p><strong>其他 Exception： 程序本身没问题，但是由于像 IO 错误这类问题导致的异常属于其他异常。</strong></p>
+</li>
+</ul>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>RuntimeException 的几种异常：</strong></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>ClassCastException:</strong> 类变换异常</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>IllegalArgumentException:</strong> 传递非法参数异常</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>IndexOutOfBoundsException:</strong> 索引越界异常</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>NoSuchElementException:</strong>  表明枚举中没有更多的元素</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>NullPointerException:</strong> 空指针异常</p>
+<a id="more"></a>
+<p>对于这些异常，我们可以选择进行处理(捕获、抛出)，也可以选择不处理。如果我们不处理的话，那么异常会交给 Java 虚拟机，不断的向上层传递，那么在不同条件下导致的情况是  <strong>当前运行的线程中断或程序中断</strong>。</p>
+<p>一般情况下我们对这类情况是不作处理的，如上文所说 <strong>“RuntimeException: 由程序错误导致导致的异常”</strong>，我们在写代码时应该尽力避免这种异常，而不应该通过 try/catch 、抛出等操作来隐藏异常。</p>
+<p><strong>如果出现了 RuntimeException 异常，那么就一定是你的问题。</strong></p>
+<p><strong>不是派生于 RuntimeException 的异常：</strong></p>
+<ol>
+<li>在文件后面读取数据</li>
+<li>打开一个不存在的文件</li>
+<li>根据给定的字符串去查找 Class 对象，但是这个对象表示的类不存在</li>
+</ol>
+<p><strong>对于这种异常，Java 编译器强制要求对这类异常进行 try/catch 并处理 或将异常抛出，否则程序就不能编译通过。</strong></p>
+<h4 id="声明受查异常"><a href="#声明受查异常" class="headerlink" title="声明受查异常"></a>声明受查异常</h4><p>派生于 Error 或 RuntimeException 类所有的异常称为 <strong>非受查异常</strong>，其他所有的异常称为 <strong>受查异常</strong>。</p>
+<p><strong>编译器将检查是否为所有的受查异常提供了异常处理器。</strong></p>
+<p><strong>一个方法不仅需要告诉编译器将要返回什么值，还要告诉编译器有可能发生什错误</strong>,我们需要在声明方法的时候同时声明该方法可能会抛出的异常。<br>如下例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public FileIputStream(String name) throw FileNotFoundException;</span><br></pre></td></tr></table></figure>
+<p>自己在编写方法时，不可能将所有可能抛出的异常声明，下面的 4 种情况应该抛出异常：</p>
+<ol>
+<li>调用一个抛出异常的方法</li>
+<li>程序运行中发现错误，并且利用 throw 语句抛出一个受查异常</li>
+<li>程序出现错误，例如一个数据越界的非受查异常</li>
+<li>Java 虚拟机或运行时库出现内部错误</li>
+</ol>
+<p>如果是前两种异常，则必须告诉调用这个方法的程序员有可能抛出的异常，因为一个抛出异常的方法都有可能是死亡陷阱。</p>
+<p>对于一个有可能被其他人使用的 Java 方法，要根据 Java 异常规范，在方法的首部声明可能会抛出的异常。</p>
+<p>我们不需要声明从 Error 继承的错误，不声明继承于 RuntimeException 的非受查异常。因为这些运行时错误是在我们的控制范围内，我们应该尽力避免这些错误，而不是在可能异常的位置抛出异常。</p>
+<p> 对于一个方法必须声明所有可能抛出的受查异常，而非受查异常要么是不可控制的，要么就必须避免发生。如果方法没有声明所有可能发生的受查异常，编译器就会发出一个错误消息。</p>
+<h4 id="如何抛出异常"><a href="#如何抛出异常" class="headerlink" title="如何抛出异常"></a>如何抛出异常</h4><p><strong>首先要决定抛出什么类型的异常</strong>。</p>
+<p>对于一个已经存在的异常类，抛出异常有一下几个步骤：</p>
+<ol>
+<li>找到一个合适的类。</li>
+<li>创建这个类的一个对象。</li>
+<li>将对象抛出。</li>
+</ol>
+<p>以下例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">String readDate(Scanner in) throw EOFException&#123;//声明这个方法可能会抛出的异常</span><br><span class="line">    </span><br><span class="line">    ...</span><br><span class="line">    ...</span><br><span class="line">    if(..)&#123;</span><br><span class="line">        throw new EOFException();//抛出异常</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>一旦方法抛出了异常，这个方法就不可能返回到调用者中，不必为返回的默认值或错误代码担忧。</strong></p>
+<h4 id="创建异常类"><a href="#创建异常类" class="headerlink" title="创建异常类"></a>创建异常类</h4><p>定义一个继承于 Exception 的子类，习惯上，这个类应该包含两个构造器，一个默认构造器，另一个带有详细描述信息。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class CustomException extends IOException&#123;</span><br><span class="line">    public CustomException()&#123;&#125;</span><br><span class="line">    public CustomException(String description)&#123;</span><br><span class="line">        super(description);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="捕获异常"><a href="#捕获异常" class="headerlink" title="捕获异常"></a>捕获异常</h3><p>上面的抛出异常中，我们只需将异常抛出不用理睬了，同时有些异常是需要我们捕获的。</p>
+<h4 id="捕获异常-1"><a href="#捕获异常-1" class="headerlink" title="捕获异常"></a>捕获异常</h4><p>在异常发生的位置如果没有进行捕获操作，那么程序就会终止执行，并且在控制台打印出异常信息和堆栈内容。</p>
+<p>捕获异常的方法：</p>
+<ol>
+<li>try/catch 语句</li>
+<li>方法首部声明异常，抛给方法调用处理</li>
+</ol>
+<ul>
+<li>try/catch</li>
+</ul>
+<p>我们使用 try/catch 语句，具体语法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">try&#123;</span><br><span class="line">  </span><br><span class="line">  ...</span><br><span class="line">  </span><br><span class="line">  ...</span><br><span class="line">  </span><br><span class="line">&#125;catch(ExceptionType e)&#123;</span><br><span class="line">  ...</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>try 语句中出现 catch 中出现的异常，那么程序将执行 catch 子句中的代码。</p>
+<ul>
+<li>抛出异常给调用者</li>
+</ul>
+<p>除了自己通过 try/catch 来处理异常，我们有没有更好的处理方式？答案是抛给调用者，很明显嘛，谁使用谁负责，让该方法的调用者去处理。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public void read(String filename) throw IOException&#123;</span><br><span class="line">    InputStream in = new InputStream(filename);</span><br><span class="line">    int b;</span><br><span class="line">    while((in.read()) != -1)&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编译器严格执行 throw 说明符，如果调用了一个受查异常的方法，就必须对它进行处理，或者继续传递。</p>
+<ul>
+<li>如果选择 try/catch 处理还是继续传递呢？</li>
+</ul>
+<p><strong>通常，应该捕获那些知道如何处理的异常，而将那些不知道怎么处理的异常继续传递。</strong></p>
+<p>为具体说明，看一个例子：</p>
+<p><strong>抛出异常</strong></p>
+<p>如果传递一个异常，那么应该在方法的首部使用 throw 声明抛出的异常，告诉方法的调用者这个方法可能会抛出的一个异常。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public class ReadFile &#123;</span><br><span class="line">    public void read(String filename) throws FileNotFoundException &#123;</span><br><span class="line">        InputStream inputStream = new FileInputStream(filename);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当我们在定义 read() 方法时，针对方法体中的 FileNotFoundException 异常我们不知道该怎么处理，怎么办？秉持着谁调用谁处理的原则 ，将该异常抛出，即如代码所示在方法头中 throws FileNotFoundException。在调用该方法时对异常进行处理，则有：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">private static void showTest() &#123;</span><br><span class="line">        ReadFile readFile = new ReadFile();</span><br><span class="line">        try &#123;</span><br><span class="line">            readFile.read(&quot;&quot;);</span><br><span class="line">        &#125; catch (FileNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>同样，如果我们还是不知道该如何处理该异常，也可以将异常继续抛出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">private static void showTest() throws FileNotFoundException &#123;</span><br><span class="line">        ReadFile readFile = new ReadFile();</span><br><span class="line">        readFile.read(&quot;&quot;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>处理异常</strong></p>
+<p>如果我们在定义时方法体知道如何处理该异常，那么我们可以在定义方法处对异常进行处理：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class ReadFile &#123;</span><br><span class="line">    public void read(String filename)  &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            InputStream inputStream = new FileInputStream(filename);</span><br><span class="line">        &#125; catch (FileNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>那么我们正常调用该方法就可以了， 不再需要对该方法中的异常进行任何处理。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">private static void showTest() &#123;</span><br><span class="line">        ReadFile readFile = new ReadFile();</span><br><span class="line">        readFile.read(&quot;&quot;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>在类继承关系中，如果超类中的方法没有抛出异常，而子类重写了这个方法，那么这个方法必须捕获方法代码出现的每一个受查异常。在子类中不允许出现 throw 说明符中出现超过超类方法声明的异常范围。</p>
+<h4 id="再次抛出异常和异常链"><a href="#再次抛出异常和异常链" class="headerlink" title="再次抛出异常和异常链"></a>再次抛出异常和异常链</h4><p><strong>可以在 catch 字句中抛出一个异常，这样的目的是改变异常的类型。</strong> 原来抛出的异常为 catch(异常) 中的异常，现在在 catch 语句中抛出了一个新的异常，那么最终异常类型为新异常。</p>
+<p>场景描述：</p>
+<p>如果开发一个供其他程序员使用的子系统，那么用于表示子系统故障的异常类型可能有多种。 ServletException 就是这样一个异常的例子，执行servlet 的代码可能不想知道发生错误的细节原因，但是希望知道 servlet 是否有问题。</p>
+<p>下面是一个捕获异常将它再次抛出的基本方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">try&#123;</span><br><span class="line">    acess the database</span><br><span class="line">&#125;catch(SQLException e)&#123;</span><br><span class="line">    throw new ServletException(&quot;database error: &quot; + e.getMessage());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>不过还是强烈推荐通过包装技术，<strong>将原始异常设置为新异常的原因</strong>，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">try&#123;</span><br><span class="line">    acess the database</span><br><span class="line">&#125;catch(SQLException e)&#123;</span><br><span class="line">    Throwable se = new ServletException(&quot;database error&quot;);</span><br><span class="line">    se.initCause(e);</span><br><span class="line">    throw se;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样，当我们捕获异常时，可以重新获取原始异常，不会丢弃原始异常的细节：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Throwable e = se.getCause();</span><br></pre></td></tr></table></figure></p>
+<p>一个完整的例子，帮助理解：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">## Main.java</span><br><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">    showTest();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private static void showTest() &#123;</span><br><span class="line">    ReadFile readFile = new ReadFile();</span><br><span class="line">    try &#123;</span><br><span class="line">        readFile.read(&quot;&quot;);</span><br><span class="line">    &#125; catch (Throwable throwable) &#123;</span><br><span class="line">        System.out.println(throwable.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">## ReadFile.java    </span><br><span class="line">public void read(String filename) throws Throwable &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        InputStream inputStream = new FileInputStream(filename);</span><br><span class="line">    &#125; catch (FileNotFoundException e) &#123;</span><br><span class="line">        Throwable throwable = new CustomFileExpection(&quot;在 catch中再次抛出了异常&quot;);</span><br><span class="line">        throwable.initCause(e);</span><br><span class="line">        throw throwable;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="finally-字句"><a href="#finally-字句" class="headerlink" title="finally 字句"></a>finally 字句</h4><p>应用场景：<br>在 finally 语句中释放资源。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">InputStream in = new InputStream(...);</span><br><span class="line">try&#123;</span><br><span class="line">    // 1</span><br><span class="line">    // code that migth throw exception</span><br><span class="line">    //2</span><br><span class="line">&#125;catch(IOException e)&#123;</span><br><span class="line">    //3</span><br><span class="line">    show error message</span><br><span class="line">    //4</span><br><span class="line">&#125;finally&#123;</span><br><span class="line">    //5</span><br><span class="line">    in.close();</span><br><span class="line">&#125;</span><br><span class="line">//6</span><br></pre></td></tr></table></figure>
+<ol>
+<li>代码没有抛出异常。代码会执行 1、2、5、6</li>
+<li>抛出一个在 catch 子句中捕获的异常。try 语句中，程序发生异常，跳过剩余代码，执行 catch 子句中代码。<ol>
+<li>如果 catch 中子句没有抛出异常，那么执行 1、3、4、5、6。</li>
+<li>如果 catch 中子句抛出一个异常，异常将被抛回给这个方法的调用者，执行 1、3、5.</li>
+</ol>
+</li>
+<li>代码抛出了一个不是 catch 捕获的异常，这种情况下，程序执行 try 语句中所有的语句，直到有异常被抛出为止，代码执行 1、5。</li>
+</ol>
+<p>在日常代码中，<strong>强烈建议解耦 try/catch 和 try/finally</strong>，这样可以提高代码的清晰度，上面的代码可以这样书写：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">InputStream in ...;</span><br><span class="line">try&#123;</span><br><span class="line">    try&#123;</span><br><span class="line">        code that might throw exception</span><br><span class="line">    &#125;finally&#123;</span><br><span class="line">        in.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;catch(IOException e)&#123;</span><br><span class="line">    show error message</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>内存 try 代码的职责是关闭输入流，外层的 try 语句的职责就是报告出现的错误。</p>
+<p>面临的问题：<br><strong>finally 语句也可能抛出异常，这时会覆盖原来的异常。</strong></p>
+<h4 id="带资源的-try-语句"><a href="#带资源的-try-语句" class="headerlink" title="带资源的 try 语句"></a>带资源的 try 语句</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">open a resource</span><br><span class="line">try&#123;</span><br><span class="line">    work with the resource</span><br><span class="line">&#125;finally&#123;</span><br><span class="line">    close the resource</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>假如资源属于一个实现了 AutoCloseable/Closeable 的类，Java 7 提供了一个有用的快捷方式，AutoCloseable 与一个接口方法：</p>
+<p><code>void close() throw Exception</code></p>
+<p>Closeable 接口的 close() 方法是一个 抛出 IOException 的方法。</p>
+<p>带资源的 try 语句的最简形式为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">try(Resource res = ...;)&#123;</span><br><span class="line">    work with resource</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>try 块退出时或者存在一个异常时，<strong>会自动调用 res.close()</strong>，就好像使用了 finally 块一样。 </p>
+<p>可以指定多个资源：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">try(Scanner in = new Scanner(new InputStream(&quot;/usr/share/dict/words&quot;),&quot;UTF-8&quot;);</span><br><span class="line">PrintWriter out = new PrintWrite(&quot;out.txt&quot;);)&#123;</span><br><span class="line">    while(in.hasNext())&#123;</span><br><span class="line">        out.println(in.next().toUpperCase());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>不论这个块怎么退出， in 和 out 都会关闭。</p>
+<p>这种处理异常的方式，就避免了上文所说的在 finally 语句中抛出的异常会覆盖 try 语句抛出异常的情况。</p>
+<p>如果此时在 finally 中 close() 也会抛出异常，那么原来在 try 子句中的异常会被重新抛出，而 close 方法抛出的异常会被抑制，这些异常会被抑制，并由 addSuppressed() 方法增加到原来的异常，可以通过 getSuppressed() 获取这个被抑制的异常。</p>
+<p><strong>在我们查看一些开源库代码时，这种实现 Closeable 接口的方案随处可见，其目的就是在相应的代码执行完毕后，关闭资源。</strong></p>
+<h4 id="分析堆栈轨迹元素"><a href="#分析堆栈轨迹元素" class="headerlink" title="分析堆栈轨迹元素"></a>分析堆栈轨迹元素</h4><p>堆栈轨迹 (stack trace) 是一个方法调用过程的列表，它包含了程序执行过程中方法调用的特定位置。当 Java 程序正常终止，而没有捕获异常时，这个列表就会显示出来。</p>
+<ol>
+<li><p>可以调用 Throwable 类的 printStackTrace 方法访问堆栈轨迹的文本描述。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Throwable t = new Throwable();</span><br><span class="line">StringWriter out = new StringWriter();</span><br><span class="line">t.printStackTrace(new PrintWriter(out));</span><br><span class="line">String des = out.toString();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>一种更为灵活的方法是使用 getStackTrace 方法，他会得到 StackTraceElement 对象的一个数组，可以在你的程序中分析这个对象数组</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Throwable t = new Throwable();</span><br><span class="line">StackTraceElement[] frames = t.getStaceTrace();</span><br><span class="line">for(StackTraceElement frame: frames)&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>StackTraceElement 类含有能够获得文件名和当前执行的代码行号的方法，同时还含有获得类名和方法名的方法。</p>
+<p>静态的Thread.getAllStackTrace() 方法，它可以产生所有线程的堆栈轨迹，下面给出这个方法的绝唱方式。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;Thread,StackTraceElement[]&gt; map = Thread.getAllStackTrace();</span><br><span class="line">for(Thread t : map.keySet())&#123;</span><br><span class="line">    StackTraceElement[] frames = map.get(t);</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用以上方法我们可以自定义 Android 的 LogCat 的打印信息，具体代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">private static String generateTag() &#123;</span><br><span class="line">       StackTraceElement caller = new Throwable().getStackTrace()[2];</span><br><span class="line">       String tag = &quot;%s.%s(L:%d)&quot;;</span><br><span class="line">       String callerClazzName = caller.getClassName();</span><br><span class="line">       callerClazzName = callerClazzName.substring(callerClazzName.lastIndexOf(&quot;.&quot;) + 1);</span><br><span class="line">       tag = String.format(Locale.CHINA, tag, callerClazzName, caller.getMethodName(),</span><br><span class="line">               caller.getLineNumber());</span><br><span class="line">       String customTagPrefix = &quot;h_log&quot;;</span><br><span class="line">       tag = TextUtils.isEmpty(customTagPrefix) ? tag : customTagPrefix + &quot;:&quot; + tag;</span><br><span class="line">       return tag;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   public static void d(Object content) &#123;</span><br><span class="line">       if (!isDebug||content==null) &#123;</span><br><span class="line">           return;</span><br><span class="line">       &#125;</span><br><span class="line">       String tag = generateTag();</span><br><span class="line">       Log.d(tag, content.toString());</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="使用异常机制的技巧"><a href="#使用异常机制的技巧" class="headerlink" title="使用异常机制的技巧"></a>使用异常机制的技巧</h3><ul>
+<li>异常处理不能代替简单的测试</li>
+</ul>
+<p>捕获异常的时间较代码此时花的时间较长，只有在异常情况下使用异常机制。</p>
+<ul>
+<li><p>不过过分细化异常</p>
+</li>
+<li><p>利用异常层次结构</p>
+</li>
+</ul>
+<p>根据具体代码寻找更适合的子类或创建自己的异常子类。</p>
+<ul>
+<li>不要压制异常</li>
+</ul>
+<h3 id="使用断言"><a href="#使用断言" class="headerlink" title="使用断言"></a>使用断言</h3><p>在执行以下代码时：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int = a/b;</span><br></pre></td></tr></table></figure>
+<p>那么我们需要确认的是，a、b 为数值，并且 b 的值不为 0，我们可以做如下操作：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if(b=0) throw new IllegalAraumentException(&quot;b=0&quot;);</span><br></pre></td></tr></table></figure></p>
+<p>但是以上代码会一直保存在代码中，测试工作完毕后也不会自动删除，如果代码中含有大量的这种检查，程序运行起来就会变慢。</p>
+<p><strong>断言机制允许在测试期间向代码中插入一些检查语句，当代码发布时，这些插入的检测语句会自动的移走。</strong></p>
+<p>Java 引入了关键字 assert，有以下两种形式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">assert 条件：</span><br></pre></td></tr></table></figure>
+<p>和<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">assert 条件：表达式;</span><br></pre></td></tr></table></figure></p>
+<p>这两种形式都会对条件进行检测，如果结果为 false，则抛出一个 AssertionError 异常。在第二种形式中，表达式将会被传入 AssertionError 的构造器，并转换成一个消息字符串。</p>
+<h4 id="启用和禁用断言"><a href="#启用和禁用断言" class="headerlink" title="启用和禁用断言"></a>启用和禁用断言</h4><p>启动或禁用断言是类加载器的功能，当断言被禁用时，类加载器将跳过断言代码。</p>
+<ul>
+<li>启用断言</li>
+</ul>
+<p><code>java -enablessertions(-ea) MyApp</code></p>
+<p>在某个类或整个包下使用断言：</p>
+<p><code>java -ea:MyClass -ea:com.xx.xxx MyApp</code></p>
+<ul>
+<li>禁用断言</li>
+</ul>
+<p><code>java -disablessertions(-da) MyApp</code></p>
+<p>有些类不是由类加载器加载，而是有直接虚拟机加载。对于不是由类加载器的系统类可是使用 -enablesystemssertions/-esa 启用断言。</p>
+<h4 id="使用断言完成代码检查"><a href="#使用断言完成代码检查" class="headerlink" title="使用断言完成代码检查"></a>使用断言完成代码检查</h4><p>Java 中有 3 种处理系统错误的机制：</p>
+<ol>
+<li>抛出一个异常</li>
+<li>日志</li>
+<li>使用断言</li>
+</ol>
+<p>选择断言记住以下几点：</p>
+<ul>
+<li>断言失败是致命的、不可恢复的错误</li>
+<li>断言只用于开发和测试阶段</li>
+</ul>
+<p>所以不应该使用断言向程序的其他部分通告发生了可恢复性的错误，断言只应该用于在测试阶段确定程序内部的错误位置。</p>
+<p><strong>前置条件</strong></p>
+<p>在声明一些方法时，往往针对该方法的使用有一定的说明，有些方法往往定义一些 <strong>前置条件</strong> 来进一步指导方法的使用，如下例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">* @param a array to be sorted (must not be null)</span><br><span class="line">*/</span><br><span class="line">static void sort(int[] a, int fromIndex, int toIndex)</span><br></pre></td></tr></table></figure></p>
+<p>那么 对数组的限制就是定义了一个前置条件，在使用这个方法时就不允许用 null 数组调用这个方法，并在这个方法的开头使用以下断言：<br><code>assert a != null;</code></p>
+<h3 id="记录日志"><a href="#记录日志" class="headerlink" title="记录日志"></a>记录日志</h3><p>我们在代码添加 <code>System.out.println()</code> 方法来调用程序员观察具体的运行过程和结果，记录日志 API 就是为了这种情况下而设计的。记录日志 API 的有点：<br>1.可以轻易的取消全部日志记录。</p>
+<ol start="2">
+<li>可以很简单的禁止日志的输出。</li>
+<li>可进行条件过滤。</li>
+<li>日志记录可以被定向到不同的处理器，用于控制台输出，用于存储在文件中等。</li>
+<li></li>
+</ol>
+<h4 id="关于异常的补充"><a href="#关于异常的补充" class="headerlink" title="关于异常的补充"></a>关于异常的补充</h4><ul>
+<li>为什么 Java 中打开物理资源，如磁盘文件、网络连接、数据库连接等，必须需要显式的关闭？</li>
+</ul>
+<p><strong>JVM 提供的垃圾回收机制只负责堆内存分配出来的内存，打开的物理资源，GC 是不进行回收的，所以需要手动的关闭。</strong></p>
+<ul>
+<li>如何正确的关闭资源？</li>
+</ul>
+<ol>
+<li>在 finall 中执行资源关闭操作。</li>
+<li>保证关闭资源前资源不为 null,因为存在资源初始化前就发生异常情况，所以在 finally 语句中对资源对象进行非空判断。</li>
+<li>为每个资源关闭操作执行 try/catch 操作，因为在资源关闭过程中也有可能发生异常，导致程序中断。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">public void test() &#123;</span><br><span class="line"></span><br><span class="line">        FileInputStream inputStream = null;</span><br><span class="line">        FileOutputStream outputStream = null;</span><br><span class="line"></span><br><span class="line">        try &#123;</span><br><span class="line">            inputStream = new FileInputStream(&quot;srcPath&quot;);</span><br><span class="line">            outputStream = new FileOutputStream(&quot;destPath&quot;);</span><br><span class="line">        &#125; catch (FileNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;finally &#123;//操作1</span><br><span class="line">            if(inputStream != null)&#123;//操作2</span><br><span class="line">                try &#123;//操作3</span><br><span class="line">                    inputStream.close();</span><br><span class="line">                &#125; catch (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if(outputStream != null)&#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    outputStream.close();</span><br><span class="line">                &#125; catch (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="知识链接"><a href="#知识链接" class="headerlink" title="知识链接"></a>知识链接</h3><p><a href="http://product.dangdang.com/24035306.html" target="_blank" rel="noopener">Java 核心知识 卷1</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://mllgy.github.io/2019/01/26/Java-异常机制浅析/" data-id="cjrdcw276000teu71c3be22s2" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Exception/">Exception</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/01/26/关于-Java-异常机制的补充/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">这些东西可能太新了</strong>
+      <div class="article-nav-title">
+        
+          关于 Java 异常机制的补充
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/01/17/RxJava 使用 Transformer 进行变换/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">这些东西可能过时了</strong>
+      <div class="article-nav-title">RxJava Transformer</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/DI/" style="font-size: 10px;">DI</a> <a href="/tags/Dagger2/" style="font-size: 10px;">Dagger2</a> <a href="/tags/Exception/" style="font-size: 20px;">Exception</a> <a href="/tags/GitPage/" style="font-size: 10px;">GitPage</a> <a href="/tags/Hexo/" style="font-size: 20px;">Hexo</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/Okhttp3/" style="font-size: 10px;">Okhttp3</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/内存分区/" style="font-size: 10px;">内存分区</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/01/26/关于-Java-异常机制的补充/">关于 Java 异常机制的补充</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/26/Java-异常机制浅析/">Java 异常机制浅析</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/17/RxJava 使用 Transformer 进行变换/">RxJava Transformer</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/17/Dagger2 前奏篇：依赖注入概念/">Dagger2 前奏篇:依赖注入概念</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/17/OKhttp3 系统拦截器简介/">OKhttp3 拦截器</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 GY<br>
+      巨大能量来源 <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">主页</a>
+  
+    <a href="/archives/" class="mobile-nav-link">文章</a>
+  
+</nav>
+    
+
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

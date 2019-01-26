@@ -66,6 +66,116 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-关于-Java-异常机制的补充" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/26/关于-Java-异常机制的补充/" class="article-date">
+  <time datetime="2019-01-26T10:44:41.000Z" itemprop="datePublished">2019-01-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/26/关于-Java-异常机制的补充/">关于 Java 异常机制的补充</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="为什么-Java-中打开物理资源，如磁盘文件、网络连接、数据库连接等，必须需要显式的关闭？"><a href="#为什么-Java-中打开物理资源，如磁盘文件、网络连接、数据库连接等，必须需要显式的关闭？" class="headerlink" title="为什么 Java 中打开物理资源，如磁盘文件、网络连接、数据库连接等，必须需要显式的关闭？"></a>为什么 Java 中打开物理资源，如磁盘文件、网络连接、数据库连接等，必须需要显式的关闭？</h3><p>JVM 提供的垃圾回收机制只负责堆内存分配出来的内存，打开的物理资源，GC 是不进行回收的，所以需要手动的关闭。</p>
+<h3 id="如何正确的关闭资源？"><a href="#如何正确的关闭资源？" class="headerlink" title="如何正确的关闭资源？"></a>如何正确的关闭资源？</h3><ol>
+<li>在 finall 中执行资源关闭操作。</li>
+<li>保证关闭资源前资源不为 null,因为存在资源初始化前就发生异常情况，所以在 finally 语句中对资源对象进行非空判断。</li>
+<li>为每个资源关闭操作执行 try/catch 操作，因为在资源关闭过程中也有可能发生异常，导致程序中断。</li>
+</ol>
+        
+          <p class="article-more-link">
+            <a href="/2019/01/26/关于-Java-异常机制的补充/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://mllgy.github.io/2019/01/26/关于-Java-异常机制的补充/" data-id="cjrdcw25z0007eu71dkovzlhw" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Exception/">Exception</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Java-异常机制浅析" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/26/Java-异常机制浅析/" class="article-date">
+  <time datetime="2019-01-26T10:23:46.000Z" itemprop="datePublished">2019-01-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/26/Java-异常机制浅析/">Java 异常机制浅析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="处理错误"><a href="#处理错误" class="headerlink" title="处理错误"></a>处理错误</h3><h4 id="异常分类"><a href="#异常分类" class="headerlink" title="异常分类"></a>异常分类</h4><p>所有的异常都是继承于 Throwable</p>
+<p><img src="/images/2019_01_26.jpg" alt="运行时内存区域"></p>
+<p> Error 类层次结构描述了 Java 运行时内部的错误以及资源耗尽错误，应用程序不应该抛出这种类型的对象，而是让程序来处理，一般情况下程序会直接中断，并报出错误以及堆栈信息。</p>
+<p>关于 Exception 派生的两个分支的依据：</p>
+<ul>
+<li><p><strong>RuntimeException: 由程序错误导致导致的异常。</strong></p>
+</li>
+<li><p><strong>其他 Exception： 程序本身没问题，但是由于像 IO 错误这类问题导致的异常属于其他异常。</strong></p>
+</li>
+</ul>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>RuntimeException 的几种异常：</strong></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>ClassCastException:</strong> 类变换异常</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>IllegalArgumentException:</strong> 传递非法参数异常</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>IndexOutOfBoundsException:</strong> 索引越界异常</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>NoSuchElementException:</strong>  表明枚举中没有更多的元素</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>NullPointerException:</strong> 空指针异常</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/01/26/Java-异常机制浅析/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://mllgy.github.io/2019/01/26/Java-异常机制浅析/" data-id="cjrdcw276000teu71c3be22s2" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Exception/">Exception</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-RxJava 使用 Transformer 进行变换" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/01/17/RxJava 使用 Transformer 进行变换/" class="article-date">
@@ -99,7 +209,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/01/17/RxJava 使用 Transformer 进行变换/" data-id="cjr0htf420004rzfy2m1w5431" class="article-share-link">分享</a>
+      <a data-url="https://mllgy.github.io/2019/01/17/RxJava 使用 Transformer 进行变换/" data-id="cjrdcw25x0004eu715y6gmzgt" class="article-share-link">分享</a>
       
       
       
@@ -157,7 +267,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/01/17/Dagger2 前奏篇：依赖注入概念/" data-id="cjr0htf3s0000rzfyulh500sy" class="article-share-link">分享</a>
+      <a data-url="https://mllgy.github.io/2019/01/17/Dagger2 前奏篇：依赖注入概念/" data-id="cjrdcw25l0000eu718dsdie3y" class="article-share-link">分享</a>
       
       
       
@@ -219,7 +329,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/01/17/OKhttp3 系统拦截器简介/" data-id="cjr0htf4r000nrzfyfe4gfa4r" class="article-share-link">分享</a>
+      <a data-url="https://mllgy.github.io/2019/01/17/OKhttp3 系统拦截器简介/" data-id="cjrdcw26o000qeu71cpzzivh8" class="article-share-link">分享</a>
       
       
       
@@ -262,7 +372,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/01/17/Hexo 博客维护/" data-id="cjr0htf3x0001rzfyosov8kat" class="article-share-link">分享</a>
+      <a data-url="https://mllgy.github.io/2019/01/17/Hexo 博客维护/" data-id="cjrdcw25r0001eu71pvooeq01" class="article-share-link">分享</a>
       
       
       
@@ -314,7 +424,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/01/16/Java 内存空间类别/" data-id="cjr0htf410003rzfy4oufmets" class="article-share-link">分享</a>
+      <a data-url="https://mllgy.github.io/2019/01/16/Java 内存空间类别/" data-id="cjrdcw25v0003eu71cn9vt268" class="article-share-link">分享</a>
       
       
       
@@ -365,7 +475,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/01/16/使用 Hexo 搭建 GitPage 静态博客/" data-id="cjr0htf430005rzfytui00oep" class="article-share-link">分享</a>
+      <a data-url="https://mllgy.github.io/2019/01/16/使用 Hexo 搭建 GitPage 静态博客/" data-id="cjrdcw25y0005eu71tq6buzzo" class="article-share-link">分享</a>
       
       
       
@@ -392,7 +502,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/DI/" style="font-size: 10px;">DI</a> <a href="/tags/Dagger2/" style="font-size: 10px;">Dagger2</a> <a href="/tags/GitPage/" style="font-size: 10px;">GitPage</a> <a href="/tags/Hexo/" style="font-size: 20px;">Hexo</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/Okhttp3/" style="font-size: 10px;">Okhttp3</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/内存分区/" style="font-size: 10px;">内存分区</a>
+      <a href="/tags/DI/" style="font-size: 10px;">DI</a> <a href="/tags/Dagger2/" style="font-size: 10px;">Dagger2</a> <a href="/tags/Exception/" style="font-size: 20px;">Exception</a> <a href="/tags/GitPage/" style="font-size: 10px;">GitPage</a> <a href="/tags/Hexo/" style="font-size: 20px;">Hexo</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/Okhttp3/" style="font-size: 10px;">Okhttp3</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/内存分区/" style="font-size: 10px;">内存分区</a>
     </div>
   </div>
 
@@ -414,6 +524,14 @@
       <ul>
         
           <li>
+            <a href="/2019/01/26/关于-Java-异常机制的补充/">关于 Java 异常机制的补充</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/26/Java-异常机制浅析/">Java 异常机制浅析</a>
+          </li>
+        
+          <li>
             <a href="/2019/01/17/RxJava 使用 Transformer 进行变换/">RxJava Transformer</a>
           </li>
         
@@ -423,14 +541,6 @@
         
           <li>
             <a href="/2019/01/17/OKhttp3 系统拦截器简介/">OKhttp3 拦截器</a>
-          </li>
-        
-          <li>
-            <a href="/2019/01/17/Hexo 博客维护/">hexo 博客维护</a>
-          </li>
-        
-          <li>
-            <a href="/2019/01/16/Java 内存空间类别/">Java 内存空间类别</a>
           </li>
         
       </ul>
