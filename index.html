@@ -102,7 +102,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/01/26/关于-Java-异常机制的补充/" data-id="cjrddgu5s0007i371pllmnuft" class="article-share-link">分享</a>
+      <a data-url="https://mllgy.github.io/2019/01/26/关于-Java-异常机制的补充/" data-id="cjrddkbcv0007l37130gf5r0t" class="article-share-link">分享</a>
       
       
       
@@ -149,7 +149,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/01/26/Java-异常机制浅析/" data-id="cjrddgu6z000ti371v891vli3" class="article-share-link">分享</a>
+      <a data-url="https://mllgy.github.io/2019/01/26/Java-异常机制浅析/" data-id="cjrddkbe5000tl371pkrpk6qp" class="article-share-link">分享</a>
       
       
       
@@ -196,7 +196,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/01/17/RxJava 使用 Transformer 进行变换/" data-id="cjrddgu5q0004i371a2jlcbfg" class="article-share-link">分享</a>
+      <a data-url="https://mllgy.github.io/2019/01/17/RxJava 使用 Transformer 进行变换/" data-id="cjrddkbct0004l371vl0jbo13" class="article-share-link">分享</a>
       
       
       
@@ -234,18 +234,6 @@
       
         <h2 id="一、What-is-Dagger2"><a href="#一、What-is-Dagger2" class="headerlink" title="一、What is Dagger2 ?"></a>一、What is Dagger2 ?</h2><p> <a href="https://github.com/google/dagger" target="_blank" rel="noopener">Dagger2</a> 是一个谷歌开源的依赖注入(<code>Dependency Injection</code>)框架，简称<code>DI</code>。Dagger2 是 Google 出的依赖注入框架。肯定有小伙伴疑问，为什么会有个 <strong>2</strong> 呢。该框架是基于 Square 开发的 Dagger 基础上开发的。<br> 那么 <strong>什么是 <code>依赖注入</code></strong> 呢？</p>
 <h3 id="1-1-何为依赖注入（控制反转-–-IOC（Inversion-of-Control））"><a href="#1-1-何为依赖注入（控制反转-–-IOC（Inversion-of-Control））" class="headerlink" title="1.1 何为依赖注入（控制反转 – IOC（Inversion of Control））"></a>1.1 何为依赖注入（控制反转 – IOC（Inversion of Control））</h3><p>我在网上搜索了相关内容，觉得以下解释相对容易理解（自定义后）：</p>
-<ol>
-<li>在一个类的具体业务逻辑中，需要另一个类的实例进行相应的操作时，在传统的设计中，通常由调用者来创建被调用者的实例（一般的，我们通过 new 的方式创建），然而依赖注入的方式，创建被调用者不再由调用者创建实例，创建被调用者的实例的工作由 <code>IOC 容器</code> 来完成，然后<code>注入</code>到调用者。因此也被称为 <strong><code>依赖注入</code></strong>。</li>
-<li><strong><code>依赖注入</code></strong> 就是调用者需要的另一个对象实例不在调用者内部实现，而是通过一定的方式从外部传入实例，<code>解决了各个类之间的耦合</code>。那么这个外部，到底指的是哪里，如果指的是另一个类，那么，另一个类内部就耦合了,这种拆东墙补西墙的做法我们是不推荐的。能不能有一种方式，将这些构造的对象放到一个容器中，具体需要哪个实例时，就从这个容器中取就行了。那么，类的实例和使用就不在有联系了，而是通过一个容器将他们联系起来。实现了解耦。</li>
-</ol>
-<p>个人理解：<strong>控制反转</strong> ,把自己新建实例对象的权利由交给了第三方工具或容器。<br>目标类将创建其他实例类的权利交给了第三方工具，也就是说，原来需要程序员把自主在目标类通过 new 的方式创建相关类的实例的权利，交给具体的业务（所谓的 IOC 容器） ，该容器在需要的时候通过它自己的方式创建该类的实例，即：<code>创建类实例权利的移交</code>。</p>
-<h2 id="1-2-依赖注入的好处"><a href="#1-2-依赖注入的好处" class="headerlink" title="1.2 依赖注入的好处"></a>1.2 依赖注入的好处</h2><p><code>依赖注入</code>就是调用者需要的另一个对象实例不在调用者内部实现，而是通过一定的方式从外部传入实例，<code>解决了各个类之间的耦合</code>。</p>
-<p>通俗一点讲：将该对象的实例化交给其调用者，通过某种方式传入进来，这种模式就是依赖注入。常见的降低耦合的方式： </p>
-<ul>
-<li>构造方法注入。 </li>
-<li>Setter方式注入。 </li>
-<li>接口注入。</li>
-</ul>
         
           <p class="article-more-link">
             <a href="/2019/01/17/Dagger2 前奏篇：依赖注入概念/#more">Read More</a>
@@ -254,7 +242,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/01/17/Dagger2 前奏篇：依赖注入概念/" data-id="cjrddgu5e0000i371882k7bct" class="article-share-link">分享</a>
+      <a data-url="https://mllgy.github.io/2019/01/17/Dagger2 前奏篇：依赖注入概念/" data-id="cjrddkbch0000l371lnne0p7b" class="article-share-link">分享</a>
       
       
       
@@ -295,19 +283,6 @@
 <p>while(true) 死循环的实现。</p>
 <p>检验返回的 Response ，如果没有异常（包括请求失败、重定向等），那么执行 <code>return Response</code>, return 会直接结束循环操作，将结果返回到下一个拦截器中进行处理。</p>
 <p>检验返回的 Response ，如果出现异常情况，那么会根据 Response 新建 Request，并且执行一些必要的检查（是否为同一个 connnetion ，是的话抛出异常，不是的话是否旧的 connection 的资源，并新建一个 connection），进入死循环的下一次循环，那么此时将进行新一轮的拦截器的处理。</p>
-<h3 id="BridgeInterceptor"><a href="#BridgeInterceptor" class="headerlink" title="BridgeInterceptor"></a>BridgeInterceptor</h3><h4 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h4><ul>
-<li>将用户构建的 Request 请求转换为能够进行网络访问的请求。</li>
-</ul>
-<p>在用户构建的 Request 的基础上 <strong>添加了许多的请求头</strong>，具体内容参看代码。</p>
-<ul>
-<li>将符合网络请求的 Request 进行网络请求。</li>
-</ul>
-<p>在责任链模式的过程中，在此拦截器的到响应 Response。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Response networkResponse = chain.proceed(requestBuilder.build());</span><br></pre></td></tr></table></figure>
-<ul>
-<li>将请求回来的响应 Response 转化为用户可用的 Response。</li>
-</ul>
-<p>主要是根据响应是否对 Response 进行 gzip 压缩，具体是使用 Okio 的库对 Response 进行压缩，并返回 Response。</p>
         
           <p class="article-more-link">
             <a href="/2019/01/17/OKhttp3 系统拦截器简介/#more">Read More</a>
@@ -316,7 +291,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/01/17/OKhttp3 系统拦截器简介/" data-id="cjrddgu6h000qi371h69qqhes" class="article-share-link">分享</a>
+      <a data-url="https://mllgy.github.io/2019/01/17/OKhttp3 系统拦截器简介/" data-id="cjrddkbdj000ql371l9h1cx1q" class="article-share-link">分享</a>
       
       
       
@@ -359,7 +334,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/01/17/Hexo 博客维护/" data-id="cjrddgu5j0001i371118reqxc" class="article-share-link">分享</a>
+      <a data-url="https://mllgy.github.io/2019/01/17/Hexo 博客维护/" data-id="cjrddkbcn0001l371nbt3mf6i" class="article-share-link">分享</a>
       
       
       
@@ -411,7 +386,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/01/16/Java 内存空间类别/" data-id="cjrddgu5o0003i371brmfqljz" class="article-share-link">分享</a>
+      <a data-url="https://mllgy.github.io/2019/01/16/Java 内存空间类别/" data-id="cjrddkbcr0003l371lmaod5d5" class="article-share-link">分享</a>
       
       
       
@@ -462,7 +437,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/01/16/使用 Hexo 搭建 GitPage 静态博客/" data-id="cjrddgu5r0005i371um6dirmz" class="article-share-link">分享</a>
+      <a data-url="https://mllgy.github.io/2019/01/16/使用 Hexo 搭建 GitPage 静态博客/" data-id="cjrddkbcu0005l371dpzerwnq" class="article-share-link">分享</a>
       
       
       

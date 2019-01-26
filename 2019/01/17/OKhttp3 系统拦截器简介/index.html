@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Enjoy">
 <meta property="og:description" content="RetryAndFollowUpInterceptor功能：实现重试、跟踪 实现原理：  while(true) 死循环的实现。 检验返回的 Response ，如果没有异常（包括请求失败、重定向等），那么执行 return Response, return 会直接结束循环操作，将结果返回到下一个拦截器中进行处理。 检验返回的 Response ，如果出现异常情况，那么会根据 Response 新">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-01-17T07:13:46.926Z">
+<meta property="og:updated_time" content="2019-01-26T11:11:00.838Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OKhttp3 拦截器">
 <meta name="twitter:description" content="RetryAndFollowUpInterceptor功能：实现重试、跟踪 实现原理：  while(true) 死循环的实现。 检验返回的 Response ，如果没有异常（包括请求失败、重定向等），那么执行 return Response, return 会直接结束循环操作，将结果返回到下一个拦截器中进行处理。 检验返回的 Response ，如果出现异常情况，那么会根据 Response 新">
@@ -96,6 +96,7 @@
 <p>while(true) 死循环的实现。</p>
 <p>检验返回的 Response ，如果没有异常（包括请求失败、重定向等），那么执行 <code>return Response</code>, return 会直接结束循环操作，将结果返回到下一个拦截器中进行处理。</p>
 <p>检验返回的 Response ，如果出现异常情况，那么会根据 Response 新建 Request，并且执行一些必要的检查（是否为同一个 connnetion ，是的话抛出异常，不是的话是否旧的 connection 的资源，并新建一个 connection），进入死循环的下一次循环，那么此时将进行新一轮的拦截器的处理。</p>
+<a id="more"></a>
 <h3 id="BridgeInterceptor"><a href="#BridgeInterceptor" class="headerlink" title="BridgeInterceptor"></a>BridgeInterceptor</h3><h4 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h4><ul>
 <li>将用户构建的 Request 请求转换为能够进行网络访问的请求。</li>
 </ul>
@@ -109,7 +110,6 @@
 <li>将请求回来的响应 Response 转化为用户可用的 Response。</li>
 </ul>
 <p>主要是根据响应是否对 Response 进行 gzip 压缩，具体是使用 Okio 的库对 Response 进行压缩，并返回 Response。</p>
-<a id="more"></a>
 <h3 id="CacheInterceptor"><a href="#CacheInterceptor" class="headerlink" title="CacheInterceptor"></a>CacheInterceptor</h3><p>功能： 实现缓存功能的拦截器</p>
 <h4 id="设置启用缓存功能"><a href="#设置启用缓存功能" class="headerlink" title="设置启用缓存功能"></a>设置启用缓存功能</h4><p>在新建 OkhttpClient.Builder 的时候进行设置：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">File sdcache = getExternalCacheDir();</span><br><span class="line">int cacheSize = 10 * 1024 * 1024;</span><br><span class="line">OkHttpClient.Builder builder = new OkHttpClient.Builder()</span><br><span class="line">    .cache(new Cache(sdcache.getAbsoluteFile(), cacheSize));</span><br><span class="line">mOkHttpClient = builder.build();</span><br></pre></td></tr></table></figure>
@@ -176,7 +176,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/01/17/OKhttp3 系统拦截器简介/" data-id="cjrddgu6h000qi371h69qqhes" class="article-share-link">分享</a>
+      <a data-url="https://mllgy.github.io/2019/01/17/OKhttp3 系统拦截器简介/" data-id="cjrddkbdj000ql371l9h1cx1q" class="article-share-link">分享</a>
       
       
       
