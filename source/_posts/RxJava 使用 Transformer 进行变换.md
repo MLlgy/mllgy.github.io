@@ -98,7 +98,7 @@ fun <T> transformerSchedluer(): ObservableTransformer<T, T> =
 obserable..compose(transformerSchedluer2()).subscribe(....);
 ```
 
-### 0x85 compose
+### 0x85 compose 操作符的功能
 
 以上对 Observable 的变换最终插入调用链中，主要是因为 compose() 的作用。compose 操作符可以对调用链的原始 Observable 产生作用。
 
