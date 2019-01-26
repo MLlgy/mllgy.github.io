@@ -17,7 +17,7 @@ while(true) 死循环的实现。
 
 检验返回的 Response ，如果出现异常情况，那么会根据 Response 新建 Request，并且执行一些必要的检查（是否为同一个 connnetion ，是的话抛出异常，不是的话是否旧的 connection 的资源，并新建一个 connection），进入死循环的下一次循环，那么此时将进行新一轮的拦截器的处理。
 
-
+<!--more-->
 
 ### BridgeInterceptor
 
@@ -40,7 +40,6 @@ Response networkResponse = chain.proceed(requestBuilder.build());
 
 主要是根据响应是否对 Response 进行 gzip 压缩，具体是使用 Okio 的库对 Response 进行压缩，并返回 Response。
 
-<!--more-->
 
 ### CacheInterceptor
 
