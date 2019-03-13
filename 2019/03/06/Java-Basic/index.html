@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Java Basic | Enjoy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="对象的三大特征对象的三种基本特征:继承、封装、多态。 Java 语言为纯粹的面向对象的程序编程语言，主要表现为 Java 完全支持对象的三大基本特征。 封装： 将对象的实现细节隐藏起来，然后通过一些公用方法暴露该对象的功能。 继承：子类继承父类，子类作为一种特殊的父类，将直接获得父类的属性和方法。 多态：子类对象可以直接赋给父类变量，但在运行时依然表现出子类的行为特征，这意味着同一个类型的引用对象">
+<meta name="keywords" content="Java 继承，对象，类初始化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java Basic">
+<meta property="og:url" content="https://mllgy.github.io/2019/03/06/Java-Basic/index.html">
+<meta property="og:site_name" content="Enjoy">
+<meta property="og:description" content="对象的三大特征对象的三种基本特征:继承、封装、多态。 Java 语言为纯粹的面向对象的程序编程语言，主要表现为 Java 完全支持对象的三大基本特征。 封装： 将对象的实现细节隐藏起来，然后通过一些公用方法暴露该对象的功能。 继承：子类继承父类，子类作为一种特殊的父类，将直接获得父类的属性和方法。 多态：子类对象可以直接赋给父类变量，但在运行时依然表现出子类的行为特征，这意味着同一个类型的引用对象">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://mllgy.github.io/images/19_03_06.jpg">
+<meta property="og:image" content="https://mllgy.github.io/images/2019_03_06_1.jpg">
+<meta property="og:image" content="https://mllgy.github.io/images/2019_03_06_2.jpg">
+<meta property="og:image" content="https://mllgy.github.io/images/2019_03_06_3.jpg">
+<meta property="og:image" content="https://mllgy.github.io/images/2019_03_06_4.jpg">
+<meta property="og:updated_time" content="2019-03-07T04:55:56.207Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java Basic">
+<meta name="twitter:description" content="对象的三大特征对象的三种基本特征:继承、封装、多态。 Java 语言为纯粹的面向对象的程序编程语言，主要表现为 Java 完全支持对象的三大基本特征。 封装： 将对象的实现细节隐藏起来，然后通过一些公用方法暴露该对象的功能。 继承：子类继承父类，子类作为一种特殊的父类，将直接获得父类的属性和方法。 多态：子类对象可以直接赋给父类变量，但在运行时依然表现出子类的行为特征，这意味着同一个类型的引用对象">
+<meta name="twitter:image" content="https://mllgy.github.io/images/19_03_06.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Enjoy" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.proxy.ustclug.org/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Enjoy</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Enjoy the technology，Enjoy the code.</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">主页</a>
+        
+          <a class="main-nav-link" href="/archives/">文章</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 流"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://mllgy.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Java-Basic" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/06/Java-Basic/" class="article-date">
+  <time datetime="2019-03-06T06:31:33.000Z" itemprop="datePublished">2019-03-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Java Basic
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="对象的三大特征"><a href="#对象的三大特征" class="headerlink" title="对象的三大特征"></a>对象的三大特征</h3><p>对象的三种基本特征:继承、封装、多态。</p>
+<p>Java 语言为纯粹的面向对象的程序编程语言，主要表现为 Java 完全支持对象的三大基本特征。</p>
+<p><strong>封装</strong>： 将对象的实现细节隐藏起来，然后通过一些公用方法暴露该对象的功能。</p>
+<p><strong>继承</strong>：子类继承父类，子类作为一种特殊的父类，将直接获得父类的属性和方法。</p>
+<p><strong>多态</strong>：子类对象可以直接赋给父类变量，但在运行时依然表现出子类的行为特征，这意味着同一个类型的引用对象在执行同一个方法时，可能表现出多种行为特征。<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// B 继承 A</span><br><span class="line">A a;</span><br><span class="line">a = new A();</span><br><span class="line">a.testMethod();// 执行 A 中方法</span><br><span class="line">a = new B();</span><br><span class="line">a.testMethod();// 执行 B 中方法</span><br><span class="line"></span><br><span class="line">//在此例中，同一个类型引用执行同一个方法，可能表现多种行为特征：类型为 A ，该类的对象 a 执行 testMethod() 方法会根据其引用对象的具体类型表现出不同的行为特征 -- A#testMethod()或B#testMethod()。</span><br></pre></td></tr></table></figure></p>
+<h4 id="Java-是静态的强类型的语言"><a href="#Java-是静态的强类型的语言" class="headerlink" title="Java 是静态的强类型的语言"></a>Java 是静态的强类型的语言</h4><p>Java 是静态的，一旦一个类被定义，如果对这个类有所更改，只要不重新编译这个类，那么这个类以及这个类拥有的成员变量就不会发生改变。</p>
+<p>Java 的强类型主要表现在两方面：</p>
+<ol>
+<li>所有的变量必须先声明后使用；</li>
+<li>指定类型的变量只能赋相同类型的值；</li>
+</ol>
+<p>基于上面，Java 在编译期就会确定成员变量的类型。</p>
+<h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><p><strong>编程的本质就是对内存中的数据访问和修改</strong>，程序所用到的数据都会保存在内存中，程序员需要通过一种机制来访问和修改内存中的数据，这种机制就是 <strong>变量</strong> ，每个变量代表某一小块内存。变量是有名字的，程序对变量 <strong>赋值</strong>，就是把数据装入该变量所代表的内存区的过程；程序 <strong>读取变量</strong>，就是从变量代表的内存区取值的过程。可以简单的理解：变量相当于一个有名称的容器，该容器用于装各种不同类型的数据。</p>
+<h3 id="对象和引用"><a href="#对象和引用" class="headerlink" title="对象和引用"></a>对象和引用</h3><p><img src="/images/19_03_06.jpg" alt="对象与引用"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Person p = new Person(&quot;Mike&quot;,20)</span><br></pre></td></tr></table></figure>
+<p>由上文中变量是需要是需要内存存储数据的，此语句中 <code>new Person(&quot;Mike&quot;,20)</code> 只是在堆内存中开辟出一块内存去存储这个对象，而 <code>Person p</code> 则需要在栈内存中开辟一块内存来存储变量以及相关内容，至于在此区域存储的到底是什么需要在赋值后才会具体化。在此例中，赋值语句后，变量 p 对应的栈内存存储的为新建对象 – new Person 的内存地址。</p>
+<h3 id="this-引用"><a href="#this-引用" class="headerlink" title="this 引用"></a>this 引用</h3><p>首先 this 代表一定是个对象，其次 this 出现在不同位置含义有所不同：</p>
+<ul>
+<li>在构造器中代表正在初始化的对象</li>
+<li>在方法中代码调用该方法的对象</li>
+</ul>
+<p>因此 static 方法中不能出现 this，因为 static 的方法属于类，是通过类去调用，此时 this 代表了类，违背了 this 代表的为一个对像的前提。</p>
+<p>同时 static 方法不可调用非 static 变量和方法也是基于这个原因，因为类中的变量和方法存在隐式的 this 引用，即为 this 作为调用者必须是一个对象。</p>
+<h3 id="方法重载"><a href="#方法重载" class="headerlink" title="方法重载"></a>方法重载</h3><p>方法名相同，而参数列表不同的现象称为方法重载。</p>
+<ul>
+<li>为什么返回值不作为方法重载的区分标准？</li>
+</ul>
+<p><strong>Java 调用方法时可以忽略返回值</strong>，如果将返回值作为重载的标准，那么存在以下情况：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int method();</span><br><span class="line">void method()</span><br><span class="line"></span><br><span class="line">void test()&#123;</span><br><span class="line">    method();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时 Java 系统将不能分辨出 test 方法中调用的 method() 是具体哪一个方法。</p>
+<h3 id="变量及其运行机制"><a href="#变量及其运行机制" class="headerlink" title="变量及其运行机制"></a>变量及其运行机制</h3><p>成员变量：</p>
+<ol>
+<li>类变量：从类的准备阶段开始存在，到系统完全销毁这个类。</li>
+<li>实例变量：从实例的创建始存在，到系统完全销毁这个实例。</li>
+</ol>
+<p>局部变量：</p>
+<ol>
+<li>形参</li>
+<li>方法内局部变量</li>
+<li>代码块中局部变量</li>
+</ol>
+<p>局部变量只要离开了相应的代码块(方法、代码块)，局部变量就会被销毁。</p>
+<h3 id="成员变量的初始化和内存中的运行机制"><a href="#成员变量的初始化和内存中的运行机制" class="headerlink" title="成员变量的初始化和内存中的运行机制"></a>成员变量的初始化和内存中的运行机制</h3><p>JVM 加载类经历以下几个阶段：</p>
+<ol>
+<li>类加载</li>
+<li>类验证</li>
+<li>类准备</li>
+<li>类解析</li>
+<li>类初始化</li>
+</ol>
+<p>当系统加载类或创建类实例时，系统会自动为成员变量分配内存，并赋初值。<br>Person 类如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">class Person&#123;</span><br><span class="line">    private static int phone;</span><br><span class="line">    private String name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Person 类使用</span><br><span class="line">Person a = new Person();</span><br><span class="line">a.phone = 110;</span><br><span class="line">a.name = &quot;mike&quot;;</span><br></pre></td></tr></table></figure></p>
+<p>当执行 <code>Person a = new Person();</code> 时，如果程序中第一次使用 Person 类， JVM 将会加载 Person 类，并初始化这个类。在类的准备阶段，<strong>JVM 将会该类的类变量分配内存空间并初始化</strong>。当 Person 类初始化完成后，系统中的内存情况如下图：</p>
+<p><img src="/images/2019_03_06_1.jpg" alt="类初始化"></p>
+<p>当类完成初始化后，JVM 将在 堆内存 中为 Person 类分配一块内存(JVM 会为Person类创建一个对象)，这块内存区包含了类变量 phone 的内存，并初始化它的初值。</p>
+<p>接着，系统创建一个 Person 对象，并把这个对象赋值给 p 变量， Person 对象中包含了实例变量–name，<strong>实例变量在创建实例时分配内存空间并赋初值</strong>。JVM 创建了第一个 Person 对象后，内存分配情况如下：</p>
+<p><img src="/images/2019_03_06_2.jpg" alt="实例变量初始化"></p>
+<p>当再次创建 Person 对象时，不需要再对 Person 类初始化。</p>
+<p>对类变量和实例变量赋值时,内存分配情况如下：</p>
+<p><img src="/images/2019_03_06_3.jpg" alt="赋值"></p>
+<p>其中，类变量为所有实例共有，每个实例都有权对其进行更改。</p>
+<h3 id="局部变量的初始化和内存中的运行机制"><a href="#局部变量的初始化和内存中的运行机制" class="headerlink" title="局部变量的初始化和内存中的运行机制"></a>局部变量的初始化和内存中的运行机制</h3><p>系统不会为局部变量进行初始化，所以局部变量必须手动初始化。</p>
+<p>与成员变量不同，局部变量的分配内存为所在的方法栈区，如果局部变量时基本数据类型，会直接存在方法栈中;如果为引用变量，则存放引用地址，通过该引用地址指向实际引用的对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">void test(int a,Person p)&#123;</span><br><span class="line">    ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>test 方法栈中内存分配情况如下：</p>
+<p><img src="/images/2019_03_06_4.jpg" alt="局部变量"></p>
+<h3 id="访问权限"><a href="#访问权限" class="headerlink" title="访问权限"></a>访问权限</h3><ul>
+<li>private:类私有</li>
+<li>default:同包可访问</li>
+<li>protected:同包及子类可访问</li>
+<li>public:所有类可访问</li>
+</ul>
+<h3 id="构造器与成员变量初始化"><a href="#构造器与成员变量初始化" class="headerlink" title="构造器与成员变量初始化"></a>构造器与成员变量初始化</h3><p>我们知道在创建一个对象时，系统会为这个对象的实例变量进行默认初始化，根据数据类型的不同初始值为：0、falase、null。如果想要改变默认初始化，想让系统创建对象时就位对象的实例变量显示指定初始值，可以通过构造器来实现。</p>
+<h3 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h3><h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><p>继承关系中，子类和父类拥有相同的实例变量时的内存模型：</p>
+<p><img src="" alt="图"></p>
+<h3 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h3><p>Java 引用变量有两个类型：<strong>编译时类型</strong> 和 <strong>运行时类型</strong>。编译时类型是由声明该变量时使用的类型决定，运行时类型是由实际赋给该变量的对象决定。</p>
+<p>当编译时类型和运行时类型不一致，就可能发生所谓的 <strong>多态</strong>。</p>
+<p>引用变量在编译时只能调用编译时类型所拥有的方法，运行时在可以执行其运行时类型所具有的方法。因此，在编写 Java 代码是，引用变量只能调用声明该变量时所用的类(编译时类型)中的方法，例如 <code>Object person = new Person();</code> ,<code>person</code> 只能调用 <code>Object</code> 类中的方法,不能调用 Person 中的方法。</p>
+<p>如果想要编译时类型调用运行时类型的方法，可以对引用变量进行强转型。</p>
+<h3 id="继承与组合"><a href="#继承与组合" class="headerlink" title="继承与组合"></a>继承与组合</h3><p>继承是实现类复用的重要手段，但是继承带来了一个坏处：破坏了封装性，即子类可以任意的访问父类的实例变量、重新父类的方法。</p>
+<p>为了保证父类良好的封装性不被子类任意更改，设计父类应遵循如下规则：</p>
+<ol>
+<li>尽量隐藏父类的内部数据，使用 private 修饰;</li>
+<li>不要让子类任意访问和修改方法。辅助方法使用 private 修饰；父类中可以被外界访问但是不可以被子类重新的方法使用 public final 修饰；希望被子类重写的方法使用 protected 修饰。</li>
+<li>尽量不要在父构造器中调用被子类重新的方法。</li>
+</ol>
+<p>针对第 3 条，特殊说明一下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">class A&#123;</span><br><span class="line">    public A()&#123;</span><br><span class="line">        test();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public void test()&#123;</span><br><span class="line">        sout(&quot;A&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class B extends A&#123;</span><br><span class="line">    private String des;</span><br><span class="line">    public void test()&#123;</span><br><span class="line">        sout(&quot;B&quot; + des.length());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//调用</span><br><span class="line">B b = new B();</span><br></pre></td></tr></table></figure>
+<p>系统在创建 B 实例时，会首先执行父类的构造器，在父构造器中调用了被父类重写的方法，此时执行的方法为子类的重写后的方法。此时 B 的实例变量 des 还没有初始化为 null，调用会发生空指针异常。</p>
+<p>产生此现象的原因我猜大致是因为这样：</p>
+<blockquote>
+<p>这个问题又牵涉到 this 引用的问题，在这个问题中我们很明确的表明当 this 出现在构造器中表示正在实例化的对象, A 构造器中 test() 方法的调用中隐藏了默认的 this 引用，所以此时 this 代表被实例化的 B 的对象，所以 A 中 test() 执行 B 中的 test() 方法。</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://mllgy.github.io/2019/03/06/Java-Basic/" data-id="cjt6lf9vb000s12fyh0fu6os4" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java-继承，对象，类初始化/">Java 继承，对象，类初始化</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/03/07/Java-Baseic-二/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">这些东西可能太新了</strong>
+      <div class="article-nav-title">
+        
+          Java Baseic 二
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/01/26/关于-Java-异常机制的补充/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">这些东西可能过时了</strong>
+      <div class="article-nav-title">关于 Java 异常机制的补充</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/DI/" style="font-size: 10px;">DI</a> <a href="/tags/Dagger2/" style="font-size: 10px;">Dagger2</a> <a href="/tags/Exception/" style="font-size: 20px;">Exception</a> <a href="/tags/GitPage/" style="font-size: 10px;">GitPage</a> <a href="/tags/Hexo/" style="font-size: 20px;">Hexo</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/Java-继承，对象，类初始化/" style="font-size: 10px;">Java 继承，对象，类初始化</a> <a href="/tags/Okhttp3/" style="font-size: 10px;">Okhttp3</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/内存分区/" style="font-size: 10px;">内存分区</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/03/08/字符串/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/03/07/Java-Baseic-二/">Java Baseic 二</a>
+          </li>
+        
+          <li>
+            <a href="/2019/03/06/Java-Basic/">Java Basic</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/26/关于-Java-异常机制的补充/">关于 Java 异常机制的补充</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/26/Java-异常机制浅析/">Java 异常机制浅析</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 GY<br>
+      巨大能量来源 <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">主页</a>
+  
+    <a href="/archives/" class="mobile-nav-link">文章</a>
+  
+</nav>
+    
+
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
