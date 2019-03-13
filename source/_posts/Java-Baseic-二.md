@@ -124,3 +124,23 @@ final String str4 = "b";
 String str5 = str3 + str4;
 sout(str1 == str5);//false
 ```
+
+### final 方法
+
+final 方法不可被重写，但是可以被重载。
+
+### final 类
+
+final 类不能拥有子类。
+
+### 不可变类(immutable)
+
+不可变类为创建该类的实例后，该实例的实例变量不可变。
+
+Java 提供的 8 个包装类和 String 为不可变类。
+
+自定义不可变类需要遵循以下规则：
+1. 使用 private final 修饰成员变量
+2. 提供构造器，传入初始值
+3. 仅提供 getter 方法
+4. 如果有必要，重新 equal() 和 hashcode() 方法自定义相等的逻辑
