@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://mllgy.github.io/"/>
-  <updated>2019-03-08T03:52:16.292Z</updated>
+  <updated>2019-03-13T02:44:51.735Z</updated>
   <id>https://mllgy.github.io/</id>
   
   <author>
@@ -17,23 +17,30 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title></title>
-    <link href="https://mllgy.github.io/2019/03/08/%E5%AD%97%E7%AC%A6%E4%B8%B2/"/>
-    <id>https://mllgy.github.io/2019/03/08/字符串/</id>
-    <published>2019-03-08T03:52:16.254Z</published>
-    <updated>2019-03-08T03:52:16.292Z</updated>
+    <title>Android 焦点机制</title>
+    <link href="https://mllgy.github.io/2019/03/11/Android-%E7%84%A6%E7%82%B9%E6%9C%BA%E5%88%B6/"/>
+    <id>https://mllgy.github.io/2019/03/11/Android-焦点机制/</id>
+    <published>2019-03-11T03:08:29.000Z</published>
+    <updated>2019-03-13T02:44:51.735Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="No-touch-Mode-非触摸模式-和-Touch-Mode-触摸模式"><a href="#No-touch-Mode-非触摸模式-和-Touch-Mode-触摸模式" class="headerlink" title="No-touch Mode(非触摸模式) 和 Touch Mode(触摸模式)"></a>No-touch Mode(非触摸模式) 和 Touch Mode(触摸模式)</h3><p>Google 把触摸模式分为 No-touch Mode 和 Touch Mode。Android Phone 由于触摸屏，所以讨论的为 <code>触摸模式</code>，而像 Andorid TV、键盘、轨迹球一般为 <code>非触摸模式</code>。</p><h3 id="Focus-焦点-、Focusable-可聚焦"><a href="#Focus-焦点-、Focusable-可聚焦" class="headerlink" title="Focus(焦点)、Focusable(可聚焦)"></a>Focus(焦点)、Focusable(可聚焦)</h3><p>在像 Android TV 、轨迹球这类设备上，我们可能需要通过遥控器等设备选择相应的选项，在交互过程中，我们选中的控件获得焦点，并通过颜色改变、高亮、突出等形式表现出来。<br>根据 Google 官方文档，在触摸模式下，其实没有没有焦点的概念，或者说此模式下的获得焦点的表现形式不同。在触摸模式下，Focus 以一种特别的方式 – Focusable 存在。<br><a id="more"></a><br>根据用户的不同行为,两种模式可以不断切换：<br>在用户点击屏幕时，设备会进入触摸模式，而当用户点击轨迹球时，App 会立即退出触摸模式进入非触摸模式，并寻找一个控件获得焦点。</p><h3 id="触摸模式与-Focusable"><a href="#触摸模式与-Focusable" class="headerlink" title="触摸模式与 Focusable"></a>触摸模式与 Focusable</h3><p>Focusable 此特殊模式是为接收文本输入的控件创建的，如 EditText。在触摸模式中，如果控件是可聚焦的(Focusable),只要用户点击该控件，该控件就会得到焦点，反之控件是不会获得焦点的。</p><p>Foucusable 其实为控件的一个属性，可以通过代码 <code>setFocusableInTouchMode</code> 或 xml中<code>android:focusableInTouchMode</code>设置控件是否可聚焦。</p><h3 id="setFocusableInTouchMode-和-setFocusable"><a href="#setFocusableInTouchMode-和-setFocusable" class="headerlink" title="setFocusableInTouchMode 和 setFocusable"></a>setFocusableInTouchMode 和 setFocusable</h3><ul><li>setFocusable:设置控件是否可以获得焦点，可以通过 isFocusable() 获得状态。</li><li>setFocusableInTouchMode: 在触摸模式下，可以通过setFocusableInTouchMode 来设置控件是否可聚焦，可以通过isFocusableInTouchMode() 获得状态。</li></ul><p>大部分控件的 <code>setFocusableInTouchMode</code> 属性均为 false ，至于 EditText 的 <code>setFocusableInTouchMode</code> 的属性为 true，这也就是为什么 EditText 会率先获得屏幕焦点的原因。</p><h3 id="焦点监听与事件监听"><a href="#焦点监听与事件监听" class="headerlink" title="焦点监听与事件监听"></a>焦点监听与事件监听</h3><p>当为控件设置可聚焦属性：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;Button</span><br><span class="line">      android:id=&quot;@+id/btnOne&quot;</span><br><span class="line">      android:layout_width=&quot;match_parent&quot;</span><br><span class="line">      android:text=&quot;one&quot;</span><br><span class="line">      android:focusableInTouchMode=&quot;true&quot;   </span><br><span class="line">      android:layout_height=&quot;wrap_content&quot;/&gt;</span><br></pre></td></tr></table></figure></p><p>同时，为该控件设置了点击事件、焦点监听，此时是需要特别注意的：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">btnOne.setOnclickListener&#123;</span><br><span class="line">    Log.e(&quot;TAG&quot;,&quot;click&quot;)</span><br><span class="line">&#125;</span><br><span class="line">btnOne.setOnFocusChangeListener&#123; v, hasFocus -&gt;</span><br><span class="line">    Log.e(&quot;TAG&quot;,&quot;focus change&quot; + hasFocus)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>当我们点击 Button 时，此时 Log 日志：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TAG focus change true</span><br></pre></td></tr></table></figure></p><p>而不会响应点击事件，想要 Button 响应点击事件，需要再次点击该按钮。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TAG click</span><br></pre></td></tr></table></figure></p><p>在这种情况下，需要点击两次才能让 Button 响应点击事件：</p><ol><li>Button 获得焦点</li><li>Button 响应点击事件</li></ol><p>所以 Google 建议使用 <code>focusableInTouchMode</code> 之前，需要三思后行。</p><h3 id="descendantFocusability"><a href="#descendantFocusability" class="headerlink" title="descendantFocusability"></a>descendantFocusability</h3><p><code>Defines the relationship between the ViewGroup and its descendants when looking for a View to take focus.</code></p><p>该属性的字面意思: 子代获取焦点的能力。该属性定义的是当一个 子View 获取焦点时， ViewGroup 与 子View 之间的关系。</p><ul><li><strong>beforeDescendants</strong>：Viewgroup 会优先其子类控件而获取到焦点</li><li><strong>afterDescendants</strong>：Viewgroup 只有当其子类控件不需要获取焦点时才获取焦点</li><li><strong>blocksDescendants</strong>：Viewgroup 会覆盖子类控件而直接获得焦点</li></ul>]]></content>
     
     <summary type="html">
     
+      &lt;h3 id=&quot;No-touch-Mode-非触摸模式-和-Touch-Mode-触摸模式&quot;&gt;&lt;a href=&quot;#No-touch-Mode-非触摸模式-和-Touch-Mode-触摸模式&quot; class=&quot;headerlink&quot; title=&quot;No-touch Mode(非触摸模式) 和 Touch Mode(触摸模式)&quot;&gt;&lt;/a&gt;No-touch Mode(非触摸模式) 和 Touch Mode(触摸模式)&lt;/h3&gt;&lt;p&gt;Google 把触摸模式分为 No-touch Mode 和 Touch Mode。Android Phone 由于触摸屏，所以讨论的为 &lt;code&gt;触摸模式&lt;/code&gt;，而像 Andorid TV、键盘、轨迹球一般为 &lt;code&gt;非触摸模式&lt;/code&gt;。&lt;/p&gt;
+&lt;h3 id=&quot;Focus-焦点-、Focusable-可聚焦&quot;&gt;&lt;a href=&quot;#Focus-焦点-、Focusable-可聚焦&quot; class=&quot;headerlink&quot; title=&quot;Focus(焦点)、Focusable(可聚焦)&quot;&gt;&lt;/a&gt;Focus(焦点)、Focusable(可聚焦)&lt;/h3&gt;&lt;p&gt;在像 Android TV 、轨迹球这类设备上，我们可能需要通过遥控器等设备选择相应的选项，在交互过程中，我们选中的控件获得焦点，并通过颜色改变、高亮、突出等形式表现出来。&lt;br&gt;根据 Google 官方文档，在触摸模式下，其实没有没有焦点的概念，或者说此模式下的获得焦点的表现形式不同。在触摸模式下，Focus 以一种特别的方式 – Focusable 存在。&lt;br&gt;
+    
     </summary>
     
+    
+      <category term="焦点机制" scheme="https://mllgy.github.io/tags/%E7%84%A6%E7%82%B9%E6%9C%BA%E5%88%B6/"/>
     
   </entry>
   
   <entry>
     <title>Java Baseic 二</title>
-    <link href="https://mllgy.github.io/2019/03/07/Java-Baseic-%E4%BA%8C/"/>
-    <id>https://mllgy.github.io/2019/03/07/Java-Baseic-二/</id>
+    <link href="https://mllgy.github.io/2019/03/07/Java-Basic-%E4%BA%8C/"/>
+    <id>https://mllgy.github.io/2019/03/07/Java-Basic-二/</id>
     <published>2019-03-07T04:56:36.000Z</published>
     <updated>2019-03-12T06:47:07.046Z</updated>
     
@@ -54,8 +61,8 @@
   
   <entry>
     <title>Java Basic</title>
-    <link href="https://mllgy.github.io/2019/03/06/Java-Basic/"/>
-    <id>https://mllgy.github.io/2019/03/06/Java-Basic/</id>
+    <link href="https://mllgy.github.io/2019/03/06/Java-Basic-%E4%B8%80/"/>
+    <id>https://mllgy.github.io/2019/03/06/Java-Basic-一/</id>
     <published>2019-03-06T06:31:33.000Z</published>
     <updated>2019-03-07T04:55:56.207Z</updated>
     
