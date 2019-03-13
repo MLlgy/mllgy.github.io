@@ -1,7 +1,7 @@
 ---
 title: Android 焦点机制
 date: 2019-03-11 11:08:29
-tags:[焦点机制]
+tags: [焦点机制]
 ---
 
 
@@ -68,6 +68,8 @@ TAG click
 所以 Google 建议使用 `focusableInTouchMode` 之前，需要三思后行。
 
 ### descendantFocusability
+
+`Defines the relationship between the ViewGroup and its descendants when looking for a View to take focus.`
 
 该属性的字面意思: 子代获取焦点的能力。该属性定义的是当一个 子View 获取焦点时， ViewGroup 与 子View 之间的关系。
 
