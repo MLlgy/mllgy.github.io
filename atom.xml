@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://mllgy.github.io/"/>
-  <updated>2019-03-13T02:44:51.735Z</updated>
+  <updated>2019-03-25T07:11:28.685Z</updated>
   <id>https://mllgy.github.io/</id>
   
   <author>
@@ -15,6 +15,189 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>设计六大准则(设计模式之禅)</title>
+    <link href="https://mllgy.github.io/2019/03/19/%E8%AE%BE%E8%AE%A1%E5%85%AD%E5%A4%A7%E5%87%86%E5%88%99/"/>
+    <id>https://mllgy.github.io/2019/03/19/设计六大准则/</id>
+    <published>2019-03-19T04:58:37.000Z</published>
+    <updated>2019-03-25T07:11:28.685Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="单一职责原则-Single-Responsibility-Principle-SRP"><a href="#单一职责原则-Single-Responsibility-Principle-SRP" class="headerlink" title="单一职责原则 (Single Responsibility Principle)(SRP)"></a>单一职责原则 (Single Responsibility Principle)(SRP)</h3><p><strong>定义：</strong> 应该有且仅有一个原因引起类的变更。</p><p><strong>操作：</strong></p><ol><li>当一个类的几个职责之间没有相互依赖时，可以考虑将职责进行拆分。</li><li>SRP原则适用于接口、类，同时也适用于方法，一个方法尽可能的做一件事。</li></ol><p><strong>好处：</strong></p><ol><li>降低类的复杂度，实现什么职责都有明显的定义</li><li>可读性提高、可维护性强</li><li>变更风险低</li></ol><p><strong>对于单一职责原则，接口一定要做到单一职责，类的设计尽量做到只要一个原因引起变化。</strong></p><a id="more"></a><h3 id="里氏替换原则-Liskov-Substitution-Principle-LSP"><a href="#里氏替换原则-Liskov-Substitution-Principle-LSP" class="headerlink" title="里氏替换原则(Liskov Substitution Principle)(LSP)"></a>里氏替换原则(Liskov Substitution Principle)(LSP)</h3><p><strong>继承的优点</strong>：</p><ol><li>代码共享，每个子类拥有父类的方法和属性；</li><li>提高代码的重用性；</li><li>提高代码的扩展性，可 “随意” 重写父类方法；</li></ol><p><strong>继承的缺点：</strong></p><ol><li>继承具有入侵性，实现父类就必须拥有父类的方法和属性；</li><li>降低代码的灵活性，原因同上；</li><li>增强了耦合性。父类中的常量、变量、方法修改后，影响子类。</li></ol><p><strong>定义：</strong></p><p>凡是引用父类的地方都可以透明的使用其子类对象，反之，不成立。</p><p><strong>引申义：</strong></p><ol><li>子类必须完全实现父类的方法</li></ol><p><em>在类中调用其他类时 <code>务必使用父类或接口</code>，如果不能使用父类或接口，说明类的设计已经违反了 LSP 原则。</em></p><p>如果子类不能完整的实现父类中的方法或者父类中的某些方法在子类中已经发生畸变，则建议断开父子继承关系，采用依赖、聚合、组合等关系代替继承。</p><ol start="2"><li><p>子类可以有自己的方法。这也就是 LSP 原则不能反过来用的原因。</p></li><li><p>覆盖或实现父类方法时，输入参数可以被放大。 </p></li><li><p>覆盖或实现父类方法时，输出结果可以被缩小。</p></li></ol><p><strong>优点：</strong></p><p>里氏替换原则的目的是增强程序的健壮性，即使增加子类，原有的子类还可以继续运行。在实际项目中，每个子类对于不同的业务含义，使用父类作为参数，传递不同的子类完成不同的业务逻辑。</p><h3 id="依赖倒置-Dependence-Inversion-Principle-DIP"><a href="#依赖倒置-Dependence-Inversion-Principle-DIP" class="headerlink" title="依赖倒置(Dependence Inversion Principle)(DIP)"></a>依赖倒置(Dependence Inversion Principle)(DIP)</h3><p><strong>依赖倒置含义：</strong></p><ol><li>高层模块不应该依赖低层模块，两者都应该依赖抽象。</li><li>抽象不应该依赖细节。</li><li>细节应该依赖抽象。</li></ol><p><strong>具体含义：</strong></p><p>低层模块：基本逻辑</p><p>高层模块：基本逻辑的组合</p><p>抽象：接口或抽象类</p><p>细节：实现类、继承子类</p><p><strong><em>模块之间的关系通过抽象产生</em></strong>，实现类之间不能直接发生依赖关系，其依赖关系通过上层的接口或者抽象类产生。</p><p>接口或抽象类不依赖实现类，实现类依赖接口或抽象类。</p><p><strong>优点：</strong></p><p>采用依赖倒置原则可以减少类间的耦合关系(更准确的说是(通过抽象类之间的关系)降低实现类之间的关系)，提高系统的稳定性，降低开发风险，提高代码的可读性和维护性。</p><p>抽象是对实现的约束，对依赖者而言，也是一种契约，不仅约束自己，同时还约束自己与外界的关系，其目的是保证所有的而细节不脱离契约的范畴，确保约束的双方按照既定的契约(抽象)共同发展，只要抽象这根基线存在，细节就不会超出范围。</p><p><strong>依赖关系</strong></p><p>依赖关系的概、具体表现、UML 图例表示可以参见 <a href="https://blog.csdn.net/Strange_Monkey/article/details/81531727" target="_blank" rel="noopener">Java 对象间关系以及 UML 类图表示方法</a> 下面简写如下：</p><ol><li>构造器函数传递依赖对象</li><li>方法中参数传递对象</li><li>接口声明中声明依赖对象。</li></ol><p><strong>最佳实践：</strong></p><p>依赖倒置原则的本质是 <code>通过抽象(抽象类或接口类)使各个类或模块的实现彼此独立</code>，不互相影响，实现模块间的松耦合，如何做：</p><ol><li>每个类尽量都有接口或抽象类，这是依赖倒置原则的基本要求，<strong>有了抽象才有可能倒置</strong>。</li><li>变量的表面类型(编译类型)尽量是接口或抽象类。</li><li>任何类都不应该从具体类派生出来。</li><li>尽量不要覆盖基类的方法(该方法已经在基类中实现)。如果说基类是一个抽象类，而且这个方法已经被实现了，子类尽量不要覆写。类间的依赖是抽象，覆写类抽象方法，对依赖的稳定性有所影响。</li><li>集合里氏替换原则。</li></ol><h3 id="接口隔离原则"><a href="#接口隔离原则" class="headerlink" title="接口隔离原则"></a>接口隔离原则</h3><p>再此层面上 接口分为：</p><ol><li>实例接口 (类也是一种接口)</li><li>类接口(interface)</li></ol><p>隔离：即把一个接口中的多种职责进一步拆分出来，作为两个颗粒度更小的接口，此刻两个职责被单独隔离处理。</p><p><strong>定义：</strong></p><p>接口尽量细化，同时接口中的方法尽量少。</p><p><strong>如何对接口进行约束：</strong></p><ol><li>接口尽量小，满足单一职责原则。</li><li>接口高内聚。</li></ol><p>针对于接口高内聚就是要在接口中尽量少公布 public 方法，接口是对外的承诺，对外承诺越少越有利于系统的开发，这样变更的风险越低。</p><h3 id="迪米特法则（最少知识原则）-Least-Knowledge-Principle-LKP"><a href="#迪米特法则（最少知识原则）-Least-Knowledge-Principle-LKP" class="headerlink" title="迪米特法则（最少知识原则）(Least Knowledge Principle,LKP)"></a>迪米特法则（最少知识原则）(Least Knowledge Principle,LKP)</h3><p>一个对象应该对其他对象有最少的了解，换句话说，一个类应该对自己需要耦合或调用的类知道的最少，被耦合的类或这被调用的类内部如何复杂都和该类没有关系，我只需知道它们提供的 public 方法。</p><p><strong>只需要和朋友类联系：</strong></p><p>朋友类：出现在成员变量、方法的输入和输出参数的类为朋友类。<br>其实朋友类就是产生 <code>依赖关系的类</code>。</p><p><strong>朋友类中不应该向对方暴露的过多</strong></p><p>如果可能的话，尽量向其他类暴露尽量少的方法。</p><p><strong>自己的自己拥有</strong><br>如果一个类可以放在本类中，既不会增加类间关系，也不会对本类产生负面影响，那就放在本类中。</p><p><strong>尽量少的使用 Serializable</strong></p><h3 id="开闭原则"><a href="#开闭原则" class="headerlink" title="开闭原则"></a>开闭原则</h3><p>一个软件实体如类、模块、函数应该对扩展开发，对修改关闭。</p><p>开闭原则是最基础的一个原则，前面介绍的 5 个原则都是在开闭原则的具体形态，它们为指导设计的工具和方法，而开闭原则才是精神领袖。</p><p><strong>原则细节</strong></p><p>应该尽量通过扩展实体行为的方式来实现变化，而不是通过修改已有的代码来实现变化。</p><p>在软件开发中，尽可能减少代码粒度，代码粒度越小，被复用的可能越大。</p><p><strong>如何使用</strong></p><ol><li>抽象约束。</li></ol><p>具体表现为：</p><pre><code>1. 在对接口或抽象类进行扩展时，不允许出现接口或抽象类中不存在的 public 方法。2. 参数类型、引用对象尽量使用接口或抽象类，而不是实现类。3. 抽象应保持稳定，一旦确定不允许更改。</code></pre><ol start="2"><li>封装变化</li></ol><p>含义：</p><pre><code>1. 将相同的变化封装到接口或抽象类中2. 将不同的变化封装到不同的接口或抽象类中，不应该两个变化出现在同一个接口或抽象中。</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;单一职责原则-Single-Responsibility-Principle-SRP&quot;&gt;&lt;a href=&quot;#单一职责原则-Single-Responsibility-Principle-SRP&quot; class=&quot;headerlink&quot; title=&quot;单一职责原则 (Single Responsibility Principle)(SRP)&quot;&gt;&lt;/a&gt;单一职责原则 (Single Responsibility Principle)(SRP)&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;定义：&lt;/strong&gt; 应该有且仅有一个原因引起类的变更。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;操作：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;当一个类的几个职责之间没有相互依赖时，可以考虑将职责进行拆分。&lt;/li&gt;
+&lt;li&gt;SRP原则适用于接口、类，同时也适用于方法，一个方法尽可能的做一件事。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;好处：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;降低类的复杂度，实现什么职责都有明显的定义&lt;/li&gt;
+&lt;li&gt;可读性提高、可维护性强&lt;/li&gt;
+&lt;li&gt;变更风险低&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;对于单一职责原则，接口一定要做到单一职责，类的设计尽量做到只要一个原因引起变化。&lt;/strong&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="设计模式六大原则" scheme="https://mllgy.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%85%AD%E5%A4%A7%E5%8E%9F%E5%88%99/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>代码混淆</title>
+    <link href="https://mllgy.github.io/2019/03/16/%E4%BB%A3%E7%A0%81%E6%B7%B7%E6%B7%86/"/>
+    <id>https://mllgy.github.io/2019/03/16/代码混淆/</id>
+    <published>2019-03-16T01:08:36.000Z</published>
+    <updated>2019-03-16T01:08:36.696Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Java Basic 三</title>
+    <link href="https://mllgy.github.io/2019/03/15/Java-Basic-%E4%B8%89/"/>
+    <id>https://mllgy.github.io/2019/03/15/Java-Basic-三/</id>
+    <published>2019-03-15T09:08:48.000Z</published>
+    <updated>2019-03-25T08:18:18.236Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="抽象类"><a href="#抽象类" class="headerlink" title="抽象类"></a>抽象类</h3><p>存在只定义了方法的签名，没有方法的类称为抽象类。</p><ul><li>抽象类和抽象方法使用 abstract 修饰</li><li>抽象类不能实例化</li><li>抽象类可以没有抽象方法，可以有非抽象方法</li><li>抽象类可以有成员变量、方法(抽象方法和非抽象方法)、构造器、初始化块、内部类(接口、枚举)</li><li>含有抽象方法的类(定义了一个抽象方法的类、继承一个抽象方法但是没有完全实现父类中抽象的方法的类、实现一个接口但是没有完全实现接口中的方法)只能为抽象类</li></ul><p>abstract 不能修饰成员变量和类方法，因为成员变量属于类实例，而抽象类不能实例化，抽象方法没有方法体，调用出错。<br><a id="more"></a></p><h3 id="抽象类的作用"><a href="#抽象类的作用" class="headerlink" title="抽象类的作用"></a>抽象类的作用</h3><p>抽象类是将多个子类向高层抽象，为子类提供行为模板,定义了子类中存在的共有行为。</p><h3 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h3><p>接口进一步将抽象类抽象。</p><p>接口定义了多个类共同的公共行为规范。</p><p>接口中不能含有</p><ol><li>构造器</li><li>初始化块</li></ol><p>但是接口中包含：</p><ol><li>成员变量(只能是静态)</li><li>方法(抽象实例方法、类方法、默认方法)</li><li>内部类(内部接口、枚举)</li></ol><h3 id="接口中的成员"><a href="#接口中的成员" class="headerlink" title="接口中的成员"></a>接口中的成员</h3><p>接口中的所有成员的访问权限为 <code>public</code> 。<br>对于接口中的静态常量而言，它们是接口相关的，系统会自动为这些成员变量增加 static 和 final 两个修饰符，必须在定义时进行初始化。</p><h3 id="接口中的默认方法、静态方法"><a href="#接口中的默认方法、静态方法" class="headerlink" title="接口中的默认方法、静态方法"></a>接口中的默认方法、静态方法</h3><p>接口中的默认方法和静态方法都可以实现，拥有方法体。</p><p>在 Java8 之前接口中的所有方法均为抽象方法，但是在 Java8 后系统为接口增加了默认方法，此方法增加了接口的可扩展性，如果需要在已有业务上需要为接口增加新的方法来实现增加业务的目的。那么 Java8 之前如果为接口增加方法，那么所有实现类均需要更改。在 Java8 后增加而 <code>默认方法</code>，实现类不是必须要实现该方法，如果实现了没有显示实现该方法，那么调用时使用默认实现。</p><p>而接口中的静态方法，需要通过接口名实现调用，在默认方法中可以调用本类的默认方法。</p><h3 id="接口的实现"><a href="#接口的实现" class="headerlink" title="接口的实现"></a>接口的实现</h3><p><em>一个类实现了一个接口后，这个类需要实现这个接口中的所有抽象方法，否则，这个类将保留从接口继承的抽象方法，则这个类必须定义为抽象类</em>。</p><h3 id="抽象类和接口"><a href="#抽象类和接口" class="headerlink" title="抽象类和接口"></a>抽象类和接口</h3><p><strong>同：</strong></p><ol><li>不能被实例化，只能被其他类继承或实现。</li><li>都可以包含抽象方法，实现或继承的子类需要实现这些抽象方法。</li></ol><p><strong>异：</strong></p><p>接口作为系统与外界交互的窗口，接口体现的是一种规范,对于接口的实现者来说，接口规定了实现者必须向外提供哪些服务(以方法的形式)；对于接口的调用者来说，接口规定了可以调用哪些服务，以及如何调用服务(如何调用方法)。</p><p>抽象作为系统中多个子类的共同父类，它体现的是一种模板式设计。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;抽象类&quot;&gt;&lt;a href=&quot;#抽象类&quot; class=&quot;headerlink&quot; title=&quot;抽象类&quot;&gt;&lt;/a&gt;抽象类&lt;/h3&gt;&lt;p&gt;存在只定义了方法的签名，没有方法的类称为抽象类。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;抽象类和抽象方法使用 abstract 修饰&lt;/li&gt;
+&lt;li&gt;抽象类不能实例化&lt;/li&gt;
+&lt;li&gt;抽象类可以没有抽象方法，可以有非抽象方法&lt;/li&gt;
+&lt;li&gt;抽象类可以有成员变量、方法(抽象方法和非抽象方法)、构造器、初始化块、内部类(接口、枚举)&lt;/li&gt;
+&lt;li&gt;含有抽象方法的类(定义了一个抽象方法的类、继承一个抽象方法但是没有完全实现父类中抽象的方法的类、实现一个接口但是没有完全实现接口中的方法)只能为抽象类&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;abstract 不能修饰成员变量和类方法，因为成员变量属于类实例，而抽象类不能实例化，抽象方法没有方法体，调用出错。&lt;br&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Docker基本使用</title>
+    <link href="https://mllgy.github.io/2019/03/14/Docker%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/"/>
+    <id>https://mllgy.github.io/2019/03/14/Docker基本使用/</id>
+    <published>2019-03-14T13:49:55.000Z</published>
+    <updated>2019-03-15T02:24:45.784Z</updated>
+    
+    <content type="html"><![CDATA[<p>### </p><p><strong>docker ps:</strong> 查看本机上正在运行的容器<br><strong>docker ps -l:</strong> 查看本机上所有的容器</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;### &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;docker ps:&lt;/strong&gt; 查看本机上正在运行的容器&lt;br&gt;&lt;strong&gt;docker ps -l:&lt;/strong&gt; 查看本机上所有的容器&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
+      <category term="Docker" scheme="https://mllgy.github.io/tags/Docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>homebrew</title>
+    <link href="https://mllgy.github.io/2019/03/14/homebrew/"/>
+    <id>https://mllgy.github.io/2019/03/14/homebrew/</id>
+    <published>2019-03-14T07:29:58.000Z</published>
+    <updated>2019-03-14T08:08:39.438Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>HomeBrew 为 Mac OSX 上的 软件管理工具，在 Mac 中可以方便的安装、卸载、更新软件，类似于 Linux 下的 apt-get、yum、dnf 等。</p><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>具体安装见 <a href="https://brew.sh/index_zh-cn" target="_blank" rel="noopener">官网</a></p><h3 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h3><p><strong>brew search xx:</strong><br><strong>brew install xx:</strong><br><strong>brew remove xx: </strong></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h3 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h3&gt;&lt;p&gt;HomeBrew 为 Mac OSX 上的 软件管理工具，在 Mac 中可以方便的安装、卸载、更新软件，类似于 Linux 下的 apt-g
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>requestDisallowInterceptTouchEvent</title>
+    <link href="https://mllgy.github.io/2019/03/14/requestDisallowInterceptTouchEvent/"/>
+    <id>https://mllgy.github.io/2019/03/14/requestDisallowInterceptTouchEvent/</id>
+    <published>2019-03-14T03:54:33.000Z</published>
+    <updated>2019-03-14T11:15:50.581Z</updated>
+    
+    <content type="html"><![CDATA[<p>### </p><p>调用 <code>requestDisallowInterceptTouchEvent</code> 方法会置位 FLAG_DISALLOW_INTERCEPTER 标志位，ViewGroup 将无法拦截除了 ACTION_DOWN 以外的事件,至于 ViewGroup 为什么还是会拦截 ACTION_DOWN 事件，是因为 ViewGruop 在 ACTION_DOWN 事件时会重新置位 FLAG_DISALLOW_INTERCEPTER 标志。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;### &lt;/p&gt;
+&lt;p&gt;调用 &lt;code&gt;requestDisallowInterceptTouchEvent&lt;/code&gt; 方法会置位 FLAG_DISALLOW_INTERCEPTER 标志位，ViewGroup 将无法拦截除了 ACTION_DOWN 以外的事件,至于
+      
+    
+    </summary>
+    
+    
+      <category term="View" scheme="https://mllgy.github.io/tags/View/"/>
+    
+      <category term="事件分发机制" scheme="https://mllgy.github.io/tags/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>拖动百度地图出现黑影的解决方法</title>
+    <link href="https://mllgy.github.io/2019/03/13/%E6%8B%96%E5%8A%A8%E7%99%BE%E5%BA%A6%E5%9C%B0%E5%9B%BE%E5%87%BA%E7%8E%B0%E9%BB%91%E5%BD%B1%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/"/>
+    <id>https://mllgy.github.io/2019/03/13/拖动百度地图出现黑影的解决方法/</id>
+    <published>2019-03-13T08:29:09.000Z</published>
+    <updated>2019-03-14T02:12:43.283Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="问题描述及解决方案"><a href="#问题描述及解决方案" class="headerlink" title="问题描述及解决方案"></a>问题描述及解决方案</h3><p><code>NestScrollView</code> 嵌套 <code>MapView</code> 在滑动整个布局时，<code>MapView</code> 的上下边界出现黑影。</p><p>问题解决：</p><p>使用 <code>TextureMapView</code> 替换布局中的 <code>MapView</code> 并开启硬件加速，如果只在当前 Activity 中开启硬件加速，执行在清单文件中该 Activity 注册信息中添加标签：<code>android:hardwareAccelerated=&quot;true&quot;</code> 。</p><h3 id="硬件加速"><a href="#硬件加速" class="headerlink" title="硬件加速"></a>硬件加速</h3>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h3 id=&quot;问题描述及解决方案&quot;&gt;&lt;a href=&quot;#问题描述及解决方案&quot; class=&quot;headerlink&quot; title=&quot;问题描述及解决方案&quot;&gt;&lt;/a&gt;问题描述及解决方案&lt;/h3&gt;&lt;p&gt;&lt;code&gt;NestScrollView&lt;/code&gt; 嵌套 &lt;code&gt;MapVi
+      
+    
+    </summary>
+    
+    
+      <category term="百度地图黑影" scheme="https://mllgy.github.io/tags/%E7%99%BE%E5%BA%A6%E5%9C%B0%E5%9B%BE%E9%BB%91%E5%BD%B1/"/>
+    
+      <category term="硬件加速" scheme="https://mllgy.github.io/tags/%E7%A1%AC%E4%BB%B6%E5%8A%A0%E9%80%9F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>单例的几种写法</title>
+    <link href="https://mllgy.github.io/2019/03/13/%E5%8D%95%E4%BE%8B%E7%9A%84%E5%87%A0%E7%A7%8D%E5%86%99%E6%B3%95/"/>
+    <id>https://mllgy.github.io/2019/03/13/单例的几种写法/</id>
+    <published>2019-03-13T03:37:05.000Z</published>
+    <updated>2019-03-13T03:37:05.730Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>Android 焦点机制</title>
