@@ -99,6 +99,15 @@ adb shell am force-stop com.gy // 关闭指定 app 的一切进程与服务
 
 ### adb shell pm 
 
+```
+adb shell pm list packages
+
+adb shell pm clear <packagename>:清除数据与缓存
+
+adb shell pm path <packagename>:应用安装路径
+
+```
+
 ### adb shell wm 
 屏幕相关
 
