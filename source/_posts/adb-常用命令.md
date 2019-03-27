@@ -129,4 +129,16 @@ adb shell wm density reset: 恢复屏幕密度
 
 ### adb shell dumpsys 
 
-查看运行状态
+查看运行状态,打印出当前系统的系统信息，默认打印出设备中所有的 service 的信息。
+
+查看 Service List
+
+```
+adb shell dumpsys
+adb shell service list
+```
+查看屏幕分辨率
+```
+adb shell dumpsys window displays
+db shell dumpsys window | grep init
+```
