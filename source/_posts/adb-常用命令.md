@@ -1,7 +1,7 @@
 ---
 title: adb 常用命令
 date: 2019-03-26 11:32:49
-tags: []
+tags: [adb]
 ---
 
 ### 概述
@@ -142,3 +142,21 @@ adb shell service list
 adb shell dumpsys window displays
 db shell dumpsys window | grep init
 ```
+
+
+### adb shell dumpsys activity 内容组成
+
+1. ACTIVITY MANAGER SETTINGS(dumpsys activity settings)
+2. ACTIVITY MANAGER PENDING INTENTS (dumpsys activity intents)
+3. ACTIVITY MANAGER BROADCAST STATE(dumpsys activity broadcasts)
+4. ACTIVITY MANAGER CONTENT PROVIDERS(dumpsys activity providers)
+5. ACTIVITY MANAGER URI PERMISSIONS (dumpsys activity permissions)
+6. ACTIVITY MANAGER SERVICES (dumpsys activity services)
+7. ACTIVITY MANAGER RECENT TASKS (dumpsys activity recents)
+8. ACTIVITY MANAGER LAST ANR (dumpsys activity lastanr)
+9. ACTIVITY MANAGER STARTER (dumpsys activity starter)
+10. ACTIVITY MANAGER ACTIVITIES (dumpsys activity activities)
+11. ACTIVITY MANAGER RUNNING PROCESSES (dumpsys activity processes)
+
+
+使用 `adb shell dumpsys activity activities | sed -En -e '/Running activities/,/Run #0/p'` 限制仅输出 "Running activities" 列表。
