@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>adb 常用命令 | Enjoy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="概述adb(Android Debug Briage) 一个通用的命令行工具，允许使用它与模拟器或 Android 设备进行通信。 adb 为一个 客户端-服务器程序，包含三个组件：  客户端。发送命令，在电脑端运行，发出 adb 命令从命令行终端调用客户端。 后台程序。在相应的设备(模拟器、真机)上运行命令，作为后台进程 在 设备上运行。 服务器。管理客户端和后台程序之间的通信，在 开发计算机">
+<meta name="keywords" content="adb">
+<meta property="og:type" content="article">
+<meta property="og:title" content="adb 常用命令">
+<meta property="og:url" content="https://mllgy.github.io/2019/03/26/adb-常用命令/index.html">
+<meta property="og:site_name" content="Enjoy">
+<meta property="og:description" content="概述adb(Android Debug Briage) 一个通用的命令行工具，允许使用它与模拟器或 Android 设备进行通信。 adb 为一个 客户端-服务器程序，包含三个组件：  客户端。发送命令，在电脑端运行，发出 adb 命令从命令行终端调用客户端。 后台程序。在相应的设备(模拟器、真机)上运行命令，作为后台进程 在 设备上运行。 服务器。管理客户端和后台程序之间的通信，在 开发计算机">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-04-02T07:41:02.113Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="adb 常用命令">
+<meta name="twitter:description" content="概述adb(Android Debug Briage) 一个通用的命令行工具，允许使用它与模拟器或 Android 设备进行通信。 adb 为一个 客户端-服务器程序，包含三个组件：  客户端。发送命令，在电脑端运行，发出 adb 命令从命令行终端调用客户端。 后台程序。在相应的设备(模拟器、真机)上运行命令，作为后台进程 在 设备上运行。 服务器。管理客户端和后台程序之间的通信，在 开发计算机">
+  
+    <link rel="alternate" href="/atom.xml" title="Enjoy" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.proxy.ustclug.org/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Enjoy</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Enjoy the technology，Enjoy the code.</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">主页</a>
+        
+          <a class="main-nav-link" href="/archives/">文章</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 流"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://mllgy.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-adb-常用命令" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/26/adb-常用命令/" class="article-date">
+  <time datetime="2019-03-26T03:32:49.000Z" itemprop="datePublished">2019-03-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      adb 常用命令
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>adb(Android Debug Briage) 一个通用的命令行工具，允许使用它与模拟器或 Android 设备进行通信。 adb 为一个 客户端-服务器程序，包含三个组件：</p>
+<ol>
+<li>客户端。发送命令，在电脑端运行，发出 adb 命令从命令行终端调用客户端。</li>
+<li>后台程序。在相应的设备(模拟器、真机)上运行命令，作为<code>后台进程</code> 在 <code>设备</code>上运行。</li>
+<li>服务器。管理客户端和后台程序之间的通信，在 <code>开发计算机</code> 上作为 <code>后台进程</code> 运行。 每个设备将获取一对按顺序排列的端口，一个用于控制台的偶数号端口和一个用于 adb 连接的奇数号端口。</li>
+</ol>
+<p>android_sdk/platform-tools/ 中找到 adb 工具。</p>
+<h3 id="adb-工作方式"><a href="#adb-工作方式" class="headerlink" title="adb 工作方式"></a>adb 工作方式</h3><ol>
+<li>启动 客户端，如果没有 adb 服务器进程，则启动服务器进程。服务器启动后，与本地的 TCP 端口 5037 绑定，它监听从 adb 客户端发送的命令(所有的 adb 命令均使用 5037 端口与 adb 服务器通信)。</li>
+<li>服务器与所有运行的模拟器或设备连接。它扫描5555 到 5585 之间的奇数号端口查找设备。 服务器一旦发现 adb 后台程序，它将与该端口的设备连接。</li>
+<li>当服务器与所有的设备连接后，使用 adb 命令来访问这些设备。</li>
+</ol>
+<a id="more"></a>
+<h3 id="通过-WLAN-连接设备"><a href="#通过-WLAN-连接设备" class="headerlink" title="通过 WLAN 连接设备"></a>通过 WLAN 连接设备</h3><p><strong>adb tcpip 5555:</strong> 设置设备监听 5555 端口上的 TCP/IP 的连接。</p>
+<p><strong>adb connect xxx:</strong>  通过目标设备的 IP 连接设备。</p>
+<p><strong>adb disconnect ip:</strong> 断开指定 IP 的设备 </p>
+<h3 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h3><p><strong>adb devices:</strong> 查找设备</p>
+<p><strong>adb -s serialNum commond:</strong> 指定设备执行命令</p>
+<p><strong>adb install apk:</strong> 安装 apk</p>
+<p><strong>adb -s xxxx install apk:</strong> 指定设备上安装 apk</p>
+<p><strong>adb install -r apk:</strong> 覆盖安装</p>
+<p><strong>adb -d install apk:</strong> 唯一 USB 连接设备安装 apk</p>
+<p><strong>adb -e install apk:</strong> 唯一模拟器设备安装 apk</p>
+<p><strong>adb uninstall packageName:</strong> 卸载 apk</p>
+<p><strong>adb uninsatll -k packageName:</strong> 卸载 apk,但是保留其配置和缓存文件</p>
+<h3 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h3><p><strong>adb push localFile remoteDictory:</strong> 将本地的文件 push 远端指定的目录下</p>
+<p><strong>adb pull file remoteDictory:</strong> 从 remoteDictory 中复制指定的 file 到当前目录下</p>
+<h3 id="adb-服务器"><a href="#adb-服务器" class="headerlink" title="adb 服务器"></a>adb 服务器</h3><p>adb kill-server： 停止 adb 服务器</p>
+<p>adb start-server：开启 adb 服务</p>
+<h3 id="adb-shell"><a href="#adb-shell" class="headerlink" title="adb shell"></a>adb shell</h3><p>在目标设备启动远程 shell </p>
+<h3 id="adb-shell-am"><a href="#adb-shell-am" class="headerlink" title="adb shell am"></a>adb shell am</h3><p>使用 adb shell am 与应用交互。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>命令</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>start [option] <intent></intent></td>
+<td>启动 <intent> 指定的 Activity</intent></td>
+</tr>
+<tr>
+<td>startservice [options] <intent></intent></td>
+<td>启动 <intent> 指定的 Service</intent></td>
+</tr>
+<tr>
+<td>broadcast [options] <intent></intent></td>
+<td>发送 <intent> 指定的广播</intent></td>
+</tr>
+<tr>
+<td>force-stop <packagename></packagename></td>
+<td>停止 <packagename> 相关的进程</packagename></td>
+</tr>
+</tbody>
+</table>
+<p><intent> 有关的选项<br>参数|含义<br>–|–<br>-a | <action>    指定 action，比如 android.intent.action.VIEW<br>-c | <category>    指定 category，比如 android.intent.category.APP_CONTACTS<br>-n | <component>    指定完整 component 名，用于明确指定启动哪个 Activity，如 com.gy/.MainActivity</component></category></action></intent></p>
+<p><intent> 可以传参</intent></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">adb shell start -n com.gy/.MainActivity //启动指定的 Activity</span><br><span class="line"></span><br><span class="line">adb shell startService -n com.gy/.TestService //启动指定的 Service</span><br><span class="line"></span><br><span class="line">adb shell broadcast  -a android.intent.action.BOOT_COMPLETED -n com.gy/.TestBroadcast //向指定的 BroadCast 发送广播</span><br><span class="line"></span><br><span class="line">adb shell am force-stop com.gy // 关闭指定 app 的一切进程与服务</span><br></pre></td></tr></table></figure>
+<h3 id="adb-shell-pm"><a href="#adb-shell-pm" class="headerlink" title="adb shell pm"></a>adb shell pm</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">adb shell pm list packages</span><br><span class="line"></span><br><span class="line">adb shell pm clear &lt;packagename&gt;:清除数据与缓存</span><br><span class="line"></span><br><span class="line">adb shell pm path &lt;packagename&gt;:应用安装路径</span><br></pre></td></tr></table></figure>
+<h3 id="adb-shell-wm"><a href="#adb-shell-wm" class="headerlink" title="adb shell wm"></a>adb shell wm</h3><p>屏幕相关</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">adb shell wm size: 屏幕分辨率</span><br><span class="line"></span><br><span class="line">adb shell wm size 480x1024: 屏幕分辨率修改为 480x1024</span><br><span class="line"></span><br><span class="line">adb shell wm size reset: 恢复屏幕分辨率</span><br><span class="line"></span><br><span class="line">adb shell wm density: 屏幕密度</span><br><span class="line"></span><br><span class="line">adb shell wm density 160 : 屏幕密度设置为 160dpi</span><br><span class="line"></span><br><span class="line">adb shell wm density reset: 恢复屏幕密度</span><br></pre></td></tr></table></figure>
+<h3 id="adb-shell-dumpsys"><a href="#adb-shell-dumpsys" class="headerlink" title="adb shell dumpsys"></a>adb shell dumpsys</h3><p>查看运行状态,打印出当前系统的系统信息，默认打印出设备中所有的 service 的信息。</p>
+<p>查看 Service List</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb shell dumpsys</span><br><span class="line">adb shell service list</span><br></pre></td></tr></table></figure>
+<p>查看屏幕分辨率<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb shell dumpsys window displays</span><br><span class="line">db shell dumpsys window | grep init</span><br></pre></td></tr></table></figure></p>
+<h3 id="adb-shell-dumpsys-activity-内容组成"><a href="#adb-shell-dumpsys-activity-内容组成" class="headerlink" title="adb shell dumpsys activity 内容组成"></a>adb shell dumpsys activity 内容组成</h3><ol>
+<li>ACTIVITY MANAGER SETTINGS(dumpsys activity settings)</li>
+<li>ACTIVITY MANAGER PENDING INTENTS (dumpsys activity intents)</li>
+<li>ACTIVITY MANAGER BROADCAST STATE(dumpsys activity broadcasts)</li>
+<li>ACTIVITY MANAGER CONTENT PROVIDERS(dumpsys activity providers)</li>
+<li>ACTIVITY MANAGER URI PERMISSIONS (dumpsys activity permissions)</li>
+<li>ACTIVITY MANAGER SERVICES (dumpsys activity services)</li>
+<li>ACTIVITY MANAGER RECENT TASKS (dumpsys activity recents)</li>
+<li>ACTIVITY MANAGER LAST ANR (dumpsys activity lastanr)</li>
+<li>ACTIVITY MANAGER STARTER (dumpsys activity starter)</li>
+<li>ACTIVITY MANAGER ACTIVITIES (dumpsys activity activities)</li>
+<li>ACTIVITY MANAGER RUNNING PROCESSES (dumpsys activity processes)</li>
+</ol>
+<p>使用 <code>adb shell dumpsys activity activities | sed -En -e &#39;/Running activities/,/Run #0/p&#39;</code> 限制仅输出 “Running activities” 列表。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://mllgy.github.io/2019/03/26/adb-常用命令/" data-id="cju2ef079000psefyticpg8w3" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/adb/">adb</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/03/27/Flutter-介绍/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">这些东西可能太新了</strong>
+      <div class="article-nav-title">
+        
+          Flutter 介绍
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/03/25/流/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">这些东西可能过时了</strong>
+      <div class="article-nav-title">Java IO</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/DI/" style="font-size: 10px;">DI</a> <a href="/tags/Dagger2/" style="font-size: 10px;">Dagger2</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Exception/" style="font-size: 20px;">Exception</a> <a href="/tags/GitPage/" style="font-size: 10px;">GitPage</a> <a href="/tags/Hexo/" style="font-size: 20px;">Hexo</a> <a href="/tags/IO/" style="font-size: 10px;">IO</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/Java-继承，对象，类初始化/" style="font-size: 10px;">Java 继承，对象，类初始化</a> <a href="/tags/Okhttp3/" style="font-size: 10px;">Okhttp3</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/VIM/" style="font-size: 10px;">VIM</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/adb/" style="font-size: 10px;">adb</a> <a href="/tags/事件分发机制/" style="font-size: 10px;">事件分发机制</a> <a href="/tags/内存分区/" style="font-size: 10px;">内存分区</a> <a href="/tags/内部类/" style="font-size: 10px;">内部类</a> <a href="/tags/焦点机制/" style="font-size: 10px;">焦点机制</a> <a href="/tags/百度地图黑影/" style="font-size: 10px;">百度地图黑影</a> <a href="/tags/硬件加速/" style="font-size: 10px;">硬件加速</a> <a href="/tags/编译技术/" style="font-size: 10px;">编译技术</a> <a href="/tags/设计模式六大原则/" style="font-size: 10px;">设计模式六大原则</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/04/04/Java-Basic-四内部类/">Java Basic (四) -- 内部类</a>
+          </li>
+        
+          <li>
+            <a href="/2019/04/02/Vim/">Vim</a>
+          </li>
+        
+          <li>
+            <a href="/2019/04/02/IntentFilter匹配规则/">IntentFilter匹配规则</a>
+          </li>
+        
+          <li>
+            <a href="/2019/04/01/Android编程中的一些概念/">Android编程中的一些概念(Wiki)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/03/29/Gradle-常用命令-Android/">Gradle 常用命令(Android)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 GY<br>
+      巨大能量来源 <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">主页</a>
+  
+    <a href="/archives/" class="mobile-nav-link">文章</a>
+  
+</nav>
+    
+
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

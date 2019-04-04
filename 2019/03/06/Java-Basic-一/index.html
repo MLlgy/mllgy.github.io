@@ -20,7 +20,8 @@
 <meta property="og:image" content="https://mllgy.github.io/images/2019_03_06_2.jpg">
 <meta property="og:image" content="https://mllgy.github.io/images/2019_03_06_3.jpg">
 <meta property="og:image" content="https://mllgy.github.io/images/2019_03_06_4.jpg">
-<meta property="og:updated_time" content="2019-03-07T04:55:56.207Z">
+<meta property="og:image" content="https://mllgy.github.io/images/2019_04_02_1.jpg">
+<meta property="og:updated_time" content="2019-04-02T09:06:48.706Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java Basic">
 <meta name="twitter:description" content="对象的三大特征对象的三种基本特征:继承、封装、多态。 Java 语言为纯粹的面向对象的程序编程语言，主要表现为 Java 完全支持对象的三大基本特征。 封装： 将对象的实现细节隐藏起来，然后通过一些公用方法暴露该对象的功能。 继承：子类继承父类，子类作为一种特殊的父类，将直接获得父类的属性和方法。 多态：子类对象可以直接赋给父类变量，但在运行时依然表现出子类的行为特征，这意味着同一个类型的引用对象">
@@ -112,13 +113,13 @@
 <h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><p><strong>编程的本质就是对内存中的数据访问和修改</strong>，程序所用到的数据都会保存在内存中，程序员需要通过一种机制来访问和修改内存中的数据，这种机制就是 <strong>变量</strong> ，每个变量代表某一小块内存。变量是有名字的，程序对变量 <strong>赋值</strong>，就是把数据装入该变量所代表的内存区的过程；程序 <strong>读取变量</strong>，就是从变量代表的内存区取值的过程。可以简单的理解：变量相当于一个有名称的容器，该容器用于装各种不同类型的数据。</p>
 <h3 id="对象和引用"><a href="#对象和引用" class="headerlink" title="对象和引用"></a>对象和引用</h3><p><img src="/images/19_03_06.jpg" alt="对象与引用"></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Person p = new Person(&quot;Mike&quot;,20)</span><br></pre></td></tr></table></figure>
-<p>由上文中变量是需要是需要内存存储数据的，此语句中 <code>new Person(&quot;Mike&quot;,20)</code> 只是在堆内存中开辟出一块内存去存储这个对象，而 <code>Person p</code> 则需要在栈内存中开辟一块内存来存储变量以及相关内容，至于在此区域存储的到底是什么需要在赋值后才会具体化。在此例中，赋值语句后，变量 p 对应的栈内存存储的为新建对象 – new Person 的内存地址。</p>
+<p>由上文中变量是需要是需要内存存储数据的，此语句中 <code>new Person(&quot;Mike&quot;,20)</code> 只是在堆内存中开辟出一块内存去存储这个对象，而 <code>Person p</code> 则需要在栈内存中开辟一块内存来存储变量以及相关内容，至于在此区域存储的到底是什么,需要在赋值后才会具体化。在此例中，赋值语句后，变量 p 对应的栈内存存储的为新建对象 – new Person 的内存地址。</p>
 <h3 id="this-引用"><a href="#this-引用" class="headerlink" title="this 引用"></a>this 引用</h3><p>首先 this 代表一定是个对象，其次 this 出现在不同位置含义有所不同：</p>
 <ul>
 <li>在构造器中代表正在初始化的对象</li>
 <li>在方法中代码调用该方法的对象</li>
 </ul>
-<p>因此 static 方法中不能出现 this，因为 static 的方法属于类，是通过类去调用，此时 this 代表了类，违背了 this 代表的为一个对像的前提。</p>
+<p>因此 static 方法中不能出现 this，因为 static 的方法属于类，是通过类去调用，此时 this 代表了类，违背了 this 代表的为一个对象的前提。</p>
 <p>同时 static 方法不可调用非 static 变量和方法也是基于这个原因，因为类中的变量和方法存在隐式的 this 引用，即为 this 作为调用者必须是一个对象。</p>
 <h3 id="方法重载"><a href="#方法重载" class="headerlink" title="方法重载"></a>方法重载</h3><p>方法名相同，而参数列表不同的现象称为方法重载。</p>
 <ul>
@@ -158,7 +159,7 @@
 <p><img src="/images/2019_03_06_3.jpg" alt="赋值"></p>
 <p>其中，类变量为所有实例共有，每个实例都有权对其进行更改。</p>
 <h3 id="局部变量的初始化和内存中的运行机制"><a href="#局部变量的初始化和内存中的运行机制" class="headerlink" title="局部变量的初始化和内存中的运行机制"></a>局部变量的初始化和内存中的运行机制</h3><p>系统不会为局部变量进行初始化，所以局部变量必须手动初始化。</p>
-<p>与成员变量不同，局部变量的分配内存为所在的方法栈区，如果局部变量时基本数据类型，会直接存在方法栈中;如果为引用变量，则存放引用地址，通过该引用地址指向实际引用的对象。</p>
+<p>与成员变量不同，<code>局部变量的分配内存为所在的方法栈区</code>，如果局部变量时基本数据类型，会直接存在方法栈中;如果为引用变量，则存放引用地址，通过该引用地址指向实际引用的对象。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">void test(int a,Person p)&#123;</span><br><span class="line">    ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>test 方法栈中内存分配情况如下：</p>
 <p><img src="/images/2019_03_06_4.jpg" alt="局部变量"></p>
@@ -170,7 +171,9 @@
 </ul>
 <h3 id="构造器与成员变量初始化"><a href="#构造器与成员变量初始化" class="headerlink" title="构造器与成员变量初始化"></a>构造器与成员变量初始化</h3><p>我们知道在创建一个对象时，系统会为这个对象的实例变量进行默认初始化，根据数据类型的不同初始值为：0、falase、null。如果想要改变默认初始化，想让系统创建对象时就位对象的实例变量显示指定初始值，可以通过构造器来实现。</p>
 <h3 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h3><h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><p>继承关系中，子类和父类拥有相同的实例变量时的内存模型：</p>
-<p><img src="" alt="图"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Parent &#123;</span><br><span class="line">    public String tag = &quot;parent&quot;;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Son extends Parent&#123;</span><br><span class="line">    private String tag = &quot;son&quot;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Son son = new Son();</span><br><span class="line">// sout(son.tag); 编译错误，不可访问私有变量</span><br><span class="line">sout(((Parent)son).tag); // 打印日志为： parent</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2019_04_02_1.jpg" alt="图"></p>
+<p>子类的实例变量隐藏父类实例变量</p>
 <h3 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h3><p>Java 引用变量有两个类型：<strong>编译时类型</strong> 和 <strong>运行时类型</strong>。编译时类型是由声明该变量时使用的类型决定，运行时类型是由实际赋给该变量的对象决定。</p>
 <p>当编译时类型和运行时类型不一致，就可能发生所谓的 <strong>多态</strong>。</p>
 <p>引用变量在编译时只能调用编译时类型所拥有的方法，运行时在可以执行其运行时类型所具有的方法。因此，在编写 Java 代码是，引用变量只能调用声明该变量时所用的类(编译时类型)中的方法，例如 <code>Object person = new Person();</code> ,<code>person</code> 只能调用 <code>Object</code> 类中的方法,不能调用 Person 中的方法。</p>
@@ -180,7 +183,7 @@
 <ol>
 <li>尽量隐藏父类的内部数据，使用 private 修饰;</li>
 <li>不要让子类任意访问和修改方法。辅助方法使用 private 修饰；父类中可以被外界访问但是不可以被子类重新的方法使用 public final 修饰；希望被子类重写的方法使用 protected 修饰。</li>
-<li>尽量不要在父构造器中调用被子类重新的方法。</li>
+<li>尽量不要在父构造器中调用被子类重写的方法。</li>
 </ol>
 <p>针对第 3 条，特殊说明一下。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">class A&#123;</span><br><span class="line">    public A()&#123;</span><br><span class="line">        test();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public void test()&#123;</span><br><span class="line">        sout(&quot;A&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class B extends A&#123;</span><br><span class="line">    private String des;</span><br><span class="line">    public void test()&#123;</span><br><span class="line">        sout(&quot;B&quot; + des.length());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//调用</span><br><span class="line">B b = new B();</span><br></pre></td></tr></table></figure>
@@ -193,7 +196,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/03/06/Java-Basic-一/" data-id="cjto45pvl001d0kfygxq9quhx" class="article-share-link">分享</a>
+      <a data-url="https://mllgy.github.io/2019/03/06/Java-Basic-一/" data-id="cju2ef080001usefywhh0ecwl" class="article-share-link">分享</a>
       
       
       
@@ -237,7 +240,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/DI/" style="font-size: 10px;">DI</a> <a href="/tags/Dagger2/" style="font-size: 10px;">Dagger2</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Exception/" style="font-size: 20px;">Exception</a> <a href="/tags/GitPage/" style="font-size: 10px;">GitPage</a> <a href="/tags/Hexo/" style="font-size: 20px;">Hexo</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/Java-继承，对象，类初始化/" style="font-size: 10px;">Java 继承，对象，类初始化</a> <a href="/tags/Okhttp3/" style="font-size: 10px;">Okhttp3</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/事件分发机制/" style="font-size: 10px;">事件分发机制</a> <a href="/tags/内存分区/" style="font-size: 10px;">内存分区</a> <a href="/tags/焦点机制/" style="font-size: 10px;">焦点机制</a> <a href="/tags/百度地图黑影/" style="font-size: 10px;">百度地图黑影</a> <a href="/tags/硬件加速/" style="font-size: 10px;">硬件加速</a> <a href="/tags/设计模式六大原则/" style="font-size: 10px;">设计模式六大原则</a>
+      <a href="/tags/DI/" style="font-size: 10px;">DI</a> <a href="/tags/Dagger2/" style="font-size: 10px;">Dagger2</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Exception/" style="font-size: 20px;">Exception</a> <a href="/tags/GitPage/" style="font-size: 10px;">GitPage</a> <a href="/tags/Hexo/" style="font-size: 20px;">Hexo</a> <a href="/tags/IO/" style="font-size: 10px;">IO</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/Java-继承，对象，类初始化/" style="font-size: 10px;">Java 继承，对象，类初始化</a> <a href="/tags/Okhttp3/" style="font-size: 10px;">Okhttp3</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/VIM/" style="font-size: 10px;">VIM</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/adb/" style="font-size: 10px;">adb</a> <a href="/tags/事件分发机制/" style="font-size: 10px;">事件分发机制</a> <a href="/tags/内存分区/" style="font-size: 10px;">内存分区</a> <a href="/tags/内部类/" style="font-size: 10px;">内部类</a> <a href="/tags/焦点机制/" style="font-size: 10px;">焦点机制</a> <a href="/tags/百度地图黑影/" style="font-size: 10px;">百度地图黑影</a> <a href="/tags/硬件加速/" style="font-size: 10px;">硬件加速</a> <a href="/tags/编译技术/" style="font-size: 10px;">编译技术</a> <a href="/tags/设计模式六大原则/" style="font-size: 10px;">设计模式六大原则</a>
     </div>
   </div>
 
@@ -246,7 +249,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li></ul>
     </div>
   </div>
 
@@ -259,23 +262,23 @@
       <ul>
         
           <li>
-            <a href="/2019/03/19/设计六大准则/">设计六大准则(设计模式之禅)</a>
+            <a href="/2019/04/04/Java-Basic-四内部类/">Java Basic (四) -- 内部类</a>
           </li>
         
           <li>
-            <a href="/2019/03/16/代码混淆/">代码混淆</a>
+            <a href="/2019/04/02/Vim/">Vim</a>
           </li>
         
           <li>
-            <a href="/2019/03/15/Java-Basic-三/">Java Basic 三</a>
+            <a href="/2019/04/02/IntentFilter匹配规则/">IntentFilter匹配规则</a>
           </li>
         
           <li>
-            <a href="/2019/03/14/Docker基本使用/">Docker基本使用</a>
+            <a href="/2019/04/01/Android编程中的一些概念/">Android编程中的一些概念(Wiki)</a>
           </li>
         
           <li>
-            <a href="/2019/03/14/homebrew/">homebrew</a>
+            <a href="/2019/03/29/Gradle-常用命令-Android/">Gradle 常用命令(Android)</a>
           </li>
         
       </ul>

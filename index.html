@@ -66,10 +66,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-设计六大准则" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-Java-Basic-四内部类" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/03/19/设计六大准则/" class="article-date">
-  <time datetime="2019-03-19T04:58:37.000Z" itemprop="datePublished">2019-03-19</time>
+    <a href="/2019/04/04/Java-Basic-四内部类/" class="article-date">
+  <time datetime="2019-04-04T06:47:26.000Z" itemprop="datePublished">2019-04-04</time>
 </a>
     
   </div>
@@ -80,7 +80,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/19/设计六大准则/">设计六大准则(设计模式之禅)</a>
+      <a class="article-title" href="/2019/04/04/Java-Basic-四内部类/">Java Basic (四) -- 内部类</a>
     </h1>
   
 
@@ -88,32 +88,672 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="单一职责原则-Single-Responsibility-Principle-SRP"><a href="#单一职责原则-Single-Responsibility-Principle-SRP" class="headerlink" title="单一职责原则 (Single Responsibility Principle)(SRP)"></a>单一职责原则 (Single Responsibility Principle)(SRP)</h3><p><strong>定义：</strong> 应该有且仅有一个原因引起类的变更。</p>
-<p><strong>操作：</strong></p>
-<ol>
-<li>当一个类的几个职责之间没有相互依赖时，可以考虑将职责进行拆分。</li>
-<li>SRP原则适用于接口、类，同时也适用于方法，一个方法尽可能的做一件事。</li>
+        <h3 id="1-提问"><a href="#1-提问" class="headerlink" title="1. 提问"></a>1. 提问</h3><ol>
+<li>内部类为什么会出现</li>
+<li>内部类的调用</li>
+<li>内部类与外部类访问成员变量的不同</li>
+<li>静态内部类和非静态内部类</li>
 </ol>
-<p><strong>好处：</strong></p>
-<ol>
-<li>降低类的复杂度，实现什么职责都有明显的定义</li>
-<li>可读性提高、可维护性强</li>
-<li>变更风险低</li>
+<h4 id="为什么使用内部类"><a href="#为什么使用内部类" class="headerlink" title="为什么使用内部类"></a>为什么使用内部类</h4><ol>
+<li>内部类提供了 <strong>更好的封装</strong>，可以把内部类的细节隐藏在外部类中，对同一个包中的其他类不可见。</li>
+<li><strong>内部类可以访问外部类的私有数据</strong>。因为内部类为外部类的成员，成员之间可以互相访问,外部类不可以访问内部类的私有数据。</li>
+<li><strong>可以使用匿名内部类创建访问一次的类</strong>，十分方便。</li>
 </ol>
-<p><strong>对于单一职责原则，接口一定要做到单一职责，类的设计尽量做到只要一个原因引起变化。</strong></p>
+<h3 id="2-非静态内部类"><a href="#2-非静态内部类" class="headerlink" title="2. 非静态内部类"></a>2. 非静态内部类</h3><p>例子 ：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">public class OutClass &#123;</span><br><span class="line"></span><br><span class="line">    private int num = 1;</span><br><span class="line">    private int num2 = 3;</span><br><span class="line"></span><br><span class="line">    private class InnerClass &#123;</span><br><span class="line"></span><br><span class="line">        private int num = 2;</span><br><span class="line"></span><br><span class="line">        private void method() &#123;</span><br><span class="line">            System.out.println(&quot;innerclass method&quot;);</span><br><span class="line">            System.out.println(&quot;innerclass method inner num &quot; + num);</span><br><span class="line">            System.out.println(&quot;innerclass method inner num &quot; + this.num);</span><br><span class="line">            System.out.println(&quot;innerclass method out num &quot; + OutClass.this.num);</span><br><span class="line">            System.out.println(&quot;innerclass method out num2 &quot; + num2);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        OutClass outclass = new OutClass();</span><br><span class="line">        System.out.println(&quot;main &quot;+ outclass.num);</span><br><span class="line">        outclass.test();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void test() &#123;</span><br><span class="line">        InnerClass inner = new InnerClass();</span><br><span class="line">        inner.method();</span><br><span class="line">        System.out.println(&quot;outclass test&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 打印日志：</span><br><span class="line">main 1</span><br><span class="line">innerclass method</span><br><span class="line">innerclass method inner num 2</span><br><span class="line">innerclass method inner num 2</span><br><span class="line">innerclass method out num 1</span><br><span class="line">innerclass method out num2 3</span><br><span class="line">outclass test</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-1-内部类可以访问外部类的成员变量-包括私有变量"><a href="#2-1-内部类可以访问外部类的成员变量-包括私有变量" class="headerlink" title="2.1 内部类可以访问外部类的成员变量(包括私有变量)"></a>2.1 内部类可以访问外部类的成员变量(包括私有变量)</h4><p>原因：</p>
+<p>在非静态内部类对象里，保存了外部类对象的引用。</p>
+<p>内存模型：<br><img src="/images/2019_04_04_1.jpg" alt="内存模型图"></p>
+<p>但是当外部类与内部类有相同名字的变量时，引用外部类变量需要指定外部类对象 –  <code>Outclass.this</code> </p>
+<h4 id="2-2-编译后的-Class-文件"><a href="#2-2-编译后的-Class-文件" class="headerlink" title="2.2 编译后的 Class 文件"></a>2.2 编译后的 Class 文件</h4><p>在 JVM 中没有内部类这个概念，所有的类都是普通类（POJO），内部类也会被编译成带有前缀的类。</p>
+<p>编译后，得到两个 class 文件:</p>
+<ol>
+<li><code>OutClass.java</code> </li>
+<li><code>OutClass$InnerClass.class</code></li>
+</ol>
+<h4 id="2-3-内部类方法中的变量的访问顺序"><a href="#2-3-内部类方法中的变量的访问顺序" class="headerlink" title="2.3 内部类方法中的变量的访问顺序"></a>2.3 内部类方法中的变量的访问顺序</h4><p><strong>内部类方法内部中 –&gt; 内部类中的成员变量 –&gt; 外部类中的成员变量 –&gt; 不存在，编译异常</strong></p>
+<h4 id="2-4-内、外部类变量名相同"><a href="#2-4-内、外部类变量名相同" class="headerlink" title="2.4 内、外部类变量名相同"></a>2.4 内、外部类变量名相同</h4><p>访问使用如下格式：</p>
+<p><code>this.field</code> : 内部类变量</p>
+<p><code>OutClass.this.field</code> : 外部类变量</p>
+<h4 id="2-5-外部类不可直接访问内部类成员"><a href="#2-5-外部类不可直接访问内部类成员" class="headerlink" title="2.5 外部类不可直接访问内部类成员"></a>2.5 外部类不可直接访问内部类成员</h4><p>非静态内部类成员只在非静态内部类范围内是可知的，外部类不能直接访问。</p>
+<p>通过 <strong>内部类实例对象来访问</strong>。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">new InnerClass().method();</span><br><span class="line">new InnerClass().num++;</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-6-外部类中静态成员中不允许直接使用非静态内部类"><a href="#2-6-外部类中静态成员中不允许直接使用非静态内部类" class="headerlink" title="2.6 外部类中静态成员中不允许直接使用非静态内部类"></a>2.6 外部类中静态成员中不允许直接使用非静态内部类</h4><p>静态成员为类成员，在编译期对其初始化，如果直接使用非静态成员(如非静态内部类)，则会发生错误。</p>
+<h4 id="2-7-内、外部类关系"><a href="#2-7-内、外部类关系" class="headerlink" title="2.7 内、外部类关系"></a>2.7 内、外部类关系</h4><p>非静态内部类对象寄生在外部类对象里，有非静态内部类对象一定存在外部类对象，反之不成立。</p>
+<h4 id="2-8-非静态内部类中的静态成员-重点理解"><a href="#2-8-非静态内部类中的静态成员-重点理解" class="headerlink" title="2.8 非静态内部类中的静态成员(重点理解)"></a>2.8 非静态内部类中的静态成员(重点理解)</h4><p><strong>如果内部了声明静态成员变量，那么必须使用 <code>final</code> 修饰</strong>。</p>
+<p>因为一个静态变量只有一个实例，而对于每一个外部对象，分别有一个单独的内部类实例，如果这个变量不是 final 的，那么他就不是唯一的，这与 static 的含义相互冲突。</p>
+<p><strong>非静态内部类中不能含有静态方法</strong>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class OutterClass &#123;</span><br><span class="line">    private int age;</span><br><span class="line">    private void outMethod()&#123;&#125;</span><br><span class="line">     class InnerClass &#123;</span><br><span class="line">        private final static String name = &quot;&quot;;</span><br><span class="line">        private /*static*/ void innerMethod() &#123;</span><br><span class="line">            age++;</span><br><span class="line">            outMethod();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-静态内部类"><a href="#3-静态内部类" class="headerlink" title="3. 静态内部类"></a>3. 静态内部类</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">class OutClass &#123;</span><br><span class="line"></span><br><span class="line">    private int num = 1;</span><br><span class="line">    private static int age = 2;</span><br><span class="line"></span><br><span class="line">    private void doSomething()&#123;</span><br><span class="line">        StaticInnerClass.staticNum++;</span><br><span class="line">        StaticInnerClass staticInnerClass = new StaticInnerClass();</span><br><span class="line">        staticInnerClass.method();</span><br><span class="line">        staticInnerClass.num++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected static class StaticInnerClass &#123;</span><br><span class="line">        private static int staticNum = 10;</span><br><span class="line">        private int num = 100;</span><br><span class="line"></span><br><span class="line">        private void method() &#123;</span><br><span class="line">            num++;</span><br><span class="line">            staticNum++;</span><br><span class="line">            age++;</span><br><span class="line">            // &apos;four.OutClass.this&apos; cannot be referenced from a static context</span><br><span class="line">            // -- four.OutClass.this 不能再 static 环境下被引用</span><br><span class="line">            // OutClass.this.num++;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-1-静态内部类不可以访问外部类实例成员，可以访问类成员"><a href="#3-1-静态内部类不可以访问外部类实例成员，可以访问类成员" class="headerlink" title="3.1 静态内部类不可以访问外部类实例成员，可以访问类成员"></a>3.1 静态内部类不可以访问外部类实例成员，可以访问类成员</h4><p>静态内部类为外部类的类成员，只能访问外部类的静态变量，不可以访问非静态变量。</p>
+<h4 id="3-2-编译后的-Class-文件"><a href="#3-2-编译后的-Class-文件" class="headerlink" title="3.2  编译后的 Class 文件"></a>3.2  编译后的 Class 文件</h4><p>与非静态内部类相同，编译后得到两个 class 文件 – OutClass.class 、StaticInnerClass.class</p>
+<h4 id="3-3-外部类不可直接访问内部类成员"><a href="#3-3-外部类不可直接访问内部类成员" class="headerlink" title="3.3 外部类不可直接访问内部类成员"></a>3.3 外部类不可直接访问内部类成员</h4><p>静态内部类成员、实例成员只在静态内部类范围内是可知的，外部类不能直接访问。</p>
+<ul>
+<li><p>通过 内部类名 来访问静态内部类类成员。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">StaticInnerClass.staticNum++;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过内部类实例对象访问静态内部类实例成员。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">StaticInnerClass staticInnerClass = new StaticInnerClass();</span><br><span class="line">staticInnerClass.method();</span><br><span class="line">staticInnerClass.num++;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="4-内部类使用"><a href="#4-内部类使用" class="headerlink" title="4. 内部类使用"></a>4. 内部类使用</h3><h4 id="4-1-外部类使用内部类"><a href="#4-1-外部类使用内部类" class="headerlink" title="4.1 外部类使用内部类"></a>4.1 外部类使用内部类</h4><ul>
+<li>基本的使用</li>
+<li>外部类使用内部类的子类</li>
+</ul>
+<p>外部类中的静态代码块、静态方法中不可使用非静态内部类，因为静态成员不能使用非静态成员。</p>
+<h4 id="4-2-外部类以外使用非静态内部类"><a href="#4-2-外部类以外使用非静态内部类" class="headerlink" title="4.2 外部类以外使用非静态内部类"></a>4.2 外部类以外使用非静态内部类</h4><p>根据内部类的访问权限修饰符，内部类对其他类的可见性不同。</p>
+<p>外部类以外建立非静态内部类实例必须外部类实例和 new 来调用非静态内部类的构造器。</p>
+<ul>
+<li>非静态内部类</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">OutClass&#123;</span><br><span class="line">    private int num = 1;</span><br><span class="line">    protected InnerClass&#123;</span><br><span class="line">    </span><br><span class="line">        private int num = 2;</span><br><span class="line">        </span><br><span class="line">        private void method()&#123;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">OutClass.InnerClass innerclass = new OutClass().new InnerClass();</span><br><span class="line">innerclass.num++;</span><br><span class="line">innerclass.method();</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>非静态内部类子类</li>
+<li></li>
+</ul>
+<h4 id="4-2-外部类以外使用非静态内部类-1"><a href="#4-2-外部类以外使用非静态内部类-1" class="headerlink" title="4.2 外部类以外使用非静态内部类"></a>4.2 外部类以外使用非静态内部类</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">OutClass&#123;</span><br><span class="line">    private int num = 1;</span><br><span class="line">    protected static InnerClass&#123;</span><br><span class="line">    </span><br><span class="line">        private int num = 2;</span><br><span class="line">        </span><br><span class="line">        private void method()&#123;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">OutClass.InnerClass staticInnerClass = new OutClass.InnerClass();</span><br><span class="line">staticInnerClass.</span><br></pre></td></tr></table></figure>
+<h3 id="5-局部内部类"><a href="#5-局部内部类" class="headerlink" title="5. 局部内部类"></a>5. 局部内部类</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    private static void main(String[] args)&#123;</span><br><span class="line"></span><br><span class="line">        class InnerBase&#123;</span><br><span class="line">            int a ;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        class SubInnerClass extends InnerBase&#123;</span><br><span class="line">            int b;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        SubInnerClass subInnerClass = new SubInnerClass();</span><br><span class="line">        subInnerClass.a = 1;</span><br><span class="line">        subInnerClass.b = 2;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>局部内部类，顾名思义内部类定义在 方法内部，其有效范围也在方法内部，方法外部无法访问,即：对外部世界完全的隐藏起来。</p>
+<p>通过 <code>javac Test.java</code> 对该类进行编译，生成的 class 有 3 个，分别为： <code>Test.class</code>、<code>Test$1InnerBase.class</code>、<code>Test$1SubInnerClass.class</code>。</p>
+<p>局部内部类遵循如下命名格式：<br><strong>OutClassName$NInnerClassName 其中 N 表示第 N 个内部类。</strong></p>
+<h3 id="6-匿名内部类-Anonymous-Inner-Class"><a href="#6-匿名内部类-Anonymous-Inner-Class" class="headerlink" title="6. 匿名内部类(Anonymous Inner Class)"></a>6. 匿名内部类(Anonymous Inner Class)</h3><h4 id="6-1-定义"><a href="#6-1-定义" class="headerlink" title="6.1 定义"></a>6.1 定义</h4><p>匿名内部类适合创建只需要一次使用的类。</p>
+<p>定义内部类的格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">new 实现接口 或 父类构造器(参数列表)</span><br><span class="line">&#123;</span><br><span class="line">    类的主体</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>由其格式可知，<strong>匿名内部类必须且只能继承一个父类，或实现且最多一个接口</strong>。</p>
+<p>由于构造器必须与类名相同，而匿名内部类不能有类名，所以匿名类不能有构造器。</p>
+<p>例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public interface IClick &#123;</span><br><span class="line">    void change();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class Main &#123;</span><br><span class="line"></span><br><span class="line">    public  void main(String[] args) &#123;</span><br><span class="line"></span><br><span class="line">        final String  name = &quot;name&quot;;</span><br><span class="line">        show(new IClick() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void change() &#123;</span><br><span class="line">                System.out.println(name);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private  void show(IClick click)&#123;</span><br><span class="line">        click.change();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个例子中，main 方法中的调用 show 的方法中定义了一个匿名内部类，这个匿名内部类实现了 IClick 接口。</p>
+<p><strong>不仅在 匿名内部类中，就是在普通的内部类中访问内部类外部的变量也需要添加 final 修饰符。</strong></p>
+<p>原因：</p>
+<p>对于普通局部变量而言，它的作用域停留在方法内，当方法执行完毕，该局部变量也随之消失。但内部类则可能产生隐式的 “闭包”，闭包使得局部变量脱离它所在的方法继续存在。</p>
+<p>个人理解，匿名内部类是一个实现了接口或继承类的</p>
+<h4 id="使用限制"><a href="#使用限制" class="headerlink" title="使用限制"></a>使用限制</h4><ul>
+<li>由于系统在创建匿名内部类时，会创建匿名内部类的对象，所以匿名内部类不能定义为抽象类。</li>
+<li>由于匿名内部类没有类名，所以匿名内部类无法定义构造器，但可以使用初始化块进行初始化。</li>
+</ul>
+<p>方法的返回值的生成和表示这个返回值的类的定义结合在一起。</p>
+<hr>
+<p>为什么需要内部类？</p>
+<p>答:   如果你想实现一个接口，但是这个接口中的一个方法和你构想的这个类中的一个方法的名称，参数相同，你应该怎么办？这时候，你可以建一个内部类实现这个接口。由于内部类对外部类的所有内容都是可访问的，所以这样做可以完成所有你直接实现这个接口的功能。</p>
+<p>真正的原因，java中的内部类和接口加在一起，可以很好的实现多继承的效果</p>
+<p>内部类是否有用、必要和安全</p>
+<p>内部类是一种编译器现象，与虚拟机无关。编译器会把内部了翻译成用 $ 分割外部类名与内部类名的常规文件，而虚拟机对此一无所知。</p>
+<hr>
+<p><a href="https://www.zhihu.com/question/21395848" target="_blank" rel="noopener">java为什么匿名内部类的参数引用时final？</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://mllgy.github.io/2019/04/04/Java-Basic-四内部类/" data-id="cju2ef080001vsefy1xkl9vrq" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/内部类/">内部类</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Vim" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/02/Vim/" class="article-date">
+  <time datetime="2019-04-02T03:33:55.000Z" itemprop="datePublished">2019-04-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/02/Vim/">Vim</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1、插入命令"><a href="#1、插入命令" class="headerlink" title="1、插入命令"></a>1、插入命令</h3><table>
+<thead>
+<tr>
+<th style="text-align:center">命令</th>
+<th style="text-align:center">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">a</td>
+<td style="text-align:center">在光标所在字符<code>后</code>插入</td>
+</tr>
+<tr>
+<td style="text-align:center">A</td>
+<td style="text-align:center">在光标所在<code>行尾</code>插入</td>
+</tr>
+<tr>
+<td style="text-align:center">i</td>
+<td style="text-align:center">在光标所在字符<code>前</code>插入</td>
+</tr>
+<tr>
+<td style="text-align:center">I</td>
+<td style="text-align:center">在光标所在<code>行首</code>插入</td>
+</tr>
+<tr>
+<td style="text-align:center">o</td>
+<td style="text-align:center">在光标<code>下</code>插入行</td>
+</tr>
+<tr>
+<td style="text-align:center">O</td>
+<td style="text-align:center">在光标<code>上</code>插入行</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2、定位命令"><a href="#2、定位命令" class="headerlink" title="2、定位命令"></a>2、定位命令</h3><table>
+<thead>
+<tr>
+<th style="text-align:center">命令</th>
+<th style="text-align:center">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">:set nu</td>
+<td style="text-align:center">设置行号</td>
+</tr>
+<tr>
+<td style="text-align:center">:set nonu</td>
+<td style="text-align:center">取消行号</td>
+</tr>
+<tr>
+<td style="text-align:center">gg</td>
+<td style="text-align:center">到第一行</td>
+</tr>
+<tr>
+<td style="text-align:center">G</td>
+<td style="text-align:center">到最后一行</td>
+</tr>
+<tr>
+<td style="text-align:center">nG</td>
+<td style="text-align:center">到第n行</td>
+</tr>
+<tr>
+<td style="text-align:center">:n</td>
+<td style="text-align:center">到第n行</td>
+</tr>
+<tr>
+<td style="text-align:center">$</td>
+<td style="text-align:center">移至行尾</td>
+</tr>
+<tr>
+<td style="text-align:center">0</td>
+<td style="text-align:center">移至行首</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3、删除命令"><a href="#3、删除命令" class="headerlink" title="3、删除命令"></a>3、删除命令</h3><table>
+<thead>
+<tr>
+<th style="text-align:center">命令</th>
+<th style="text-align:center">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">x</td>
+<td style="text-align:center">删除光标所在处字符</td>
+</tr>
+<tr>
+<td style="text-align:center">nx</td>
+<td style="text-align:center">删除光标所在处后 n 个字符</td>
+</tr>
+<tr>
+<td style="text-align:center">dd</td>
+<td style="text-align:center">删除光标所在行</td>
+</tr>
+<tr>
+<td style="text-align:center">ndd</td>
+<td style="text-align:center">删除n行</td>
+</tr>
+<tr>
+<td style="text-align:center">dG</td>
+<td style="text-align:center">删除光标所在行到<code>文件末尾</code>的内容</td>
+</tr>
+<tr>
+<td style="text-align:center">D</td>
+<td style="text-align:center">删除光标所在处到<code>行尾</code>的内容</td>
+</tr>
+<tr>
+<td style="text-align:center">:n1,n2d</td>
+<td style="text-align:center">删除指定范围的行</td>
+</tr>
+</tbody>
+</table>
+<h3 id="4、复制和剪切命令"><a href="#4、复制和剪切命令" class="headerlink" title="4、复制和剪切命令"></a>4、复制和剪切命令</h3><table>
+<thead>
+<tr>
+<th style="text-align:center">命令</th>
+<th style="text-align:center">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">yy</td>
+<td style="text-align:center">复制当前行</td>
+</tr>
+<tr>
+<td style="text-align:center">nyy</td>
+<td style="text-align:center">复制当前行以下 n 行</td>
+</tr>
+<tr>
+<td style="text-align:center">dd</td>
+<td style="text-align:center">剪切当前行</td>
+</tr>
+<tr>
+<td style="text-align:center">ndd</td>
+<td style="text-align:center">剪切当前行以下 n 行</td>
+</tr>
+<tr>
+<td style="text-align:center">p</td>
+<td style="text-align:center">粘贴在当前光标所在行下</td>
+</tr>
+<tr>
+<td style="text-align:center">P</td>
+<td style="text-align:center">粘贴在当前光标所在行上</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5、替换和取消命令"><a href="#5、替换和取消命令" class="headerlink" title="5、替换和取消命令"></a>5、替换和取消命令</h3><table>
+<thead>
+<tr>
+<th style="text-align:center">命令</th>
+<th style="text-align:center">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">r</td>
+<td style="text-align:center">取代光标所在处字符</td>
+</tr>
+<tr>
+<td style="text-align:center">R</td>
+<td style="text-align:center">从光标所在处开始替换字符，按 Esc 结束</td>
+</tr>
+<tr>
+<td style="text-align:center">u</td>
+<td style="text-align:center">取消上一步操作</td>
+</tr>
+</tbody>
+</table>
+<h3 id="6、搜索和搜索替换命令"><a href="#6、搜索和搜索替换命令" class="headerlink" title="6、搜索和搜索替换命令"></a>6、搜索和搜索替换命令</h3><table>
+<thead>
+<tr>
+<th style="text-align:center">命令</th>
+<th style="text-align:center">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<p>/string|搜索指定字符串 、搜索时忽略大小写 <code>:set ic</code><br>n|搜索指定字符串的下一个出现位置<br>：%s/old/new/g|全文替换指定字符串<br>：n1，n2/old/new/g|在一定范围内替换指定字符串</p>
+<h3 id="7、保存和退出命令"><a href="#7、保存和退出命令" class="headerlink" title="7、保存和退出命令"></a>7、保存和退出命令</h3><table>
+<thead>
+<tr>
+<th style="text-align:center">命令</th>
+<th style="text-align:center">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<p>:w|保存修改<br>:w new_filename|另存为指定文件<br>：wq|保存修改并退出<br>ZZ|快捷键，保存修改并退出<br>:q!|不保存修改退出<br>：wq!|保存修改并退出（文件所有者及root 用户可使用）</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://mllgy.github.io/2019/04/02/Vim/" data-id="cju2ef076000ksefyln2wk03u" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/VIM/">VIM</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-IntentFilter匹配规则" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/02/IntentFilter匹配规则/" class="article-date">
+  <time datetime="2019-04-02T02:28:45.000Z" itemprop="datePublished">2019-04-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/02/IntentFilter匹配规则/">IntentFilter匹配规则</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://mllgy.github.io/2019/04/02/IntentFilter匹配规则/" data-id="cju2ef06t000bsefya56borjp" class="article-share-link">分享</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Android编程中的一些概念" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/01/Android编程中的一些概念/" class="article-date">
+  <time datetime="2019-04-01T02:38:59.000Z" itemprop="datePublished">2019-04-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/01/Android编程中的一些概念/">Android编程中的一些概念(Wiki)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="编译器"><a href="#编译器" class="headerlink" title="编译器"></a>编译器</h3><p>编译器(compiler) ,是一种 <strong>应用程序</strong>，它会将某种编程语言写成的源代码(原始语言)，转换为另外一种编程语言(目标语言)。</p>
+<p>它的主要目的是将人编写、维护的高级计算机语言所写出的 <strong>源代码程序</strong>，翻译为计算机能解读、运行的低价 <strong>机器语言</strong> 的程序，也就是 <strong>可执行文件</strong>。</p>
+<p>常见的编译器：</p>
+<ol>
+<li>GCC(GUN Compiler Collection)</li>
+</ol>
+<p>GNU编译器套装（英语：GNU Compiler Collection，缩写为GCC），指一套编程语言编译器，以GPL及LGPL许可证所发行的自由软件，也是GNU项目的关键部分，也是GNU工具链的主要组成部分之一。GCC（特别是其中的C语言编译器）也常被认为是跨平台编译器的事实标准。</p>
+<ol start="2">
+<li>LLVM</li>
+</ol>
+<p>LLVM是一个自由软件项目，它是一种编译器基础设施，以C++写成，包含一系列模块化的编译器组件和工具链，用来开发编译器前端和后端。它是为了任意一种编程语言而写成的程序，利用虚拟技术创造出编译时期、链接时期、运行时期以及“闲置时期”的最优化。<br>
+        
+          </p><p class="article-more-link">
+            <a href="/2019/04/01/Android编程中的一些概念/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://mllgy.github.io/2019/04/01/Android编程中的一些概念/" data-id="cju2ef06h0001sefy8x29ilwm" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译技术/">编译技术</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Gradle-常用命令-Android" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/29/Gradle-常用命令-Android/" class="article-date">
+  <time datetime="2019-03-29T08:31:19.000Z" itemprop="datePublished">2019-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/29/Gradle-常用命令-Android/">Gradle 常用命令(Android)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://mllgy.github.io/2019/03/29/Gradle-常用命令-Android/" data-id="cju2ef06p0008sefyy9dnk63v" class="article-share-link">分享</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-常用的-Gradle-命令" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/28/常用的-Gradle-命令/" class="article-date">
+  <time datetime="2019-03-28T08:37:33.000Z" itemprop="datePublished">2019-03-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/28/常用的-Gradle-命令/">常用的 Gradle 命令</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="gradlew-q-app-dependencies"><a href="#gradlew-q-app-dependencies" class="headerlink" title="gradlew -q app:dependencies"></a>gradlew -q app:dependencies</h3><p>出现依赖库版本冲突，一般会包如下错：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">All com.android.support libraries must use the exact same version specification (mixing versions can lead to runtime crashes). Found versions 28.0.0, 25.2.0. Examples include com.android.support:animated-vector-drawable:28.0.0 and com.android.support:support-media-compat:25.2.</span><br></pre></td></tr></table></figure></p>
+<p>一般出现这种错的原因是自己依赖的库与其他依赖的库所依赖的库为同一个 group 的库，但是版本不同。</p>
+<p>使用 <strong>./gradlew -q app:dependencies</strong> 可以看到自己项目依赖库的层级关系：</p>
+<p>解决：使用 exclude 排除相应的库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">api &apos;com.android.support:appcompat-v7:28.0.0&apos;</span><br><span class="line">api (&quot;com.alibaba:arouter-api:1.4.0&quot;)&#123;</span><br><span class="line">    exclude group: &apos;com.android.support&apos;,module:&apos;support-v4&apos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://mllgy.github.io/2019/03/28/常用的-Gradle-命令/" data-id="cju2ef07i000zsefyg7oqandh" class="article-share-link">分享</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-打包-jar-、aar" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/27/打包-jar-、aar/" class="article-date">
+  <time datetime="2019-03-27T02:47:06.000Z" itemprop="datePublished">2019-03-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/27/打包-jar-、aar/">打包 jar 、aar</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>aar:(Android Archive) 是一个 Android 库项目的二进制归档文件，里面不仅包含工程代码还包括工程资源文件，大部分的 aar 文件包括：AndroidManifest.xml，classes.jar，res，R.txt。</p>
+<p>jar：只包含了 class 文件和清单文件，不包含资源文件。</p>
+<p>如果需要资源文件，那么以 aar 的形式引入到工程，反之使用 jar。</p>
+<h3 id="打包-aar、jar"><a href="#打包-aar、jar" class="headerlink" title="打包 aar、jar"></a>打包 aar、jar</h3><p>如果将 Application 打包为 aar，做以下更改：</p>
+<ol>
+<li>将 <code>apply plugin: &#39;com.android.application&#39;</code> 改为 <code>apply plugin: &#39;com.android.library&#39;</code></li>
+<li>去掉 <code>applicationId</code></li>
+<li>项目根目录执行 <code>./gradlew assembleRelease</code>,就可以在相应的目录(build/output/aar)下看到生成的 aar，在 <code>build/intermediates/packed-classes</code> 中看到相应的 jar 包。</li>
+</ol>
+<p>可以使用新建 gradle task 可以将生成的 jar 包直接复制到 libs 下，并完成构建。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">task copyJar(type: Copy) &#123;</span><br><span class="line">    def name = project.name //Library名称</span><br><span class="line">    delete &apos;libs/&apos; + name + &apos;.jar&apos; //删除之前的旧jar包</span><br><span class="line">    from(&apos;build/intermediates/packaged-classes/release/&apos;) //从这个目录下取出默认jar包</span><br><span class="line">    into(&apos;libs/&apos;) //将jar包输出到指定目录下</span><br><span class="line">    include(&apos;classes.jar&apos;)</span><br><span class="line">    rename(&apos;classes.jar&apos;, name + &apos;.jar&apos;) //自定义jar包的名字</span><br><span class="line">&#125;</span><br><span class="line">copyJar.dependsOn(build)</span><br></pre></td></tr></table></figure></p>
+<h3 id="自定义-jar"><a href="#自定义-jar" class="headerlink" title="自定义 jar"></a>自定义 jar</h3>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://mllgy.github.io/2019/03/27/打包-jar-、aar/" data-id="cju2ef07j0011sefyr03zwtqc" class="article-share-link">分享</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Flutter-介绍" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/27/Flutter-介绍/" class="article-date">
+  <time datetime="2019-03-27T02:25:00.000Z" itemprop="datePublished">2019-03-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/27/Flutter-介绍/">Flutter 介绍</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li>main函数使用了(=&gt;)符号, 这是Dart中单行函数或方法的简写</li>
+<li>在 Flutter 中大部分都是 widget，包括对齐(alignment)、填充(padding)、布局(layout)。</li>
+<li>Scaffold(脚手架) 是Material library 中提供的一个widget, 它提供了默认的导航栏、标题和包含主屏幕widget树的body属性。</li>
+<li>widget 的主要工作是提供一个build()方法来描述如何根据其他较低级别的widget来显示自己。</li>
+<li>变量以下划线(_) 为前缀时，在 Dart 会被强制将其变为私有的。</li>
+</ul>
+<h3 id="路由"><a href="#路由" class="headerlink" title="路由"></a>路由</h3><ul>
+<li>在 Flutter 中页面称为路由(Router)。</li>
+<li>在 Flutter 中，<strong>导航器</strong> 管理应用程序的 <strong>路由栈</strong>，将路由推入 (push) 到导航器的栈中，将会显示该路由界面，从导航器中弹出 (pop) 路由，将返回到前一个路由(页面)。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://mllgy.github.io/2019/03/27/Flutter-介绍/" data-id="cju2ef06m0004sefyo5exfv0y" class="article-share-link">分享</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-adb-常用命令" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/26/adb-常用命令/" class="article-date">
+  <time datetime="2019-03-26T03:32:49.000Z" itemprop="datePublished">2019-03-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/26/adb-常用命令/">adb 常用命令</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>adb(Android Debug Briage) 一个通用的命令行工具，允许使用它与模拟器或 Android 设备进行通信。 adb 为一个 客户端-服务器程序，包含三个组件：</p>
+<ol>
+<li>客户端。发送命令，在电脑端运行，发出 adb 命令从命令行终端调用客户端。</li>
+<li>后台程序。在相应的设备(模拟器、真机)上运行命令，作为<code>后台进程</code> 在 <code>设备</code>上运行。</li>
+<li>服务器。管理客户端和后台程序之间的通信，在 <code>开发计算机</code> 上作为 <code>后台进程</code> 运行。 每个设备将获取一对按顺序排列的端口，一个用于控制台的偶数号端口和一个用于 adb 连接的奇数号端口。</li>
+</ol>
+<p>android_sdk/platform-tools/ 中找到 adb 工具。</p>
+<h3 id="adb-工作方式"><a href="#adb-工作方式" class="headerlink" title="adb 工作方式"></a>adb 工作方式</h3><ol>
+<li>启动 客户端，如果没有 adb 服务器进程，则启动服务器进程。服务器启动后，与本地的 TCP 端口 5037 绑定，它监听从 adb 客户端发送的命令(所有的 adb 命令均使用 5037 端口与 adb 服务器通信)。</li>
+<li>服务器与所有运行的模拟器或设备连接。它扫描5555 到 5585 之间的奇数号端口查找设备。 服务器一旦发现 adb 后台程序，它将与该端口的设备连接。</li>
+<li>当服务器与所有的设备连接后，使用 adb 命令来访问这些设备。</li>
+</ol>
         
           <p class="article-more-link">
-            <a href="/2019/03/19/设计六大准则/#more">Read More</a>
+            <a href="/2019/03/26/adb-常用命令/#more">Read More</a>
           </p>
         
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/03/19/设计六大准则/" data-id="cjto45pv0000q0kfyu96g8dxu" class="article-share-link">分享</a>
+      <a data-url="https://mllgy.github.io/2019/03/26/adb-常用命令/" data-id="cju2ef079000psefyticpg8w3" class="article-share-link">分享</a>
       
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式六大原则/">设计模式六大原则</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/adb/">adb</a></li></ul>
 
     </footer>
   </div>
@@ -123,10 +763,10 @@
 
 
   
-    <article id="post-代码混淆" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <article id="post-流" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/03/16/代码混淆/" class="article-date">
-  <time datetime="2019-03-16T01:08:36.000Z" itemprop="datePublished">2019-03-16</time>
+    <a href="/2019/03/25/流/" class="article-date">
+  <time datetime="2019-03-25T09:03:45.000Z" itemprop="datePublished">2019-03-25</time>
 </a>
     
   </div>
@@ -137,7 +777,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/16/代码混淆/">代码混淆</a>
+      <a class="article-title" href="/2019/03/25/流/">Java IO</a>
     </h1>
   
 
@@ -145,364 +785,24 @@
     
     <div class="article-entry" itemprop="articleBody">
       
+        <h3 id="File"><a href="#File" class="headerlink" title="File"></a>File</h3><p>File 为文件和目录路径名的抽象表示方式。<br>一个 File 对象可以代表一个文件或目录的抽象。<br>建立 File 对象不会对文件系统产生影响。</p>
+<p>File 为 文件与程序之间的联系，是一个抽象的概念，File 对象不能不能代表一个真正的文件。</p>
+<p>File 不能按其字面意思理解为文件，File 为文件与程序之间的抽象关系，能够建立 File 对象不能说明文件真正的存在，故在使用 File 对象的使用需要对 File 对象关联的文件判断是否存在操作。</p>
+<h3 id="File-的基本操作"><a href="#File-的基本操作" class="headerlink" title="File 的基本操作"></a>File 的基本操作</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">getName():获得文件的名字、路径名</span><br><span class="line">getPath():路径名</span><br><span class="line">getAbsoluteFile():绝对路径名</span><br><span class="line">getParentFile():父路径，没有为 null</span><br><span class="line">file 的绝对路径和相对路径</span><br></pre></td></tr></table></figure>
         
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/03/16/代码混淆/" data-id="cjto45puv000j0kfyzke33owp" class="article-share-link">分享</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Java-Basic-三" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/03/15/Java-Basic-三/" class="article-date">
-  <time datetime="2019-03-15T09:08:48.000Z" itemprop="datePublished">2019-03-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/15/Java-Basic-三/">Java Basic 三</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="抽象类"><a href="#抽象类" class="headerlink" title="抽象类"></a>抽象类</h3><p>存在只定义了方法的签名，没有方法的类称为抽象类。</p>
-<ul>
-<li>抽象类和抽象方法使用 abstract 修饰</li>
-<li>抽象类不能实例化</li>
-<li>抽象类可以没有抽象方法，可以有非抽象方法</li>
-<li>抽象类可以有成员变量、方法(抽象方法和非抽象方法)、构造器、初始化块、内部类(接口、枚举)</li>
-<li>含有抽象方法的类(定义了一个抽象方法的类、继承一个抽象方法但是没有完全实现父类中抽象的方法的类、实现一个接口但是没有完全实现接口中的方法)只能为抽象类</li>
-</ul>
-<p>abstract 不能修饰成员变量和类方法，因为成员变量属于类实例，而抽象类不能实例化，抽象方法没有方法体，调用出错。<br>
-        
-          </p><p class="article-more-link">
-            <a href="/2019/03/15/Java-Basic-三/#more">Read More</a>
+          <p class="article-more-link">
+            <a href="/2019/03/25/流/#more">Read More</a>
           </p>
         
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/03/15/Java-Basic-三/" data-id="cjto45pug00080kfyq9ros7fz" class="article-share-link">分享</a>
+      <a data-url="https://mllgy.github.io/2019/03/25/流/" data-id="cju2ef07k0013sefydpijpa8w" class="article-share-link">分享</a>
       
       
       
-    </footer>
-  </div>
-  
-</article>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IO/">IO</a></li></ul>
 
-
-
-  
-    <article id="post-Docker基本使用" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/03/14/Docker基本使用/" class="article-date">
-  <time datetime="2019-03-14T13:49:55.000Z" itemprop="datePublished">2019-03-14</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/14/Docker基本使用/">Docker基本使用</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>### </p>
-<p><strong>docker ps:</strong> 查看本机上正在运行的容器<br><strong>docker ps -l:</strong> 查看本机上所有的容器</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/03/14/Docker基本使用/" data-id="cjto45pub00030kfyxfkh0l9t" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-homebrew" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/03/14/homebrew/" class="article-date">
-  <time datetime="2019-03-14T07:29:58.000Z" itemprop="datePublished">2019-03-14</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/14/homebrew/">homebrew</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>HomeBrew 为 Mac OSX 上的 软件管理工具，在 Mac 中可以方便的安装、卸载、更新软件，类似于 Linux 下的 apt-get、yum、dnf 等。</p>
-<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>具体安装见 <a href="https://brew.sh/index_zh-cn" target="_blank" rel="noopener">官网</a></p>
-<h3 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h3><p><strong>brew search xx:</strong><br><strong>brew install xx:</strong><br><strong>brew remove xx: </strong></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/03/14/homebrew/" data-id="cjto45puo000d0kfyu6xqg2nn" class="article-share-link">分享</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-requestDisallowInterceptTouchEvent" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/03/14/requestDisallowInterceptTouchEvent/" class="article-date">
-  <time datetime="2019-03-14T03:54:33.000Z" itemprop="datePublished">2019-03-14</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/14/requestDisallowInterceptTouchEvent/">requestDisallowInterceptTouchEvent</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>### </p>
-<p>调用 <code>requestDisallowInterceptTouchEvent</code> 方法会置位 FLAG_DISALLOW_INTERCEPTER 标志位，ViewGroup 将无法拦截除了 ACTION_DOWN 以外的事件,至于 ViewGroup 为什么还是会拦截 ACTION_DOWN 事件，是因为 ViewGruop 在 ACTION_DOWN 事件时会重新置位 FLAG_DISALLOW_INTERCEPTER 标志。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/03/14/requestDisallowInterceptTouchEvent/" data-id="cjto45put000h0kfyotmy22so" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/View/">View</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/事件分发机制/">事件分发机制</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-拖动百度地图出现黑影的解决方法" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/03/13/拖动百度地图出现黑影的解决方法/" class="article-date">
-  <time datetime="2019-03-13T08:29:09.000Z" itemprop="datePublished">2019-03-13</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/13/拖动百度地图出现黑影的解决方法/">拖动百度地图出现黑影的解决方法</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="问题描述及解决方案"><a href="#问题描述及解决方案" class="headerlink" title="问题描述及解决方案"></a>问题描述及解决方案</h3><p><code>NestScrollView</code> 嵌套 <code>MapView</code> 在滑动整个布局时，<code>MapView</code> 的上下边界出现黑影。</p>
-<p>问题解决：</p>
-<p>使用 <code>TextureMapView</code> 替换布局中的 <code>MapView</code> 并开启硬件加速，如果只在当前 Activity 中开启硬件加速，执行在清单文件中该 Activity 注册信息中添加标签：<code>android:hardwareAccelerated=&quot;true&quot;</code> 。</p>
-<h3 id="硬件加速"><a href="#硬件加速" class="headerlink" title="硬件加速"></a>硬件加速</h3>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/03/13/拖动百度地图出现黑影的解决方法/" data-id="cjto45puz000o0kfy4jgexuq0" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/百度地图黑影/">百度地图黑影</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/硬件加速/">硬件加速</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-单例的几种写法" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/03/13/单例的几种写法/" class="article-date">
-  <time datetime="2019-03-13T03:37:05.000Z" itemprop="datePublished">2019-03-13</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/13/单例的几种写法/">单例的几种写法</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/03/13/单例的几种写法/" data-id="cjto45puy000l0kfyez4lbcy9" class="article-share-link">分享</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Android-焦点机制" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/03/11/Android-焦点机制/" class="article-date">
-  <time datetime="2019-03-11T03:08:29.000Z" itemprop="datePublished">2019-03-11</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/11/Android-焦点机制/">Android 焦点机制</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="No-touch-Mode-非触摸模式-和-Touch-Mode-触摸模式"><a href="#No-touch-Mode-非触摸模式-和-Touch-Mode-触摸模式" class="headerlink" title="No-touch Mode(非触摸模式) 和 Touch Mode(触摸模式)"></a>No-touch Mode(非触摸模式) 和 Touch Mode(触摸模式)</h3><p>Google 把触摸模式分为 No-touch Mode 和 Touch Mode。Android Phone 由于触摸屏，所以讨论的为 <code>触摸模式</code>，而像 Andorid TV、键盘、轨迹球一般为 <code>非触摸模式</code>。</p>
-<h3 id="Focus-焦点-、Focusable-可聚焦"><a href="#Focus-焦点-、Focusable-可聚焦" class="headerlink" title="Focus(焦点)、Focusable(可聚焦)"></a>Focus(焦点)、Focusable(可聚焦)</h3><p>在像 Android TV 、轨迹球这类设备上，我们可能需要通过遥控器等设备选择相应的选项，在交互过程中，我们选中的控件获得焦点，并通过颜色改变、高亮、突出等形式表现出来。<br>根据 Google 官方文档，在触摸模式下，其实没有没有焦点的概念，或者说此模式下的获得焦点的表现形式不同。在触摸模式下，Focus 以一种特别的方式 – Focusable 存在。<br>
-        
-          </p><p class="article-more-link">
-            <a href="/2019/03/11/Android-焦点机制/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/03/11/Android-焦点机制/" data-id="cjto45pu200000kfywy4ss0vr" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/焦点机制/">焦点机制</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Java-Basic-二" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/03/07/Java-Basic-二/" class="article-date">
-  <time datetime="2019-03-07T04:56:36.000Z" itemprop="datePublished">2019-03-07</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/07/Java-Basic-二/">Java Baseic 二</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="与-equal-方法"><a href="#与-equal-方法" class="headerlink" title="== 与 equal 方法"></a>== 与 equal 方法</h3><p>Java 中判断两个变量是否相等有两个方法: == 和 equal 方法。</p>
-<p>当使用 <code>==</code> 是，如果两个变量为基本数据类型，且都是数值类型，那么只要求两个变量的值相等，则为 true；如果两个变量为引用类型，那么只有当它们指向同一个对象时，返回值才为 true。但是 <strong><code>==</code> 不可用于比较类型上没有父子关系的两个对象</strong>。</p>
-<p>equal 为 Object 的方法，所有的引用变量都可以调用该方法。但是使用 equal 方法判断两个对象是否相等的标准和 == 是一致的，都是在两个变量指向同一个对象时，才会返回 true。直接使用 Object 的 equal 方法没有什么意义，一般需要我们自己定义 equal 方法自定义相等的标准。</p>
-<p>在平常的开发中我们会有这样的一个误区： == 是判断两个变量是否相等， equal 是用来判断两个变量的值是否相等，其实后半句话有一个前提，就是变量的类型为 String ，这是因为 String 已经为我们重写了 equal 方法，用于判断两个字符串的值是否相等,具体可以参见 String 的源码。</p>
-<p>所以在两个变量皆为引用数据类型是， == 与 equal 方法没有什么区别,都是判断两个变量是否指向同一个变量。<br>
-        
-          </p><p class="article-more-link">
-            <a href="/2019/03/07/Java-Basic-二/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://mllgy.github.io/2019/03/07/Java-Basic-二/" data-id="cjto45pul00090kfy3qjhb2o3" class="article-share-link">分享</a>
-      
-      
-      
     </footer>
   </div>
   
@@ -515,7 +815,7 @@
 
   <nav id="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">下一页 &raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">下一页 &raquo;</a>
   </nav>
 
 </section>
@@ -529,7 +829,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/DI/" style="font-size: 10px;">DI</a> <a href="/tags/Dagger2/" style="font-size: 10px;">Dagger2</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Exception/" style="font-size: 20px;">Exception</a> <a href="/tags/GitPage/" style="font-size: 10px;">GitPage</a> <a href="/tags/Hexo/" style="font-size: 20px;">Hexo</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/Java-继承，对象，类初始化/" style="font-size: 10px;">Java 继承，对象，类初始化</a> <a href="/tags/Okhttp3/" style="font-size: 10px;">Okhttp3</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/事件分发机制/" style="font-size: 10px;">事件分发机制</a> <a href="/tags/内存分区/" style="font-size: 10px;">内存分区</a> <a href="/tags/焦点机制/" style="font-size: 10px;">焦点机制</a> <a href="/tags/百度地图黑影/" style="font-size: 10px;">百度地图黑影</a> <a href="/tags/硬件加速/" style="font-size: 10px;">硬件加速</a> <a href="/tags/设计模式六大原则/" style="font-size: 10px;">设计模式六大原则</a>
+      <a href="/tags/DI/" style="font-size: 10px;">DI</a> <a href="/tags/Dagger2/" style="font-size: 10px;">Dagger2</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Exception/" style="font-size: 20px;">Exception</a> <a href="/tags/GitPage/" style="font-size: 10px;">GitPage</a> <a href="/tags/Hexo/" style="font-size: 20px;">Hexo</a> <a href="/tags/IO/" style="font-size: 10px;">IO</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/Java-继承，对象，类初始化/" style="font-size: 10px;">Java 继承，对象，类初始化</a> <a href="/tags/Okhttp3/" style="font-size: 10px;">Okhttp3</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/VIM/" style="font-size: 10px;">VIM</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/adb/" style="font-size: 10px;">adb</a> <a href="/tags/事件分发机制/" style="font-size: 10px;">事件分发机制</a> <a href="/tags/内存分区/" style="font-size: 10px;">内存分区</a> <a href="/tags/内部类/" style="font-size: 10px;">内部类</a> <a href="/tags/焦点机制/" style="font-size: 10px;">焦点机制</a> <a href="/tags/百度地图黑影/" style="font-size: 10px;">百度地图黑影</a> <a href="/tags/硬件加速/" style="font-size: 10px;">硬件加速</a> <a href="/tags/编译技术/" style="font-size: 10px;">编译技术</a> <a href="/tags/设计模式六大原则/" style="font-size: 10px;">设计模式六大原则</a>
     </div>
   </div>
 
@@ -538,7 +838,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li></ul>
     </div>
   </div>
 
@@ -551,23 +851,23 @@
       <ul>
         
           <li>
-            <a href="/2019/03/19/设计六大准则/">设计六大准则(设计模式之禅)</a>
+            <a href="/2019/04/04/Java-Basic-四内部类/">Java Basic (四) -- 内部类</a>
           </li>
         
           <li>
-            <a href="/2019/03/16/代码混淆/">代码混淆</a>
+            <a href="/2019/04/02/Vim/">Vim</a>
           </li>
         
           <li>
-            <a href="/2019/03/15/Java-Basic-三/">Java Basic 三</a>
+            <a href="/2019/04/02/IntentFilter匹配规则/">IntentFilter匹配规则</a>
           </li>
         
           <li>
-            <a href="/2019/03/14/Docker基本使用/">Docker基本使用</a>
+            <a href="/2019/04/01/Android编程中的一些概念/">Android编程中的一些概念(Wiki)</a>
           </li>
         
           <li>
-            <a href="/2019/03/14/homebrew/">homebrew</a>
+            <a href="/2019/03/29/Gradle-常用命令-Android/">Gradle 常用命令(Android)</a>
           </li>
         
       </ul>
