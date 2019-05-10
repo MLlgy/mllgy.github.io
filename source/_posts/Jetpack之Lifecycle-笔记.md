@@ -35,6 +35,10 @@ Lifecycle 使用两个重要的枚举类来跟踪它所关联的组件的生命�
 
 LifecycleObserver 通过在在其方法上添加注解来监听组件的状态，LifecycleOwner 通过 addObserver() 关联此 Observer 。
 
+### LifecycleObserver
+
+观其行为 生命周期的观察者，它的主要作用是监听 LifecycleOwner 对象的生命周期变化，在自己的方法中进行相关业务处理。
+
 
 ### LifecycleOwner 
 
@@ -96,6 +100,11 @@ class MyActivity : Activity(), LifecycleOwner {
 
 1. 在粗粒度和细粒度的两种状态的地图切换展示。当 UI 在前台时使用细粒度的地图，在后台时切换为粗粒度的地图。
 2. 暂停和恢复动画。UI 在后台暂停动画，在前台恢复动画。
+
+
+### 关于 LiveData 
+
+LiveData 同为 生命中期感知组件，其实它这种功能的实现主要是依托了 Lifecycle 的实现。在 LiveData 的 obsever() 方法中将 LiveData的 Observer 包装成 LifecycleObserver 并与 LifecycleOwner 相关联，至此 LiveData 实现了生命周期的感知功能。
 
 ---
 以上为个人翻译官方文档
