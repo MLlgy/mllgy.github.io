@@ -10,11 +10,13 @@ LiveData 认为上述中的 **活跃状态** 为对应的 Observer 处于 STARTE
 
 LiveData 与 观察者(实现 LifecycleOwner 的类) 建立的连接会在组件处于 DESTORY 状态后被移除。
 
-### 理解
+### 个人理解
 
 官方文档看了几遍，大致明白了 LiveData 的作用， LiveData 可持有数据，并且它有一个重要的方法:
 
 `public void observe(@NonNull LifecycleOwner owner, @NonNull Observer<? super T> observer)` 
+
+<!-- more -->
 
 第一个参数为 LifecycleOwner 对象，一般为 Activity/Fragment/Servic 对象，第二参数为 Observer 对象，它的重要工作是一个回调，用于更新 UI 等工作。 LiveData#observe() 方法中完成了对 observer 的包装，并将其添加到 LifecycleOwner 对象观察者列表中，完成了 observer 关联 LifecycleOwner 生命周期的操作。
 
