@@ -18,8 +18,6 @@ tags: [内部类]
 3. **可以使用匿名内部类创建访问一次的类**，十分方便。
 
 
-
-
 ### 2. 非静态内部类
 
 例子 ：
@@ -55,7 +53,9 @@ public class OutClass {
         System.out.println("outclass test");
     }
 }
-
+```
+<!-- more -->
+```
 // 打印日志：
 main 1
 innerclass method

@@ -37,6 +37,7 @@ public class MediaScanner implements AutoCloseable {
 }    
 
 ```
+<!-- more -->
 
 ### JNI 之 native 层操作 (一)
 

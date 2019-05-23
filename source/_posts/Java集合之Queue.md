@@ -14,9 +14,11 @@ Queue 用于模拟 "队列" 这种数据结构，队列为 先进先出(First In
 4. Object peek():获取队列头部的元素，不删除该元素。
 5. Object poll():获取队列头部的元素，并删除该元素。
 6. Object remove():获取队列头部的元素，并删除该元素。
-
+<!-- more -->
 
 Queue 有 PriorityQueue 实现类，同时 Queue 还有一个 Deque 接口，Deque 代表一个 “双端队列”，双端队列可以在两端进行添加、删除元素，Deque 的实现类既可以当做队列来使用也可以当做栈来使用，其有两个实现类： ArrayDeque、LinkedList。
+
+
 
 ### PriorityQueue 类
 

@@ -32,6 +32,7 @@ public static void main(String[] args) {
 [ClassD{num=2}, ClassD{num=1}, ClassD{num=3}]
 [ClassD{num=1}, ClassD{num=2}, ClassD{num=3}]
 ```
+<!-- more -->
 
 迭代遍历：
 
