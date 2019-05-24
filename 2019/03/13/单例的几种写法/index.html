@@ -6,19 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="//litten.me">
-  <title>单例的几种写法 | Enjoy</title>
+  <title>Java 单例的几种写法 | Enjoy</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="如何实现单例类如果一个类只能创建一个实例，那么这个类称为 单例类。 根据良好性封装原则，我们需要：  把类构造器函数隐藏 提供 public 方法获取类的实例对象，并用 static 方法修饰,因为调用该方法前该对象还不存在，所以该方法应该属于类。  饿汉式()方式一： 123456789public class Singleton&amp;#123;    private final static Si">
 <meta name="keywords" content="Singleton">
 <meta property="og:type" content="article">
-<meta property="og:title" content="单例的几种写法">
+<meta property="og:title" content="Java 单例的几种写法">
 <meta property="og:url" content="//litten.me/2019/03/13/单例的几种写法/index.html">
 <meta property="og:site_name" content="Enjoy">
 <meta property="og:description" content="如何实现单例类如果一个类只能创建一个实例，那么这个类称为 单例类。 根据良好性封装原则，我们需要：  把类构造器函数隐藏 提供 public 方法获取类的实例对象，并用 static 方法修饰,因为调用该方法前该对象还不存在，所以该方法应该属于类。  饿汉式()方式一： 123456789public class Singleton&amp;#123;    private final static Si">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-23T02:48:05.325Z">
+<meta property="og:updated_time" content="2019-05-24T03:27:40.387Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="单例的几种写法">
+<meta name="twitter:title" content="Java 单例的几种写法">
 <meta name="twitter:description" content="如何实现单例类如果一个类只能创建一个实例，那么这个类称为 单例类。 根据良好性封装原则，我们需要：  把类构造器函数隐藏 提供 public 方法获取类的实例对象，并用 static 方法修饰,因为调用该方法前该对象还不存在，所以该方法应该属于类。  饿汉式()方式一： 123456789public class Singleton&amp;#123;    private final static Si">
   
     <link rel="alternative" href="/atom.xml" title="Enjoy" type="application/atom+xml">
@@ -158,7 +158,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      单例的几种写法
+      Java 单例的几种写法
     </h1>
   
 
@@ -186,13 +186,12 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton&#123;</span><br><span class="line">    private static Singleton INSTANCE ;</span><br><span class="line"></span><br><span class="line">    static&#123;</span><br><span class="line">        INSTANCE = new Singleton();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private Singleton()&#123;&#125;</span><br><span class="line"></span><br><span class="line">    public static Singleton getInstance&#123;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>以上两种实现方法基本一致，均是利用 <strong>类变量会在加载类时完成初始化</strong> 这一特性，实现了 <strong>线程安全</strong>，在加载类的同时就会完成该类单例的创建，即使在多线程情况下访问到的也是同一个对象，当然实现了单例模式。</p>
-<p>虽然饿汉式在类加载时就实现了类的单例，但是存在压根就用不到该单例的情况，此时就浪费了内存。</p>
-<h3 id="懒汉式"><a href="#懒汉式" class="headerlink" title="懒汉式"></a>懒汉式</h3><p><strong>方式一：</strong></p>
+<p><strong>饿汉式的 “饿”具体体现在：不管你是否使用，都会实例化该类的单例对象</strong>，正是这个特点造成了如下缺点：</p>
+<pre><code>饿汉式在类加载时就实现了类的单例，但是存在压根就用不到该单例的情况，此时就浪费了内存。</code></pre><h3 id="懒汉式"><a href="#懒汉式" class="headerlink" title="懒汉式"></a>懒汉式</h3><p><strong>方式一：</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton&#123;</span><br><span class="line">    private static Singleton INSTANCE;</span><br><span class="line"></span><br><span class="line">    private Singleton()&#123;&#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">    * 静态方法虽然属于类，但是没有调用情况下不会执行,所以为懒汉式。</span><br><span class="line">    */</span><br><span class="line">    public static Singleton getInstance&#123;</span><br><span class="line">        if(INSTANCE == null)&#123;</span><br><span class="line">            INSTANCE = new Singleton(); </span><br><span class="line">        &#125;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>懒汉式的 “懒” 就体现在:你用的话我就会初始化，你不用我我就不会初始化。</p>
-<p>但是一个很明显的 Bug 是：在多线程情况下，有可能一个线程 A 进入了 <code>getInstance</code> 方法中但是未完成对象的初始化，但是此时另外的一个线程 B 进入该方法完成初始化初始化一个对象，A 之后重新执行生成一个对象，那么此刻就违背了单例模式的初衷。</p>
-<p><strong>方式二：(改进)</strong></p>
+<p><strong>懒汉式的 “懒” 具体体现在:你用的话我就会初始化，你不用我我就不会初始化</strong>,但是也造成了已些缺陷：</p>
+<pre><code>在多线程情况下，有可能一个线程 A 进入了 `getInstance` 方法中但是未完成对象的初始化，但是此时另外的一个线程 B 进入该方法完成初始化初始化一个对象，A 之后重新执行生成一个对象，那么此刻就违背了单例模式的初衷。</code></pre><p><strong>方式二：(改进)</strong></p>
 <p>上面方式一谈到懒汉式存在线程安全的问题，那么改进该问题如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton&#123;</span><br><span class="line">    private static Singleton INSTANCE;</span><br><span class="line"></span><br><span class="line">    private Singleton()&#123;&#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">    * 静态方法虽然属于类，但是没有调用情况下不会执行,所以为懒汉式。</span><br><span class="line">    */</span><br><span class="line">    public static synchronized Singleton getInstance&#123;</span><br><span class="line">        if(INSTANCE == null)&#123;</span><br><span class="line">            INSTANCE = new Singleton(); </span><br><span class="line">        &#125;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -202,13 +201,14 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public class Singleton&#123;</span><br><span class="line">    private static Singleton INSTANCE;</span><br><span class="line"></span><br><span class="line">    private Singleton()&#123;&#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">    * 静态方法虽然属于类，但是没有调用情况下不会执行,所以为懒汉式。</span><br><span class="line">    */</span><br><span class="line">    public static  Singleton getInstance&#123;</span><br><span class="line">        if(INSTANCE == null)&#123;</span><br><span class="line">            synchronized(Singleton.class)&#123;</span><br><span class="line">                INSTANCE = new Singleton(); </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这样写虽然杜绝了每次获得实例的线程同步而引起的问题，但是这种方式是有明显的缺点的：一个线程执行 <code>if(INSTANCE == null)</code> 方法时，其他线程可能会同时执行方法，造成程序中出现多个实例。</p>
-<h3 id="多重检查"><a href="#多重检查" class="headerlink" title="多重检查"></a>多重检查</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton&#123;</span><br><span class="line">    private static Singleton INSTANCE;</span><br><span class="line"></span><br><span class="line">    private Singleton()&#123;&#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">    * 静态方法虽然属于类，但是没有调用情况下不会执行,所以为懒汉式。</span><br><span class="line">    */</span><br><span class="line">    public static  Singleton getInstance&#123;</span><br><span class="line">        if(INSTANCE == null)&#123;</span><br><span class="line">            synchronized(Singleton.class)&#123;</span><br><span class="line">                if(INSTANCE == null)&#123;</span><br><span class="line">                    INSTANCE = new Singleton(); </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="多重检查-饿汉式终极形态"><a href="#多重检查-饿汉式终极形态" class="headerlink" title="多重检查(饿汉式终极形态)"></a>多重检查(饿汉式终极形态)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton&#123;</span><br><span class="line">    private static Singleton INSTANCE;</span><br><span class="line"></span><br><span class="line">    private Singleton()&#123;&#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">    * 静态方法虽然属于类，但是没有调用情况下不会执行,所以为懒汉式。</span><br><span class="line">    */</span><br><span class="line">    public static  Singleton getInstance&#123;</span><br><span class="line">        if(INSTANCE == null)&#123;</span><br><span class="line">            synchronized(Singleton.class)&#123;</span><br><span class="line">                if(INSTANCE == null)&#123;</span><br><span class="line">                    INSTANCE = new Singleton(); </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>针对上面的 饿汉方式三 做出改进，即在同步代码块中再做一次空判断，杜绝了以上方式的明显缺陷。</p>
 <h3 id="静态内部类方式"><a href="#静态内部类方式" class="headerlink" title="静态内部类方式"></a>静态内部类方式</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton&#123;</span><br><span class="line">    private Singleton()&#123;&#125;</span><br><span class="line"></span><br><span class="line">    private static class SingletonInstance&#123;</span><br><span class="line">        private static final Singleton INSTANCE = new Singleton();</span><br><span class="line">    &#125;</span><br><span class="line">    public static Singleton getInstance()&#123;</span><br><span class="line">        return SingletonInstance.INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>静态内部类不会再外部类完成类加载的时候进行初始化加载，只会在调用时进行相关的类加载，实现了 <strong>懒加载</strong> 的功能，由于类加载只有在程序中出现一次，其享相应的属性也只会存在一份，实现了单例。</p>
-<h3 id="枚举方式"><a href="#枚举方式" class="headerlink" title="枚举方式"></a>枚举方式</h3><p>public enum Singleton{<br>    INSTANCE;<br>    public void whateverMethod() {<br>    }<br>}</p>
+<h3 id="枚举方式"><a href="#枚举方式" class="headerlink" title="枚举方式"></a>枚举方式</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public enum Singleton&#123;</span><br><span class="line">    INSTANCE;</span><br><span class="line">    public void whateverMethod() &#123;  </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>Effective Java 推荐使用，避免线程安全问题，支持自动序列化，注意枚举特性为 JDK 1.5 后添加。</p>
 <h3 id="使用指南"><a href="#使用指南" class="headerlink" title="使用指南"></a>使用指南</h3><p>一般情况下，推荐使用 <code>饿汉方式</code>，如果项目需求实现懒加载，推荐使用 <code>静态内部类方式</code>，涉及反序列试一下 <code>枚举方式</code>,特殊需求使用 <code>多重检查</code>。</p>
 
@@ -444,15 +444,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Coroutines</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -468,14 +476,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Dagger2</a>
               </li>
              
@@ -484,7 +484,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+                <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -500,6 +500,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">反射</a>
               </li>
              
@@ -508,11 +512,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">List</a>
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+                <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -524,15 +528,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">VIM</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -544,15 +552,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">VIM</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">adb</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -564,11 +572,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -580,10 +584,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">JNI</a>
               </li>
              
@@ -592,11 +592,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
