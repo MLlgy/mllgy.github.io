@@ -5,9 +5,9 @@
   <subtitle>Enjoy the technology，Enjoy the code.</subtitle>
   <link href="/atom.xml" rel="self"/>
   
-  <link href="//litten.me/"/>
-  <updated>2019-05-24T10:40:16.514Z</updated>
-  <id>//litten.me/</id>
+  <link href="/"/>
+  <updated>2019-05-24T10:47:24.506Z</updated>
+  <id>/</id>
   
   <author>
     <name>GY</name>
@@ -18,12 +18,12 @@
   
   <entry>
     <title>Kotlin 单例模式的实现</title>
-    <link href="//litten.me/2019/05/24/Kotlin-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%AE%9E%E7%8E%B0/"/>
-    <id>//litten.me/2019/05/24/Kotlin-单例模式的实现/</id>
+    <link href="/2019/05/24/Kotlin-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%AE%9E%E7%8E%B0/"/>
+    <id>/2019/05/24/Kotlin-单例模式的实现/</id>
     <published>2019-05-24T10:35:39.000Z</published>
-    <updated>2019-05-24T10:40:16.514Z</updated>
+    <updated>2019-05-24T10:47:24.506Z</updated>
     
-    <content type="html"><![CDATA[<h4 id="最简单的实现方式"><a href="#最简单的实现方式" class="headerlink" title="最简单的实现方式"></a>最简单的实现方式</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">object Singleton &#123;</span><br><span class="line">  fun method() &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>调用单例</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//在Kotlin里调用</span><br><span class="line">Singleton.method()</span><br><span class="line"></span><br><span class="line">//在Java中调用</span><br><span class="line">Singleton.INSTANCE.method();</span><br></pre></td></tr></table></figure><p>其实这种方式的实现为 Java 中的饿汉式,在 AS 的 Kotlin 相关的工具对 object 类进行编译和反编译，可以看到起对应的 Java 代码如下：</p><a id="more"></a><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public final class Singleton &#123;</span><br><span class="line">   public static final Singleton INSTANCE;</span><br><span class="line"></span><br><span class="line">   public final void method() &#123;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   private Singleton() &#123;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   static &#123;</span><br><span class="line">      Singleton var0 = new Singleton();</span><br><span class="line">      INSTANCE = var0;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>和 Java 中的 饿汉式获得单例方式相同。</p><p>同样也与 Java 中饿汉方式获得单例拥有相同的问题：</p><ul><li>如果没有使用该类的对象，那么已经实例化的对象，造成了内存浪费。</li><li>当构造器中执行复杂操作，造成实例化过程缓慢，可能造成性能问题。</li></ul><h4 id="懒汉式-一"><a href="#懒汉式-一" class="headerlink" title="懒汉式 一"></a>懒汉式 一</h4><p>在 Kotlin 中单例的实现和 Java 中一样，必须有：</p><ol><li>私有化的构造函数</li><li>获得对象的方法</li></ol><p>那么在 Kotlin 中有：</p><ul><li>显式声明构造方法为 private</li><li>companion object 用来在 class 内部声明一个对象<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class Singleton private constructor()&#123;</span><br><span class="line">    companion object &#123;</span><br><span class="line"></span><br><span class="line">        @Volatile</span><br><span class="line">        private var instance: Singleton? = null</span><br><span class="line"></span><br><span class="line">        fun getInstance() =</span><br><span class="line">                instance ?: synchronized(this) &#123;</span><br><span class="line">                    instance ?: Singleton().also &#123; instance =it &#125;</span><br><span class="line">                &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li></ul><p>此写法 <a href="https://mllgy.github.io/2019/03/13/%E5%8D%95%E4%BE%8B%E7%9A%84%E5%87%A0%E7%A7%8D%E5%86%99%E6%B3%95/" target="_blank" rel="noopener">Java 单例模式的几种写法</a> 中懒汉模式的 <strong>方式三</strong> 相同。</p><p>调用方式：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//Kotlin 调用</span><br><span class="line">val singleton = Singleton.getInstance()</span><br><span class="line"></span><br><span class="line">//Java 调用</span><br><span class="line">Singleton singleton = Singleton.Companion.getInstance()</span><br></pre></td></tr></table></figure><h4 id="懒汉式-二"><a href="#懒汉式-二" class="headerlink" title="懒汉式 二"></a>懒汉式 二</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class Singleton private constructor()&#123;</span><br><span class="line">    companion object &#123;</span><br><span class="line">        val instance: Singleton by lazy &#123; Singleton() &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ul><li><code>Singleton</code> 通过 <code>lazy</code>来实现懒汉式加载。</li><li><code>lazy</code> 默认情况下是 <strong>线程安全</strong> 的，这就可以避免多个线程同时访问生成多个实例的问题。</li></ul><p>所以就不用象方式一种一样，对 Singleton 对象进行 <strong>加同步锁</strong> 和 <strong>双重校验</strong> 操作。</p>]]></content>
+    <content type="html"><![CDATA[<h4 id="最简单的实现方式"><a href="#最简单的实现方式" class="headerlink" title="最简单的实现方式"></a>最简单的实现方式</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">object Singleton &#123;</span><br><span class="line">  fun method() &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>调用单例</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//在Kotlin里调用</span><br><span class="line">Singleton.method()</span><br><span class="line"></span><br><span class="line">//在Java中调用</span><br><span class="line">Singleton.INSTANCE.method();</span><br></pre></td></tr></table></figure><p>其实这种方式的实现为 Java 中的饿汉式,在 AS 的 Kotlin 相关的工具对 object 类进行编译和反编译，可以看到起对应的 Java 代码如下：</p><a id="more"></a><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public final class Singleton &#123;</span><br><span class="line">   public static final Singleton INSTANCE;</span><br><span class="line"></span><br><span class="line">   public final void method() &#123;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   private Singleton() &#123;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   static &#123;</span><br><span class="line">      Singleton var0 = new Singleton();</span><br><span class="line">      INSTANCE = var0;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>和 Java 中的 饿汉式获得单例方式相同。</p><p>同样也与 Java 中饿汉方式获得单例拥有相同的问题：</p><ul><li>如果没有使用该类的对象，那么已经实例化的对象，造成了内存浪费。</li><li>当构造器中执行复杂操作，造成实例化过程缓慢，可能造成性能问题。</li></ul><h4 id="懒汉式-一"><a href="#懒汉式-一" class="headerlink" title="懒汉式 一"></a>懒汉式 一</h4><p>在 Kotlin 中单例的实现和 Java 中一样，必须有：</p><ol><li>私有化的构造函数</li><li>获得对象的方法</li></ol><p>那么在 Kotlin 中有：</p><ul><li>显式声明构造方法为 private</li><li>companion object 用来在 class 内部声明一个对象<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class Singleton private constructor()&#123;</span><br><span class="line">    companion object &#123;</span><br><span class="line"></span><br><span class="line">        @Volatile</span><br><span class="line">        private var instance: Singleton? = null</span><br><span class="line"></span><br><span class="line">        fun getInstance() =</span><br><span class="line">                instance ?: synchronized(this) &#123;</span><br><span class="line">                    instance ?: Singleton().also &#123; instance =it &#125;</span><br><span class="line">                &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li></ul><p>此写法 <a href="https://mllgy.github.io/2019/03/13/%E5%8D%95%E4%BE%8B%E7%9A%84%E5%87%A0%E7%A7%8D%E5%86%99%E6%B3%95/" target="_blank" rel="noopener">Java 单例模式的几种写法</a> 中懒汉模式的 <strong>方式三</strong> 相同。</p><p>调用方式：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//Kotlin 调用</span><br><span class="line">val singleton = Singleton.getInstance()</span><br><span class="line"></span><br><span class="line">//Java 调用</span><br><span class="line">Singleton singleton = Singleton.Companion.getInstance()</span><br></pre></td></tr></table></figure><h4 id="懒汉式-二"><a href="#懒汉式-二" class="headerlink" title="懒汉式 二"></a>懒汉式 二</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class Singleton private constructor()&#123;</span><br><span class="line">    companion object &#123;</span><br><span class="line">        val instance: Singleton by lazy &#123; Singleton() &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ul><li><code>Singleton</code> 通过 <code>lazy</code>来实现懒汉式加载。</li><li><code>lazy</code> 默认情况下是 <strong>线程安全</strong> 的，这就可以避免多个线程同时访问生成多个实例的问题。</li></ul><p>所以就不用象方式一中那样，对 Singleton 对象进行 <strong>加同步锁</strong> 和 <strong>双重校验</strong> 操作。</p>]]></content>
     
     <summary type="html">
     
@@ -37,16 +37,16 @@
     </summary>
     
     
-      <category term="Kotlin" scheme="//litten.me/tags/Kotlin/"/>
+      <category term="Kotlin" scheme="/tags/Kotlin/"/>
     
-      <category term="Singleton" scheme="//litten.me/tags/Singleton/"/>
+      <category term="Singleton" scheme="/tags/Singleton/"/>
     
   </entry>
   
   <entry>
     <title>随笔</title>
-    <link href="//litten.me/2019/05/23/%E9%9A%8F%E7%AC%94/"/>
-    <id>//litten.me/2019/05/23/随笔/</id>
+    <link href="/2019/05/23/%E9%9A%8F%E7%AC%94/"/>
+    <id>/2019/05/23/随笔/</id>
     <published>2019-05-22T23:36:36.000Z</published>
     <updated>2019-05-23T03:14:25.537Z</updated>
     
@@ -63,14 +63,14 @@
     </summary>
     
     
-      <category term="随笔" scheme="//litten.me/tags/%E9%9A%8F%E7%AC%94/"/>
+      <category term="随笔" scheme="/tags/%E9%9A%8F%E7%AC%94/"/>
     
   </entry>
   
   <entry>
     <title>深入浅出计算机组成原理(二)-CPU是如何执行指令的</title>
-    <link href="//litten.me/2019/05/15/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86-%E4%BA%8C-CPU%E6%98%AF%E5%A6%82%E4%BD%95%E6%89%A7%E8%A1%8C%E6%8C%87%E4%BB%A4%E7%9A%84/"/>
-    <id>//litten.me/2019/05/15/深入浅出计算机组成原理-二-CPU是如何执行指令的/</id>
+    <link href="/2019/05/15/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86-%E4%BA%8C-CPU%E6%98%AF%E5%A6%82%E4%BD%95%E6%89%A7%E8%A1%8C%E6%8C%87%E4%BB%A4%E7%9A%84/"/>
+    <id>/2019/05/15/深入浅出计算机组成原理-二-CPU是如何执行指令的/</id>
     <published>2019-05-15T10:04:03.000Z</published>
     <updated>2019-05-16T08:25:58.442Z</updated>
     
@@ -87,14 +87,14 @@
     </summary>
     
     
-      <category term="深入浅出计算机组成原理(徐文浩)" scheme="//litten.me/tags/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86-%E5%BE%90%E6%96%87%E6%B5%A9/"/>
+      <category term="深入浅出计算机组成原理(徐文浩)" scheme="/tags/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86-%E5%BE%90%E6%96%87%E6%B5%A9/"/>
     
   </entry>
   
   <entry>
     <title>深入浅出计算机组成原理(一)--计算机指令</title>
-    <link href="//litten.me/2019/05/15/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86-%E4%B8%80-%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%8C%87%E4%BB%A4/"/>
-    <id>//litten.me/2019/05/15/深入浅出计算机组成原理-一-计算机指令/</id>
+    <link href="/2019/05/15/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86-%E4%B8%80-%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%8C%87%E4%BB%A4/"/>
+    <id>/2019/05/15/深入浅出计算机组成原理-一-计算机指令/</id>
     <published>2019-05-15T02:21:30.000Z</published>
     <updated>2019-05-15T09:25:42.585Z</updated>
     
@@ -112,14 +112,14 @@
     </summary>
     
     
-      <category term="深入浅出计算机组成原理(徐文浩)" scheme="//litten.me/tags/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86-%E5%BE%90%E6%96%87%E6%B5%A9/"/>
+      <category term="深入浅出计算机组成原理(徐文浩)" scheme="/tags/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86-%E5%BE%90%E6%96%87%E6%B5%A9/"/>
     
   </entry>
   
   <entry>
     <title>Jetpack之WorkManager基本了解</title>
-    <link href="//litten.me/2019/05/14/Jetpack%E4%B9%8BWorkManager%E7%AC%94%E8%AE%B0/"/>
-    <id>//litten.me/2019/05/14/Jetpack之WorkManager笔记/</id>
+    <link href="/2019/05/14/Jetpack%E4%B9%8BWorkManager%E7%AC%94%E8%AE%B0/"/>
+    <id>/2019/05/14/Jetpack之WorkManager笔记/</id>
     <published>2019-05-14T07:15:58.000Z</published>
     <updated>2019-05-23T02:54:04.047Z</updated>
     
@@ -156,8 +156,8 @@
   
   <entry>
     <title>Java集合之Map</title>
-    <link href="//litten.me/2019/05/10/Java%E9%9B%86%E5%90%88%E4%B9%8BMap/"/>
-    <id>//litten.me/2019/05/10/Java集合之Map/</id>
+    <link href="/2019/05/10/Java%E9%9B%86%E5%90%88%E4%B9%8BMap/"/>
+    <id>/2019/05/10/Java集合之Map/</id>
     <published>2019-05-10T10:17:08.000Z</published>
     <updated>2019-05-23T02:52:19.957Z</updated>
     
@@ -172,16 +172,16 @@
     </summary>
     
     
-      <category term="Java 集合" scheme="//litten.me/tags/Java-%E9%9B%86%E5%90%88/"/>
+      <category term="Java 集合" scheme="/tags/Java-%E9%9B%86%E5%90%88/"/>
     
-      <category term="Map" scheme="//litten.me/tags/Map/"/>
+      <category term="Map" scheme="/tags/Map/"/>
     
   </entry>
   
   <entry>
     <title>Java集合之Queue</title>
-    <link href="//litten.me/2019/05/10/Java%E9%9B%86%E5%90%88%E4%B9%8BQueue/"/>
-    <id>//litten.me/2019/05/10/Java集合之Queue/</id>
+    <link href="/2019/05/10/Java%E9%9B%86%E5%90%88%E4%B9%8BQueue/"/>
+    <id>/2019/05/10/Java集合之Queue/</id>
     <published>2019-05-10T09:57:03.000Z</published>
     <updated>2019-05-23T02:54:44.400Z</updated>
     
@@ -202,16 +202,16 @@
     </summary>
     
     
-      <category term="Java 集合" scheme="//litten.me/tags/Java-%E9%9B%86%E5%90%88/"/>
+      <category term="Java 集合" scheme="/tags/Java-%E9%9B%86%E5%90%88/"/>
     
-      <category term="Queue" scheme="//litten.me/tags/Queue/"/>
+      <category term="Queue" scheme="/tags/Queue/"/>
     
   </entry>
   
   <entry>
     <title>Java集合之List</title>
-    <link href="//litten.me/2019/05/10/Java%E9%9B%86%E5%90%88%E4%B9%8BList/"/>
-    <id>//litten.me/2019/05/10/Java集合之List/</id>
+    <link href="/2019/05/10/Java%E9%9B%86%E5%90%88%E4%B9%8BList/"/>
+    <id>/2019/05/10/Java集合之List/</id>
     <published>2019-05-10T08:59:47.000Z</published>
     <updated>2019-05-23T02:55:08.224Z</updated>
     
@@ -230,16 +230,16 @@
     </summary>
     
     
-      <category term="Java 集合" scheme="//litten.me/tags/Java-%E9%9B%86%E5%90%88/"/>
+      <category term="Java 集合" scheme="/tags/Java-%E9%9B%86%E5%90%88/"/>
     
-      <category term="List" scheme="//litten.me/tags/List/"/>
+      <category term="List" scheme="/tags/List/"/>
     
   </entry>
   
   <entry>
     <title>Jetpack之Lifecycle 笔记</title>
-    <link href="//litten.me/2019/05/10/Jetpack%E4%B9%8BLifecycle-%E7%AC%94%E8%AE%B0/"/>
-    <id>//litten.me/2019/05/10/Jetpack之Lifecycle-笔记/</id>
+    <link href="/2019/05/10/Jetpack%E4%B9%8BLifecycle-%E7%AC%94%E8%AE%B0/"/>
+    <id>/2019/05/10/Jetpack之Lifecycle-笔记/</id>
     <published>2019-05-10T02:42:25.000Z</published>
     <updated>2019-05-10T08:56:59.810Z</updated>
     
@@ -255,16 +255,16 @@
     </summary>
     
     
-      <category term="Jetpack" scheme="//litten.me/tags/Jetpack/"/>
+      <category term="Jetpack" scheme="/tags/Jetpack/"/>
     
-      <category term="Lifecycle" scheme="//litten.me/tags/Lifecycle/"/>
+      <category term="Lifecycle" scheme="/tags/Lifecycle/"/>
     
   </entry>
   
   <entry>
     <title>Java 集合之 Set 集合 </title>
-    <link href="//litten.me/2019/05/09/Java-%E9%9B%86%E5%90%88%E4%B9%8B-Set/"/>
-    <id>//litten.me/2019/05/09/Java-集合之-Set/</id>
+    <link href="/2019/05/09/Java-%E9%9B%86%E5%90%88%E4%B9%8B-Set/"/>
+    <id>/2019/05/09/Java-集合之-Set/</id>
     <published>2019-05-09T07:49:35.000Z</published>
     <updated>2019-05-23T03:00:52.534Z</updated>
     
@@ -285,16 +285,16 @@
     </summary>
     
     
-      <category term="Java 集合" scheme="//litten.me/tags/Java-%E9%9B%86%E5%90%88/"/>
+      <category term="Java 集合" scheme="/tags/Java-%E9%9B%86%E5%90%88/"/>
     
-      <category term="Set" scheme="//litten.me/tags/Set/"/>
+      <category term="Set" scheme="/tags/Set/"/>
     
   </entry>
   
   <entry>
     <title>Java 集合概述</title>
-    <link href="//litten.me/2019/05/09/Java-%E9%9B%86%E5%90%88%E6%A6%82%E8%BF%B0/"/>
-    <id>//litten.me/2019/05/09/Java-集合概述/</id>
+    <link href="/2019/05/09/Java-%E9%9B%86%E5%90%88%E6%A6%82%E8%BF%B0/"/>
+    <id>/2019/05/09/Java-集合概述/</id>
     <published>2019-05-09T03:06:58.000Z</published>
     <updated>2019-05-09T07:48:25.065Z</updated>
     
@@ -316,14 +316,14 @@
     </summary>
     
     
-      <category term="Java 集合" scheme="//litten.me/tags/Java-%E9%9B%86%E5%90%88/"/>
+      <category term="Java 集合" scheme="/tags/Java-%E9%9B%86%E5%90%88/"/>
     
   </entry>
   
   <entry>
     <title>Jetpack之LiveData 笔记</title>
-    <link href="//litten.me/2019/05/08/Jetpack%E4%B9%8BLiveData-%E7%AC%94%E8%AE%B0/"/>
-    <id>//litten.me/2019/05/08/Jetpack之LiveData-笔记/</id>
+    <link href="/2019/05/08/Jetpack%E4%B9%8BLiveData-%E7%AC%94%E8%AE%B0/"/>
+    <id>/2019/05/08/Jetpack之LiveData-笔记/</id>
     <published>2019-05-08T03:21:37.000Z</published>
     <updated>2019-05-09T10:33:26.358Z</updated>
     
@@ -340,16 +340,16 @@
     </summary>
     
     
-      <category term="Jetpack" scheme="//litten.me/tags/Jetpack/"/>
+      <category term="Jetpack" scheme="/tags/Jetpack/"/>
     
-      <category term="LiveData" scheme="//litten.me/tags/LiveData/"/>
+      <category term="LiveData" scheme="/tags/LiveData/"/>
     
   </entry>
   
   <entry>
     <title>Jetpack之ViewModle 笔记</title>
-    <link href="//litten.me/2019/05/06/Jetpack%E4%B9%8BViewModle%E7%AC%94%E8%AE%B0/"/>
-    <id>//litten.me/2019/05/06/Jetpack之ViewModle笔记/</id>
+    <link href="/2019/05/06/Jetpack%E4%B9%8BViewModle%E7%AC%94%E8%AE%B0/"/>
+    <id>/2019/05/06/Jetpack之ViewModle笔记/</id>
     <published>2019-05-06T03:52:23.000Z</published>
     <updated>2019-05-23T02:52:44.059Z</updated>
     
@@ -364,16 +364,16 @@
     </summary>
     
     
-      <category term="Jetpack" scheme="//litten.me/tags/Jetpack/"/>
+      <category term="Jetpack" scheme="/tags/Jetpack/"/>
     
-      <category term="ViewModle" scheme="//litten.me/tags/ViewModle/"/>
+      <category term="ViewModle" scheme="/tags/ViewModle/"/>
     
   </entry>
   
   <entry>
     <title>TCP 的三次握手和四次挥手</title>
-    <link href="//litten.me/2019/05/06/TCP-%E7%9A%84%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/"/>
-    <id>//litten.me/2019/05/06/TCP-的三次握手和四次挥手/</id>
+    <link href="/2019/05/06/TCP-%E7%9A%84%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/"/>
+    <id>/2019/05/06/TCP-的三次握手和四次挥手/</id>
     <published>2019-05-06T03:35:16.000Z</published>
     <updated>2019-05-07T07:25:45.260Z</updated>
     
@@ -395,18 +395,18 @@
     </summary>
     
     
-      <category term="网络协议" scheme="//litten.me/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/"/>
+      <category term="网络协议" scheme="/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/"/>
     
-      <category term="TCP" scheme="//litten.me/tags/TCP/"/>
+      <category term="TCP" scheme="/tags/TCP/"/>
     
-      <category term="趣谈网络协议(刘超)" scheme="//litten.me/tags/%E8%B6%A3%E8%B0%88%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE-%E5%88%98%E8%B6%85/"/>
+      <category term="趣谈网络协议(刘超)" scheme="/tags/%E8%B6%A3%E8%B0%88%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE-%E5%88%98%E8%B6%85/"/>
     
   </entry>
   
   <entry>
     <title>Java 反射</title>
-    <link href="//litten.me/2019/04/30/Java-%E5%8F%8D%E5%B0%84/"/>
-    <id>//litten.me/2019/04/30/Java-反射/</id>
+    <link href="/2019/04/30/Java-%E5%8F%8D%E5%B0%84/"/>
+    <id>/2019/04/30/Java-反射/</id>
     <published>2019-04-30T02:35:03.000Z</published>
     <updated>2019-04-30T10:41:41.872Z</updated>
     
@@ -422,14 +422,14 @@
     </summary>
     
     
-      <category term="反射" scheme="//litten.me/tags/%E5%8F%8D%E5%B0%84/"/>
+      <category term="反射" scheme="/tags/%E5%8F%8D%E5%B0%84/"/>
     
   </entry>
   
   <entry>
     <title>理解JNI</title>
-    <link href="//litten.me/2019/04/09/%E7%90%86%E8%A7%A3JNI/"/>
-    <id>//litten.me/2019/04/09/理解JNI/</id>
+    <link href="/2019/04/09/%E7%90%86%E8%A7%A3JNI/"/>
+    <id>/2019/04/09/理解JNI/</id>
     <published>2019-04-09T08:28:01.000Z</published>
     <updated>2019-05-23T02:57:06.384Z</updated>
     
@@ -453,16 +453,16 @@
     </summary>
     
     
-      <category term="JNI" scheme="//litten.me/tags/JNI/"/>
+      <category term="JNI" scheme="/tags/JNI/"/>
     
-      <category term="深入理解 Android 读书笔记" scheme="//litten.me/tags/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-Android-%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+      <category term="深入理解 Android 读书笔记" scheme="/tags/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-Android-%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
     
   </entry>
   
   <entry>
     <title>面向对象思想的思考</title>
-    <link href="//litten.me/2019/04/09/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/"/>
-    <id>//litten.me/2019/04/09/面向对象/</id>
+    <link href="/2019/04/09/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/"/>
+    <id>/2019/04/09/面向对象/</id>
     <published>2019-04-09T03:36:13.000Z</published>
     <updated>2019-04-09T06:01:42.685Z</updated>
     
@@ -478,14 +478,14 @@
     </summary>
     
     
-      <category term="OOP" scheme="//litten.me/tags/OOP/"/>
+      <category term="OOP" scheme="/tags/OOP/"/>
     
   </entry>
   
   <entry>
     <title>Java Basic (四) -- 内部类</title>
-    <link href="//litten.me/2019/04/04/Java-Basic-%E5%9B%9B%E5%86%85%E9%83%A8%E7%B1%BB/"/>
-    <id>//litten.me/2019/04/04/Java-Basic-四内部类/</id>
+    <link href="/2019/04/04/Java-Basic-%E5%9B%9B%E5%86%85%E9%83%A8%E7%B1%BB/"/>
+    <id>/2019/04/04/Java-Basic-四内部类/</id>
     <published>2019-04-04T06:47:26.000Z</published>
     <updated>2019-05-23T02:58:21.028Z</updated>
     
@@ -510,14 +510,14 @@
     </summary>
     
     
-      <category term="内部类" scheme="//litten.me/tags/%E5%86%85%E9%83%A8%E7%B1%BB/"/>
+      <category term="内部类" scheme="/tags/%E5%86%85%E9%83%A8%E7%B1%BB/"/>
     
   </entry>
   
   <entry>
     <title>Vim 基本使用</title>
-    <link href="//litten.me/2019/04/02/Vim/"/>
-    <id>//litten.me/2019/04/02/Vim/</id>
+    <link href="/2019/04/02/Vim/"/>
+    <id>/2019/04/02/Vim/</id>
     <published>2019-04-02T03:33:55.000Z</published>
     <updated>2019-05-23T02:58:41.702Z</updated>
     
@@ -601,14 +601,14 @@
     </summary>
     
     
-      <category term="VIM" scheme="//litten.me/tags/VIM/"/>
+      <category term="VIM" scheme="/tags/VIM/"/>
     
   </entry>
   
   <entry>
     <title>IntentFilter匹配规则</title>
-    <link href="//litten.me/2019/04/02/IntentFilter%E5%8C%B9%E9%85%8D%E8%A7%84%E5%88%99/"/>
-    <id>//litten.me/2019/04/02/IntentFilter匹配规则/</id>
+    <link href="/2019/04/02/IntentFilter%E5%8C%B9%E9%85%8D%E8%A7%84%E5%88%99/"/>
+    <id>/2019/04/02/IntentFilter匹配规则/</id>
     <published>2019-04-02T02:28:45.000Z</published>
     <updated>2019-05-16T07:52:06.629Z</updated>
     
@@ -630,8 +630,8 @@
   
   <entry>
     <title>Android编程中的一些概念(Wiki)</title>
-    <link href="//litten.me/2019/04/01/Android%E7%BC%96%E7%A8%8B%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E6%A6%82%E5%BF%B5/"/>
-    <id>//litten.me/2019/04/01/Android编程中的一些概念/</id>
+    <link href="/2019/04/01/Android%E7%BC%96%E7%A8%8B%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E6%A6%82%E5%BF%B5/"/>
+    <id>/2019/04/01/Android编程中的一些概念/</id>
     <published>2019-04-01T02:38:59.000Z</published>
     <updated>2019-04-09T03:33:34.882Z</updated>
     
@@ -654,14 +654,14 @@
     </summary>
     
     
-      <category term="编译技术" scheme="//litten.me/tags/%E7%BC%96%E8%AF%91%E6%8A%80%E6%9C%AF/"/>
+      <category term="编译技术" scheme="/tags/%E7%BC%96%E8%AF%91%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   
   <entry>
     <title>常用的 Gradle 命令</title>
-    <link href="//litten.me/2019/03/28/%E5%B8%B8%E7%94%A8%E7%9A%84-Gradle-%E5%91%BD%E4%BB%A4/"/>
-    <id>//litten.me/2019/03/28/常用的-Gradle-命令/</id>
+    <link href="/2019/03/28/%E5%B8%B8%E7%94%A8%E7%9A%84-Gradle-%E5%91%BD%E4%BB%A4/"/>
+    <id>/2019/03/28/常用的-Gradle-命令/</id>
     <published>2019-03-28T08:37:33.000Z</published>
     <updated>2019-03-29T10:55:03.465Z</updated>
     
@@ -681,8 +681,8 @@
   
   <entry>
     <title>打包 jar 、aar</title>
-    <link href="//litten.me/2019/03/27/%E6%89%93%E5%8C%85-jar-%E3%80%81aar/"/>
-    <id>//litten.me/2019/03/27/打包-jar-、aar/</id>
+    <link href="/2019/03/27/%E6%89%93%E5%8C%85-jar-%E3%80%81aar/"/>
+    <id>/2019/03/27/打包-jar-、aar/</id>
     <published>2019-03-27T02:47:06.000Z</published>
     <updated>2019-03-28T10:06:15.262Z</updated>
     
@@ -702,8 +702,8 @@
   
   <entry>
     <title>adb 常用命令</title>
-    <link href="//litten.me/2019/03/26/adb-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
-    <id>//litten.me/2019/03/26/adb-常用命令/</id>
+    <link href="/2019/03/26/adb-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
+    <id>/2019/03/26/adb-常用命令/</id>
     <published>2019-03-26T03:32:49.000Z</published>
     <updated>2019-04-02T07:41:02.113Z</updated>
     
@@ -727,14 +727,14 @@
     </summary>
     
     
-      <category term="adb" scheme="//litten.me/tags/adb/"/>
+      <category term="adb" scheme="/tags/adb/"/>
     
   </entry>
   
   <entry>
     <title>Java IO 流</title>
-    <link href="//litten.me/2019/03/25/%E6%B5%81/"/>
-    <id>//litten.me/2019/03/25/流/</id>
+    <link href="/2019/03/25/%E6%B5%81/"/>
+    <id>/2019/03/25/流/</id>
     <published>2019-03-25T09:03:45.000Z</published>
     <updated>2019-04-09T07:40:35.525Z</updated>
     
@@ -750,14 +750,14 @@
     </summary>
     
     
-      <category term="IO 流" scheme="//litten.me/tags/IO-%E6%B5%81/"/>
+      <category term="IO 流" scheme="/tags/IO-%E6%B5%81/"/>
     
   </entry>
   
   <entry>
     <title>设计六大准则(设计模式之禅)</title>
-    <link href="//litten.me/2019/03/19/%E8%AE%BE%E8%AE%A1%E5%85%AD%E5%A4%A7%E5%87%86%E5%88%99/"/>
-    <id>//litten.me/2019/03/19/设计六大准则/</id>
+    <link href="/2019/03/19/%E8%AE%BE%E8%AE%A1%E5%85%AD%E5%A4%A7%E5%87%86%E5%88%99/"/>
+    <id>/2019/03/19/设计六大准则/</id>
     <published>2019-03-19T04:58:37.000Z</published>
     <updated>2019-03-25T07:11:28.685Z</updated>
     
@@ -782,14 +782,14 @@
     </summary>
     
     
-      <category term="设计模式六大原则" scheme="//litten.me/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%85%AD%E5%A4%A7%E5%8E%9F%E5%88%99/"/>
+      <category term="设计模式六大原则" scheme="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%85%AD%E5%A4%A7%E5%8E%9F%E5%88%99/"/>
     
   </entry>
   
   <entry>
     <title>Java Basic 三</title>
-    <link href="//litten.me/2019/03/15/Java-Basic-%E4%B8%89/"/>
-    <id>//litten.me/2019/03/15/Java-Basic-三/</id>
+    <link href="/2019/03/15/Java-Basic-%E4%B8%89/"/>
+    <id>/2019/03/15/Java-Basic-三/</id>
     <published>2019-03-15T09:08:48.000Z</published>
     <updated>2019-04-04T09:27:23.918Z</updated>
     
@@ -814,8 +814,8 @@
   
   <entry>
     <title>requestDisallowInterceptTouchEvent</title>
-    <link href="//litten.me/2019/03/14/requestDisallowInterceptTouchEvent/"/>
-    <id>//litten.me/2019/03/14/requestDisallowInterceptTouchEvent/</id>
+    <link href="/2019/03/14/requestDisallowInterceptTouchEvent/"/>
+    <id>/2019/03/14/requestDisallowInterceptTouchEvent/</id>
     <published>2019-03-14T03:54:33.000Z</published>
     <updated>2019-03-14T11:15:50.581Z</updated>
     
@@ -832,16 +832,16 @@
     </summary>
     
     
-      <category term="View" scheme="//litten.me/tags/View/"/>
+      <category term="View" scheme="/tags/View/"/>
     
-      <category term="事件分发机制" scheme="//litten.me/tags/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6/"/>
+      <category term="事件分发机制" scheme="/tags/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6/"/>
     
   </entry>
   
   <entry>
     <title>拖动百度地图出现黑影的解决方法</title>
-    <link href="//litten.me/2019/03/13/%E6%8B%96%E5%8A%A8%E7%99%BE%E5%BA%A6%E5%9C%B0%E5%9B%BE%E5%87%BA%E7%8E%B0%E9%BB%91%E5%BD%B1%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/"/>
-    <id>//litten.me/2019/03/13/拖动百度地图出现黑影的解决方法/</id>
+    <link href="/2019/03/13/%E6%8B%96%E5%8A%A8%E7%99%BE%E5%BA%A6%E5%9C%B0%E5%9B%BE%E5%87%BA%E7%8E%B0%E9%BB%91%E5%BD%B1%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/"/>
+    <id>/2019/03/13/拖动百度地图出现黑影的解决方法/</id>
     <published>2019-03-13T08:29:09.000Z</published>
     <updated>2019-03-14T02:12:43.283Z</updated>
     
@@ -857,16 +857,16 @@
     </summary>
     
     
-      <category term="百度地图黑影" scheme="//litten.me/tags/%E7%99%BE%E5%BA%A6%E5%9C%B0%E5%9B%BE%E9%BB%91%E5%BD%B1/"/>
+      <category term="百度地图黑影" scheme="/tags/%E7%99%BE%E5%BA%A6%E5%9C%B0%E5%9B%BE%E9%BB%91%E5%BD%B1/"/>
     
-      <category term="硬件加速" scheme="//litten.me/tags/%E7%A1%AC%E4%BB%B6%E5%8A%A0%E9%80%9F/"/>
+      <category term="硬件加速" scheme="/tags/%E7%A1%AC%E4%BB%B6%E5%8A%A0%E9%80%9F/"/>
     
   </entry>
   
   <entry>
     <title>Java 单例的几种写法</title>
-    <link href="//litten.me/2019/03/13/%E5%8D%95%E4%BE%8B%E7%9A%84%E5%87%A0%E7%A7%8D%E5%86%99%E6%B3%95/"/>
-    <id>//litten.me/2019/03/13/单例的几种写法/</id>
+    <link href="/2019/03/13/%E5%8D%95%E4%BE%8B%E7%9A%84%E5%87%A0%E7%A7%8D%E5%86%99%E6%B3%95/"/>
+    <id>/2019/03/13/单例的几种写法/</id>
     <published>2019-03-13T03:37:05.000Z</published>
     <updated>2019-05-24T10:08:53.547Z</updated>
     
@@ -886,14 +886,14 @@
     </summary>
     
     
-      <category term="Singleton" scheme="//litten.me/tags/Singleton/"/>
+      <category term="Singleton" scheme="/tags/Singleton/"/>
     
   </entry>
   
   <entry>
     <title>Android 焦点机制</title>
-    <link href="//litten.me/2019/03/11/Android-%E7%84%A6%E7%82%B9%E6%9C%BA%E5%88%B6/"/>
-    <id>//litten.me/2019/03/11/Android-焦点机制/</id>
+    <link href="/2019/03/11/Android-%E7%84%A6%E7%82%B9%E6%9C%BA%E5%88%B6/"/>
+    <id>/2019/03/11/Android-焦点机制/</id>
     <published>2019-03-11T03:08:29.000Z</published>
     <updated>2019-03-13T02:44:51.735Z</updated>
     
@@ -907,14 +907,14 @@
     </summary>
     
     
-      <category term="焦点机制" scheme="//litten.me/tags/%E7%84%A6%E7%82%B9%E6%9C%BA%E5%88%B6/"/>
+      <category term="焦点机制" scheme="/tags/%E7%84%A6%E7%82%B9%E6%9C%BA%E5%88%B6/"/>
     
   </entry>
   
   <entry>
     <title>Java Baseic 二</title>
-    <link href="//litten.me/2019/03/07/Java-Basic-%E4%BA%8C/"/>
-    <id>//litten.me/2019/03/07/Java-Basic-二/</id>
+    <link href="/2019/03/07/Java-Basic-%E4%BA%8C/"/>
+    <id>/2019/03/07/Java-Basic-二/</id>
     <published>2019-03-07T04:56:36.000Z</published>
     <updated>2019-03-12T06:47:07.046Z</updated>
     
@@ -935,8 +935,8 @@
   
   <entry>
     <title>Java Basic</title>
-    <link href="//litten.me/2019/03/06/Java-Basic-%E4%B8%80/"/>
-    <id>//litten.me/2019/03/06/Java-Basic-一/</id>
+    <link href="/2019/03/06/Java-Basic-%E4%B8%80/"/>
+    <id>/2019/03/06/Java-Basic-一/</id>
     <published>2019-03-06T06:31:33.000Z</published>
     <updated>2019-04-02T09:06:48.706Z</updated>
     
@@ -953,14 +953,14 @@
     </summary>
     
     
-      <category term="Java 继承，对象，类初始化" scheme="//litten.me/tags/Java-%E7%BB%A7%E6%89%BF%EF%BC%8C%E5%AF%B9%E8%B1%A1%EF%BC%8C%E7%B1%BB%E5%88%9D%E5%A7%8B%E5%8C%96/"/>
+      <category term="Java 继承，对象，类初始化" scheme="/tags/Java-%E7%BB%A7%E6%89%BF%EF%BC%8C%E5%AF%B9%E8%B1%A1%EF%BC%8C%E7%B1%BB%E5%88%9D%E5%A7%8B%E5%8C%96/"/>
     
   </entry>
   
   <entry>
     <title>关于 Java 异常机制的补充</title>
-    <link href="//litten.me/2019/01/26/%E5%85%B3%E4%BA%8E-Java-%E5%BC%82%E5%B8%B8%E6%9C%BA%E5%88%B6%E7%9A%84%E8%A1%A5%E5%85%85/"/>
-    <id>//litten.me/2019/01/26/关于-Java-异常机制的补充/</id>
+    <link href="/2019/01/26/%E5%85%B3%E4%BA%8E-Java-%E5%BC%82%E5%B8%B8%E6%9C%BA%E5%88%B6%E7%9A%84%E8%A1%A5%E5%85%85/"/>
+    <id>/2019/01/26/关于-Java-异常机制的补充/</id>
     <published>2019-01-26T10:44:41.000Z</published>
     <updated>2019-01-26T10:51:14.604Z</updated>
     
@@ -978,14 +978,14 @@
     </summary>
     
     
-      <category term="Exception" scheme="//litten.me/tags/Exception/"/>
+      <category term="Exception" scheme="/tags/Exception/"/>
     
   </entry>
   
   <entry>
     <title>Java 异常机制浅析</title>
-    <link href="//litten.me/2019/01/26/Java-%E5%BC%82%E5%B8%B8%E6%9C%BA%E5%88%B6%E6%B5%85%E6%9E%90/"/>
-    <id>//litten.me/2019/01/26/Java-异常机制浅析/</id>
+    <link href="/2019/01/26/Java-%E5%BC%82%E5%B8%B8%E6%9C%BA%E5%88%B6%E6%B5%85%E6%9E%90/"/>
+    <id>/2019/01/26/Java-异常机制浅析/</id>
     <published>2019-01-26T10:23:46.000Z</published>
     <updated>2019-01-26T11:08:34.066Z</updated>
     
@@ -1000,14 +1000,14 @@
     </summary>
     
     
-      <category term="Exception" scheme="//litten.me/tags/Exception/"/>
+      <category term="Exception" scheme="/tags/Exception/"/>
     
   </entry>
   
   <entry>
     <title>RxJava Transformer</title>
-    <link href="//litten.me/2019/01/17/RxJava%20%E4%BD%BF%E7%94%A8%20Transformer%20%E8%BF%9B%E8%A1%8C%E5%8F%98%E6%8D%A2/"/>
-    <id>//litten.me/2019/01/17/RxJava 使用 Transformer 进行变换/</id>
+    <link href="/2019/01/17/RxJava%20%E4%BD%BF%E7%94%A8%20Transformer%20%E8%BF%9B%E8%A1%8C%E5%8F%98%E6%8D%A2/"/>
+    <id>/2019/01/17/RxJava 使用 Transformer 进行变换/</id>
     <published>2019-01-17T09:26:13.000Z</published>
     <updated>2019-01-17T10:51:43.986Z</updated>
     
@@ -1022,16 +1022,16 @@
     </summary>
     
     
-      <category term="RxJava" scheme="//litten.me/tags/RxJava/"/>
+      <category term="RxJava" scheme="/tags/RxJava/"/>
     
-      <category term="Transformer" scheme="//litten.me/tags/Transformer/"/>
+      <category term="Transformer" scheme="/tags/Transformer/"/>
     
   </entry>
   
   <entry>
     <title>Dagger2 前奏篇:依赖注入概念</title>
-    <link href="//litten.me/2019/01/17/Dagger2%20%E5%89%8D%E5%A5%8F%E7%AF%87%EF%BC%9A%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E6%A6%82%E5%BF%B5/"/>
-    <id>//litten.me/2019/01/17/Dagger2 前奏篇：依赖注入概念/</id>
+    <link href="/2019/01/17/Dagger2%20%E5%89%8D%E5%A5%8F%E7%AF%87%EF%BC%9A%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E6%A6%82%E5%BF%B5/"/>
+    <id>/2019/01/17/Dagger2 前奏篇：依赖注入概念/</id>
     <published>2019-01-17T06:57:56.000Z</published>
     <updated>2019-01-26T11:10:20.351Z</updated>
     
@@ -1045,16 +1045,16 @@
     </summary>
     
     
-      <category term="Dagger2" scheme="//litten.me/tags/Dagger2/"/>
+      <category term="Dagger2" scheme="/tags/Dagger2/"/>
     
-      <category term="DI" scheme="//litten.me/tags/DI/"/>
+      <category term="DI" scheme="/tags/DI/"/>
     
   </entry>
   
   <entry>
     <title>OKhttp3 拦截器</title>
-    <link href="//litten.me/2019/01/17/OKhttp3%20%E7%B3%BB%E7%BB%9F%E6%8B%A6%E6%88%AA%E5%99%A8%E7%AE%80%E4%BB%8B/"/>
-    <id>//litten.me/2019/01/17/OKhttp3 系统拦截器简介/</id>
+    <link href="/2019/01/17/OKhttp3%20%E7%B3%BB%E7%BB%9F%E6%8B%A6%E6%88%AA%E5%99%A8%E7%AE%80%E4%BB%8B/"/>
+    <id>/2019/01/17/OKhttp3 系统拦截器简介/</id>
     <published>2019-01-17T06:31:26.000Z</published>
     <updated>2019-05-16T07:53:37.063Z</updated>
     
@@ -1071,14 +1071,14 @@
     </summary>
     
     
-      <category term="Okhttp3" scheme="//litten.me/tags/Okhttp3/"/>
+      <category term="Okhttp3" scheme="/tags/Okhttp3/"/>
     
   </entry>
   
   <entry>
     <title>hexo 博客维护</title>
-    <link href="//litten.me/2019/01/17/Hexo%20%E5%8D%9A%E5%AE%A2%E7%BB%B4%E6%8A%A4/"/>
-    <id>//litten.me/2019/01/17/Hexo 博客维护/</id>
+    <link href="/2019/01/17/Hexo%20%E5%8D%9A%E5%AE%A2%E7%BB%B4%E6%8A%A4/"/>
+    <id>/2019/01/17/Hexo 博客维护/</id>
     <published>2019-01-17T02:26:43.000Z</published>
     <updated>2019-01-17T07:13:41.634Z</updated>
     
@@ -1094,14 +1094,14 @@
     </summary>
     
     
-      <category term="Hexo" scheme="//litten.me/tags/Hexo/"/>
+      <category term="Hexo" scheme="/tags/Hexo/"/>
     
   </entry>
   
   <entry>
     <title>Java 内存空间类别</title>
-    <link href="//litten.me/2019/01/16/Java%20%E5%86%85%E5%AD%98%E7%A9%BA%E9%97%B4%E7%B1%BB%E5%88%AB/"/>
-    <id>//litten.me/2019/01/16/Java 内存空间类别/</id>
+    <link href="/2019/01/16/Java%20%E5%86%85%E5%AD%98%E7%A9%BA%E9%97%B4%E7%B1%BB%E5%88%AB/"/>
+    <id>/2019/01/16/Java 内存空间类别/</id>
     <published>2019-01-16T07:23:17.000Z</published>
     <updated>2019-01-17T07:13:44.098Z</updated>
     
@@ -1122,16 +1122,16 @@
     </summary>
     
     
-      <category term="Java" scheme="//litten.me/tags/Java/"/>
+      <category term="Java" scheme="/tags/Java/"/>
     
-      <category term="内存分区" scheme="//litten.me/tags/%E5%86%85%E5%AD%98%E5%88%86%E5%8C%BA/"/>
+      <category term="内存分区" scheme="/tags/%E5%86%85%E5%AD%98%E5%88%86%E5%8C%BA/"/>
     
   </entry>
   
   <entry>
     <title>使用 Hexo 搭建 GitPage 静态博客</title>
-    <link href="//litten.me/2019/01/16/%E4%BD%BF%E7%94%A8%20Hexo%20%E6%90%AD%E5%BB%BA%20GitPage%20%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2/"/>
-    <id>//litten.me/2019/01/16/使用 Hexo 搭建 GitPage 静态博客/</id>
+    <link href="/2019/01/16/%E4%BD%BF%E7%94%A8%20Hexo%20%E6%90%AD%E5%BB%BA%20GitPage%20%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2/"/>
+    <id>/2019/01/16/使用 Hexo 搭建 GitPage 静态博客/</id>
     <published>2019-01-16T06:08:29.821Z</published>
     <updated>2019-01-17T07:13:32.759Z</updated>
     
@@ -1152,9 +1152,9 @@
     </summary>
     
     
-      <category term="Hexo" scheme="//litten.me/tags/Hexo/"/>
+      <category term="Hexo" scheme="/tags/Hexo/"/>
     
-      <category term="GitPage" scheme="//litten.me/tags/GitPage/"/>
+      <category term="GitPage" scheme="/tags/GitPage/"/>
     
   </entry>
   
