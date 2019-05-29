@@ -1,7 +1,7 @@
 ---
 title: Java 集合工具类--Collections
 date: 2019-05-29 17:17:24
-tags: [Java 集合,Collections]
+tags: [Java Collection,Collections,Java Basic]
 ---
 
 **HashSet、TreeSet、ArrayList、ArrayDeque、LinkedList、HashMap 和 TreeMap 都是线程不安全的**，

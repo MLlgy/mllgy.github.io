@@ -1,7 +1,7 @@
 ---
 title: Java集合之Map
 date: 2019-05-10 18:17:08
-tags: [Java 集合,Map]
+tags: [Java Collection,Map,Java Basic]
 ---
 
 ### 概述 

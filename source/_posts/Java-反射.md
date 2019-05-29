@@ -1,9 +1,8 @@
 ---
 title: Java 反射
 date: 2019-04-30 10:35:03
-tags: [反射]
+tags: [Java Basic,Inflection]
 ---
-
 
 
 ## 根据一个对象获得一个类

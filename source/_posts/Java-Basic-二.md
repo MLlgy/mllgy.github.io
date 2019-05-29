@@ -1,7 +1,7 @@
 ---
-title: Java Baseic 二
+title: Java Baseic Two
 date: 2019-03-07 12:56:36
-tags:
+tags: [Java Basic]
 ---
 ### == 与 equal 方法
 
