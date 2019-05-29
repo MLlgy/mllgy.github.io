@@ -17,7 +17,7 @@
 <meta property="og:description" content="概述Map 用于保存具有 映射关系 的数据，因此 Map 集合内保存着两组数据，一组保存 Map 的 key，一组保存 Map 的 value，并且 key 和 value 可以是任何类型的数据。  可以把 Map 里的 Key 放在一起，它们组成一个 Set 集合(Key 没有顺序、不可重复)，其实Map 的内部的 keySet() 方法确实是返回的所有的 key 组成的 Set 集合对象。而把">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/images/2019_05_09_02.jpg">
-<meta property="og:updated_time" content="2019-05-29T06:00:12.396Z">
+<meta property="og:updated_time" content="2019-05-29T09:16:39.023Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java集合之Map">
 <meta name="twitter:description" content="概述Map 用于保存具有 映射关系 的数据，因此 Map 集合内保存着两组数据，一组保存 Map 的 key，一组保存 Map 的 value，并且 key 和 value 可以是任何类型的数据。  可以把 Map 里的 Key 放在一起，它们组成一个 Set 集合(Key 没有顺序、不可重复)，其实Map 的内部的 keySet() 方法确实是返回的所有的 key 组成的 Set 集合对象。而把">
@@ -176,6 +176,7 @@
         <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>Map 用于保存具有 <strong>映射关系</strong> 的数据，因此 Map 集合内保存着两组数据，一组保存 Map 的 key，一组保存 Map 的 value，并且 key 和 value 可以是任何类型的数据。</p>
 <p><img src="/../images/2019_05_09_02.jpg" alt="Map"></p>
 <p>可以把 Map 里的 Key 放在一起，它们组成一个 <strong>Set 集合</strong>(Key 没有顺序、不可重复)，其实Map 的内部的 keySet() 方法确实是返回的所有的 key 组成的 Set 集合对象。而把 Map 内的 Value 放在一起，它们类似一个 <strong>List 集合</strong>(可重复，此时的索引为 key)。</p>
+<p>如果抽象的看 Map 的 key 可以看作为 Set 集合(即无序、不可重复)，而 value 可以看作为 Array 集合(可重复)</p>
 <h3 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h3><p>向 Map 中添加数据中，如果 Map 中有存在 key，那么新添加的 value 会覆盖原来的 value。</p>
 <a id="more"></a>
 
@@ -191,11 +192,12 @@
 <p>与 HashSet 相同，采用自定义类作为 HashMap、Hashtable 的 key，如果程序修改了作为 key 的可变对象，那么也会出现与 HashSet 类似的情形：程序无法准确访问到 Map 中被修改过的 key。</p>
 <h3 id="LinkedHashMap"><a href="#LinkedHashMap" class="headerlink" title="LinkedHashMap"></a>LinkedHashMap</h3><p>与 LinkedHashSet 一致，LinkedHashMap 内部也是通过双向链表来维护添加的 key-value 的顺序(以 key 的添加顺序为准)。</p>
 <p>同样的，由于维护链表 LinkedHashMap 的性能比 HashMap 差一些，但是也正是这个原因在遍历 Map 中元素时，LinkedHashMap 的效率更高一些。</p>
-<h3 id="TreeMap-amp-amp-SortMap"><a href="#TreeMap-amp-amp-SortMap" class="headerlink" title="TreeMap &amp;&amp; SortMap"></a>TreeMap &amp;&amp; SortMap</h3><p>TreeMap 是一个红黑树结构，每个 key-value 为红黑树的一个节点，而 TreeMap 存储数据时，是以 key 为标准对 key-value 进行排序。</p>
+<h3 id="SortedMap-amp-amp-TreeMap"><a href="#SortedMap-amp-amp-TreeMap" class="headerlink" title="SortedMap &amp;&amp; TreeMap"></a>SortedMap &amp;&amp; TreeMap</h3><p>SortedMap 为 Map 派生的一个子接口，而 TreeMap 为 SortedMap 的一个实现类。</p>
+<p>TreeMap 是一个红黑树结构，每个 key-value 为红黑树的一个节点，而 TreeMap 存储数据时，是以 key 为标准对 key-value 进行排序。</p>
 <p>TreeMap 的两种排序方式：</p>
 <ul>
 <li><p>自然排序</p>
-<p>  TreeMap 的所有的 key 必须实现 Comparator 接口，而且所有的 key 必须为同一个类的对象，否则会报 ClassCastException 。</p>
+<p>  TreeMap 的所有的 key 必须实现 Comparable 接口，而且所有的 key 必须为同一个类的对象，否则会报 ClassCastException 。</p>
 <p>  key 相同的标准为：两个 key 通过 compareTo() 方法返回 0，则认为相等。</p>
 </li>
 <li><p>定制排序</p>
@@ -203,6 +205,42 @@
 <p>  如果想让排序更加顺利的进行，那么需要重写 key 对应类的 equal() 方法，并且 equal() 方法的返回值与 compareTo() 的返回值表达的结果一致，否则将于 Map 接口规则冲突。</p>
 </li>
 </ul>
+<p><strong>自然排序</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">public class Bean implements Comparable &#123;</span><br><span class="line"></span><br><span class="line">    private int age;</span><br><span class="line">    private String name;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean equals(Object obj) &#123;</span><br><span class="line">        if (this == obj) &#123;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        if (obj != null &amp;&amp; obj.getClass() == Bean.class) &#123;</span><br><span class="line">            Bean bean = (Bean) obj;</span><br><span class="line">            return age == bean.age;</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int compareTo(Object obj) &#123;</span><br><span class="line">        Bean bean = (Bean) obj;</span><br><span class="line">        return Integer.compare(age, bean.age);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">       ....</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">TreeMap treeMap = new TreeMap();</span><br><span class="line">Bean bean = new Bean(1, &quot;mike&quot;);</span><br><span class="line">Bean bean2 = new Bean(4, &quot;mike2&quot;);</span><br><span class="line">Bean bean3 = new Bean(3, &quot;mike3&quot;);</span><br><span class="line">Bean bean4 = new Bean(1, &quot;mike4&quot;);</span><br><span class="line">treeMap.put(bean, &quot;one&quot;);</span><br><span class="line">treeMap.put(bean4, &quot;two&quot;);</span><br><span class="line">treeMap.put(bean3, &quot;three&quot;);</span><br><span class="line">treeMap.put(bean2, &quot;four&quot;);</span><br><span class="line">treeMap.put(bean2, &quot;five&quot;);</span><br><span class="line">System.out.println(treeMap);</span><br></pre></td></tr></table></figure>
+
+<p>打印日志：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;Bean&#123;age=1, name=&apos;mike&apos;&#125;=two, Bean&#123;age=3, name=&apos;mike3&apos;&#125;=three, Bean&#123;age=4, name=&apos;mike2&apos;&#125;=five&#125;</span><br></pre></td></tr></table></figure>
+
+<p>TreeMap 按照 Bean 重写的 compareTo() 规则进行排序，注意重写的 equal() 需要满足以上逻辑。</p>
+<p><strong>定制排序</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">TreeMap treeMap = new TreeMap((o1, o2) -&gt; &#123;</span><br><span class="line">    Bean2 bean = (Bean2) o1;</span><br><span class="line">    Bean2 bean2 = (Bean2) o2;</span><br><span class="line">    return Integer.compare(bean.getAge(), bean2.getAge());</span><br><span class="line">&#125;);</span><br><span class="line">Bean2 bean = new Bean2(1, &quot;mike&quot;);</span><br><span class="line">Bean2 bean2 = new Bean2(4, &quot;mike2&quot;);</span><br><span class="line">Bean2 bean3 = new Bean2(3, &quot;mike3&quot;);</span><br><span class="line">Bean2 bean4 = new Bean2(1, &quot;mike4&quot;);</span><br><span class="line">treeMap.put(bean, &quot;one&quot;);</span><br><span class="line">treeMap.put(bean4, &quot;two&quot;);</span><br><span class="line">treeMap.put(bean3, &quot;three&quot;);</span><br><span class="line">treeMap.put(bean2, &quot;four&quot;);</span><br><span class="line">treeMap.put(bean2, &quot;five&quot;);</span><br><span class="line">System.out.println(treeMap);</span><br></pre></td></tr></table></figure>
+
+<p>打印日志：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;Bean&#123;age=1, name=&apos;mike&apos;&#125;=two, Bean&#123;age=3, name=&apos;mike3&apos;&#125;=three, Bean&#123;age=4, name=&apos;mike2&apos;&#125;=five&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="WeakHashMap"><a href="#WeakHashMap" class="headerlink" title="WeakHashMap"></a>WeakHashMap</h3><p>观字识意，WeakHashMap 与 HashMap 的区别是 WeakHashMap 中存在弱引用。</p>
+<p>WeakHashMap 中的 key 只保留了对实际对象的弱引用，如果 WeakHashMap 对象的 key 引用的对象没有被其它强引用的变量引用，那么 key 所引用的对象在垃圾回收时很有可能被销毁，同时 WeakHashMap 也会自动移除 key 对应的 key-value 键值对。</p>
+<h3 id="EnumMap"><a href="#EnumMap" class="headerlink" title="EnumMap"></a>EnumMap</h3><p>EnumMap 中的所有的 key 必须是 单个枚举类中的枚举值。创建 EnumMap 对象时需要指定其对应的枚举类。</p>
+<p>EnumMap 的特征：</p>
+<ul>
+<li>EnumMap 内部以数组的形式保存，所以高效。</li>
+<li>EnumMap 根据 key 的自然排序(枚举类中枚举值的定义顺序)维护 key-value 的顺序。</li>
+<li>EnumMap key 不可为 null。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Enum Num&#123;</span><br><span class="line">    ONE,TWO,THREE</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">EnumMap enumMap = new EnumMap(Num.class);</span><br><span class="line">enumMap.put(Num.TWO,&quot;two&quot;);</span><br><span class="line">enumMap.put(Num.ONE,&quot;one&quot;);</span><br><span class="line">enumMap.put(Num.THREE,&quot;three&quot;);</span><br><span class="line">sout(enumMap);</span><br></pre></td></tr></table></figure>
+
+<p>打印日志：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;ONE=oen,TWO=two,THREE=three&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="性能对比"><a href="#性能对比" class="headerlink" title="性能对比"></a>性能对比</h3><p>Hashtable 和 HashMap 的内部实现机制几乎一样，但是由于 Hashtable 为线性安全的集合，所以 HashMap 要比 Hashtable 要快。</p>
+<p>TreeMap 的内部通过红黑树来维护添加顺序，所以比 Hashtable、HashMap 要慢(特别是在添加元素、删除元素时，此时需要重新整理红黑树)。同时也是因为内部红黑树 TreeMap 在变量元素时比较高效。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(Arrays.binarySearch( treeMap.keySet().toArray(),new Bean(3, &quot;mike3&quot;)));</span><br></pre></td></tr></table></figure>
+
+<p>一般场景下使用 HashMap，因为 HashMap 为快速查询而设计(底层使用数组存储 key-value)。如果需要对元素进行排序，那么使用 TreeMap。</p>
+<p>由于需要维护内部链表，LinkedHashMap 比 HashMap慢一些，与 HashMap 实现基本一致，但是 LinkedHashMap 使用 == 而不是 equal() 来判断 key 相等。</p>
+<p>EnumMap 性能最好，但是它的 key 只能是枚举值。</p>
 
       
 
@@ -482,15 +520,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Dagger2</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">DI</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -506,11 +544,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">反射</a>
+                <a href="javascript:void(0)" class="js-tag color3">Java 集合</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Java 集合</a>
+                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">反射</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -522,6 +564,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Jetpack</a>
               </li>
              
@@ -530,23 +576,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">RxJava</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Transformer</a>
+                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -558,6 +592,26 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">adb</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">RxJava</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Transformer</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">View</a>
               </li>
              
@@ -566,15 +620,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">adb</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -586,7 +632,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -598,10 +644,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">OOP</a>
               </li>
              
@@ -610,11 +652,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
+                <a href="javascript:void(0)" class="js-tag color4">内部类</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">内部类</a>
+                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
               </li>
              
               <li class="article-tag-list-item">

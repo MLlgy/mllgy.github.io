@@ -19,7 +19,7 @@
 <meta property="og:image" content="https://static001.geekbang.org/resource/image/cd/6f/cdba5c17a04f0dd5ef05b70368b9a96f.jpg">
 <meta property="og:image" content="https://static001.geekbang.org/resource/image/ad/8a/ad91b005e97959d571bbd2a0fa30b48a.jpeg">
 <meta property="og:image" content="https://static001.geekbang.org/resource/image/b4/fa/b439cebb2d85496ad6eef2f61071aefa.jpeg">
-<meta property="og:updated_time" content="2019-05-16T08:25:58.442Z">
+<meta property="og:updated_time" content="2019-05-29T07:35:01.658Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入浅出计算机组成原理(二)-CPU是如何执行指令的">
 <meta name="twitter:description" content="代码变成指令后，是一条一条顺序执行的。 在代码的执行过程中，CPU 中的寄存器扮演着举足轻重的角色。 在硬件上，寄存器有锁存器或触发器组成。  每种寄存器有不同的功能，而且每种寄存器都在指令执行过程中扮演重要角色。">
@@ -197,7 +197,7 @@
 <p>编译命令：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc -g -c test.c</span><br><span class="line">objdump -d -M intel -S test.o</span><br></pre></td></tr></table></figure>
 
-<p>在 Mac 上对应的汇编码如下，但是我没有看懂，所以直接参看原博客：</p>
+<p>在 Mac 上对应的汇编码如下，限于平台问题，和原博客有所差别，所以直接参看原博客：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">1 // test.c</span><br><span class="line">26:   99  cltd</span><br><span class="line">27:   b9 02 00 00 00  movl    $2, %ecx</span><br><span class="line">2c:   f7 f9   idivl   %ecx</span><br><span class="line">2e:   89 55 f8    movl    %edx, -8(%rbp)</span><br><span class="line">; int a = 10;</span><br><span class="line">31:   c7 45 f4 0a 00 00 00    movl    $10, -12(%rbp)</span><br><span class="line">; if (r == 0)</span><br><span class="line">38:   83 7d f8 00     cmpl    $0, -8(%rbp)</span><br><span class="line">3c:   0f 85 0c 00 00 00   jne 12 &lt;_main+0x4e&gt;</span><br><span class="line">; a = 1;</span><br><span class="line">42:   c7 45 f4 01 00 00 00    movl    $1, -12(%rbp)</span><br><span class="line">; &#125; else &#123;</span><br><span class="line">49:   e9 07 00 00 00  jmp 7 &lt;_main+0x55&gt;</span><br><span class="line">; a = 2;</span><br><span class="line">4e:   c7 45 f4 02 00 00 00    movl    $2, -12(%rbp)</span><br><span class="line">; &#125;</span><br><span class="line">55:   8b 45 fc    movl    -4(%rbp), %eax</span><br><span class="line">58:   48 83 c4 10     addq    $16, %rsp</span><br><span class="line">5c:   5d  popq    %rbp</span><br><span class="line">5d:   c3  retq</span><br></pre></td></tr></table></figure>
 
 <p> 原博客汇编码：</p>
@@ -490,15 +490,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Dagger2</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">DI</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -514,11 +514,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">反射</a>
+                <a href="javascript:void(0)" class="js-tag color3">Java 集合</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Java 集合</a>
+                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">反射</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -530,6 +534,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Jetpack</a>
               </li>
              
@@ -538,23 +546,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">RxJava</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Transformer</a>
+                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -566,6 +562,26 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">adb</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">RxJava</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Transformer</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">View</a>
               </li>
              
@@ -574,15 +590,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">adb</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -594,7 +602,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -606,10 +614,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">OOP</a>
               </li>
              
@@ -618,11 +622,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
+                <a href="javascript:void(0)" class="js-tag color4">内部类</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">内部类</a>
+                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
               </li>
              
               <li class="article-tag-list-item">

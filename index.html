@@ -148,6 +148,89 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Java-集合工具类-Collections" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/29/Java-集合工具类-Collections/">Java 集合工具类--Collections</a>
+    </h1>
+  
+
+        
+        <a href="/2019/05/29/Java-集合工具类-Collections/" class="archive-article-date">
+  	<time datetime="2019-05-29T09:17:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-29</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>HashSet、TreeSet、ArrayList、ArrayDeque、LinkedList、HashMap 和 TreeMap 都是线程不安全的</strong>，
+如果多个线程对用一个集合对象进行存、取、删等操作，不免会产生 <strong>线程同步问题</strong>。</p>
+<p>Java 提供了 Collections 工具类，使用 synchronizedxxx()  方法可以将集合类包装成线程安全的集合。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Collections collections = Collections.synchronizedCollection(new ArrayList());</span><br><span class="line"></span><br><span class="line">List list = Collections.synchronizedList(new ArrayList());</span><br><span class="line"></span><br><span class="line">Set set = Collections.synchronizedSet(new HashSet());</span><br><span class="line"></span><br><span class="line">Map map = Collections.synchronizedMap(new HashMap());</span><br></pre></td></tr></table></figure>
+
+<p>同时 Collections 还提供了排序、查找、替换、设置不可变集合等功能，有空自己看 API。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Java 集合</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Collections</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/05/29/Java-集合工具类-Collections/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Kotlin-单例模式的实现" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
@@ -576,6 +659,7 @@
         <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>Map 用于保存具有 <strong>映射关系</strong> 的数据，因此 Map 集合内保存着两组数据，一组保存 Map 的 key，一组保存 Map 的 value，并且 key 和 value 可以是任何类型的数据。</p>
 <p><img src="/../images/2019_05_09_02.jpg" alt="Map"></p>
 <p>可以把 Map 里的 Key 放在一起，它们组成一个 <strong>Set 集合</strong>(Key 没有顺序、不可重复)，其实Map 的内部的 keySet() 方法确实是返回的所有的 key 组成的 Set 集合对象。而把 Map 内的 Value 放在一起，它们类似一个 <strong>List 集合</strong>(可重复，此时的索引为 key)。</p>
+<p>如果抽象的看 Map 的 key 可以看作为 Set 集合(即无序、不可重复)，而 value 可以看作为 Array 集合(可重复)</p>
 <h3 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h3><p>向 Map 中添加数据中，如果 Map 中有存在 key，那么新添加的 value 会覆盖原来的 value。</p>
         
           <a class="article-more-a" href="/2019/05/10/Java集合之Map/#more">more >></a>
@@ -893,94 +977,6 @@
 
 
   
-    <article id="post-Java-集合之-Set" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/09/Java-集合之-Set/">Java 集合之 Set 集合 </a>
-    </h1>
-  
-
-        
-        <a href="/2019/05/09/Java-集合之-Set/" class="archive-article-date">
-  	<time datetime="2019-05-09T07:49:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-09</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="Set-集合"><a href="#Set-集合" class="headerlink" title="Set 集合"></a>Set 集合</h3><p>Set 集合的特点无序、不可重复。</p>
-<p>Set 集合不能记住元素的添加顺序。Set 集合不能包含相同的元素，把两个相同的元素添加到同一个 Set 集合中，则添加失败，add() 方法返回 false，且新元素不会被添加。</p>
-<h3 id="HashSet-类"><a href="#HashSet-类" class="headerlink" title="HashSet 类"></a>HashSet 类</h3><p>HashSet 集合按 <code>Hash 算法</code> 来存储集合的元素，<strong>因此具有很好的存取和查找功能</strong>。</p>
-<p>HashSet 具有以下特点：</p>
-<ol>
-<li>不能保证元素的排列顺序，这也是 Set 集合元素不能通过索引只能通过元素本身访问的原因。</li>
-<li>HashSet 不是线程安全的。</li>
-<li>元素可以为 null。</li>
-</ol>
-        
-          <a class="article-more-a" href="/2019/05/09/Java-集合之-Set/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Java 集合</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Set</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/09/Java-集合之-Set/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1102,15 +1098,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Dagger2</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">DI</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1126,11 +1122,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">反射</a>
+                <a href="javascript:void(0)" class="js-tag color3">Java 集合</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Java 集合</a>
+                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">反射</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1142,6 +1142,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Jetpack</a>
               </li>
              
@@ -1150,23 +1154,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">RxJava</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Transformer</a>
+                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1178,6 +1170,26 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">adb</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">RxJava</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Transformer</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">View</a>
               </li>
              
@@ -1186,15 +1198,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">adb</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1206,7 +1210,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1218,10 +1222,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">OOP</a>
               </li>
              
@@ -1230,11 +1230,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
+                <a href="javascript:void(0)" class="js-tag color4">内部类</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">内部类</a>
+                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
               </li>
              
               <li class="article-tag-list-item">
