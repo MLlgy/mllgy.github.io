@@ -80,7 +80,7 @@ class Singleton private constructor(){
 }
 ```
 
-此写法 [Java 单例模式的几种写法](https://mllgy.github.io/2019/03/13/%E5%8D%95%E4%BE%8B%E7%9A%84%E5%87%A0%E7%A7%8D%E5%86%99%E6%B3%95/) 中懒汉模式的 **方式三** 相同。
+此写法 [Java 单例模式的几种写法](https://leegyplus.github.io/2019/03/13/%E5%8D%95%E4%BE%8B%E7%9A%84%E5%87%A0%E7%A7%8D%E5%86%99%E6%B3%95/) 中懒汉模式的 **方式三** 相同。
 
 
 调用方式：
