@@ -68,7 +68,7 @@ ArrayList 和 Vector 在用法上几乎一致， Vector 在 JDK 1.0 就有了，
 
 ArrayList 和 Vector 作为 List 的典型实现，支持 List 接口的全部功能。
 
-ArrayList 和 Vector 都是基于数组实现的 List 类，在ArrayList 和 Vector **内部封装了一个动态的、允许再分配的 Object[] 数组**，使用 initiaCapacity 来初始化数组的长度，当数组元素超过数组的长度时，数组长度自动增加 initiaCapacity ,即长度增加一倍。
+ArrayList 和 Vector 都是基于数组实现的 List 类，在ArrayList 和 Vector **内部封装了一个动态的、允许再分配的 Object[] 数组**，使用 initiaCapacity 来初始化数组的长度，当数组元素超过数组的长度时，数组长度自动增加 initiaCapacity ,即长度增加 **0.5** 倍。
 
 线程安全性：
 * ArrayList 为线程不安全的，可以使用 Collections 工具类使 ArrayList 变成线程安全的。
