@@ -14,7 +14,7 @@ timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: //litten.me
+url: /
 root: /
 permalink: :year/:month/:day/:title/
 tag_dir: tags
@@ -108,7 +108,7 @@ exclude_generator:
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repository: https://github.com/MLlgy/mllgy.github.io.git
+  repository: https://github.com/leeGYPlus/leegyplus.github.io.git
   branch: master
 
 feed:
