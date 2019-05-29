@@ -17,7 +17,7 @@
 <meta property="og:description" content="概述Map 用于保存具有 映射关系 的数据，因此 Map 集合内保存着两组数据，一组保存 Map 的 key，一组保存 Map 的 value，并且 key 和 value 可以是任何类型的数据。  可以把 Map 里的 Key 放在一起，它们组成一个 Set 集合(Key 没有顺序、不可重复)，其实Map 的内部的 keySet() 方法确实是返回的所有的 key 组成的 Set 集合对象。而把">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/images/2019_05_09_02.jpg">
-<meta property="og:updated_time" content="2019-05-29T02:36:36.166Z">
+<meta property="og:updated_time" content="2019-05-29T06:00:12.396Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java集合之Map">
 <meta name="twitter:description" content="概述Map 用于保存具有 映射关系 的数据，因此 Map 集合内保存着两组数据，一组保存 Map 的 key，一组保存 Map 的 value，并且 key 和 value 可以是任何类型的数据。  可以把 Map 里的 Key 放在一起，它们组成一个 Set 集合(Key 没有顺序、不可重复)，其实Map 的内部的 keySet() 方法确实是返回的所有的 key 组成的 Set 集合对象。而把">
@@ -179,14 +179,30 @@
 <h3 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h3><p>向 Map 中添加数据中，如果 Map 中有存在 key，那么新添加的 value 会覆盖原来的 value。</p>
 <a id="more"></a>
 
-<h3 id="HashMap-和-Hashtable"><a href="#HashMap-和-Hashtable" class="headerlink" title="HashMap 和 Hashtable"></a>HashMap 和 Hashtable</h3><p>HashMap 和 Hashtable 是 Map 的典型实现类， Hashtable 在 JDK1.0 起就已经存在。在 Java8 时改进了 HashMap 的实现，使其在 HashMap 存在 key 冲突时具有更好的性能。</p>
+<h3 id="HashMap-和-Hashtable"><a href="#HashMap-和-Hashtable" class="headerlink" title="HashMap 和 Hashtable"></a>HashMap 和 Hashtable</h3><p>HashMap 和 Hashtable 是 Map 的典型实现类。 Hashtable 在 JDK1.0 起就已经存在。在 Java8 时改进了 HashMap 的实现，使其在 HashMap 存在 key 冲突时具有更好的性能。</p>
 <p>Hashtable 与 HashMap 主要区别：</p>
 <ul>
 <li>Hashtable: <strong>线程安全</strong> 的 Map 实现，但是 HashMap 是线程不安全的实现，所以 HashMap 的性能更高一些。多个线程访问同一个 Map 对象时，使用 Hashtable 会更好。</li>
 <li>Hashtable 不允许使用 null 作为 key 和 value，否则会引起异常，但是 HashMap 可以。</li>
 </ul>
-<p>为了更好的在 HashMap 和 Hashtable 中存储、获取对象，<strong>用作 key 的对象必须实现 hashCode() 和 equals() 方法</strong>。HashMap、Hashtable 判断 key 相同的标准是：<strong>两个 key 通过 equals() 方法比较返回为 true，那么两个 key 的 hashcode 值必须相等</strong>。而判断 value 相等的标准只要两个对象的 equals() 方法比较返回为 true 即可。</p>
+<p>为了更好的在 HashMap 和 Hashtable 中存储、获取对象，<strong>用作 key 的对象必须实现 hashCode() 和 equals() 方法</strong>。</p>
+<p>HashMap、Hashtable <strong>key 相同的标准</strong> 是：<strong>两个 key 通过 equals() 方法比较返回为 true，那么两个 key 的 hashcode 值必须相等</strong>。</p>
+<p>HashMap、Hashtable <strong>value 相等</strong> 的标准：只要两个对象的 equals() 方法比较返回为 true 即可。</p>
 <p>与 HashSet 相同，采用自定义类作为 HashMap、Hashtable 的 key，如果程序修改了作为 key 的可变对象，那么也会出现与 HashSet 类似的情形：程序无法准确访问到 Map 中被修改过的 key。</p>
+<h3 id="LinkedHashMap"><a href="#LinkedHashMap" class="headerlink" title="LinkedHashMap"></a>LinkedHashMap</h3><p>与 LinkedHashSet 一致，LinkedHashMap 内部也是通过双向链表来维护添加的 key-value 的顺序(以 key 的添加顺序为准)。</p>
+<p>同样的，由于维护链表 LinkedHashMap 的性能比 HashMap 差一些，但是也正是这个原因在遍历 Map 中元素时，LinkedHashMap 的效率更高一些。</p>
+<h3 id="TreeMap-amp-amp-SortMap"><a href="#TreeMap-amp-amp-SortMap" class="headerlink" title="TreeMap &amp;&amp; SortMap"></a>TreeMap &amp;&amp; SortMap</h3><p>TreeMap 是一个红黑树结构，每个 key-value 为红黑树的一个节点，而 TreeMap 存储数据时，是以 key 为标准对 key-value 进行排序。</p>
+<p>TreeMap 的两种排序方式：</p>
+<ul>
+<li><p>自然排序</p>
+<p>  TreeMap 的所有的 key 必须实现 Comparator 接口，而且所有的 key 必须为同一个类的对象，否则会报 ClassCastException 。</p>
+<p>  key 相同的标准为：两个 key 通过 compareTo() 方法返回 0，则认为相等。</p>
+</li>
+<li><p>定制排序</p>
+<p>  在 创建 TreeMap 时，传入 Comparator 对象，该对象负责对 key 进行排序，此时 key 不要求实现 Comparator 接口。 </p>
+<p>  如果想让排序更加顺利的进行，那么需要重写 key 对应类的 equal() 方法，并且 equal() 方法的返回值与 compareTo() 的返回值表达的结果一致，否则将于 Map 接口规则冲突。</p>
+</li>
+</ul>
 
       
 
@@ -204,13 +220,13 @@
                   <div class="reward-box">
                     
                     <div class="reward-box-item">
-                      <img class="reward-img" src="/img/logo.jpg">
+                      <img class="reward-img" src="/img/alipay.jpg">
                       <span class="reward-type">支付宝</span>
                     </div>
                     
                     
                     <div class="reward-box-item">
-                      <img class="reward-img" src="/img/logo.jpg">
+                      <img class="reward-img" src="/img/wxpay.jpg">
                       <span class="reward-type">微信</span>
                     </div>
                     
@@ -458,11 +474,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -486,10 +506,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">反射</a>
               </li>
              
@@ -498,15 +514,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -518,15 +530,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
+                <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -538,19 +550,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">adb</a>
+                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">VIM</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -562,7 +566,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+                <a href="javascript:void(0)" class="js-tag color4">adb</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -571,6 +583,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -683,6 +699,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           
             <li class="search-li">
               <a href="https://www.wanandroid.com/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>WanAndroid</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="https://droidyue.com/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>技术小黑屋</a>
             </li>
           
         </ul>
