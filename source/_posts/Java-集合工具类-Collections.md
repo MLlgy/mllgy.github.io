@@ -4,7 +4,6 @@ date: 2019-05-29 17:17:24
 tags: [Java 集合,Collections]
 ---
 
-
 **HashSet、TreeSet、ArrayList、ArrayDeque、LinkedList、HashMap 和 TreeMap 都是线程不安全的**，
 如果多个线程对用一个集合对象进行存、取、删等操作，不免会产生 **线程同步问题**。
 
