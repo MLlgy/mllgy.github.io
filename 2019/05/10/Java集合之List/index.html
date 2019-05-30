@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Enjoy">
 <meta property="og:description" content="概述List 集合为元素有序、可重复的集合。 List 集合判断元素相等的标准：两个对象的 equals() 方法比较返回值为 true 。 实现排序：List 的 sort() 方法需要一个 Comparator 对象来控制元素的排序。 123456789101112public static void main(String[] args) &amp;#123;        List list =">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-29T10:18:13.398Z">
+<meta property="og:updated_time" content="2019-05-29T11:00:52.928Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java集合之List">
 <meta name="twitter:description" content="概述List 集合为元素有序、可重复的集合。 List 集合判断元素相等的标准：两个对象的 equals() 方法比较返回值为 true 。 实现排序：List 的 sort() 方法需要一个 Comparator 对象来控制元素的排序。 123456789101112public static void main(String[] args) &amp;#123;        List list =">
@@ -192,9 +192,14 @@
 <p>迭代遍历：</p>
 <p>与 Set 集合只提供了 iterator() 方法不同，List 还提供了 listiterator() 方法，返回一个 ListIterator 对象， ListIterator 接口继承了 Itertor 接口，提供了专门操作 List 的方法。</p>
 <p>ListIterator 在遍历过程中可以通过 add() 方法向上一个迭代元素后面添加一个新的元素,如果 list 对象为排过序的集合，以上操作不会触发再次排序，而 Itertor 只能实现删除元素的功能。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ListIterator listIterator = list.listIterator();</span><br><span class="line">int a = 6;</span><br><span class="line">while (listIterator.hasNext()) &#123;</span><br><span class="line">    ClassE classE = (ClassE) listIterator.next();</span><br><span class="line">    if (classE.getNum() == 3) &#123;</span><br><span class="line">        listIterator.add(new ClassE(6));</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(&quot;listIterator &quot; + classE.toString());</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(list);</span><br></pre></td></tr></table></figure>
+
+<p>打印日志为:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">listIterator ClassE&#123;num=1&#125;</span><br><span class="line">listIterator ClassE&#123;num=2&#125;</span><br><span class="line">listIterator ClassE&#123;num=3&#125;</span><br><span class="line">[ClassE&#123;num=1&#125;, ClassE&#123;num=2&#125;, ClassE&#123;num=3&#125;, ClassE&#123;num=6&#125;]</span><br></pre></td></tr></table></figure>
+
 <h3 id="ArrayList-和-Vector-类"><a href="#ArrayList-和-Vector-类" class="headerlink" title="ArrayList 和 Vector 类"></a>ArrayList 和 Vector 类</h3><p>ArrayList 和 Vector 在用法上几乎一致， Vector 在 JDK 1.0 就有了，那时候还没有 Java 集合框架的概念。在 JDK 1.2 将 Vector改为实现 List 接口，而 Vector 作为 List 的实现之一。</p>
 <p>ArrayList 和 Vector 作为 List 的典型实现，支持 List 接口的全部功能。</p>
-<p>ArrayList 和 Vector 都是基于数组实现的 List 类，在ArrayList 和 Vector <strong>内部封装了一个动态的、允许再分配的 Object[] 数组</strong>，使用 initiaCapacity 来初始化数组的长度，当数组元素超过数组的长度时，数组长度自动增加 initiaCapacity ,即长度增加一倍。</p>
+<p>ArrayList 和 Vector 都是基于数组实现的 List 类，在ArrayList 和 Vector <strong>内部封装了一个动态的、允许再分配的 Object[] 数组</strong>，使用 initiaCapacity 来初始化数组的长度，当数组元素超过数组的长度时，数组长度自动增加 initiaCapacity ,即长度增加 <strong>0.5</strong> 倍。</p>
 <p>线程安全性：</p>
 <ul>
 <li>ArrayList 为线程不安全的，可以使用 Collections 工具类使 ArrayList 变成线程安全的。</li>
@@ -470,14 +475,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Coroutines</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
               </li>
              
@@ -490,19 +487,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Coroutines</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -514,11 +515,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -527,6 +536,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Java Collection</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -542,10 +555,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">List</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Queue</a>
               </li>
              
@@ -554,15 +563,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -594,6 +607,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">View</a>
               </li>
              
@@ -606,23 +627,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">JNI</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">深入理解 Android 读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -634,11 +643,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">内部类</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
               </li>
              
               <li class="article-tag-list-item">

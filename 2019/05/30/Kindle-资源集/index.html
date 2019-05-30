@@ -6,20 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="">
-  <title>Jetpack之LiveData 笔记 | Enjoy</title>
+  <title>Kindle 资源网站集 | Enjoy</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="在官方文档中首先对 LiveData 做了一个概述 : LiveData is an observable data holder class, LiveData 是一个 可观察的 数据持有者类。它是可以感知 Activity/Fragment/Service 的生命周期的，这使得 LiveData 只会在以上组件处于 活跃状态下 更新组件。 LiveData 认为上述中的 活跃状态 为对应的 O">
-<meta name="keywords" content="Jetpack,LiveData">
+  <meta name="description" content="kaka 行行 图书馆 书语者 Bookset 苦瓜书盘 我的小书屋">
+<meta name="keywords" content="Kindle">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Jetpack之LiveData 笔记">
-<meta property="og:url" content="/2019/05/08/Jetpack之LiveData-笔记/index.html">
+<meta property="og:title" content="Kindle 资源网站集">
+<meta property="og:url" content="/2019/05/30/Kindle-资源集/index.html">
 <meta property="og:site_name" content="Enjoy">
-<meta property="og:description" content="在官方文档中首先对 LiveData 做了一个概述 : LiveData is an observable data holder class, LiveData 是一个 可观察的 数据持有者类。它是可以感知 Activity/Fragment/Service 的生命周期的，这使得 LiveData 只会在以上组件处于 活跃状态下 更新组件。 LiveData 认为上述中的 活跃状态 为对应的 O">
+<meta property="og:description" content="kaka 行行 图书馆 书语者 Bookset 苦瓜书盘 我的小书屋">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-09T10:33:26.358Z">
+<meta property="og:updated_time" content="2019-05-30T02:32:14.534Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Jetpack之LiveData 笔记">
-<meta name="twitter:description" content="在官方文档中首先对 LiveData 做了一个概述 : LiveData is an observable data holder class, LiveData 是一个 可观察的 数据持有者类。它是可以感知 Activity/Fragment/Service 的生命周期的，这使得 LiveData 只会在以上组件处于 活跃状态下 更新组件。 LiveData 认为上述中的 活跃状态 为对应的 O">
+<meta name="twitter:title" content="Kindle 资源网站集">
+<meta name="twitter:description" content="kaka 行行 图书馆 书语者 Bookset 苦瓜书盘 我的小书屋">
   
     <link rel="alternative" href="/atom.xml" title="Enjoy" type="application/atom+xml">
   
@@ -159,81 +159,33 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Jetpack之LiveData-笔记" class="article article-type-post " itemscope="" itemprop="blogPost">
+            <article id="post-Kindle-资源集" class="article article-type-post " itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      Jetpack之LiveData 笔记
+      Kindle 资源网站集
     </h1>
   
 
         
-        <a href="/2019/05/08/Jetpack之LiveData-笔记/" class="archive-article-date">
-  	<time datetime="2019-05-08T03:21:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-08</time>
+        <a href="/2019/05/30/Kindle-资源集/" class="archive-article-date">
+  	<time datetime="2019-05-30T02:28:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-30</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>在官方文档中首先对 LiveData 做了一个概述 : <code>LiveData is an observable data holder class</code>, LiveData 是一个 <strong>可观察的</strong> <strong>数据持有者类</strong>。它是可以感知 Activity/Fragment/Service 的生命周期的，这使得 LiveData 只会在以上组件处于 <strong>活跃状态下</strong> 更新组件。</p>
-<p>LiveData 认为上述中的 <strong>活跃状态</strong> 为对应的 Observer 处于 STARTED 或 RESUMED 状态。LiveData 数据更改不会触发非活跃组件的更新。</p>
-<p>LiveData 与 观察者(实现 LifecycleOwner 的类) 建立的连接会在组件处于 DESTORY 状态后被移除。</p>
-<h3 id="个人理解"><a href="#个人理解" class="headerlink" title="个人理解"></a>个人理解</h3><p>官方文档看了几遍，大致明白了 LiveData 的作用， LiveData 可持有数据，并且它有一个重要的方法:</p>
-<p><code>public void observe(@NonNull LifecycleOwner owner, @NonNull Observer&lt;? super T&gt; observer)</code> </p>
-<a id="more"></a>
-
-<p>第一个参数为 LifecycleOwner 对象，一般为 Activity/Fragment/Servic 对象，第二参数为 Observer 对象，它的重要工作是一个回调，用于更新 UI 等工作。 LiveData#observe() 方法中完成了对 observer 的包装，并将其添加到 LifecycleOwner 对象观察者列表中，完成了 observer 关联 LifecycleOwner 生命周期的操作。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> @MainThread</span><br><span class="line">public void observe(@NonNull LifecycleOwner owner, @NonNull Observer&lt;? super T&gt; observer) &#123;</span><br><span class="line">    assertMainThread(&quot;observe&quot;);</span><br><span class="line">    if (owner.getLifecycle().getCurrentState() == DESTROYED) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    LifecycleBoundObserver wrapper = new LifecycleBoundObserver(owner, observer);</span><br><span class="line">    ObserverWrapper existing = mObservers.putIfAbsent(observer, wrapper);</span><br><span class="line">    ....</span><br><span class="line">    owner.getLifecycle().addObserver(wrapper);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>至此 LiveData 就实现了如下功能；<br>    1. 数据更改时触发处于 ACTIVE 的组件的功能。<br>    2. UI 生命周期变更时，LiveData 会通知 Observer。</p>
-<h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ol>
-<li><p>保证 UI 与 实时数据完美匹配</p>
-<p> 这种模式下：</p>
-<ol>
-<li>UI 生命周期变更时，LiveData 会通知 Observer。</li>
-<li>LiveData 在数据发生变化时，通知 Observer 对象更新 UI，这就保证了数据在每次变更时 <strong>自动更新 UI</strong>, 而不需要手动的更新 UI。</li>
-</ol>
-</li>
-</ol>
-<ol start="2">
-<li><p>不会内存泄漏</p>
-<p> Lifecycle 对象销毁后(Activity/Framgent/Service)，Observer 与 Lifecycle 对象 的绑定关系会被移除，这样就不会因为两者的互相引用而导致无法回收对象。</p>
-</li>
-<li><p>不会因为 Activity 的停止而导致崩溃</p>
-<p> Observer 处于 InActive 状态时, 它不会接收到 LiveData 的 Event。</p>
-</li>
-<li><p>不再需要手动生命周期处理</p>
-<p> UI组件只是观察相关数据，不会停止或恢复观察。LiveData自动管理生命周期，因为它可以观察到组件的生命周期状态变化。</p>
-</li>
-<li><p>时刻保持最新的数据</p>
-<p> 当 LifecycleOwner 的生命周期从 incative 转换到 active 时，会更新最新的数据。</p>
-</li>
-<li><p>旋转屏幕等配置发生变化时，可以收到最新数据</p>
-</li>
-<li><p>共享数据资源<br>LiveData 对象一致，那么那所持有的数据或资源就可以被多个页面共享。</p>
-</li>
-</ol>
-<h3 id="使用-LiveData"><a href="#使用-LiveData" class="headerlink" title="使用 LiveData"></a>使用 LiveData</h3><ol>
-<li>创建 LiveData 对象。</li>
-<li>观察 LiveData 对象，传入 LifecycleOwner 和 Observer ,以 LiveData 为桥梁，创建两者的监听关系。</li>
-<li>变更 LiveData 所持有的数据。</li>
-</ol>
-<p>能够触发 App 组件更新的唯一情况是 LiveData 的数据源发生变化，即</p>
-<pre><code>1. 调用了 LiveData 的 setValue(T)// 在主线程中变更数据
-2. 调用了 LiveData 的 postValue(T)// 在 Worker 线程执行操作</code></pre><h3 id="自定义-LiveData"><a href="#自定义-LiveData" class="headerlink" title="自定义 LiveData"></a>自定义 LiveData</h3><h3 id="转换-LiveData"><a href="#转换-LiveData" class="headerlink" title="转换 LiveData"></a>转换 LiveData</h3><p>和 Rxjava 相似，通过使用 <code>Transformations</code> 的操作符转换 LiveData 对象。</p>
-<h4 id="map"><a href="#map" class="headerlink" title="map()"></a>map()</h4><p>该操作符做转换的工作如下：</p>
-<pre><code>LiveData&lt;T&gt; -&gt; LiveData&lt;R&gt;</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">val userLiveData: LiveData&lt;User&gt; = UserLiveData()</span><br><span class="line">val userName: LiveData&lt;String&gt; = Transformations.map(userLiveData) &#123;</span><br><span class="line">    user -&gt; &quot;$&#123;user.name&#125; $&#123;user.lastName&#125;&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>本例中通过 map 实现了 LiveData<user> 向 LiveData<string> 的转换。</string></user></p>
-<h4 id="switchMap"><a href="#switchMap" class="headerlink" title="switchMap()"></a>switchMap()</h4><p>该操作符做转换的工作如下：</p>
-<pre><code>LiveData&lt;T&gt; -&gt; LiveData&lt;R&gt;</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">private fun getUser(id: String): LiveData&lt;User&gt; &#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line">val userId: LiveData&lt;String&gt; = ...</span><br><span class="line">val user = Transformations.switchMap(userId) &#123; id -&gt; getUser(id) &#125;</span><br></pre></td></tr></table></figure>
-
-<p>本例中通过 map 实现了 LiveData<string> 向 LiveData<user> 的转换。</user></string></p>
-<p>switchMap 和 map 都实现了 LiveData 所持有数据类型的转换，但是与 map() 不同的 switchMap 的第二个参数 Function 的返回值类型必须为 LiveData。</p>
+        <p><a href="http://www.kaka3.com/" target="_blank" rel="noopener">kaka</a></p>
+<p><a href="http://www.ireadweek.com/index.php/Index/index.html" target="_blank" rel="noopener">行行</a></p>
+<p><a href="http://www.tushugu.com/" target="_blank" rel="noopener">图书馆</a></p>
+<p><a href="https://book.shuyuzhe.com/" target="_blank" rel="noopener">书语者</a></p>
+<p><a href="https://bookset.me/" target="_blank" rel="noopener">Bookset</a></p>
+<p><a href="https://kgbook.com/" target="_blank" rel="noopener">苦瓜书盘</a></p>
+<p><a href="http://mebook.cc/" target="_blank" rel="noopener">我的小书屋</a></p>
 
       
 
@@ -278,11 +230,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Jetpack</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">LiveData</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Kindle</a>
         		</li>
       		
 		</ul>
@@ -338,7 +286,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http:/2019/05/08/Jetpack之LiveData-笔记/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http:/2019/05/30/Kindle-资源集/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -352,18 +300,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/05/09/Java-集合概述/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Java 集合概述
-        
-      </div>
-    </a>
   
-  
-    <a href="/2019/05/06/Jetpack之ViewModle笔记/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Jetpack之ViewModle 笔记</div>
+    <a href="/2019/05/29/Java-集合工具类-Collections/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Java 集合工具类--Collections</div>
       <i class="icon-circle-right"></i>
     </a>
   
