@@ -1,7 +1,9 @@
 ---
 title: Binder基本原理
-tags:
+date: 2019-06-05 13:33:02
+tags: [Binder]
 ---
+
 
 Binder 机制是 Android 特有的跨进程通信机制，本文为 [Android 插件化机制]() 相关章节的阅读笔记。
 
