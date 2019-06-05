@@ -17,8 +17,8 @@
 <meta property="og:description" content="Binder 机制是 Android 特有的跨进程通信机制，本文为 Android 插件化机制 相关章节的阅读笔记。 00x01Binder 分为 Client 端和 Server 端，在进行跨进程通信时，两端分别为两个不同的进程。发消息者为 Client，相应的接收消息者为 Server。根据消息的流向，一端可以同时为 Client 和 Server。 00x02Binder 组成：  Clie">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/images/2019_06_05_01.jpg">
-<meta property="og:image" content="/images/2019_06_05_02.jpg">
-<meta property="og:updated_time" content="2019-06-05T05:33:22.405Z">
+<meta property="og:image" content="/images/2019_06_05_02.png">
+<meta property="og:updated_time" content="2019-06-05T05:35:15.469Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Binder基本原理">
 <meta name="twitter:description" content="Binder 机制是 Android 特有的跨进程通信机制，本文为 Android 插件化机制 相关章节的阅读笔记。 00x01Binder 分为 Client 端和 Server 端，在进行跨进程通信时，两端分别为两个不同的进程。发消息者为 Client，相应的接收消息者为 Server。根据消息的流向，一端可以同时为 Client 和 Server。 00x02Binder 组成：  Clie">
@@ -214,7 +214,7 @@
 <li>Client 调用 Proxy 中的 add 方法，SM 会帮助它调用 Server 的 add 方法，并把结果返回给 Client。</li>
 </ol>
 <p>此时 Client 和 Server 实现了进程间通信，在此过程中 Binder 驱动做了许多事情，但是我们目前不需要关心。</p>
-<p><img src="/../images/2019_06_05_02.jpg" alt="Binder 通信过程"></p>
+<p><img src="/../images/2019_06_05_02.png" alt="Binder 通信过程"></p>
 <h4 id="00x06"><a href="#00x06" class="headerlink" title="00x06"></a>00x06</h4><p>在研究系统框架或第三方库时，我们不要陷入细节中，要先熟悉基本的运行机制、运行流程，根据自我需求，选择性的查看实现细节，但是需要注意的还是不能陷入细节，要有的放矢的跳出细节，把控全局。</p>
 
       
@@ -474,11 +474,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
+                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -487,10 +491,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -506,15 +506,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Java Basic</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Java Basic</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -546,11 +546,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
+                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
+                <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -622,11 +622,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
               </li>
              
               <li class="article-tag-list-item">
