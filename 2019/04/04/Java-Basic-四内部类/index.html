@@ -6,24 +6,24 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="">
-  <title>Java Basic Four | Enjoy</title>
+  <title>Java Basic Four | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1. 提问 内部类为什么会出现 内部类的调用 内部类与外部类访问成员变量的不同 静态内部类和非静态内部类  为什么使用内部类 内部类提供了 更好的封装，可以把内部类的细节隐藏在外部类中，对同一个包中的其他类不可见。 内部类可以访问外部类的私有数据。因为内部类为外部类的成员，成员之间可以互相访问,外部类不可以访问内部类的私有数据。 可以使用匿名内部类创建访问一次的类，十分方便。  2. 非静态内部类">
+  <meta name="description" content="概要 内部类为什么会出现 内部类的调用 内部类与外部类访问成员变量的不同 静态内部类和非静态内部类  为什么使用内部类 内部类提供了 更好的封装，可以把内部类的细节隐藏在外部类中，对同一个包中的其他类不可见。  内部类可以访问外部类的数据 (包括私有变量)，但是外部类不可以访问内部类的私有变量。因为内部类持有外部类的引用。 内部类为外部类的成员，成员之间可以互相访问,这符合 Java 对象思想，但">
 <meta name="keywords" content="Java Basic,内部类">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java Basic Four">
 <meta property="og:url" content="/2019/04/04/Java-Basic-四内部类/index.html">
-<meta property="og:site_name" content="Enjoy">
-<meta property="og:description" content="1. 提问 内部类为什么会出现 内部类的调用 内部类与外部类访问成员变量的不同 静态内部类和非静态内部类  为什么使用内部类 内部类提供了 更好的封装，可以把内部类的细节隐藏在外部类中，对同一个包中的其他类不可见。 内部类可以访问外部类的私有数据。因为内部类为外部类的成员，成员之间可以互相访问,外部类不可以访问内部类的私有数据。 可以使用匿名内部类创建访问一次的类，十分方便。  2. 非静态内部类">
+<meta property="og:site_name" content="GY">
+<meta property="og:description" content="概要 内部类为什么会出现 内部类的调用 内部类与外部类访问成员变量的不同 静态内部类和非静态内部类  为什么使用内部类 内部类提供了 更好的封装，可以把内部类的细节隐藏在外部类中，对同一个包中的其他类不可见。  内部类可以访问外部类的数据 (包括私有变量)，但是外部类不可以访问内部类的私有变量。因为内部类持有外部类的引用。 内部类为外部类的成员，成员之间可以互相访问,这符合 Java 对象思想，但">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/images/2019_04_04_1.jpg">
-<meta property="og:updated_time" content="2019-05-29T10:12:02.597Z">
+<meta property="og:updated_time" content="2019-05-31T22:09:44.224Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java Basic Four">
-<meta name="twitter:description" content="1. 提问 内部类为什么会出现 内部类的调用 内部类与外部类访问成员变量的不同 静态内部类和非静态内部类  为什么使用内部类 内部类提供了 更好的封装，可以把内部类的细节隐藏在外部类中，对同一个包中的其他类不可见。 内部类可以访问外部类的私有数据。因为内部类为外部类的成员，成员之间可以互相访问,外部类不可以访问内部类的私有数据。 可以使用匿名内部类创建访问一次的类，十分方便。  2. 非静态内部类">
+<meta name="twitter:description" content="概要 内部类为什么会出现 内部类的调用 内部类与外部类访问成员变量的不同 静态内部类和非静态内部类  为什么使用内部类 内部类提供了 更好的封装，可以把内部类的细节隐藏在外部类中，对同一个包中的其他类不可见。  内部类可以访问外部类的数据 (包括私有变量)，但是外部类不可以访问内部类的私有变量。因为内部类持有外部类的引用。 内部类为外部类的成员，成员之间可以互相访问,这符合 Java 对象思想，但">
 <meta name="twitter:image" content="/images/2019_04_04_1.jpg">
   
-    <link rel="alternative" href="/atom.xml" title="Enjoy" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
   
   
     <link rel="icon" href="/img/ship.png">
@@ -56,7 +56,7 @@
 		  <h1 class="header-author"><a href="/">GY</a></h1>
 		</hgroup>
 		
-		<p class="header-subtitle">Enjoy the technology，Enjoy the code.</p>
+		<p class="header-subtitle">Enjoy the life, enjoy the code.</p>
 		
 
 		<nav class="header-menu">
@@ -114,7 +114,7 @@
 			  <h1 class="header-author js-header-author">GY</h1>
 			</hgroup>
 			
-			<p class="header-subtitle"><i class="icon icon-quo-left"></i>Enjoy the technology，Enjoy the code.<i class="icon icon-quo-right"></i></p>
+			<p class="header-subtitle"><i class="icon icon-quo-left"></i>Enjoy the life, enjoy the code.<i class="icon icon-quo-right"></i></p>
 			
 			
 			
@@ -181,53 +181,58 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="1-提问"><a href="#1-提问" class="headerlink" title="1. 提问"></a>1. 提问</h3><ol>
+        <h3 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h3><ol>
 <li>内部类为什么会出现</li>
 <li>内部类的调用</li>
 <li>内部类与外部类访问成员变量的不同</li>
 <li>静态内部类和非静态内部类</li>
 </ol>
 <h4 id="为什么使用内部类"><a href="#为什么使用内部类" class="headerlink" title="为什么使用内部类"></a>为什么使用内部类</h4><ol>
-<li>内部类提供了 <strong>更好的封装</strong>，可以把内部类的细节隐藏在外部类中，对同一个包中的其他类不可见。</li>
-<li><strong>内部类可以访问外部类的私有数据</strong>。因为内部类为外部类的成员，成员之间可以互相访问,外部类不可以访问内部类的私有数据。</li>
-<li><strong>可以使用匿名内部类创建访问一次的类</strong>，十分方便。</li>
+<li><p>内部类提供了 <strong>更好的封装</strong>，可以把内部类的细节隐藏在外部类中，对同一个包中的其他类不可见。</p>
+</li>
+<li><p><strong>内部类可以访问外部类的数据 (包括私有变量)</strong>，但是外部类不可以访问内部类的私有变量。因为内部类持有外部类的引用。</p>
+<p>内部类为外部类的成员，成员之间可以互相访问,这符合 Java 对象思想，但是外部类不可以访问内部类的私有数据。</p>
+<p>真实原因是 JVM 在编译时会将外部类和内部类便以为两个类 – OutterClass.class、OutterClass$InnerClass,OutterClass$InnerClass 对象持有 OutterClass 类的引用</p>
+</li>
+<li><p><strong>可以使用匿名内部类创建访问一次的类</strong>，十分方便。</p>
+</li>
 </ol>
-<h3 id="2-非静态内部类"><a href="#2-非静态内部类" class="headerlink" title="2. 非静态内部类"></a>2. 非静态内部类</h3><p>例子 ：</p>
+<h3 id="非静态内部类"><a href="#非静态内部类" class="headerlink" title="非静态内部类"></a>非静态内部类</h3><p>例子 ：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">public class OutClass &#123;</span><br><span class="line"></span><br><span class="line">    private int num = 1;</span><br><span class="line">    private int num2 = 3;</span><br><span class="line"></span><br><span class="line">    private class InnerClass &#123;</span><br><span class="line"></span><br><span class="line">        private int num = 2;</span><br><span class="line"></span><br><span class="line">        private void method() &#123;</span><br><span class="line">            System.out.println(&quot;innerclass method&quot;);</span><br><span class="line">            System.out.println(&quot;innerclass method inner num &quot; + num);</span><br><span class="line">            System.out.println(&quot;innerclass method inner num &quot; + this.num);</span><br><span class="line">            System.out.println(&quot;innerclass method out num &quot; + OutClass.this.num);</span><br><span class="line">            System.out.println(&quot;innerclass method out num2 &quot; + num2);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        OutClass outclass = new OutClass();</span><br><span class="line">        System.out.println(&quot;main &quot;+ outclass.num);</span><br><span class="line">        outclass.test();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void test() &#123;</span><br><span class="line">        InnerClass inner = new InnerClass();</span><br><span class="line">        inner.method();</span><br><span class="line">        System.out.println(&quot;outclass test&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <a id="more"></a>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 打印日志：</span><br><span class="line">main 1</span><br><span class="line">innerclass method</span><br><span class="line">innerclass method inner num 2</span><br><span class="line">innerclass method inner num 2</span><br><span class="line">innerclass method out num 1</span><br><span class="line">innerclass method out num2 3</span><br><span class="line">outclass test</span><br></pre></td></tr></table></figure>
 
-<h4 id="2-1-内部类可以访问外部类的成员变量-包括私有变量"><a href="#2-1-内部类可以访问外部类的成员变量-包括私有变量" class="headerlink" title="2.1 内部类可以访问外部类的成员变量(包括私有变量)"></a>2.1 内部类可以访问外部类的成员变量(包括私有变量)</h4><p>原因：</p>
+<h4 id="内部类可以访问外部类的成员变量-包括私有变量"><a href="#内部类可以访问外部类的成员变量-包括私有变量" class="headerlink" title="内部类可以访问外部类的成员变量(包括私有变量)"></a>内部类可以访问外部类的成员变量(包括私有变量)</h4><p>原因：</p>
 <p>在非静态内部类对象里，保存了外部类对象的引用。</p>
 <p>内存模型：<br><img src="/images/2019_04_04_1.jpg" alt="内存模型图"></p>
 <p>但是当外部类与内部类有相同名字的变量时，引用外部类变量需要指定外部类对象 –  <code>Outclass.this</code> </p>
-<h4 id="2-2-编译后的-Class-文件"><a href="#2-2-编译后的-Class-文件" class="headerlink" title="2.2 编译后的 Class 文件"></a>2.2 编译后的 Class 文件</h4><p>在 JVM 中没有内部类这个概念，所有的类都是普通类（POJO），内部类也会被编译成带有前缀的类。</p>
+<h4 id="编译后的-Class-文件"><a href="#编译后的-Class-文件" class="headerlink" title="编译后的 Class 文件"></a>编译后的 Class 文件</h4><p>在 JVM 中没有内部类这个概念，所有的类都是普通类（POJO），内部类也会被编译成带有前缀的类。</p>
 <p>编译后，得到两个 class 文件:</p>
 <ol>
 <li><code>OutClass.java</code> </li>
 <li><code>OutClass$InnerClass.class</code></li>
 </ol>
-<h4 id="2-3-内部类方法中的变量的访问顺序"><a href="#2-3-内部类方法中的变量的访问顺序" class="headerlink" title="2.3 内部类方法中的变量的访问顺序"></a>2.3 内部类方法中的变量的访问顺序</h4><p><strong>内部类方法内部中 –&gt; 内部类中的成员变量 –&gt; 外部类中的成员变量 –&gt; 不存在，编译异常</strong></p>
-<h4 id="2-4-内、外部类变量名相同"><a href="#2-4-内、外部类变量名相同" class="headerlink" title="2.4 内、外部类变量名相同"></a>2.4 内、外部类变量名相同</h4><p>访问使用如下格式：</p>
+<h4 id="内部类方法中的变量的访问顺序"><a href="#内部类方法中的变量的访问顺序" class="headerlink" title="内部类方法中的变量的访问顺序"></a>内部类方法中的变量的访问顺序</h4><p><strong>内部类方法内部中 –&gt; 内部类中的成员变量 –&gt; 外部类中的成员变量 –&gt; 不存在，编译异常</strong></p>
+<h4 id="内、外部类变量名相同"><a href="#内、外部类变量名相同" class="headerlink" title="内、外部类变量名相同"></a>内、外部类变量名相同</h4><p>访问使用如下格式：</p>
 <p><code>this.field</code> : 内部类变量</p>
 <p><code>OutClass.this.field</code> : 外部类变量</p>
-<h4 id="2-5-外部类不可直接访问内部类成员"><a href="#2-5-外部类不可直接访问内部类成员" class="headerlink" title="2.5 外部类不可直接访问内部类成员"></a>2.5 外部类不可直接访问内部类成员</h4><p>非静态内部类成员只在非静态内部类范围内是可知的，外部类不能直接访问。</p>
+<h4 id="外部类不可直接访问内部类成员"><a href="#外部类不可直接访问内部类成员" class="headerlink" title="外部类不可直接访问内部类成员"></a>外部类不可直接访问内部类成员</h4><p>非静态内部类成员只在非静态内部类范围内是可知的，外部类不能直接访问。</p>
 <p>通过 <strong>内部类实例对象来访问</strong>。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">new InnerClass().method();</span><br><span class="line">new InnerClass().num++;</span><br></pre></td></tr></table></figure>
 
-<h4 id="2-6-外部类中静态成员中不允许直接使用非静态内部类"><a href="#2-6-外部类中静态成员中不允许直接使用非静态内部类" class="headerlink" title="2.6 外部类中静态成员中不允许直接使用非静态内部类"></a>2.6 外部类中静态成员中不允许直接使用非静态内部类</h4><p>静态成员为类成员，在编译期对其初始化，如果直接使用非静态成员(如非静态内部类)，则会发生错误。</p>
-<h4 id="2-7-内、外部类关系"><a href="#2-7-内、外部类关系" class="headerlink" title="2.7 内、外部类关系"></a>2.7 内、外部类关系</h4><p>非静态内部类对象寄生在外部类对象里，有非静态内部类对象一定存在外部类对象，反之不成立。</p>
-<h4 id="2-8-非静态内部类中的静态成员-重点理解"><a href="#2-8-非静态内部类中的静态成员-重点理解" class="headerlink" title="2.8 非静态内部类中的静态成员(重点理解)"></a>2.8 非静态内部类中的静态成员(重点理解)</h4><p><strong>如果内部了声明静态成员变量，那么必须使用 <code>final</code> 修饰</strong>。</p>
+<h4 id="外部类中静态成员中不允许直接使用非静态内部类"><a href="#外部类中静态成员中不允许直接使用非静态内部类" class="headerlink" title="外部类中静态成员中不允许直接使用非静态内部类"></a>外部类中静态成员中不允许直接使用非静态内部类</h4><p>静态成员为类成员，在编译期对其初始化，如果直接使用非静态成员(如非静态内部类)，则会发生错误。</p>
+<h4 id="内、外部类关系"><a href="#内、外部类关系" class="headerlink" title="内、外部类关系"></a>内、外部类关系</h4><p>非静态内部类对象寄生在外部类对象里，有非静态内部类对象一定存在外部类对象，反之不成立。</p>
+<h4 id="非静态内部类中的静态成员-重点理解"><a href="#非静态内部类中的静态成员-重点理解" class="headerlink" title="非静态内部类中的静态成员(重点理解)"></a>非静态内部类中的静态成员(重点理解)</h4><p><strong>如果内部类声明静态成员变量，那么必须使用 <code>final</code> 修饰</strong>。</p>
 <p>因为一个静态变量只有一个实例，而对于每一个外部对象，分别有一个单独的内部类实例，如果这个变量不是 final 的，那么他就不是唯一的，这与 static 的含义相互冲突。</p>
 <p><strong>非静态内部类中不能含有静态方法</strong>。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class OutterClass &#123;</span><br><span class="line">    private int age;</span><br><span class="line">    private void outMethod()&#123;&#125;</span><br><span class="line">     class InnerClass &#123;</span><br><span class="line">        private final static String name = &quot;&quot;;</span><br><span class="line">        private /*static*/ void innerMethod() &#123;</span><br><span class="line">            age++;</span><br><span class="line">            outMethod();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="3-静态内部类"><a href="#3-静态内部类" class="headerlink" title="3. 静态内部类"></a>3. 静态内部类</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">class OutClass &#123;</span><br><span class="line"></span><br><span class="line">    private int num = 1;</span><br><span class="line">    private static int age = 2;</span><br><span class="line"></span><br><span class="line">    private void doSomething()&#123;</span><br><span class="line">        StaticInnerClass.staticNum++;</span><br><span class="line">        StaticInnerClass staticInnerClass = new StaticInnerClass();</span><br><span class="line">        staticInnerClass.method();</span><br><span class="line">        staticInnerClass.num++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected static class StaticInnerClass &#123;</span><br><span class="line">        private static int staticNum = 10;</span><br><span class="line">        private int num = 100;</span><br><span class="line"></span><br><span class="line">        private void method() &#123;</span><br><span class="line">            num++;</span><br><span class="line">            staticNum++;</span><br><span class="line">            age++;</span><br><span class="line">            // &apos;four.OutClass.this&apos; cannot be referenced from a static context</span><br><span class="line">            // -- four.OutClass.this 不能再 static 环境下被引用</span><br><span class="line">            // OutClass.this.num++;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="静态内部类"><a href="#静态内部类" class="headerlink" title="静态内部类"></a>静态内部类</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">class OutClass &#123;</span><br><span class="line"></span><br><span class="line">    private int num = 1;</span><br><span class="line">    private static int age = 2;</span><br><span class="line"></span><br><span class="line">    private void doSomething()&#123;</span><br><span class="line">        StaticInnerClass.staticNum++;</span><br><span class="line">        StaticInnerClass staticInnerClass = new StaticInnerClass();</span><br><span class="line">        staticInnerClass.method();</span><br><span class="line">        staticInnerClass.num++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected static class StaticInnerClass &#123;</span><br><span class="line">        private static int staticNum = 10;</span><br><span class="line">        private int num = 100;</span><br><span class="line"></span><br><span class="line">        private void method() &#123;</span><br><span class="line">            num++;</span><br><span class="line">            staticNum++;</span><br><span class="line">            age++;</span><br><span class="line">            // &apos;four.OutClass.this&apos; cannot be referenced from a static context</span><br><span class="line">            // -- four.OutClass.this 不能再 static 环境下被引用</span><br><span class="line">            // OutClass.this.num++;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="3-1-静态内部类不可以访问外部类实例成员，可以访问类成员"><a href="#3-1-静态内部类不可以访问外部类实例成员，可以访问类成员" class="headerlink" title="3.1 静态内部类不可以访问外部类实例成员，可以访问类成员"></a>3.1 静态内部类不可以访问外部类实例成员，可以访问类成员</h4><p>静态内部类为外部类的类成员，只能访问外部类的静态变量，不可以访问非静态变量。</p>
-<h4 id="3-2-编译后的-Class-文件"><a href="#3-2-编译后的-Class-文件" class="headerlink" title="3.2  编译后的 Class 文件"></a>3.2  编译后的 Class 文件</h4><p>与非静态内部类相同，编译后得到两个 class 文件 – OutClass.class 、StaticInnerClass.class</p>
-<h4 id="3-3-外部类不可直接访问内部类成员"><a href="#3-3-外部类不可直接访问内部类成员" class="headerlink" title="3.3 外部类不可直接访问内部类成员"></a>3.3 外部类不可直接访问内部类成员</h4><p>静态内部类成员、实例成员只在静态内部类范围内是可知的，外部类不能直接访问。</p>
+<h4 id="静态内部类不可以访问外部类实例成员，可以访问类成员"><a href="#静态内部类不可以访问外部类实例成员，可以访问类成员" class="headerlink" title="静态内部类不可以访问外部类实例成员，可以访问类成员"></a>静态内部类不可以访问外部类实例成员，可以访问类成员</h4><p>静态内部类为外部类的类成员，只能访问外部类的静态变量，不可以访问非静态变量。</p>
+<h4 id="编译后的-Class-文件-1"><a href="#编译后的-Class-文件-1" class="headerlink" title="编译后的 Class 文件"></a>编译后的 Class 文件</h4><p>与非静态内部类相同，编译后得到两个 class 文件 – OutClass.class 、StaticInnerClass.class</p>
+<h4 id="外部类不可直接访问内部类成员-1"><a href="#外部类不可直接访问内部类成员-1" class="headerlink" title="外部类不可直接访问内部类成员"></a>外部类不可直接访问内部类成员</h4><p>静态内部类成员、实例成员只在静态内部类范围内是可知的，外部类不能直接访问。</p>
 <ul>
 <li><p>通过 内部类名 来访问静态内部类类成员。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">StaticInnerClass.staticNum++;</span><br></pre></td></tr></table></figure>
@@ -237,12 +242,12 @@
 
 </li>
 </ul>
-<h3 id="4-内部类使用"><a href="#4-内部类使用" class="headerlink" title="4. 内部类使用"></a>4. 内部类使用</h3><h4 id="4-1-外部类使用内部类"><a href="#4-1-外部类使用内部类" class="headerlink" title="4.1 外部类使用内部类"></a>4.1 外部类使用内部类</h4><ul>
+<h3 id="内部类使用"><a href="#内部类使用" class="headerlink" title="内部类使用"></a>内部类使用</h3><h4 id="外部类使用内部类"><a href="#外部类使用内部类" class="headerlink" title="外部类使用内部类"></a>外部类使用内部类</h4><ul>
 <li>基本的使用</li>
 <li>外部类使用内部类的子类</li>
 </ul>
 <p>外部类中的静态代码块、静态方法中不可使用非静态内部类，因为静态成员不能使用非静态成员。</p>
-<h4 id="4-2-外部类以外使用非静态内部类"><a href="#4-2-外部类以外使用非静态内部类" class="headerlink" title="4.2 外部类以外使用非静态内部类"></a>4.2 外部类以外使用非静态内部类</h4><p>根据内部类的访问权限修饰符，内部类对其他类的可见性不同。</p>
+<h4 id="外部类以外使用非静态内部类"><a href="#外部类以外使用非静态内部类" class="headerlink" title="外部类以外使用非静态内部类"></a>外部类以外使用非静态内部类</h4><p>根据内部类的访问权限修饰符，内部类对其他类的可见性不同。</p>
 <p>外部类以外建立非静态内部类实例必须外部类实例和 new 来调用非静态内部类的构造器。</p>
 <ul>
 <li>非静态内部类</li>
@@ -256,17 +261,17 @@
 <li>非静态内部类子类</li>
 <li></li>
 </ul>
-<h4 id="4-2-外部类以外使用非静态内部类-1"><a href="#4-2-外部类以外使用非静态内部类-1" class="headerlink" title="4.2 外部类以外使用非静态内部类"></a>4.2 外部类以外使用非静态内部类</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">OutClass&#123;</span><br><span class="line">    private int num = 1;</span><br><span class="line">    protected static InnerClass&#123;</span><br><span class="line">    </span><br><span class="line">        private int num = 2;</span><br><span class="line">        </span><br><span class="line">        private void method()&#123;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="外部类以外使用非静态内部类-1"><a href="#外部类以外使用非静态内部类-1" class="headerlink" title="外部类以外使用非静态内部类"></a>外部类以外使用非静态内部类</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">OutClass&#123;</span><br><span class="line">    private int num = 1;</span><br><span class="line">    protected static InnerClass&#123;</span><br><span class="line">    </span><br><span class="line">        private int num = 2;</span><br><span class="line">        </span><br><span class="line">        private void method()&#123;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>调用：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">OutClass.InnerClass staticInnerClass = new OutClass.InnerClass();</span><br><span class="line">staticInnerClass.</span><br></pre></td></tr></table></figure>
 
-<h3 id="5-局部内部类"><a href="#5-局部内部类" class="headerlink" title="5. 局部内部类"></a>5. 局部内部类</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    private static void main(String[] args)&#123;</span><br><span class="line"></span><br><span class="line">        class InnerBase&#123;</span><br><span class="line">            int a ;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        class SubInnerClass extends InnerBase&#123;</span><br><span class="line">            int b;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        SubInnerClass subInnerClass = new SubInnerClass();</span><br><span class="line">        subInnerClass.a = 1;</span><br><span class="line">        subInnerClass.b = 2;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="局部内部类"><a href="#局部内部类" class="headerlink" title="局部内部类"></a>局部内部类</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    private static void main(String[] args)&#123;</span><br><span class="line"></span><br><span class="line">        class InnerBase&#123;</span><br><span class="line">            int a ;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        class SubInnerClass extends InnerBase&#123;</span><br><span class="line">            int b;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        SubInnerClass subInnerClass = new SubInnerClass();</span><br><span class="line">        subInnerClass.a = 1;</span><br><span class="line">        subInnerClass.b = 2;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>局部内部类，顾名思义内部类定义在 方法内部，其有效范围也在方法内部，方法外部无法访问,即：对外部世界完全的隐藏起来。</p>
 <p>通过 <code>javac Test.java</code> 对该类进行编译，生成的 class 有 3 个，分别为： <code>Test.class</code>、<code>Test$1InnerBase.class</code>、<code>Test$1SubInnerClass.class</code>。</p>
 <p>局部内部类遵循如下命名格式：<br><strong>OutClassName$NInnerClassName 其中 N 表示第 N 个内部类。</strong></p>
-<h3 id="6-匿名内部类-Anonymous-Inner-Class"><a href="#6-匿名内部类-Anonymous-Inner-Class" class="headerlink" title="6. 匿名内部类(Anonymous Inner Class)"></a>6. 匿名内部类(Anonymous Inner Class)</h3><h4 id="6-1-定义"><a href="#6-1-定义" class="headerlink" title="6.1 定义"></a>6.1 定义</h4><p>匿名内部类适合创建只需要一次使用的类。</p>
+<h3 id="匿名内部类-Anonymous-Inner-Class"><a href="#匿名内部类-Anonymous-Inner-Class" class="headerlink" title="匿名内部类(Anonymous Inner Class)"></a>匿名内部类(Anonymous Inner Class)</h3><h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>匿名内部类适合创建只需要一次使用的类。</p>
 <p>定义内部类的格式：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">new 实现接口 或 父类构造器(参数列表)</span><br><span class="line">&#123;</span><br><span class="line">    类的主体</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -288,9 +293,9 @@
 <hr>
 <p>为什么需要内部类？</p>
 <p>答:   如果你想实现一个接口，但是这个接口中的一个方法和你构想的这个类中的一个方法的名称，参数相同，你应该怎么办？这时候，你可以建一个内部类实现这个接口。由于内部类对外部类的所有内容都是可访问的，所以这样做可以完成所有你直接实现这个接口的功能。</p>
-<p>真正的原因，java中的内部类和接口加在一起，可以很好的实现多继承的效果</p>
+<p>真正的原因，java中的内部类和接口加在一起，可以很好的实现多继承的效果。</p>
 <p>内部类是否有用、必要和安全</p>
-<p>内部类是一种编译器现象，与虚拟机无关。编译器会把内部了翻译成用 $ 分割外部类名与内部类名的常规文件，而虚拟机对此一无所知。</p>
+<p>内部类是一种编译器现象，与虚拟机无关。编译器会把内部了翻译成用 <code>$</code> 分割外部类名与内部类名的常规文件，而虚拟机对此一无所知。</p>
 <hr>
 <p><a href="https://www.zhihu.com/question/21395848" target="_blank" rel="noopener">java为什么匿名内部类的参数引用时final？</a></p>
 
@@ -540,10 +545,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
               </li>
              
@@ -552,7 +553,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -568,23 +569,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -597,6 +590,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -624,11 +629,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+                <a href="javascript:void(0)" class="js-tag color3">Jetpack</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Jetpack</a>
+                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -640,15 +649,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">VIM</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -660,7 +669,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">VIM</a>
+                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -668,7 +677,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -677,10 +686,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">事件分发机制</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -696,14 +701,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">JNI</a>
               </li>
              
@@ -712,7 +709,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
               </li>
              
               <li class="article-tag-list-item">
