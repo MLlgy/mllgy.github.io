@@ -1,7 +1,10 @@
 ---
 title: 性能优化之优化 App 启动速度
-tags: [性能优化]
+tags:
+  - 性能优化
+date: 2019-06-11 17:13:48
 ---
+
 
 
 主要面临的问题：
@@ -102,10 +105,9 @@ tags: [性能优化]
 
 8. <style name="Theme">
 ```
-
 层级自 1~8 自上而下具有继承关系。
 
-可以看到在第 7 层中存在 windowBackground 属性。
+可以看到在第 7 层中存在 windowBackground 属性，这是一路下来与背景唯一相关属性。
 
 看一下 windowBackground 的 drawable 显示如何：
 
@@ -120,90 +122,7 @@ tags: [性能优化]
 
 分析、找出优化点
 
-### 启动时间统计
-
-#### 方法一 使用 Logcat 查看启动时间
-
-自 Android4.4 (API level 19) 以上的版本可以通过 AS 的 Logcat 查看 App 的启动时间。
-
-
-Displayed 标识的时间包括 `启动相应的进程`以及 `绘制完成相应的 Activity`，主要过程包括过程如下：
-
-* 启动相应进程
-* 初始化相应对象
-* 创建相应的 Activity 
-* 加载布局
-* 第一次绘制应用
-
-
-![Displayed Time](/../images/2019_06_11_02.png)
-
-要想看到 Displayed 属性，Logcat 不能设置任何过滤条件。
-
-#### 方法二 使用 adb 查看启动时间
-
-具体命令如下：
-
-```
-adb shell am start -W package/activity
-```
-
-具体事例
-
-```
- adb shell am start -W com.sixcat/com.sixcat.views.activity.MainActivity
-```
-具体展示信息如下：
-
-```
-Starting: Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=com.sixcat/.views.activity.MainActivity }
-Status: ok
-Activity: com.sixcat/.views.activity.MainActivity
-TotalTime: 2892
-ThisTime: xxx(这个属性自己没有显示，但是有些资料上存在)
-WaitTime: 2905
-Complete
-```
-具体属性含义可以参见 [Android 中如何计算 App 的启动时间？](https://www.androidperformance.com/2015/12/31/How-to-calculation-android-app-lunch-time/),含义参见如下：
-
-* WaitTime 就是总的耗时，包括前一个应用 Activity pause 的时间和新应用启动的时间；
-* ThisTime 表示一连串启动 Activity 的最后一个 Activity 的启动耗时；
-* TotalTime 表示新应用启动的耗时，包括新进程的启动和 Activity 的启动，但不包括前
-一个应用 Activity pause 的耗时。
-
-在日常开发中，我们一般只需要关心 TotalTime ，这个时间是自己应用的启动时间。
-
-
-#### reportFullyDrawn()
-
-如官方给出的示意图一样：
-
-![image](https://developer.android.com/topic/performance/images/cold-launch.png)
-
-如果应用的初始化过程中包括懒加载或者异步加载，上面的两种方法获得启动时间均不包含以上情况所消耗的时间。
-
-如示意图所以 reportFullyDrawn() 可以自定义统计时间的结束为止，其展示时间为 apk 初始化到 reportFullyDrawn() 调用位置消耗的时间。
-
-这样可以在初始化过程中的懒加载或异步加载后，调用 reportFullyDrawn()，从而统计启动时间。 
-
-为了验证效果，在 MainActivity 的 initView() 方法做以下调整：
-
-```
-override fun initView(){
-    ...
-    Thread.sleep(3000L)
-    reportFullyDrawn
-    ...
-}
-```
-添加这两行代码前后的 Displayed Time 分别如下：
-
-```
-2019-06-12 14:11:14.270 805-819/? I/ActivityManager: Displayed com.sixcat/.views.activity.MainActivity: +3s291ms
-2019-06-12 14:14:59.536 805-819/? I/ActivityManager: Displayed com.sixcat/.views.activity.MainActivity: +6s151ms
-```
-
-Get It !!!
+#### 启动时间统计
 
 
 
@@ -247,6 +166,7 @@ App 启动时间统计
 
 ```zsh
 adb shell am start -W package/activity
+
 ```
 
 
@@ -256,5 +176,3 @@ adb shell am start -W package/activity
 
 
 https://www.zhihu.com/question/35487841
-
-https://www.jianshu.com/p/4f10c9a10ac9

@@ -5,7 +5,7 @@ tags: [Binder]
 ---
 
 
-Binder 机制是 Android 特有的跨进程通信机制，本文为 [Android 插件化机制]() 相关章节的阅读笔记。
+Binder 机制是 Android 特有的跨进程通信机制，本文为 [Android 插件化开发]() 相关章节的阅读笔记。
 
 
 #### 00x01
@@ -56,7 +56,7 @@ Binder 基本运行机制如下图：
 此时 Client 和 Server 实现了进程间通信，在此过程中 Binder 驱动做了许多事情，但是我们目前不需要关心。
 
 
-![Binder 通信过程](/../images/2019_06_05_02.jpg)
+![Binder 通信过程](/../images/2019_06_05_02.png)
 
 
 #### 00x06
