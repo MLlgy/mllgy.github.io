@@ -20,3 +20,7 @@ tags:
 
 ---
 [[Uber Mobility] Memory Leak Hunt: LeakCanary - Pierre-Yves Ricau](https://www.youtube.com/watch?v=KwArTJHLq5g)
+
+https://mp.weixin.qq.com/s/uwDk5D986OdMzKgtjpHdHg
+
+https://mp.weixin.qq.com/s/idjFaJsLpVLw52RSYHA_Vg
