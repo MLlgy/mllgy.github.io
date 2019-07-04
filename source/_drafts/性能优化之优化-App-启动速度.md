@@ -200,9 +200,10 @@ override fun initView(){
 
 ```
 2019-06-12 14:11:14.270 805-819/? I/ActivityManager: Displayed com.sixcat/.views.activity.MainActivity: +3s291ms
+
 2019-06-12 14:14:59.536 805-819/? I/ActivityManager: Displayed com.sixcat/.views.activity.MainActivity: +6s151ms
 ```
-
+两次日志的时间相差大致为 3s 。
 Get It !!!
 
 
