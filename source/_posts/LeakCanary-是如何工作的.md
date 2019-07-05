@@ -103,8 +103,6 @@ CustomRunnable work = new CustomRunnable();
 new Thread(work).start();
 ```
 
-
-
 ### 二
 
 这个例子更能够体现一步一步寻找内存泄漏点：
