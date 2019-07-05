@@ -54,9 +54,9 @@ we will dump the states of every singleInstance and that's where you can find th
 如此往复，结合 trace 图和 leakmomory 进程信息，判断对象是否应该存在，不过根据对象的不同，判断标准不同，如例子中的 mAttachInfo、mDestory。
 
 
-### LeakCanary 实践
+### LeakCanary 实践一
 
-使用官方 [LeakCanary](https://github.com/square/leakcanary/tree/jrod/2019-04-15/hprof) 库的 demo 进行展示如何定位内存泄漏。此处演示的为 LeakCanary 1.6.3 ，master 分支已于 2019-05-21 变更为 由 1.x 变更为 2.x ，具体查看 [Chnage Log](https://github.com/square/leakcanary/blob/4bbc0f6f2e3c9a25ca890ece6770f81cf9059510/docs/changelog.md)。
+使用官方 [LeakCanary 1.6.3 ](https://github.com/square/leakcanary/tree/v1.6.3) 库的 demo 进行展示如何定位内存泄漏。此处演示的为 LeakCanary 1.6.3 ，master 分支已于 2019-05-21 变更为 由 1.x 变更为 2.x ，具体查看 [Chnage Log](https://github.com/square/leakcanary/blob/4bbc0f6f2e3c9a25ca890ece6770f81cf9059510/docs/changelog.md)。
 
 
 LeakCanary 2.x 功能更加全面，需要使用。
@@ -103,6 +103,11 @@ CustomRunnable work = new CustomRunnable();
 new Thread(work).start();
 ```
 
+
+
+### 二
+
+这个例子更能够体现一步一步寻找内存泄漏点：
 
 
 
