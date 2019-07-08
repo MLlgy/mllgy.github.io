@@ -156,6 +156,536 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-LeakCanary-是如何工作的" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/07/04/LeakCanary-是如何工作的/">如何使用 LeakCanary 寻找内存泄漏位置</a>
+    </h1>
+  
+
+        
+        <a href="/2019/07/04/LeakCanary-是如何工作的/" class="archive-article-date">
+  	<time datetime="2019-07-04T07:40:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="如何使用-Leakmemory-泄漏链路-Trace-图"><a href="#如何使用-Leakmemory-泄漏链路-Trace-图" class="headerlink" title="如何使用 Leakmemory 泄漏链路(Trace 图)"></a>如何使用 Leakmemory 泄漏链路(Trace 图)</h3><p>以下英文部分摘自 <a href="https://www.youtube.com/watch?v=KwArTJHLq5g" target="_blank" rel="noopener">Youtube 视频：[Uber Mobility] Memory Leak Hunt: LeakCanary - Pierre-Yves Ricau</a></p>
+<blockquote>
+<p>[19:30] You look for objects that you know you try to ask the question throught subject should be in memory or not. If you can anwser the question, it’s greate because you’re going to help you reduce the space of the problem. If the anwser is yes that it should be in memory, the problem is in blow, if the anwser is no, the problem is above.</p>
+</blockquote>
+<blockquote>
+<p>[个人译] 如果你知道在 Trace 图中出现的对象是否应该存在于内存中，这会帮助你很好的分析内存泄漏位置。如果对象不应该存在于内存中，那么内存泄漏的位置应该在Trace 中该对象上面的位置；如果对象应该存在于内存中，那么内存泄漏的位置应该在Trace 中该对象下面的位置。</p>
+</blockquote>
+<blockquote>
+<p>[12:37] Method:<br>Find an object and ask should this object should be alive or should be in garbage collection?</p>
+</blockquote>
+<h3 id="如何使用-package-leakmomory-进程进行问题定位"><a href="#如何使用-package-leakmomory-进程进行问题定位" class="headerlink" title="如何使用 package:leakmomory 进程进行问题定位"></a>如何使用 package:leakmomory 进程进行问题定位</h3><p>以下英文部分摘自 <a href="https://www.youtube.com/watch?v=KwArTJHLq5g" target="_blank" rel="noopener">Youtube 视频：[Uber Mobility] Memory Leak Hunt: LeakCanary - Pierre-Yves Ricau</a></p>
+<blockquote>
+<p>[15：00] Should this object should be alive at this point in time? how we know that?</p>
+</blockquote>
+<p>不只是根据 leakcanary 在手机上的 Trace 图，leakcanary 可以在 package:leakmomory 进程显示详细的 Trace 日志。其实现在手机上的 Trace 图也可以显示出关键的 Trace 日志，只是手机品牌不同显示的详细程度不同，如果手机上信息语言简略，推荐查看 AS 中 package:leakmomory 中的相关日志。</p>
+        
+          <a class="article-more-a" href="/2019/07/04/LeakCanary-是如何工作的/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">LeakCanary</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">内存泄漏</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">内存优化</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">工具</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/07/04/LeakCanary-是如何工作的/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-动画使用概述" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/07/03/动画使用概述/">动画使用概述</a>
+    </h1>
+  
+
+        
+        <a href="/2019/07/03/动画使用概述/" class="archive-article-date">
+  	<time datetime="2019-07-03T03:28:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-03</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="视图动画"><a href="#视图动画" class="headerlink" title="视图动画"></a>视图动画</h2><p>View动画， 从名字上我们也可以看出，此动画只能对派生自 View 的控件实例起作用，它改变的只是控件的显示位置，但是并没有更改控件本身的值。</p>
+<p>View 动画其实是通过其 Parent View 实现的，在 View 被绘制时 Parent View 改变它的绘制参数，这样虽然 View 的大小或位置改变，但是却没有改变 View 本身的值。</p>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><h2 id="属性动画"><a href="#属性动画" class="headerlink" title="属性动画"></a>属性动画</h2><p>属性动画，从名字上来看，此动画针对于控件的某个属性做动画。</p>
+<p>属性动画和 View 动画只能作用于 View 不同，它可以对任何对象做动画效果。要想对一个对使用属性动画，那么这个对象必须满足以下两个条件：</p>
+<ol>
+<li>对象作动画的属性有 set 和 get 方法，如果对象没有可以考虑使用包装为对象添加 set get 方法，比如一些 view 就没有这两个方法，我们可以自己实现。</li>
+<li>对象属性的变化必须通过某种形式表现出来，比如 UI 的变化。</li>
+</ol>
+<h3 id="ViewPropertyAnimator"><a href="#ViewPropertyAnimator" class="headerlink" title="ViewPropertyAnimator"></a>ViewPropertyAnimator</h3><p> view.animate().xxx；</p>
+<h3 id="ValueAnimator"><a href="#ValueAnimator" class="headerlink" title="ValueAnimator"></a>ValueAnimator</h3><p>属性动画的核心所在，其本身不提供任何动画效果，它更像一个数值发生器，产生具有一定规律的数字，调用者使用数字控制动画的实现。</p>
+<h4 id="使用-ofObject"><a href="#使用-ofObject" class="headerlink" title="使用 ofObject"></a>使用 ofObject</h4><p>我们看一下 ValueAnimator#ofObject 的 API：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public static ValueAnimator ofObject(TypeEvaluator evaluator, Object... values);</span><br></pre></td></tr></table></figure>
+
+<p>当我们使用 ofObject 时，我们需要同时传入 自定义估值器 和 相应的值，至于为什么要传入 自定义估值器，因为不像其他 API 有默认的 估值器，通过传入的指的类型使用相应的估值器进行计算相应的值（Int-IntEvalutor,Float-FloatEvalutor等）,如果我们在这里不传入自定义估值器，那么将不知道如果计算值。</p>
+<h2 id="插值器-TimeInterpolator-和估值器-TypeEvaluator"><a href="#插值器-TimeInterpolator-和估值器-TypeEvaluator" class="headerlink" title="插值器(TimeInterpolator)和估值器(TypeEvaluator)"></a>插值器(TimeInterpolator)和估值器(TypeEvaluator)</h2><p>插值器 ：根据时间流逝的百分比计算属性值改变的百分比。</p>
+<p> 类型估值算法: 根据当前属性改变的百分比(此值由时间插值器获得)来计算改变后的属性值.</p>
+<p> 属性动画的默认插值器和估值器分别为 LinearInterpolator 和 IntEvaluator。两者协同工作共同完成动画：</p>
+<p> 使用插值器根据时间流逝的百分比获得属性改变的百分比，然后使用估值器根据得到属性改变的百分比计算改变后的属性值。</p>
+<h3 id="自定义插值器"><a href="#自定义插值器" class="headerlink" title="自定义插值器"></a>自定义插值器</h3><p> 自定义插值器需要继承 TimeInterpolator，实现 getInterpolation(float intput) 方法:</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> class CustomeInterplotor : TimeInterpolator &#123;</span><br><span class="line">    override fun getInterpolation(input: Float): Float = 1 - input</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中 getInterpolation 的参数 input 为时间流逝的百分比，其值只与时间的流逝有关，方法的返回值表示动画的当前属性的改变比例。</p>
+<h3 id="自定义估值器"><a href="#自定义估值器" class="headerlink" title="自定义估值器"></a>自定义估值器</h3><p> 自定义估值器需要继承 TypeEvalutor ,实现 evaluate(…) 方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> class CustomTypeEvalutor : TypeEvaluator&lt;Float&gt; &#123;</span><br><span class="line">    override fun evaluate(fraction: Float, startValue: Float, endValue: Float): Float</span><br><span class="line">            = (startValue + (endValue - startValue) * fraction)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>不过我们需要注意的是 TypeEvaluator evaluate方法的 startValue、endValue、返回值类型要与 ofInt()、ofFloat 对应，否则就会在计算具体的属性值时出现转型错误。</p>
+<h3 id="ValueAnimator、TimeInterpolator-与-TypeEvaluator"><a href="#ValueAnimator、TimeInterpolator-与-TypeEvaluator" class="headerlink" title="ValueAnimator、TimeInterpolator 与 TypeEvaluator"></a>ValueAnimator、TimeInterpolator 与 TypeEvaluator</h3><p>知道了时间插值器和类型估值器，现在在来理解一下属性动画的整体流程：</p>
+<p><img src="/../images/2019_07_03_03.png" alt="动画流程图"></p>
+<h4 id="ObjectAnimator"><a href="#ObjectAnimator" class="headerlink" title="ObjectAnimator"></a>ObjectAnimator</h4><p>ValueAnimator 不产生动画，它只是产生一系列的数字，通过控制数字来控制动画，谷歌派生出 ObjectAnimator 类，来直接对控件实现动画。</p>
+<p>在 ValueAnimator 中我们通过流程图的方式来具体理解动画的流程，同样我们通过流程图来认识 ObjectAnimator 的动画流程：</p>
+<p><img src="/../images/2019_07_03_02.png" alt="动画流程图"></p>
+<p>根据时间插值器和类型估值器最终得到变化后的属性值，此时根据属性拼装成最终的 set 函数的名字，如 setAlpha、setRorate 等，通过反射找到控件的 setXXX 函数，并把最终的计算值作为参数传递到相应的 setXXX 函数中。</p>
+<p>ObjectAnimator 的作用只是把计算后的数值传递到 set 方法中，至于之后的操作 ObjectAnimator 将不能作用。要想控件产生 移动、平移、旋转、透明度变换等操作，还需要在 set 方法中进行相应的绘制。</p>
+<p>根据以上描述不难发现，ObjectAnimator 的目标控件必须有 set 方法(要想获得控件的值还需要有 get 方法)，而且 set 方法中必须可以操作(绘制)控件进行相应的变换，两者缺一不可。</p>
+<h4 id="PropertyValuesHolder"><a href="#PropertyValuesHolder" class="headerlink" title="PropertyValuesHolder"></a>PropertyValuesHolder</h4><p>PropertyValuesHolder 这个类保存了动画过程中所需要操作的属性和对应的值。</p>
+<p>ObjectAnimator 的 ofInt() 实现函数构造，它的内部其实是将传进来的参数封装成 PropertyValuesHolder 实例来保存动画状态，所以说 PropertyValuesHolder 对整个动画实现上的地位是举足轻重的。</p>
+<p>看一下 PropertyValuesHolder相关的的两个比较重要的方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public static PropertyValuesHolder ofFloat(String propertyName, float... values)  </span><br><span class="line"></span><br><span class="line">public static ObjectAnimator ofPropertyValuesHolder(Object target,PropertyValuesHolder... values)</span><br></pre></td></tr></table></figure>
+
+<p>上面说到 ObjectAnimator 是在内部实现了 PropertyValuesHolder ，那么我们通过一个方法对比一下两者：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public static ObjectAnimator ofFloat(Object target, String propertyName, float... values);</span><br></pre></td></tr></table></figure>
+
+<p>对比两者方法的参数： target – target、propertyName – propertyName、values – values,可以看出 ObjectAnimator 中的方法是 PropertyValuesHolder 对应两方法的集合，也证明了 ObjectAnimator 是在内部实现了 PropertyValuesHolder 来完成动画的控制。</p>
+<p>通过以下代码实现来理解以上内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">val rotation = PropertyValuesHolder.ofFloat(&quot;Rotation&quot;,0f,90f,150f,-100f,0f)</span><br><span class="line">val color = PropertyValuesHolder.ofInt(&quot;BackgroundColor&quot;, 0xffffffff, 0xffff00ff, 0xffffff00, 0xffffffff)</span><br><span class="line">val objectAnimator = ObjectAnimator.ofPropertyValuesHolder(mTextView, rotation, color)</span><br><span class="line">objectAnimator.duration = 1000</span><br><span class="line">objectAnimator.start()</span><br></pre></td></tr></table></figure>
+
+<p>ObjectAnimator.ofPropertyValuesHolder 可以实现多个属性的动画同时进行。</p>
+<h5 id="PropertyValuesHolder-的-ofObject-方法"><a href="#PropertyValuesHolder-的-ofObject-方法" class="headerlink" title="PropertyValuesHolder  的 ofObject 方法"></a>PropertyValuesHolder  的 ofObject 方法</h5><p>如果 ValueAnimator 的 ofObject 一样，我们可以从方法名可以推测动画实现的操作对象为一个 Object 对象，那么这样的话我们还需要自定义属于该对象的 TypeEvalutor ，来计算对象改变后的值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">val change = PropertyValuesHolder.ofObject(&quot;CharText&quot;, CharEvalutor(), &apos;A&apos;, &apos;Z&apos;)</span><br><span class="line">val animator = ObjectAnimator.ofPropertyValuesHolder(myTextView, change)</span><br><span class="line">animator.duration = 2000</span><br><span class="line">animator.interpolator = AccelerateInterpolator()</span><br><span class="line">animator.start()</span><br></pre></td></tr></table></figure>
+
+<p>在此例中，调用 ofObject 方法操作的 ‘A’、’Z’ 为 Char 类型，所以针对 Char 自定义类型估值器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">class CharEvalutor : TypeEvaluator&lt;Char&gt; &#123;</span><br><span class="line">    override fun evaluate(fraction: Float, startValue: Char?, endValue: Char?): Char &#123;</span><br><span class="line">        val start = startValue?.toInt()</span><br><span class="line">        val end = endValue?.toInt()</span><br><span class="line">        val current = (start!! + fraction * (end!! - start)).toInt()</span><br><span class="line">        return current.toChar()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 ObjectAnimator.ofPropertyValuesHolder() 方法中传入操作的控件和PropertyValuesHolder 属性，到此动画定义的大部分工作已经完成。如上面的例子可见，我们通过控件 myTextView 的 setCharText 方法将值传递给相应控件，这就是 PropertyValuesHolder 的 ofObject 的用法，其实和 ValueAnimator 的 ofObject 的用法大同小异。</p>
+<h3 id="KeyFrame-–-关键帧"><a href="#KeyFrame-–-关键帧" class="headerlink" title="KeyFrame – 关键帧"></a>KeyFrame – 关键帧</h3><p>具体的方法为:<code>Keyframe.ofFloat(float fraction, Object value)</code></p>
+<p>关键帧定义了属性值在某个时间点上具体值，明白了这些基本使用就比较简单了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">val keyFrame1 = Keyframe.ofFloat(0f, 1f)</span><br><span class="line">val keyFrame2 = Keyframe.ofFloat(0.5f, 0.7f)</span><br><span class="line">keyFrame2.interpolator = LinearInterpolator()// keyFrame1 与 keyFrame2 之间设置了 线性插值器</span><br><span class="line">val keyFrame3 = Keyframe.ofFloat(0.7f, 0.8f)</span><br><span class="line">val keyframe4 = Keyframe.ofFloat(1f)</span><br><span class="line">keyframe4.value = 1f</span><br><span class="line">val propertyValueHolder = PropertyValuesHolder.ofKeyframe(&quot;alpha&quot;, keyFrame1, keyFrame2, keyFrame3, keyframe4)</span><br><span class="line">val animator = ObjectAnimator.ofPropertyValuesHolder(mIVKeyFrame, propertyValueHolder)</span><br><span class="line">animator.duration = 2000</span><br><span class="line">animator.start()</span><br></pre></td></tr></table></figure>
+
+<h5 id="KeyFrame-的-ofObject-方法"><a href="#KeyFrame-的-ofObject-方法" class="headerlink" title="KeyFrame 的 ofObject 方法"></a>KeyFrame 的 ofObject 方法</h5><p>由于 KeyFrame 的 ofObject 方法和上文中几种情况的 ofObject 的意义一样，其使用方法的指导思想也一致，直接看例子理解一下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Keyframe frame0 = Keyframe.ofObject(0f, new Character(&apos;A&apos;));  </span><br><span class="line">Keyframe frame1 = Keyframe.ofObject(0.1f, new Character(&apos;L&apos;));  </span><br><span class="line">Keyframe frame2 = Keyframe.ofObject(1,new Character(&apos;Z&apos;));  </span><br><span class="line">PropertyValuesHolder frameHolder = PropertyValuesHolder.ofKeyframe(&quot;CharText&quot;,frame0,frame1,frame2);  </span><br><span class="line">frameHolder.setEvaluator(new CharEvaluator());  </span><br><span class="line">ObjectAnimator animator = ObjectAnimator.ofPropertyValuesHolder(mMyTv,frameHolder);  </span><br><span class="line">animator.setDuration(3000);  </span><br><span class="line">animator.start();</span><br></pre></td></tr></table></figure>
+
+
+<p>使用注意事项：</p>
+<ul>
+<li>如果去掉第 0 帧，将以第一个关键帧为起始位置</li>
+<li>如果去掉结束帧，将以最后一个关键帧为结束位置</li>
+<li>使用 Keyframe 来构建动画，至少要有两个或两个以上帧</li>
+</ul>
+<h2 id="布局动画"><a href="#布局动画" class="headerlink" title="布局动画"></a>布局动画</h2><hr>
+<p>Camera的处理结果只是生成一个Matrix，该Matrix用于Bitmap或Canvas绘制Bitmap时才能产生旋转或缩放的效果。</p>
+<p>A camera instance can be used to compute 3D transformations and generate a matrix that can be applied, for instance, on a Canvas.</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/07/03/动画使用概述/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-刷机资源" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/26/刷机资源/">刷机资源</a>
+    </h1>
+  
+
+        
+        <a href="/2019/06/26/刷机资源/" class="archive-article-date">
+  	<time datetime="2019-06-26T09:42:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="TWRP"><a href="#TWRP" class="headerlink" title="TWRP"></a>TWRP</h3><p><a href="https://twrp.me/Devices/" target="_blank" rel="noopener">TeamWin - TWRP</a></p>
+<h3 id="SuperSu"><a href="#SuperSu" class="headerlink" title="SuperSu"></a>SuperSu</h3><p><a href="http://www.supersu.com/download" target="_blank" rel="noopener">SuperSu</a></p>
+<p>2018 年 5 月，SuperSU 的作者 Chainfire 正式宣布停止开发所有 root 相关的应用，此后 Magisk 称为 root 利器。</p>
+<h3 id="Magisk"><a href="#Magisk" class="headerlink" title="Magisk"></a>Magisk</h3><p><a href="https://forum.xda-developers.com/apps/magisk/official-magisk-v7-universal-systemless-t3473445" target="_blank" rel="noopener">Magisk</a></p>
+<p><a href="https://github.com/topjohnwu/Magisk" target="_blank" rel="noopener">Magisk-Github</a></p>
+<h3 id="Xposed-Framework"><a href="#Xposed-Framework" class="headerlink" title="Xposed Framework"></a>Xposed Framework</h3><h2 id="Rom-资源"><a href="#Rom-资源" class="headerlink" title="Rom 资源"></a>Rom 资源</h2><p><a href="https://www.lineageos.org/" target="_blank" rel="noopener">LineageOS</a></p>
+<p><a href="https://mirrors.tuna.tsinghua.edu.cn/lineage-rom/full/" target="_blank" rel="noopener">LineageOS 清华源</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Android 刷机</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/06/26/刷机资源/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-灵感来源" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/12/灵感来源/">灵感来源</a>
+    </h1>
+  
+
+        
+        <a href="/2019/06/12/灵感来源/" class="archive-article-date">
+  	<time datetime="2019-06-12T10:54:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="https://github.com/" target="_blank" rel="noopener">GayHub 交友社区</a></p>
+<p><a href="https://www.ctolib.com/article/compares/53292" target="_blank" rel="noopener">CTOLib码库</a></p>
+<p><a href="https://p.codekk.com/" target="_blank" rel="noopener">CodeKK</a></p>
+<p><a href="https://www.diycode.cc/categories/Android" target="_blank" rel="noopener">diycode</a></p>
+<p><a href="https://android-arsenal.com/" target="_blank" rel="noopener"> Android Arsenal</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/06/12/灵感来源/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-性能优化之优化-App-启动速度" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/11/性能优化之优化-App-启动速度/">性能优化之优化 App 启动速度</a>
+    </h1>
+  
+
+        
+        <a href="/2019/06/11/性能优化之优化-App-启动速度/" class="archive-article-date">
+  	<time datetime="2019-06-11T09:13:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-11</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>主要面临的问题：<br> APP 冷启动白屏。</p>
+<p>针对于这个问题，基本上主流的解决方法存在两个：</p>
+<pre><code>1. 主题替换。
+2. 减少冷启动时主线程的工作量。</code></pre><p>本文的重点不在解决问题方法，而在于解决问题的过程，包括影响启动速度的因素、时间统计工具、解决思路。</p>
+<p>优化 App 启动速度主要是优化冷启动时的 App 启动速度，官方文档 (<a href="https://developer.android.com/topic/performance/vitals/launch-time" target="_blank" rel="noopener">App startup time</a>) 中指出优化冷启动方式的同时，温启动和热启动也会得到改善。</p>
+<p>在分析过程之前，首先了解启动方式。</p>
+<h3 id="冷启动、温启动、热启动"><a href="#冷启动、温启动、热启动" class="headerlink" title="冷启动、温启动、热启动"></a>冷启动、温启动、热启动</h3><ul>
+<li><p>冷启动</p>
+<p>App 安装后第一次启动或者杀死 App 进程后重新启动称为冷启动。冷启动的启动成本较高，一切都要重新建立，包括新建应用进程、初始化应用以及首页的布局、渲染等操作。</p>
+</li>
+</ul>
+<ul>
+<li><p>热启动</p>
+<p>  App 所在进程存活，并且所有 Activity 均未被销毁，热启动做的只是把应用从后台切换至前台，如果 Activity 实例中的被回收的实例变量会重新创建。</p>
+<p>  具体场景为在微信中切换到桌面，后马上回到微信。</p>
+</li>
+<li><p>温启动</p>
+<p>  Activity 被杀死但是 App 所在的进程在内存中依然存在。</p>
+</li>
+</ul>
+<h4 id="启动时间组成"><a href="#启动时间组成" class="headerlink" title="启动时间组成"></a>启动时间组成</h4><p>很多时候解决问题需要我们拥有上帝视角，全面把控事态的发展，跳出事件本身，以俯视的角度看待整个流程，找出问题的关键点。总的来说我们需要纵观全局来看待问题、解决问题。</p>
+<p>从在 Launcher 中点击 App 的 icon 到 App 的第一面展示的时间差称为冷启动时间，那么这段时间整个系统都经历了什么。用上帝之眼看待整个流程，从而寻找解决问题的切入点，首先我们分析一下整个过程都经历了什么。</p>
+<p>在 Launcher 中我们点击 App 图标，经过一系列过程，涉及 AMS、 Binder、IPC 等组件和过程。</p>
+<p>在启动 App 的主页面之前，系统操作如下：</p>
+<ol>
+<li>创建并启动 App 所在应用</li>
+<li>启动 App 后会马上展示系统的 start window</li>
+<li>创建 App 进程</li>
+</ol>
+<p>在系统创建完成 App 所在的进程后，App 进程负责完成下列一系列步骤：</p>
+<ol>
+<li>创建 App 对象</li>
+<li>启动 App 主线程</li>
+<li>创建主 Activity</li>
+<li>加载 View 视图</li>
+<li>布局屏幕</li>
+<li>执行初始化绘制 View</li>
+</ol>
+<p>在 App 进程完成第一帧的绘制后，start window 会被替换，此时在屏幕上展示的就是在主 Activity 加载的布局。</p>
+<p><img src="/../images/2019_06_01_01.png" alt="App 页面替换"></p>
+<p>根据 <a href="https://www.youtube.com/watch?v=Vw1G1s73DsY" target="_blank" rel="noopener">Colt McAnlis</a> 在 Yutobe 上的关于 App 启动时间的描述，以上过程可以形象的图形化表示如下：</p>
+<p><img src="/../images/2019_06_01_02.png" alt="App 启动时间"></p>
+<h4 id="为什么是白屏或黑屏"><a href="#为什么是白屏或黑屏" class="headerlink" title="为什么是白屏或黑屏"></a>为什么是白屏或黑屏</h4><p>在清单文件中我们需要设置 Application 的 Theme，比如自己设置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;application</span><br><span class="line">        ...</span><br><span class="line">        android:theme=&quot;@style/sixcatTheme&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+
+<p>我们需要查看 sixcatTheme 主题的继承关系</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">1. &lt;style name=&quot;sixcatTheme&quot; parent=&quot;Theme.AppCompat.Light.NoActionBar&quot;&gt;</span><br><span class="line"></span><br><span class="line">2. &lt;style name=&quot;Theme.AppCompat.Light&quot; parent=&quot;Base.Theme.AppCompat.Light&quot;/&gt;</span><br><span class="line"></span><br><span class="line">3. &lt;style name=&quot;Base.Theme.AppCompat.Light&quot; parent=&quot;Base.V7.Theme.AppCompat.Light&quot;&gt;</span><br><span class="line"></span><br><span class="line">4. &lt;style name=&quot;Base.V7.Theme.AppCompat.Light&quot; parent=&quot;Platform.AppCompat.Light&quot;&gt;</span><br><span class="line"></span><br><span class="line">5. &lt;style name=&quot;Platform.AppCompat.Light&quot; parent=&quot;android:Theme.Holo.Light&quot;&gt;</span><br><span class="line"></span><br><span class="line">6. &lt;style name=&quot;Theme.Holo.Light&quot; parent=&quot;Theme.Light&quot;&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">7. &lt;style name=&quot;Theme.Light&quot;&gt;</span><br><span class="line">      &lt;item name=&quot;windowBackground&quot;&gt;@drawable/screen_background_selector_light&lt;/item&gt;</span><br><span class="line">   &lt;/style&gt;</span><br><span class="line"></span><br><span class="line">8. &lt;style name=&quot;Theme&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>层级自 1~8 自上而下具有继承关系。</p>
+<p>可以看到在第 7 层中存在 windowBackground 属性，这是一路下来与背景唯一相关属性。</p>
+<p>看一下 windowBackground 的 drawable 显示如何：</p>
+<p><img src="/../images/2019_06_11_01.jpg" alt="drawable"></p>
+<p>事实证明确实是这个属性决定着点击 App 后显示的白屏或黑屏，当然这也为解决此问题提供了一个思路。</p>
+<p>官方图</p>
+<p>拆解为两部分。</p>
+<p>分析、找出优化点</p>
+<h4 id="启动时间统计"><a href="#启动时间统计" class="headerlink" title="启动时间统计"></a>启动时间统计</h4><h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><p>更换主题</p>
+<p>截图 + 解决方法 + 截图</p>
+<p>延时加载</p>
+<p>CPU profile<br>trace 文件<br>命令行<br>Displayed Time</p>
+<p>方法一</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;item name=&quot;android:windowIsTranslucent&quot;&gt;true&lt;/item&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在原来的 MainActivity 设定的主题中添加以上代码。</p>
+<p>带来的效果：<br>透明效果，即点击 App icon 后的白屏时间变为 透明 状态，避免了白屏，但是两者的时间几乎相同。给人的错觉时点击 icon 后一段时间后，app 才调起，给人的印象不好。</p>
+<p>方法二 主题替换</p>
+<p>在 App 启动时</p>
+<hr>
+<p>App 启动时间统计</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell am start -W package/activity</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://www.youtube.com/watch?v=Vw1G1s73DsY" target="_blank" rel="noopener">Google Developer</a></p>
+<p><a href="https://www.youtube.com/watch?v=Vw1G1s73DsY" target="_blank" rel="noopener">Youtube 性能优化视频</a></p>
+<p><a href="https://www.zhihu.com/question/35487841" target="_blank" rel="noopener">https://www.zhihu.com/question/35487841</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">性能优化</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/06/11/性能优化之优化-App-启动速度/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Binder基本原理" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
@@ -176,7 +706,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Binder 机制是 Android 特有的跨进程通信机制，本文为 <a href="">Android 插件化机制</a> 相关章节的阅读笔记。</p>
+        <p>Binder 机制是 Android 特有的跨进程通信机制，本文为 <a href="">Android 插件化开发</a> 相关章节的阅读笔记。</p>
 <h4 id="00x01"><a href="#00x01" class="headerlink" title="00x01"></a>00x01</h4><p>Binder 分为 Client 端和 Server 端，在进行跨进程通信时，两端分别为两个不同的进程。发消息者为 Client，相应的接收消息者为 Server。根据消息的流向，一端可以同时为 Client 和 Server。</p>
 <h4 id="00x02"><a href="#00x02" class="headerlink" title="00x02"></a>00x02</h4><p>Binder 组成：</p>
 <ul>
@@ -562,432 +1092,6 @@
 
 
   
-    <article id="post-深入浅出计算机组成原理-二-CPU是如何执行指令的" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/15/深入浅出计算机组成原理-二-CPU是如何执行指令的/">深入浅出计算机组成原理(二)-CPU是如何执行指令的</a>
-    </h1>
-  
-
-        
-        <a href="/2019/05/15/深入浅出计算机组成原理-二-CPU是如何执行指令的/" class="archive-article-date">
-  	<time datetime="2019-05-15T10:04:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-15</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>代码变成指令后，是一条一条顺序执行的。</p>
-<p>在代码的执行过程中，CPU 中的寄存器扮演着举足轻重的角色。</p>
-<p>在硬件上，寄存器有锁存器或触发器组成。</p>
-<p><img src="https://static001.geekbang.org/resource/image/cd/6f/cdba5c17a04f0dd5ef05b70368b9a96f.jpg" alt="常见寄存器"></p>
-<p>每种寄存器有不同的功能，而且每种寄存器都在指令执行过程中扮演重要角色。</p>
-        
-          <a class="article-more-a" href="/2019/05/15/深入浅出计算机组成原理-二-CPU是如何执行指令的/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">深入浅出计算机组成原理(徐文浩)</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/15/深入浅出计算机组成原理-二-CPU是如何执行指令的/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-深入浅出计算机组成原理-一-计算机指令" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/15/深入浅出计算机组成原理-一-计算机指令/">深入浅出计算机组成原理(一)--计算机指令</a>
-    </h1>
-  
-
-        
-        <a href="/2019/05/15/深入浅出计算机组成原理-一-计算机指令/" class="archive-article-date">
-  	<time datetime="2019-05-15T02:21:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-15</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>因为计算机或者说 CPU 本身，并没有能力理解这些高级语言，计算机只能理解 “机器码”，即一连串的 “0” 和 “1” 这样的数字。</p>
-<h3 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h3><p>CPU 是计算机的大脑，Central Processing Unit，中文为 <strong>中央处理器</strong>。</p>
-<p>从硬件角度： CPU 是一个超大规模的集成电路，通过电路实现加法、减法、乘法等逻辑运算。</p>
-<p>从软件角度：CPU 是一个执行 计算机指令的逻辑电器。这里的计算机指令是指 CPU 能够听懂的语言，可以把它看做 <strong>机器语言</strong>。</p>
-<p>每种 CPU 能够听懂的语言是不同的，例如个人 PC 中的 Intel 的 CPU， IPhone 中的 ARM 的 CPU。每种 CPU 有自己能够支持的 <strong>计算机指令</strong>。不同 CPU 间的计算机指令是不可互通的，例如你不能把运行在计算机上的程序复制到手机上，这是没有办法运行的。</p>
-<p>一个计算机程序编译后，有很多的计算机指令。<br>
-        
-          <a class="article-more-a" href="/2019/05/15/深入浅出计算机组成原理-一-计算机指令/#more">more >></a>
-        
-      
-
-      
-    </p></div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">深入浅出计算机组成原理(徐文浩)</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/15/深入浅出计算机组成原理-一-计算机指令/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Jetpack之WorkManager笔记" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/14/Jetpack之WorkManager笔记/">Jetpack之WorkManager基本了解</a>
-    </h1>
-  
-
-        
-        <a href="/2019/05/14/Jetpack之WorkManager笔记/" class="archive-article-date">
-  	<time datetime="2019-05-14T07:15:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-14</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>通过WorkManager API，可以轻松安排即使应用程序退出或设备重新启动也可以运行的可延迟的异步任务。</p>
-<h3 id="feature"><a href="#feature" class="headerlink" title="feature"></a>feature</h3><ul>
-<li><p>向后兼容到 API 14</p>
-<ul>
-<li>在 API 23+ 的设备上使用 JobScheduler。</li>
-<li>在 API 14-22 的设备上使用 BroadcastReceiver 以及 AlarmManager。</li>
-</ul>
-</li>
-<li><p>为网络或获取充电状态添加约束</p>
-</li>
-<li><p>安排一次性异步任务或定期任务  </p>
-</li>
-<li><p>监控和管理计划任务</p>
-</li>
-<li><p>链接多个任务</p>
-</li>
-<li><p>即使应用程序或设备重新启动，也可确保任务执行</p>
-</li>
-<li><p>坚持Doze模式等省电模式</p>
-</li>
-</ul>
-        
-          <a class="article-more-a" href="/2019/05/14/Jetpack之WorkManager笔记/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/14/Jetpack之WorkManager笔记/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Java集合之Map" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/10/Java集合之Map/">Java集合之Map</a>
-    </h1>
-  
-
-        
-        <a href="/2019/05/10/Java集合之Map/" class="archive-article-date">
-  	<time datetime="2019-05-10T10:17:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-10</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>Map 用于保存具有 <strong>映射关系</strong> 的数据，因此 Map 集合内保存着两组数据，一组保存 Map 的 key，一组保存 Map 的 value，并且 key 和 value 可以是任何类型的数据。</p>
-<p><img src="/../images/2019_05_09_02.jpg" alt="Map"></p>
-<p>可以把 Map 里的 Key 放在一起，它们组成一个 <strong>Set 集合</strong>(Key 没有顺序、不可重复)，其实Map 的内部的 keySet() 方法确实是返回的所有的 key 组成的 Set 集合对象。而把 Map 内的 Value 放在一起，它们类似一个 <strong>List 集合</strong>(可重复，此时的索引为 key)。</p>
-<p>如果抽象的看 Map 的 key 可以看作为 Set 集合(即无序、不可重复)，而 value 可以看作为 Array 集合(可重复)</p>
-<h3 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h3><p>向 Map 中添加数据中，如果 Map 中有存在 key，那么新添加的 value 会覆盖原来的 value。</p>
-        
-          <a class="article-more-a" href="/2019/05/10/Java集合之Map/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Java Basic</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Java Collection</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Map</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/10/Java集合之Map/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Java集合之Queue" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/10/Java集合之Queue/">Java集合之Queue</a>
-    </h1>
-  
-
-        
-        <a href="/2019/05/10/Java集合之Queue/" class="archive-article-date">
-  	<time datetime="2019-05-10T09:57:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-10</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>Queue 用于模拟 “队列” 这种数据结构，队列为 先进先出(First In First Out,FIFO) 的容器。队列可以将元素插入尾部，可以访问位于队列头部的元素，所以队列不能随机访问队列的元素。</p>
-<p>常用的 API：</p>
-<ol>
-<li>void add(Object obj):将指定元素加入队列的尾部。</li>
-<li>boolean offer(Object obj):将指定元素加入队列的尾部。</li>
-<li>Object element(): 获取队列头部的元素，但是不删除该元素。</li>
-<li>Object peek():获取队列头部的元素，不删除该元素。</li>
-<li>Object poll():获取队列头部的元素，并删除该元素。</li>
-<li>Object remove():获取队列头部的元素，并删除该元素。
-        
-          <a class="article-more-a" href="/2019/05/10/Java集合之Queue/#more">more >></a>
-        
-      
-
-      
-    </li></ol></div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Java Basic</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Java Collection</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Queue</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/10/Java集合之Queue/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1109,15 +1213,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1129,19 +1233,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Java Basic</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Java Basic</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1165,10 +1269,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Jetpack</a>
               </li>
              
@@ -1177,11 +1277,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1209,6 +1313,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">View</a>
               </li>
              
@@ -1217,11 +1325,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
+                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1233,10 +1345,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">JNI</a>
               </li>
              
@@ -1245,19 +1353,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
+                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1269,7 +1373,27 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存泄漏</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
               </li>
             
             <div class="clearfix"></div>
