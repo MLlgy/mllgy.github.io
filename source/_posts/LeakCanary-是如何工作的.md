@@ -1,5 +1,5 @@
 ---
-title: 如何使用 LeakCanary 寻找内存泄漏位置
+title: 如何使用 LeakCanary(1.6.3之前版本) 寻找内存泄漏位置
 date: 2019-07-04 15:40:01
 tags: [LeakCanary,内存泄漏,内存优化,工具]
 ---
@@ -15,6 +15,7 @@ tags: [LeakCanary,内存泄漏,内存优化,工具]
 > [12:37] Method: 
 > Find an object and ask should this object should be alive or should be in garbage collection?
 
+<!-- more -->
 
 ### 如何使用 package:leakmomory 进程进行问题定位
 
@@ -24,7 +25,6 @@ tags: [LeakCanary,内存泄漏,内存优化,工具]
 
 不只是根据 leakcanary 在手机上的 Trace 图，leakcanary 可以在 package:leakmomory 进程显示详细的 Trace 日志。其实现在手机上的 Trace 图也可以显示出关键的 Trace 日志，只是手机品牌不同显示的详细程度不同，如果手机上信息语言简略，推荐查看 AS 中 package:leakmomory 中的相关日志。
 
-<!-- more -->
 
 <!-- ![展示](/../images/2019_07_03_05.jpg) -->
 **package:leakmomory 中关于对象的详细信息**：
@@ -100,7 +100,7 @@ LeakCanary 2.x 功能更加全面，定位难度更加简单，但是方法基�
 <img src="/../images/2019_07_05_06.png" height="70%" width="70%">
 
 
-从图中得知 `MainActivity$2.this$0` 为 **anonymous implent Runnable -- 匿名对象** 。从截图中值 `this$0` 为 `com.example.MainActivity` 实例对象,此时 `this$0` 所指向的 MainActivity 在旋转屏幕后会被销毁、被回收，但是 `Runnable 对象` 执行后台任务导致 `MainActivity$2` 对象依旧存在,即该对象此时应该存在于内存中，那么导致其所持有的 MainActivity 引用不能被回收，从而导致了 MainActivity 对象的泄漏。
+从图中得知 `MainActivity$2.this$0` 为 **anonymous implent Runnable(继承 Runnble 的匿名对象)** 。从截图中值 `this$0` 为 `com.example.MainActivity` 实例对象,此时 `this$0` 所指向的 MainActivity 在旋转屏幕后会被销毁、被回收，但是 `Runnable 对象` 执行后台任务导致 `MainActivity$2` 对象依旧存在,即该对象此时应该存在于内存中，那么导致其所持有的 MainActivity 引用不能被回收，从而导致了 MainActivity 对象的泄漏。
 
 匿名对象的具体代码如下：
 ```
