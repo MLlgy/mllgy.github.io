@@ -6,12 +6,12 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="">
-  <title>如何使用 LeakCanary 寻找内存泄漏位置 | GY</title>
+  <title>如何使用 LeakCanary(1.6.3) 寻找内存泄漏位置 | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="如何使用 Leakmemory 泄漏链路(Trace 图)以下英文部分摘自 Youtube 视频：[Uber Mobility] Memory Leak Hunt: LeakCanary - Pierre-Yves Ricau  [19:30] You look for objects that you know you try to ask the question throught subje">
 <meta name="keywords" content="LeakCanary,内存泄漏,内存优化,工具">
 <meta property="og:type" content="article">
-<meta property="og:title" content="如何使用 LeakCanary 寻找内存泄漏位置">
+<meta property="og:title" content="如何使用 LeakCanary(1.6.3) 寻找内存泄漏位置">
 <meta property="og:url" content="/2019/07/04/LeakCanary-是如何工作的/index.html">
 <meta property="og:site_name" content="GY">
 <meta property="og:description" content="如何使用 Leakmemory 泄漏链路(Trace 图)以下英文部分摘自 Youtube 视频：[Uber Mobility] Memory Leak Hunt: LeakCanary - Pierre-Yves Ricau  [19:30] You look for objects that you know you try to ask the question throught subje">
@@ -31,9 +31,9 @@
 <meta property="og:image" content="/images/2019_07_06_06.png">
 <meta property="og:image" content="/images/2019_07_06_07.png">
 <meta property="og:image" content="/images/2019_07_06_08.png">
-<meta property="og:updated_time" content="2019-07-08T02:55:47.887Z">
+<meta property="og:updated_time" content="2019-07-08T03:52:29.581Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="如何使用 LeakCanary 寻找内存泄漏位置">
+<meta name="twitter:title" content="如何使用 LeakCanary(1.6.3) 寻找内存泄漏位置">
 <meta name="twitter:description" content="如何使用 Leakmemory 泄漏链路(Trace 图)以下英文部分摘自 Youtube 视频：[Uber Mobility] Memory Leak Hunt: LeakCanary - Pierre-Yves Ricau  [19:30] You look for objects that you know you try to ask the question throught subje">
 <meta name="twitter:image" content="/images/2019_07_03_05.jpg">
   
@@ -182,7 +182,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      如何使用 LeakCanary 寻找内存泄漏位置
+      如何使用 LeakCanary(1.6.3) 寻找内存泄漏位置
     </h1>
   
 
@@ -205,13 +205,13 @@
 <blockquote>
 <p>[12:37] Method:<br>Find an object and ask should this object should be alive or should be in garbage collection?</p>
 </blockquote>
+<a id="more"></a>
+
 <h3 id="如何使用-package-leakmomory-进程进行问题定位"><a href="#如何使用-package-leakmomory-进程进行问题定位" class="headerlink" title="如何使用 package:leakmomory 进程进行问题定位"></a>如何使用 package:leakmomory 进程进行问题定位</h3><p>以下英文部分摘自 <a href="https://www.youtube.com/watch?v=KwArTJHLq5g" target="_blank" rel="noopener">Youtube 视频：[Uber Mobility] Memory Leak Hunt: LeakCanary - Pierre-Yves Ricau</a></p>
 <blockquote>
 <p>[15：00] Should this object should be alive at this point in time? how we know that?</p>
 </blockquote>
 <p>不只是根据 leakcanary 在手机上的 Trace 图，leakcanary 可以在 package:leakmomory 进程显示详细的 Trace 日志。其实现在手机上的 Trace 图也可以显示出关键的 Trace 日志，只是手机品牌不同显示的详细程度不同，如果手机上信息语言简略，推荐查看 AS 中 package:leakmomory 中的相关日志。</p>
-<a id="more"></a>
-
 <!-- ![展示](/../images/2019_07_03_05.jpg) -->
 <p><strong>package:leakmomory 中关于对象的详细信息</strong>：</p>
 <img src="/../images/2019_07_03_05.jpg" height="70%" width="70%">
@@ -600,15 +600,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Dagger2</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">DI</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -625,14 +633,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Dagger2</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DI</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -672,7 +672,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
+                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -680,7 +680,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
+                <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -700,15 +700,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">VIM</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">adb</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">VIM</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -760,19 +760,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">内部类</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Set</a>
+                <a href="javascript:void(0)" class="js-tag color4">内部类</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
+                <a href="javascript:void(0)" class="js-tag color4">Set</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -789,6 +785,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">工具</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
               </li>
             
             <div class="clearfix"></div>
