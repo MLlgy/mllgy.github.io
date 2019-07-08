@@ -253,139 +253,6 @@
 
 
   
-    <article id="post-动画使用概述" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/07/03/动画使用概述/">动画使用概述</a>
-    </h1>
-  
-
-        
-        <a href="/2019/07/03/动画使用概述/" class="archive-article-date">
-  	<time datetime="2019-07-03T03:28:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-03</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="视图动画"><a href="#视图动画" class="headerlink" title="视图动画"></a>视图动画</h2><p>View动画， 从名字上我们也可以看出，此动画只能对派生自 View 的控件实例起作用，它改变的只是控件的显示位置，但是并没有更改控件本身的值。</p>
-<p>View 动画其实是通过其 Parent View 实现的，在 View 被绘制时 Parent View 改变它的绘制参数，这样虽然 View 的大小或位置改变，但是却没有改变 View 本身的值。</p>
-<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><h2 id="属性动画"><a href="#属性动画" class="headerlink" title="属性动画"></a>属性动画</h2><p>属性动画，从名字上来看，此动画针对于控件的某个属性做动画。</p>
-<p>属性动画和 View 动画只能作用于 View 不同，它可以对任何对象做动画效果。要想对一个对使用属性动画，那么这个对象必须满足以下两个条件：</p>
-<ol>
-<li>对象作动画的属性有 set 和 get 方法，如果对象没有可以考虑使用包装为对象添加 set get 方法，比如一些 view 就没有这两个方法，我们可以自己实现。</li>
-<li>对象属性的变化必须通过某种形式表现出来，比如 UI 的变化。</li>
-</ol>
-<h3 id="ViewPropertyAnimator"><a href="#ViewPropertyAnimator" class="headerlink" title="ViewPropertyAnimator"></a>ViewPropertyAnimator</h3><p> view.animate().xxx；</p>
-<h3 id="ValueAnimator"><a href="#ValueAnimator" class="headerlink" title="ValueAnimator"></a>ValueAnimator</h3><p>属性动画的核心所在，其本身不提供任何动画效果，它更像一个数值发生器，产生具有一定规律的数字，调用者使用数字控制动画的实现。</p>
-<h4 id="使用-ofObject"><a href="#使用-ofObject" class="headerlink" title="使用 ofObject"></a>使用 ofObject</h4><p>我们看一下 ValueAnimator#ofObject 的 API：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public static ValueAnimator ofObject(TypeEvaluator evaluator, Object... values);</span><br></pre></td></tr></table></figure>
-
-<p>当我们使用 ofObject 时，我们需要同时传入 自定义估值器 和 相应的值，至于为什么要传入 自定义估值器，因为不像其他 API 有默认的 估值器，通过传入的指的类型使用相应的估值器进行计算相应的值（Int-IntEvalutor,Float-FloatEvalutor等）,如果我们在这里不传入自定义估值器，那么将不知道如果计算值。</p>
-<h2 id="插值器-TimeInterpolator-和估值器-TypeEvaluator"><a href="#插值器-TimeInterpolator-和估值器-TypeEvaluator" class="headerlink" title="插值器(TimeInterpolator)和估值器(TypeEvaluator)"></a>插值器(TimeInterpolator)和估值器(TypeEvaluator)</h2><p>插值器 ：根据时间流逝的百分比计算属性值改变的百分比。</p>
-<p> 类型估值算法: 根据当前属性改变的百分比(此值由时间插值器获得)来计算改变后的属性值.</p>
-<p> 属性动画的默认插值器和估值器分别为 LinearInterpolator 和 IntEvaluator。两者协同工作共同完成动画：</p>
-<p> 使用插值器根据时间流逝的百分比获得属性改变的百分比，然后使用估值器根据得到属性改变的百分比计算改变后的属性值。</p>
-<h3 id="自定义插值器"><a href="#自定义插值器" class="headerlink" title="自定义插值器"></a>自定义插值器</h3><p> 自定义插值器需要继承 TimeInterpolator，实现 getInterpolation(float intput) 方法:</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> class CustomeInterplotor : TimeInterpolator &#123;</span><br><span class="line">    override fun getInterpolation(input: Float): Float = 1 - input</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>其中 getInterpolation 的参数 input 为时间流逝的百分比，其值只与时间的流逝有关，方法的返回值表示动画的当前属性的改变比例。</p>
-<h3 id="自定义估值器"><a href="#自定义估值器" class="headerlink" title="自定义估值器"></a>自定义估值器</h3><p> 自定义估值器需要继承 TypeEvalutor ,实现 evaluate(…) 方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> class CustomTypeEvalutor : TypeEvaluator&lt;Float&gt; &#123;</span><br><span class="line">    override fun evaluate(fraction: Float, startValue: Float, endValue: Float): Float</span><br><span class="line">            = (startValue + (endValue - startValue) * fraction)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>不过我们需要注意的是 TypeEvaluator evaluate方法的 startValue、endValue、返回值类型要与 ofInt()、ofFloat 对应，否则就会在计算具体的属性值时出现转型错误。</p>
-<h3 id="ValueAnimator、TimeInterpolator-与-TypeEvaluator"><a href="#ValueAnimator、TimeInterpolator-与-TypeEvaluator" class="headerlink" title="ValueAnimator、TimeInterpolator 与 TypeEvaluator"></a>ValueAnimator、TimeInterpolator 与 TypeEvaluator</h3><p>知道了时间插值器和类型估值器，现在在来理解一下属性动画的整体流程：</p>
-<p><img src="/../images/2019_07_03_03.png" alt="动画流程图"></p>
-<h4 id="ObjectAnimator"><a href="#ObjectAnimator" class="headerlink" title="ObjectAnimator"></a>ObjectAnimator</h4><p>ValueAnimator 不产生动画，它只是产生一系列的数字，通过控制数字来控制动画，谷歌派生出 ObjectAnimator 类，来直接对控件实现动画。</p>
-<p>在 ValueAnimator 中我们通过流程图的方式来具体理解动画的流程，同样我们通过流程图来认识 ObjectAnimator 的动画流程：</p>
-<p><img src="/../images/2019_07_03_02.png" alt="动画流程图"></p>
-<p>根据时间插值器和类型估值器最终得到变化后的属性值，此时根据属性拼装成最终的 set 函数的名字，如 setAlpha、setRorate 等，通过反射找到控件的 setXXX 函数，并把最终的计算值作为参数传递到相应的 setXXX 函数中。</p>
-<p>ObjectAnimator 的作用只是把计算后的数值传递到 set 方法中，至于之后的操作 ObjectAnimator 将不能作用。要想控件产生 移动、平移、旋转、透明度变换等操作，还需要在 set 方法中进行相应的绘制。</p>
-<p>根据以上描述不难发现，ObjectAnimator 的目标控件必须有 set 方法(要想获得控件的值还需要有 get 方法)，而且 set 方法中必须可以操作(绘制)控件进行相应的变换，两者缺一不可。</p>
-<h4 id="PropertyValuesHolder"><a href="#PropertyValuesHolder" class="headerlink" title="PropertyValuesHolder"></a>PropertyValuesHolder</h4><p>PropertyValuesHolder 这个类保存了动画过程中所需要操作的属性和对应的值。</p>
-<p>ObjectAnimator 的 ofInt() 实现函数构造，它的内部其实是将传进来的参数封装成 PropertyValuesHolder 实例来保存动画状态，所以说 PropertyValuesHolder 对整个动画实现上的地位是举足轻重的。</p>
-<p>看一下 PropertyValuesHolder相关的的两个比较重要的方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public static PropertyValuesHolder ofFloat(String propertyName, float... values)  </span><br><span class="line"></span><br><span class="line">public static ObjectAnimator ofPropertyValuesHolder(Object target,PropertyValuesHolder... values)</span><br></pre></td></tr></table></figure>
-
-<p>上面说到 ObjectAnimator 是在内部实现了 PropertyValuesHolder ，那么我们通过一个方法对比一下两者：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public static ObjectAnimator ofFloat(Object target, String propertyName, float... values);</span><br></pre></td></tr></table></figure>
-
-<p>对比两者方法的参数： target – target、propertyName – propertyName、values – values,可以看出 ObjectAnimator 中的方法是 PropertyValuesHolder 对应两方法的集合，也证明了 ObjectAnimator 是在内部实现了 PropertyValuesHolder 来完成动画的控制。</p>
-<p>通过以下代码实现来理解以上内容：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">val rotation = PropertyValuesHolder.ofFloat(&quot;Rotation&quot;,0f,90f,150f,-100f,0f)</span><br><span class="line">val color = PropertyValuesHolder.ofInt(&quot;BackgroundColor&quot;, 0xffffffff, 0xffff00ff, 0xffffff00, 0xffffffff)</span><br><span class="line">val objectAnimator = ObjectAnimator.ofPropertyValuesHolder(mTextView, rotation, color)</span><br><span class="line">objectAnimator.duration = 1000</span><br><span class="line">objectAnimator.start()</span><br></pre></td></tr></table></figure>
-
-<p>ObjectAnimator.ofPropertyValuesHolder 可以实现多个属性的动画同时进行。</p>
-<h5 id="PropertyValuesHolder-的-ofObject-方法"><a href="#PropertyValuesHolder-的-ofObject-方法" class="headerlink" title="PropertyValuesHolder  的 ofObject 方法"></a>PropertyValuesHolder  的 ofObject 方法</h5><p>如果 ValueAnimator 的 ofObject 一样，我们可以从方法名可以推测动画实现的操作对象为一个 Object 对象，那么这样的话我们还需要自定义属于该对象的 TypeEvalutor ，来计算对象改变后的值。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">val change = PropertyValuesHolder.ofObject(&quot;CharText&quot;, CharEvalutor(), &apos;A&apos;, &apos;Z&apos;)</span><br><span class="line">val animator = ObjectAnimator.ofPropertyValuesHolder(myTextView, change)</span><br><span class="line">animator.duration = 2000</span><br><span class="line">animator.interpolator = AccelerateInterpolator()</span><br><span class="line">animator.start()</span><br></pre></td></tr></table></figure>
-
-<p>在此例中，调用 ofObject 方法操作的 ‘A’、’Z’ 为 Char 类型，所以针对 Char 自定义类型估值器：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">class CharEvalutor : TypeEvaluator&lt;Char&gt; &#123;</span><br><span class="line">    override fun evaluate(fraction: Float, startValue: Char?, endValue: Char?): Char &#123;</span><br><span class="line">        val start = startValue?.toInt()</span><br><span class="line">        val end = endValue?.toInt()</span><br><span class="line">        val current = (start!! + fraction * (end!! - start)).toInt()</span><br><span class="line">        return current.toChar()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在 ObjectAnimator.ofPropertyValuesHolder() 方法中传入操作的控件和PropertyValuesHolder 属性，到此动画定义的大部分工作已经完成。如上面的例子可见，我们通过控件 myTextView 的 setCharText 方法将值传递给相应控件，这就是 PropertyValuesHolder 的 ofObject 的用法，其实和 ValueAnimator 的 ofObject 的用法大同小异。</p>
-<h3 id="KeyFrame-–-关键帧"><a href="#KeyFrame-–-关键帧" class="headerlink" title="KeyFrame – 关键帧"></a>KeyFrame – 关键帧</h3><p>具体的方法为:<code>Keyframe.ofFloat(float fraction, Object value)</code></p>
-<p>关键帧定义了属性值在某个时间点上具体值，明白了这些基本使用就比较简单了。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">val keyFrame1 = Keyframe.ofFloat(0f, 1f)</span><br><span class="line">val keyFrame2 = Keyframe.ofFloat(0.5f, 0.7f)</span><br><span class="line">keyFrame2.interpolator = LinearInterpolator()// keyFrame1 与 keyFrame2 之间设置了 线性插值器</span><br><span class="line">val keyFrame3 = Keyframe.ofFloat(0.7f, 0.8f)</span><br><span class="line">val keyframe4 = Keyframe.ofFloat(1f)</span><br><span class="line">keyframe4.value = 1f</span><br><span class="line">val propertyValueHolder = PropertyValuesHolder.ofKeyframe(&quot;alpha&quot;, keyFrame1, keyFrame2, keyFrame3, keyframe4)</span><br><span class="line">val animator = ObjectAnimator.ofPropertyValuesHolder(mIVKeyFrame, propertyValueHolder)</span><br><span class="line">animator.duration = 2000</span><br><span class="line">animator.start()</span><br></pre></td></tr></table></figure>
-
-<h5 id="KeyFrame-的-ofObject-方法"><a href="#KeyFrame-的-ofObject-方法" class="headerlink" title="KeyFrame 的 ofObject 方法"></a>KeyFrame 的 ofObject 方法</h5><p>由于 KeyFrame 的 ofObject 方法和上文中几种情况的 ofObject 的意义一样，其使用方法的指导思想也一致，直接看例子理解一下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Keyframe frame0 = Keyframe.ofObject(0f, new Character(&apos;A&apos;));  </span><br><span class="line">Keyframe frame1 = Keyframe.ofObject(0.1f, new Character(&apos;L&apos;));  </span><br><span class="line">Keyframe frame2 = Keyframe.ofObject(1,new Character(&apos;Z&apos;));  </span><br><span class="line">PropertyValuesHolder frameHolder = PropertyValuesHolder.ofKeyframe(&quot;CharText&quot;,frame0,frame1,frame2);  </span><br><span class="line">frameHolder.setEvaluator(new CharEvaluator());  </span><br><span class="line">ObjectAnimator animator = ObjectAnimator.ofPropertyValuesHolder(mMyTv,frameHolder);  </span><br><span class="line">animator.setDuration(3000);  </span><br><span class="line">animator.start();</span><br></pre></td></tr></table></figure>
-
-
-<p>使用注意事项：</p>
-<ul>
-<li>如果去掉第 0 帧，将以第一个关键帧为起始位置</li>
-<li>如果去掉结束帧，将以最后一个关键帧为结束位置</li>
-<li>使用 Keyframe 来构建动画，至少要有两个或两个以上帧</li>
-</ul>
-<h2 id="布局动画"><a href="#布局动画" class="headerlink" title="布局动画"></a>布局动画</h2><hr>
-<p>Camera的处理结果只是生成一个Matrix，该Matrix用于Bitmap或Canvas绘制Bitmap时才能产生旋转或缩放的效果。</p>
-<p>A camera instance can be used to compute 3D transformations and generate a matrix that can be applied, for instance, on a Canvas.</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/07/03/动画使用概述/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
     <article id="post-刷机资源" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
@@ -1087,6 +954,86 @@
 
 
   
+    <article id="post-深入浅出计算机组成原理-二-CPU是如何执行指令的" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/15/深入浅出计算机组成原理-二-CPU是如何执行指令的/">深入浅出计算机组成原理(二)-CPU是如何执行指令的</a>
+    </h1>
+  
+
+        
+        <a href="/2019/05/15/深入浅出计算机组成原理-二-CPU是如何执行指令的/" class="archive-article-date">
+  	<time datetime="2019-05-15T10:04:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-15</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>代码变成指令后，是一条一条顺序执行的。</p>
+<p>在代码的执行过程中，CPU 中的寄存器扮演着举足轻重的角色。</p>
+<p>在硬件上，寄存器有锁存器或触发器组成。</p>
+<p><img src="https://static001.geekbang.org/resource/image/cd/6f/cdba5c17a04f0dd5ef05b70368b9a96f.jpg" alt="常见寄存器"></p>
+<p>每种寄存器有不同的功能，而且每种寄存器都在指令执行过程中扮演重要角色。</p>
+        
+          <a class="article-more-a" href="/2019/05/15/深入浅出计算机组成原理-二-CPU是如何执行指令的/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">深入浅出计算机组成原理(徐文浩)</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/05/15/深入浅出计算机组成原理-二-CPU是如何执行指令的/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1200,15 +1147,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1220,11 +1175,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1233,10 +1184,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1272,11 +1219,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
+                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
+                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1300,7 +1247,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">VIM</a>
+                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1308,7 +1255,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+                <a href="javascript:void(0)" class="js-tag color4">VIM</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1340,6 +1287,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">JNI</a>
               </li>
              
@@ -1348,15 +1299,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">OOP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">动画</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1369,6 +1320,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Set</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1385,10 +1340,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">工具</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
               </li>
             
             <div class="clearfix"></div>
