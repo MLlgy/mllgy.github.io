@@ -31,7 +31,7 @@
 <meta property="og:image" content="/images/2019_07_06_06.png">
 <meta property="og:image" content="/images/2019_07_06_07.png">
 <meta property="og:image" content="/images/2019_07_06_08.png">
-<meta property="og:updated_time" content="2019-07-08T10:34:54.899Z">
+<meta property="og:updated_time" content="2019-07-09T09:47:21.607Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何使用 LeakCanary(1.6.3之前版本) 寻找内存泄漏位置">
 <meta name="twitter:description" content="如何使用 Leakmemory 泄漏链路(Trace 图)以下英文部分摘自 Youtube 视频：[Uber Mobility] Memory Leak Hunt: LeakCanary - Pierre-Yves Ricau  [19:30] You look for objects that you know you try to ask the question throught subje">
@@ -199,14 +199,15 @@
 <blockquote>
 <p>[19:30] You look for objects that you know you try to ask the question throught subject should be in memory or not. If you can anwser the question, it’s greate because you’re going to help you reduce the space of the problem. If the anwser is yes that it should be in memory, the problem is in blow, if the anwser is no, the problem is above.</p>
 </blockquote>
+<a id="more"></a>
+
+
 <blockquote>
 <p>[个人译] 如果你知道在 Trace 图中出现的对象是否应该存在于内存中，这会帮助你很好的分析内存泄漏位置。如果对象不应该存在于内存中，那么内存泄漏的位置应该在Trace 中该对象上面的位置；如果对象应该存在于内存中，那么内存泄漏的位置应该在Trace 中该对象下面的位置。</p>
 </blockquote>
 <blockquote>
 <p>[12:37] Method:<br>Find an object and ask should this object should be alive or should be in garbage collection?</p>
 </blockquote>
-<a id="more"></a>
-
 <h3 id="如何使用-package-leakmomory-进程进行问题定位"><a href="#如何使用-package-leakmomory-进程进行问题定位" class="headerlink" title="如何使用 package:leakmomory 进程进行问题定位"></a>如何使用 package:leakmomory 进程进行问题定位</h3><p>以下英文部分摘自 <a href="https://www.youtube.com/watch?v=KwArTJHLq5g" target="_blank" rel="noopener">Youtube 视频：[Uber Mobility] Memory Leak Hunt: LeakCanary - Pierre-Yves Ricau</a></p>
 <blockquote>
 <p>[15：00] Should this object should be alive at this point in time? how we know that?</p>
@@ -749,15 +750,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
               </li>
              
               <li class="article-tag-list-item">
