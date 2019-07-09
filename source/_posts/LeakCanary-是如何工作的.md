@@ -10,12 +10,14 @@ tags: [LeakCanary,内存泄漏,内存优化,工具]
 
 > [19:30] You look for objects that you know you try to ask the question throught subject should be in memory or not. If you can anwser the question, it's greate because you're going to help you reduce the space of the problem. If the anwser is yes that it should be in memory, the problem is in blow, if the anwser is no, the problem is above.
 
+<!-- more -->
+
+
 > [个人译] 如果你知道在 Trace 图中出现的对象是否应该存在于内存中，这会帮助你很好的分析内存泄漏位置。如果对象不应该存在于内存中，那么内存泄漏的位置应该在Trace 中该对象上面的位置；如果对象应该存在于内存中，那么内存泄漏的位置应该在Trace 中该对象下面的位置。
 
 > [12:37] Method: 
 > Find an object and ask should this object should be alive or should be in garbage collection?
 
-<!-- more -->
 
 ### 如何使用 package:leakmomory 进程进行问题定位
 
