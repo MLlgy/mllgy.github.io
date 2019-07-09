@@ -6,15 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="">
-  <title>Tag: 编译技术 | GY</title>
+  <title>Hprof 拾遗 | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="GY">
-<meta property="og:url" content="/tags/编译技术/index.html">
+  <meta name="description" content="0x0001 引用一以下内容来自：Different Ways to Capture Java Heap Dumps A heap dump is a snapshot of all the objects that are in memory in the JVM at a certain moment. They are very useful to troubleshoot memory-l">
+<meta name="keywords" content="Hprof,内存泄漏,工具">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hprof 拾遗">
+<meta property="og:url" content="/2019/07/09/Hprof-拾遗/index.html">
 <meta property="og:site_name" content="GY">
+<meta property="og:description" content="0x0001 引用一以下内容来自：Different Ways to Capture Java Heap Dumps A heap dump is a snapshot of all the objects that are in memory in the JVM at a certain moment. They are very useful to troubleshoot memory-l">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-07-09T09:45:13.520Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="GY">
+<meta name="twitter:title" content="Hprof 拾遗">
+<meta name="twitter:description" content="0x0001 引用一以下内容来自：Different Ways to Capture Java Heap Dumps A heap dump is a snapshot of all the objects that are in memory in the JVM at a certain moment. They are very useful to troubleshoot memory-l">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
   
@@ -154,60 +159,199 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Hprof-拾遗" class="article article-type-post " itemscope="" itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/04/01/Android编程中的一些概念/" class="archive-article-date">
-  	<time datetime="2019-04-01T02:38:59.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-01</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/04/01/Android编程中的一些概念/">Android编程中的一些概念(Wiki)</a>
+    <h1 class="article-title" itemprop="name">
+      Hprof 拾遗
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2019/07/09/Hprof-拾遗/" class="archive-article-date">
+  	<time datetime="2019-07-09T09:43:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-09</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="0x0001-引用一"><a href="#0x0001-引用一" class="headerlink" title="0x0001 引用一"></a>0x0001 引用一</h3><p>以下内容来自：<a href="https://www.baeldung.com/java-heap-dump-capture" target="_blank" rel="noopener">Different Ways to Capture Java Heap Dumps</a></p>
+<p>A heap dump is a snapshot of all the objects that are in memory in the JVM at a certain moment. They are very useful to troubleshoot memory-leak problems and optimize memory usage in Java applications. <strong>Heap dumps are usually stored in binary format hprof files.</strong> </p>
+<h3 id="0x0002-引用二"><a href="#0x0002-引用二" class="headerlink" title="0x0002 引用二"></a>0x0002 引用二</h3><p>以下内容来自：<a href="https://www.ibm.com/support/knowledgecenter/en/SS3KLZ/com.ibm.java.diagnostics.memory.analyzer.doc/heapdump.html" target="_blank" rel="noopener">Understanding heap dumps</a></p>
+<p><strong>A heap dump is a snapshot of the memory of a Java™ process</strong>.</p>
+<p>The snapshot contains information about the Java objects and classes in the heap at the moment the snapshot is triggered. Because there are different formats for persisting this data, there might be some differences in the information provided. Typically, a full garbage collection is triggered before the heap dump is written, so the dump contains information about <strong>the remaining objects in the heap</strong>.</p>
+<p>The Memory Analyzer works with HPROF binary heap dumps, IBM® system dumps, and IBM portable heap dumps (PHD) from various platforms. See Supported dump file types.</p>
+<p>Typical information in a heap dump, depending on the heap dump type, includes(堆转储文件中包含的信息):</p>
+<p><strong>All Objects</strong></p>
+<pre><code>Class, fields, primitive values, and references.</code></pre><p><strong>All Classes</strong></p>
+<pre><code>Class loader, name, super class, and static fields.</code></pre><p><strong>Garbage collection roots</strong></p>
+<pre><code>Objects defined to be reachable by the JVM.</code></pre><p><strong>Thread Stacks and Local Variables</strong></p>
+<pre><code>Call-stacks of threads at the moment of the snapshot, and information about local objects on a frame by frame basis.</code></pre><h3 id="0x0003-Android-中的-Hprof"><a href="#0x0003-Android-中的-Hprof" class="headerlink" title="0x0003 Android 中的 Hprof"></a>0x0003 Android 中的 Hprof</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Debug.dumpHprofData(String filePath);</span><br></pre></td></tr></table></figure>
+
+<p>在 Android 中使用以上代码将对转储文件生成到指定的文件上。</p>
+<p>在 AS 中如何分析 Hprof 见官方文档：<a href="https://developer.android.com/studio/profile/memory-profiler" target="_blank" rel="noopener">使用 Memory Profiler 查看 Java 堆和内存分配</a></p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/img/alipay.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/img/wxpay.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">编译技术</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Hprof</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">内存泄漏</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">工具</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http:/2019/07/09/Hprof-拾遗/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2019/07/04/LeakCanary-是如何工作的/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">如何使用 LeakCanary(1.6.3之前版本) 寻找内存泄漏位置</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -230,9 +374,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
