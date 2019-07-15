@@ -4,7 +4,7 @@ tags:
 ---
 
 
-[LeakCanary 1.x 源码原理](https://mp.weixin.qq.com/s/idjFaJsLpVLw52RSYHA_Vg)
+
 
 https://mp.weixin.qq.com/s/uwDk5D986OdMzKgtjpHdHg
 https://www.jianshu.com/p/49239eac7a76

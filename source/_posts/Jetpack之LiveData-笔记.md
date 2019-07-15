@@ -4,13 +4,16 @@ date: 2019-05-08 11:21:37
 tags: [Jetpack,LiveData]
 ---
 
+### 0x000 概述
+
+
 在官方文档中首先对 LiveData 做了一个概述 : `LiveData is an observable data holder class`, LiveData 是一个 **可观察的** **数据持有者类**。它是可以感知 Activity/Fragment/Service 的生命周期的，这使得 LiveData 只会在以上组件处于 **活跃状态下** 更新组件。
 
-LiveData 认为上述中的 **活跃状态** 为对应的 Observer 处于 STARTED 或 RESUMED 状态。LiveData 数据更改不会触发非活跃组件的更新。
+LiveData 认为上述中的 **活跃状态** 为对应的 Observer 处于 **STARTED** 或 **RESUMED** 状态。LiveData 数据更改不会触发非活跃组件的更新。
 
 LiveData 与 观察者(实现 LifecycleOwner 的类) 建立的连接会在组件处于 DESTORY 状态后被移除。
 
-### 个人理解
+### 0x0001 个人理解
 
 官方文档看了几遍，大致明白了 LiveData 的作用， LiveData 可持有数据，并且它有一个重要的方法:
 
@@ -18,7 +21,9 @@ LiveData 与 观察者(实现 LifecycleOwner 的类) 建立的连接会在组件
 
 <!-- more -->
 
-第一个参数为 LifecycleOwner 对象，一般为 Activity/Fragment/Servic 对象，第二参数为 Observer 对象，它的重要工作是一个回调，用于更新 UI 等工作。 LiveData#observe() 方法中完成了对 observer 的包装，并将其添加到 LifecycleOwner 对象观察者列表中，完成了 observer 关联 LifecycleOwner 生命周期的操作。
+第一个参数为 LifecycleOwner 对象，一般为 Activity/Fragment/Servic 对象，第二参数为 Observer 对象，它的重要工作是一个回调-- `onChanged(T t)`，用于更新 UI 等工作。
+
+ LiveData#observe() 方法中完成了对 observer 的包装，并将其添加到 LifecycleOwner 对象观察者列表中，完成了 observer 关联 LifecycleOwner 生命周期的操作。
 
 ```
  @MainThread
@@ -38,12 +43,10 @@ public void observe(@NonNull LifecycleOwner owner, @NonNull Observer<? super T> 
     1. 数据更改时触发处于 ACTIVE 的组件的功能。
     2. UI 生命周期变更时，LiveData 会通知 Observer。
 
-#### 优点
+#### 0x0002 LiveData 优点
 
 
-1. 保证 UI 与 实时数据完美匹配
-
-    这种模式下：
+1. 保证 UI 与 实时数据完美匹配，这种模式下：
     
     1. UI 生命周期变更时，LiveData 会通知 Observer。
     2. LiveData 在数据发生变化时，通知 Observer 对象更新 UI，这就保证了数据在每次变更时 **自动更新 UI**, 而不需要手动的更新 UI。
@@ -55,7 +58,7 @@ public void observe(@NonNull LifecycleOwner owner, @NonNull Observer<? super T> 
 
 3. 不会因为 Activity 的停止而导致崩溃
 
-    Observer 处于 InActive 状态时, 它不会接收到 LiveData 的 Event。
+    Observer 处于 InActive 状态时, 它不会接收到 LiveData 的 Event。根据 LiveData 的相关定义只有在 LifecycleOwner 的状态为 START 或 RESUME 时 Observer 才处于 Active 状态。
 
 4. 不再需要手动生命周期处理
 
@@ -70,7 +73,7 @@ public void observe(@NonNull LifecycleOwner owner, @NonNull Observer<? super T> 
    LiveData 对象一致，那么那所持有的数据或资源就可以被多个页面共享。
 
 
-### 使用 LiveData
+### 0x0003 使用 LiveData
 
 
 1. 创建 LiveData 对象。
@@ -83,13 +86,13 @@ public void observe(@NonNull LifecycleOwner owner, @NonNull Observer<? super T> 
     2. 调用了 LiveData 的 postValue(T)// 在 Worker 线程执行操作
 
 
-### 自定义 LiveData
+### 0x0004 自定义 LiveData
 
-### 转换 LiveData
+### 1. 转换 LiveData
 
 和 Rxjava 相似，通过使用 `Transformations` 的操作符转换 LiveData 对象。
 
-#### map()
+#### 2. map()
 
 该操作符做转换的工作如下：
 
@@ -103,7 +106,7 @@ val userName: LiveData<String> = Transformations.map(userLiveData) {
 ```
 本例中通过 map 实现了 LiveData<User> 向 LiveData<String> 的转换。
 
-#### switchMap()
+#### 3. switchMap()
 
 该操作符做转换的工作如下：
 

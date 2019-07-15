@@ -3,3 +3,202 @@ title: Kotlin 协程
 date: 2019-05-22 11:31:22
 tags: [Kotlin,Coroutines]
 ---
+
+
+
+上下文 协程 挂起函数
+
+
+
+协程，本质上是轻量级的线程。
+
+它们在某些 CoroutineScope 上下文中与 launch 协程构建器 一起启动。
+
+在 GlobalScope 中启动了一个新的协程，这意味着新协程的生命周期只受整个应用程序的生命周期限制。
+
+
+
+delay是挂起函数不会造成线程阻塞，但是会挂起协程，并且挂起函数只能在协程中使用。
+
+
+
+### 阻塞与非阻塞
+
+阻塞与非阻塞都是针对于是否阻塞主线程来说的。
+
+
+```
+// 示例 1
+fun main() {
+    GlobalScope.launch { // 在后台启动一个新的协程并继续
+        delay(1000L)
+        println("World!")
+    }
+    println("Hello,") // 主线程中的代码会立即执行
+    runBlocking {     // 但是这个表达式阻塞了主线程
+        delay(2000L)  // ……我们延迟 2 秒来保证 JVM 的存活
+    } 
+}
+```
+
+例如上程序中 GlobalScope.launch{} 中的 delay(1000L) 只会阻塞协程，但是不会阻塞主线程的执行。
+
+runBlocking{} 代码块确实阻塞式的。
+
+### 定义 Job
+
+示例 1 中通过阻塞主线程一段时间:
+`(runBlocking{delay(2000L)})`，
+从而等待协程的完成，这不是一个好的方式，可以通过 Job 来改善上述方法。
+
+```
+fun main() = runBlocking {
+    val job = GlobalScope.launch { // launch a new coroutine and keep a reference to its Job
+        delay(1000L)
+        println("World!")
+    }
+    println("Hello,")
+    job.join() // wait until child coroutine completes    
+}
+```
+
+调用 `Job#join()` 主线程会一直阻塞，直到指定协程执行完毕。
+
+
+
+### 构建作用域
+
+使用  coroutineScope 可以构建协程作用域，构建的协程作用域在所有子协程执行完毕之前不会结束。
+
+
+```
+fun main() = runBlocking { // this: CoroutineScope
+    launch { 
+        delay(200L)
+        println("Task from runBlocking")
+    }
+    
+    coroutineScope { // 创建一个协程作用域
+        launch {
+            delay(500L) 
+            println("Task from nested launch")
+        }
+    
+        delay(100L)
+        println("Task from coroutine scope") // 这一行会在内嵌 launch 之前输出
+    }
+    
+    println("Coroutine scope is over") // 这一行在内嵌 launch 执行完毕后才输出
+}
+```
+以下为打印日志，注意打印顺序，从打印顺序中可以看出协程的 **非阻塞**。
+```
+Task from coroutine scope
+Task from runBlocking
+Task from nested launch
+Coroutine scope is over
+```
+
+
+
+### 协程的取消与超时
+
+协程是可以被取消的。
+
+当协程中在执行计算任务是协程是不能被取消的。
+
+
+超时 ：
+
+withTimeout(1300L) {
+    repeat(1000) { i ->
+            println("I'm sleeping $i ...")
+        delay(500L)
+    }
+}
+
+在执行超过 1300ms 会报出错误。
+
+
+### 挂起函数
+
+使用 suspend 修饰的函数，排列的挂起函数默认顺序执行。
+
+```
+suspend fun doSomethingUsefulOne(): Int {
+    delay(1000L) // 假设我们在这里做了一些有用的事
+    return 13
+}
+
+suspend fun doSomethingUsefulTwo(): Int {
+    delay(1000L) // 假设我们在这里也做了一些有用的事
+    return 29
+}
+
+fun main() = runBlocking<Unit> {
+    val time = measureTimeMillis {
+        val one = doSomethingUsefulOne()
+        val two = doSomethingUsefulTwo()
+        println("The answer is ${one + two}")
+    }
+    println("Completed in $time ms")    
+}
+
+//执行结果：
+The answer is 42
+Completed in 2012 ms
+```
+通过打印时间可以得知默认挂起函数为顺序执行的。
+### lauch async
+
+async 与 lauch 一样，开启了一个单独的协程，与其他协程一起进行并行工作。
+不同的 launch 返回一个 Job 不附带任何结果值，而 async 返回 Deffered ，它是一个轻量级的非阻塞 future， 这代表了一个将会在稍后提供结果的 promise。你可以使用 **.await() 在一个延期的值上得到它的最终结果**， 但是 Deferred 也是一个 Job，所以如果需要的话，你可以取消它 。
+
+同样是上面的例子，我们使用 async 并发修饰函数。
+
+```
+val time = measureTimeMillis {
+        val one = async { doSomethingUsefulOne() }
+        val two = async { doSomethingUsefulTwo() }
+        println("The answer is ${one.await() + two.await()}")// 使用 await() 函数获得他的最终结果
+    }
+println("Completed in $time ms") 
+
+//执行结果：
+The answer is 42
+Completed in 1029 ms
+```
+从执行时间可知使用 async 修饰函数为并行执行的。
+
+
+### 惰性 async
+
+如果懒加载一样，惰性 async 只有在使用时才会执行，执行 start() 方法执行该方法。
+
+```
+val time = measureTimeMillis {
+    val one = async(start = CoroutineStart.LAZY) { doSomethingUsefulOne() }
+    val two = async(start = CoroutineStart.LAZY) { doSomethingUsefulTwo() }
+    // 执行一些计算
+    one.start() // 启动第一个
+    two.start() // 启动第二个
+    println("The answer is ${one.await() + two.await()}")
+}
+println("Completed in $time ms")
+
+//执行结果：
+The answer is 42
+Completed in 1017 ms
+```
+
+
+### async 风格函数
+
+
+-----
+
+
+[Improve app performance with Kotlin coroutines](https://developer.android.com/kotlin/coroutines)
+
+
+[Coroutines on Android (part I): Getting the background](https://medium.com/androiddevelopers/coroutines-on-android-part-i-getting-the-background-3e0e54d20bb)

@@ -137,3 +137,15 @@ public class HandlerThread extends Thread {
 
 具体使用：
     外部需要通过 Handler 的消息方式来通知 HandlerThread 执行一个具体的任务。
+
+
+
+### HandlerThread 使用 IntentService
+
+
+
+
+
+----
+
+[Android 艺术探索]
