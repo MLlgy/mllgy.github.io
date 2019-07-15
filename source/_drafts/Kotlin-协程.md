@@ -194,6 +194,52 @@ Completed in 1017 ms
 
 ### async 风格函数
 
+在 Kotlin 中不推荐使用此类型的函数,故不详述.
+
+### 结构化 async 函数
+
+结构化 async 函数 就是使多个 async 函数执行时如果一个函数发生异常则结束执行其他未执行的async 函数,此功能使用  coroutineScope 来实现.
+
+```
+fun main() = runBlocking<Unit> {
+    try {
+        failedConcurrentSum()
+    } catch (e: ArithmeticException) {
+        println("Computation failed with ArithmeticException")
+    }
+}
+
+suspend fun failedConcurrentSum(): Int = coroutineScope {
+    val one = async<Int> {
+        try {
+            delay(Long.MAX_VALUE) // 模拟一个长时间的运算
+            42
+        } finally {
+            println("First child was cancelled")
+        }
+    }
+
+    val two = async<Int> {
+        delay(2000L)
+        println("Second child throws an exception")
+        throw ArithmeticException()
+    }
+
+    val three = async {
+        println("Test third run or not")
+        12
+    }
+    one.await() + two.await() + three.await()
+}
+
+// 打印日志"
+Test third run or not
+Second child throws an exception
+First child was cancelled
+Computation failed with ArithmeticException
+```
+
+如果在上面函数执行过程中 two 发生异常,那么此时正在等待执行的 one 将中断执行,但是之前的 three 则可以正常的执行。
 
 -----
 
