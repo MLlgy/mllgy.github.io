@@ -248,3 +248,18 @@ Computation failed with ArithmeticException
 
 
 [Coroutines on Android (part I): Getting the background](https://medium.com/androiddevelopers/coroutines-on-android-part-i-getting-the-background-3e0e54d20bb)
+
+
+[Kotlin-24.协程和线程(Coroutine & Thread)](https://blog.csdn.net/qq_32115439/article/details/74018755)
+
+[使用协程进行 UI 编程指南](https://github.com/hltj/kotlinx.coroutines-cn/blob/master/ui/coroutines-guide-ui.md)
+
+
+----
+
+协程构建起
+
+launch
+async
+runBlocking
+delay 
