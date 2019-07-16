@@ -67,3 +67,8 @@ Dispatchers.Unconfined协程调度器会在程序运行到第一个挂起点时�
 `Unconfined      : After delay in thread kotlinx.coroutines.DefaultExecutor`
 
 。非受限调度器适合协程不消耗 CPU 时间也不更新任何限于特定线程的共享数据（如 UI）的情境。
+
+
+#### 调试协程与线程 
+
+由上面可知协程可以在一个线程中挂挂起在另外一个线程中恢复。如果在一个线程中也可以
