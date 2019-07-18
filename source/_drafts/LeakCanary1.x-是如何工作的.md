@@ -90,9 +90,9 @@ public @NonNull RefWatcher buildAndInstall() {
       };
 ```
 
-很明显以上过程主要使用了 Application#registerActivityLifecycleCallbacks 方法监听 Activity 的生命周期，在 Activity 销毁时将该 Activity 实例对象添加到 RefWatch 的检测范围内。
+很明显以上过程主要使用了 Application#registerActivityLifecycleCallbacks 方法监听 Activity 的生命周期，在 Activity 执行 onDestory()后将该 Activity 实例对象添加到 RefWatch 的检测范围内。
 
-上面的逻辑很简单：当 Activity 销毁后检测该 Activity 实例是否发生内存泄漏，合情合理。
+上面的逻辑很简单：当 Activity 在执行 onDestory()后，检测该 Activity 实例是否发生内存泄漏，合情合理。
 
 
 关于 Fragment 的检测和 Activity 机制相同，不再重现分析过程，但是需要注意的是 RefWatch 除了检测 Fragment 实例对象也会检测 Fragment 的 View 对象。根据 SDK 版本不同 Fragment d检测过程分别由 SupportFragmentRefWatcher(在库中通过反射获得对象) 和 AndroidOFragmentRefWatcher 具体实现。
@@ -107,8 +107,131 @@ refWatch.wathc(object);
 
 
 
-#### 分析内存泄漏
-在
+#### 检出内存泄漏
+
+在上一步 设置监听对象 中我们在 Activity 执行 onDestory() 后将 Activity 实例对象添加到 RefWatch 的检测内存泄漏状态的范围内，同时也开启了检测动作。
+
+```
+public void watch(Object watchedReference) {
+    watch(watchedReference, "");
+  }
+```
+
+根据调用流程：
+
+```
+public void watch(Object watchedReference, String referenceName) {
+   ......
+   String key = UUID.randomUUID().toString();
+    retainedKeys.add(key);
+    //构建以 key 为唯一标识的弱引用对象，将原来的对象放入弱引用队列
+    final KeyedWeakReference reference =
+        new KeyedWeakReference(watchedReference, key, referenceName, queue);
+    ensureGoneAsync(watchStartNanoTime, reference);
+}
+```
+
+其中关键点：使用 WeakReference 引用 Activity 实例对象(本例中的 watchedReference)，并且管理 ReferenceQueue，这样就可以根据 ReferenceQueue 的元素判断 Activity 实例对象是否被回收，具体关于 ReferenceQueue 的信息参见：[grgf]()。同时在后面的操作中 **配合 retainedKeys 来检测最终是否发生内存泄漏**。
+
+继续跟进流程：
+
+```
+private void ensureGoneAsync(final long watchStartNanoTime, final KeyedWeakReference reference) {
+    watchExecutor.execute(new Retryable() {
+      @Override public Retryable.Result run() {
+        return ensureGone(reference, watchStartNanoTime);
+      }
+    });
+  }
+
+  Retryable.Result ensureGone(final KeyedWeakReference reference, final long watchStartNanoTime) {
+    long gcStartNanoTime = System.nanoTime();
+    long watchDurationMs = NANOSECONDS.toMillis(gcStartNanoTime - watchStartNanoTime);
+
+    removeWeaklyReachableReferences();
+
+    if (debuggerControl.isDebuggerAttached()) {
+      // The debugger can create false leaks.
+      return RETRY;
+    }
+    if (gone(reference)) {
+      return DONE;
+    }
+    gcTrigger.runGc();
+    removeWeaklyReachableReferences();
+    // 如果 retainedKeys 包含 reference 则执行如下操作
+    if (!gone(reference)) {
+      long startDumpHeap = System.nanoTime();
+      long gcDurationMs = NANOSECONDS.toMillis(startDumpHeap - gcStartNanoTime);
+
+      // AndroidHeapDumper 得到堆转储文件
+      File heapDumpFile = heapDumper.dumpHeap();
+      if (heapDumpFile == RETRY_LATER) {
+        // Could not dump the heap.
+        return RETRY;
+      }
+      long heapDumpDurationMs = NANOSECONDS.toMillis(System.nanoTime() - startDumpHeap);
+
+      HeapDump heapDump = heapDumpBuilder.heapDumpFile(heapDumpFile).referenceKey(reference.key)
+          .referenceName(reference.name)
+          .watchDurationMs(watchDurationMs)
+          .gcDurationMs(gcDurationMs)
+          .heapDumpDurationMs(heapDumpDurationMs)
+          .build();
+
+      // ServiceHeapDumpListener
+      heapdumpListener.analyze(heapDump);
+    }
+    return DONE;
+  }
+```
+
+在第一个方法中的关于 `watchExecutor` 的运作机制现在不详述，先着重分析整个库的流程，后面会再回头简述。
+
+在上面代码中可以看到该过程在触发 GC 前后分别执`removeWeaklyReachableReferences()`， 结合 ReferenceQueue(引用队列),确保回收应用内存中监测的对象中可以被正常回收的对象，最终根据 retainedKeys 中的元素是判定被监测的对象是否发生内存泄漏。
+
+```
+private boolean gone(KeyedWeakReference reference) {
+    return !retainedKeys.contains(reference.key);
+}
+```
+在执行 gone(reference) 后，将可以判断指定的实例对象是否发生内存泄漏，如果发生内存泄漏就会生成堆转储文件，并进行相应的分析。
+
+如果发生内存泄漏会通过以下代码获得堆转储文件：
+```
+File heapDumpFile = heapDumper.dumpHeap();
+```
+
+其中过程涉及一系列文件的新建、删除等步骤，但是关键获取堆转储文件代码为：
+```
+// 将 hprof 生成到指定文件
+Debug.dumpHprofData(heapDumpFile.getAbsolutePath());
+return heapDumpFile;
+```
+指定将 hprof 生成到指定文件上，并返回，其中关于 Hprof 文件请参见:[Hprof 拾遗](https://leegyplus.github.io/2019/07/09/Hprof-%E6%8B%BE%E9%81%97/)。
+
+这样兜兜转转终于拿到了有关内存泄漏的堆转储文件，下面就应当是分析文件定位内存泄漏点了，但是在这之前需要就拿到的文件封装进 HeapDump(持有堆转储信息的数据类)，进而进行分析内存泄漏。
+
+```
+HeapDump heapDump = heapDumpBuilder.heapDumpFile(heapDumpFile).referenceKey(reference.key)
+    .referenceName(reference.name)
+    .watchDurationMs(watchDurationMs)
+    .gcDurationMs(gcDurationMs)
+    .heapDumpDurationMs(heapDumpDurationMs)
+    .build();
+// ServiceHeapDumpListener
+heapdumpListener.analyze(heapDump);
+```
+
+
+
+
+
+
+
+#### 内存泄漏分析
+
+
 
 
 
