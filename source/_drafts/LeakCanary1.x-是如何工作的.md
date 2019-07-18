@@ -223,21 +223,87 @@ HeapDump heapDump = heapDumpBuilder.heapDumpFile(heapDumpFile).referenceKey(refe
 heapdumpListener.analyze(heapDump);
 ```
 
-
-
-
-
-
-
 #### 内存泄漏分析
 
+由上步骤的 `heapdumpListener.analyze(heapDump);` 正式开启开启内存分析之路。
 
+按照程序流程，执行 ServiceHeapDumpListener#analyze()
+```
+@Override public void analyze(@NonNull HeapDump heapDump) {
+    checkNotNull(heapDump, "heapDump");
+    //DisplayLeakService
+    HeapAnalyzerService.runAnalysis(context, heapDump, listenerServiceClass);
+}
+```
+HeapAnalyzerService#runAnalysis
+```
 
+  public static void runAnalysis(Context context, HeapDump heapDump,
+      Class<? extends AbstractAnalysisResultService> listenerServiceClass) {
+    setEnabledBlocking(context, HeapAnalyzerService.class, true);
+    setEnabledBlocking(context, listenerServiceClass, true);
+    Intent intent = new Intent(context, HeapAnalyzerService.class);
+    // listenerServiceClass -- DisplayLeakService
+    intent.putExtra(LISTENER_CLASS_EXTRA, listenerServiceClass.getName());
+    intent.putExtra(HEAPDUMP_EXTRA, heapDump);
+    ContextCompat.startForegroundService(context, intent);
+  }
+```
 
+各种函数回调、系统回调后来到了这里 HeapAnalyzerService#onHandleIntentInForeground：
 
+```
+@Override protected void onHandleIntentInForeground(@Nullable Intent intent) {
+    if (intent == null) {
+      CanaryLog.d("HeapAnalyzerService received a null intent, ignoring.");
+      return;
+    }
+    String listenerClassName = intent.getStringExtra(LISTENER_CLASS_EXTRA);
+    HeapDump heapDump = (HeapDump) intent.getSerializableExtra(HEAPDUMP_EXTRA);
 
-### 0x0003
-安装
+    HeapAnalyzer heapAnalyzer =
+        new HeapAnalyzer(heapDump.excludedRefs, this, heapDump.reachabilityInspectorClasses);
+
+    AnalysisResult result = heapAnalyzer.checkForLeak(heapDump.heapDumpFile, heapDump.referenceKey,
+        heapDump.computeRetainedHeapSize);
+    // 开始显示分析结果
+    AbstractAnalysisResultService.sendResultToListener(this, listenerClassName, heapDump, result);
+  }
+```
+以上函数中调用了 `heapAnalyzer.checkForLeak` 中使用 haha 库对堆转储文件进行分析，并将分析结果返回。
+
+具体怎么分析的，整个流程比较清晰，但是具体上具体代码上确实比较难以理解，本文着重分析流程，故暂且不表。
+
+#### 显示分析结果
+
+可以看到将分析结果继续向下传，完成显示功能。
+```
+AbstractAnalysisResultService.sendResultToListener(this, listenerClassName, heapDump, result);
+```
+经历了AbstractAnalysisResultService#sendResultToListener、经历了AbstractAnalysisResultService#onHandleIntentInForeground 最终流程执行如下：
+
+```
+@Override
+  protected final void onHeapAnalyzed(@NonNull AnalyzedHeap analyzedHeap) {
+    HeapDump heapDump = analyzedHeap.heapDump;
+    AnalysisResult result = analyzedHeap.result;
+
+    String leakInfo = leakInfo(this, heapDump, result, true);
+    CanaryLog.d("%s", leakInfo);
+
+    boolean resultSaved = false;
+    boolean shouldSaveResult = result.leakFound || result.failure != null;
+    if (shouldSaveResult) {
+      heapDump = renameHeapdump(heapDump);
+      resultSaved = saveResult(heapDump, result);
+    }
+
+      PendingIntent pendingIntent =
+          DisplayLeakActivity.createPendingIntent(this, heapDump.referenceKey);
+
+      .....
+}
+```
 
 
 
@@ -262,3 +328,6 @@ https://mp.weixin.qq.com/s/idjFaJsLpVLw52RSYHA_Vg
 
 
 [LeakCanary实战](https://www.sunmoonblog.com/2018/02/02/leakcanary-application/)
+
+
+[UML时序图(Sequence Diagram)学习笔记](https://blog.csdn.net/fly_zxy/article/details/80911942)
