@@ -105,8 +105,6 @@ RefWatch refWatch = LeakCanary.install(this);
 refWatch.wathc(object);
 ```
 
-
-
 #### 检出内存泄漏
 
 在上一步 设置监听对象 中我们在 Activity 执行 onDestory() 后将 Activity 实例对象添加到 RefWatch 的检测内存泄漏状态的范围内，同时也开启了检测动作。
@@ -145,18 +143,9 @@ private void ensureGoneAsync(final long watchStartNanoTime, final KeyedWeakRefer
   }
 
   Retryable.Result ensureGone(final KeyedWeakReference reference, final long watchStartNanoTime) {
-    long gcStartNanoTime = System.nanoTime();
-    long watchDurationMs = NANOSECONDS.toMillis(gcStartNanoTime - watchStartNanoTime);
-
+    ......
     removeWeaklyReachableReferences();
-
-    if (debuggerControl.isDebuggerAttached()) {
-      // The debugger can create false leaks.
-      return RETRY;
-    }
-    if (gone(reference)) {
-      return DONE;
-    }
+    ......
     gcTrigger.runGc();
     removeWeaklyReachableReferences();
     // 如果 retainedKeys 包含 reference 则执行如下操作
@@ -212,6 +201,7 @@ return heapDumpFile;
 
 这样兜兜转转终于拿到了有关内存泄漏的堆转储文件，下面就应当是分析文件定位内存泄漏点了，但是在这之前需要就拿到的文件封装进 HeapDump(持有堆转储信息的数据类)，进而进行分析内存泄漏。
 
+RefWatcher#ensureGone
 ```
 HeapDump heapDump = heapDumpBuilder.heapDumpFile(heapDumpFile).referenceKey(reference.key)
     .referenceName(reference.name)
@@ -227,7 +217,7 @@ heapdumpListener.analyze(heapDump);
 
 由上步骤的 `heapdumpListener.analyze(heapDump);` 正式开启开启内存分析之路。
 
-按照程序流程，执行 ServiceHeapDumpListener#analyze()
+`ServiceHeapDumpListener#analyze()`
 ```
 @Override public void analyze(@NonNull HeapDump heapDump) {
     checkNotNull(heapDump, "heapDump");
@@ -235,7 +225,12 @@ heapdumpListener.analyze(heapDump);
     HeapAnalyzerService.runAnalysis(context, heapDump, listenerServiceClass);
 }
 ```
-HeapAnalyzerService#runAnalysis
+
+**由于分析过程比较耗时，所以该分析过程以及显示过程都运行在单独的线程:applicationId:leakcanary 。**
+
+
+`HeapAnalyzerService#runAnalysis()`
+
 ```
 
   public static void runAnalysis(Context context, HeapDump heapDump,
@@ -246,21 +241,17 @@ HeapAnalyzerService#runAnalysis
     // listenerServiceClass -- DisplayLeakService
     intent.putExtra(LISTENER_CLASS_EXTRA, listenerServiceClass.getName());
     intent.putExtra(HEAPDUMP_EXTRA, heapDump);
+    // 开启相应 Service 的工作
     ContextCompat.startForegroundService(context, intent);
   }
 ```
 
-各种函数回调、系统回调后来到了这里 HeapAnalyzerService#onHandleIntentInForeground：
+各种函数回调、系统回调，流程进行到这一步：
+`HeapAnalyzerService#onHandleIntentInForeground()`
 
 ```
 @Override protected void onHandleIntentInForeground(@Nullable Intent intent) {
-    if (intent == null) {
-      CanaryLog.d("HeapAnalyzerService received a null intent, ignoring.");
-      return;
-    }
-    String listenerClassName = intent.getStringExtra(LISTENER_CLASS_EXTRA);
-    HeapDump heapDump = (HeapDump) intent.getSerializableExtra(HEAPDUMP_EXTRA);
-
+    ....
     HeapAnalyzer heapAnalyzer =
         new HeapAnalyzer(heapDump.excludedRefs, this, heapDump.reachabilityInspectorClasses);
 
@@ -270,9 +261,48 @@ HeapAnalyzerService#runAnalysis
     AbstractAnalysisResultService.sendResultToListener(this, listenerClassName, heapDump, result);
   }
 ```
-以上函数中调用了 `heapAnalyzer.checkForLeak` 中使用 haha 库对堆转储文件进行分析，并将分析结果返回。
+以上函数中调用了 `heapAnalyzer.checkForLeak` 中使用 haha 库对堆转储文件进行分析：
 
-具体怎么分析的，整个流程比较清晰，但是具体上具体代码上确实比较难以理解，本文着重分析流程，故暂且不表。
+```
+public @NonNull AnalysisResult checkForLeak(@NonNull File heapDumpFile,
+      @NonNull String referenceKey,
+      boolean computeRetainedSize) {
+    try {
+    // 用于更新 Notication 的各种状态
+      listener.onProgressUpdate(READING_HEAP_DUMP_FILE);
+      //使用 haha 库分析堆转储文件
+      HprofBuffer buffer = new MemoryMappedFileBuffer(heapDumpFile);
+      HprofParser parser = new HprofParser(buffer);
+      listener.onProgressUpdate(PARSING_HEAP_DUMP);
+      Snapshot snapshot = parser.parse();
+      listener.onProgressUpdate(DEDUPLICATING_GC_ROOTS);
+      //彻底铲除 GcRootss
+      deduplicateGcRoots(snapshot);
+      listener.onProgressUpdate(FINDING_LEAKING_REF);
+      // 寻找内存泄漏位置的引用
+      Instance leakingRef = findLeakingReference(referenceKey, snapshot);
+
+      // False alarm, weak reference was cleared in between key check and heap dump.
+      if (leakingRef == null) {
+        return noLeak(since(analysisStartNanoTime));
+      }
+      // findLeakTrace 获取内存泄漏的位置
+      return findLeakTrace(analysisStartNanoTime, snapshot, leakingRef, computeRetainedSize);
+    } catch (Throwable e) {
+      return failure(e, since(analysisStartNanoTime));
+    }
+  }
+```
+
+经历以上过程，将内存泄漏的结果返回，传入指定函数，进行内存泄漏分析显示结果的阶段：
+
+```
+// 开始显示分析结果
+AbstractAnalysisResultService.sendResultToListener(this, listenerClassName, heapDump, result);
+```
+
+具体怎么分析的，整个流程比较清晰，但至于内存泄漏分析过程是如何进行的，由于本文着重分析流程，故暂且不表。
+
 
 #### 显示分析结果
 
@@ -297,13 +327,35 @@ AbstractAnalysisResultService.sendResultToListener(this, listenerClassName, heap
       heapDump = renameHeapdump(heapDump);
       resultSaved = saveResult(heapDump, result);
     }
-
-      PendingIntent pendingIntent =
+    PendingIntent pendingIntent =
           DisplayLeakActivity.createPendingIntent(this, heapDump.referenceKey);
 
       .....
 }
 ```
+
+以上函数中特别关键的步骤是 ：
+
+```
+ resultSaved = saveResult(heapDump, result);
+```
+这步操作是将分析结果保存到本地文件中，上面我们将堆转储文件保存至 xxxx.hprof 文件中，那么在这里我们需要间分析结果保存在 xxxx.hprof.result 中，注意以上两个文件是一一对应的，即每次的堆转储文件都对应一次分析结果相应的文件。
+
+将分析结果保存到文件的操作是十分重要的，因为下面将分析结果显示到页面就是基于以上文件。
+
+从上面的函数中我们注意到了 DisplayLeakActivity，这个 Activity 就是我们展示内存泄漏引用链的界面，在这里我们针对该Activity 构建了 PendingIntent，为相应 Notifation 的配置，这些都是为更加友好的显示，不表述。
+
+那么，我们进入到 DisplayLeakActivity 查看显示的具体流程，其中重要的是：
+
+```
+ @Override protected void onResume() {
+    super.onResume();
+    LoadLeaks.load(this, getLeakDirectoryProvider(this));
+  }
+```
+
+这一步就是读取应用的内存泄漏分析结果的文件，也就是我们上面保存的
+xxx.hprof.result 文件，从而拿到泄漏信息，至此我们就获取到我们想要显示的数据，将数据保存到  List<AnalyzedHeap> leaks; 中，至于怎么显示，希望自己去一下源码。
 
 
 
