@@ -232,7 +232,6 @@ heapdumpListener.analyze(heapDump);
 `HeapAnalyzerService#runAnalysis()`
 
 ```
-
   public static void runAnalysis(Context context, HeapDump heapDump,
       Class<? extends AbstractAnalysisResultService> listenerServiceClass) {
     setEnabledBlocking(context, HeapAnalyzerService.class, true);
@@ -263,6 +262,7 @@ heapdumpListener.analyze(heapDump);
 ```
 以上函数中调用了 `heapAnalyzer.checkForLeak` 中使用 haha 库对堆转储文件进行分析：
 
+`HeapAnalyzer.checkForLeak()`
 ```
 public @NonNull AnalysisResult checkForLeak(@NonNull File heapDumpFile,
       @NonNull String referenceKey,
