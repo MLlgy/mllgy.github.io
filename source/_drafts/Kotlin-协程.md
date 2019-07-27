@@ -64,9 +64,32 @@ fun main() = runBlocking {
 
 调用 `Job#join()` 主线程会一直阻塞，直到指定协程执行完毕。
 
+### 结构化并发
+
+定义一个外部协程，在其内部也可以定义新的协程，包括外部协程在内的每个协程构建器都将 CoroutineScope 的实例添加到其代码块所在的作用域中。 我们可以在这个作用域中启动协程而无需显式 join 之，因为外部协程（示例中的 runBlocking）直到在其作用域中启动的所有协程都执行完毕后才会结束。
+
+```
+fun main() = runBlocking { //this:CoroutineScope
+    
+    launch {// this: CoroutineScope
+        // 在 runBlocking 作用域中启动一个新协程
+        delay(1000L)
+        println("World!")
+
+        launch {// this: CoroutineScope
+            delay(5000L)
+            println("hahahah")
+        }
+    }
+    println("Hello,")
+}
+```
+
 
 
 ### 构建作用域
+
+除了使用构建器(如: launch、async 等)提供协程作用域之外，还可以使用 coroutineScope 构建器声明自己的作用域。
 
 使用  coroutineScope 可以构建协程作用域，构建的协程作用域在所有子协程执行完毕之前不会结束。
 
@@ -91,13 +114,15 @@ fun main() = runBlocking { // this: CoroutineScope
     println("Coroutine scope is over") // 这一行在内嵌 launch 执行完毕后才输出
 }
 ```
-以下为打印日志，注意打印顺序，从打印顺序中可以看出协程的 **非阻塞**。
+以下为打印日志:
 ```
 Task from coroutine scope
 Task from runBlocking
 Task from nested launch
 Coroutine scope is over
 ```
+
+注意打印顺序，从打印顺序中可以看出协程的 **非阻塞**，因为 `Task from coroutine scope ` 最先打印出来。
 
 
 
