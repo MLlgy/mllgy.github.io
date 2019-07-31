@@ -1,5 +1,5 @@
 ---
-title: adb 常用命令
+title: adb 运行原理和常用命令
 date: 2019-03-26 11:32:49
 tags: [adb]
 ---
