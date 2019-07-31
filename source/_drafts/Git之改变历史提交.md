@@ -1,4 +1,4 @@
----
+`---
 title: Git之改变历史提交
 tags:
 ---
@@ -52,3 +52,58 @@ git-commit: Record changes to the repository
 > git log --stat --pretty=onelin -3
 
 ![](/../images/2019_07_26_03.png)
+
+
+### 
+
+1. 查看提交日志记录
+> git log --oneline -6
+
+![](/../images/2019_07_27_01.png)
+
+
+2. 假设在提交 D 中做出了错误的更改，我们现在下次操作抹去提交　Ｄ　以及操作　Ｄ所作出的文件更改。
+
+那么我们有两种方法：
+
+ 1. 直接抹去提交　Ｄ，即操作提交　Ｃ　指向操作　Ｅ。
+
+为了抑郁标记每次提交，我们对每次提交进行　tag 标记。
+
+```
+git tag F
+git tag D HEAD^^
+git tag C HEAD^^^
+git tag B HEAD~4 
+git tag A HEAD~5
+```
+
+通过日志可以查看被标记的　６　个提交。
+
+> git log --oneline --decorate=6
+
+![](/../images/2019_07_27_02.png)
+
+
+通过　git checkout 命令暂时将 HEAD 指向 C
+> git checkout C
+
+执行拣选操作将提价 E 在当前 HEAD 上重放，由于 master^ 和 E 为相同指向，所以
+
+> git cherry-pick master^
+
+上述操作可能出现 cherry-pick conflic，自己解决后执行：
+
+> git add xxx
+> git cherry-pick --continue
+
+执行拣选操作将提价 F 在当前 HEAD 上重放，由于 F 和 master 有相同的指向，所以有：
+
+> git cherry-pick master
+
+如果有冲突执行上步相同操作，此时通过提交日志可以看到提交 D 以及不在了
+
+![](/../images/2019_07_27_03.png)
+
+
+以下操作为十分重要的操作，需要将 master 分之重置到新提交
