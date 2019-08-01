@@ -8,22 +8,22 @@
   <link rel="dns-prefetch" href>
   <title>浮点型数据的精度问题 | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="如何表示定点数使用二进制来表示十进制的编码称为 BCD 编码。 这种编码方式把小数点固定在某一位，所以其表示的数称为 定点数。 那么 4 个比特最大的表示是十进制数为 9 (1001)。 32 bit 使用右侧的 2 个 0-9 的整数，当成小数部分，左侧的6 个 0-9 表示整数部分，那么 32 bit 可以表示 0到 999999.99 这样的数组范围。">
+  <meta name="description" content="如何表示定点数使用二进制来表示十进制的编码称为 BCD 编码。 这种编码方式把小数点固定在某一位，所以其表示的数称为 定点数。 那么 4 个比特最大的表示是十进制数为 9 (1001)。 32 bit 使用右侧的 2 个 0-9 的整数(8 bit)，当成小数部分，左侧的6 个 0-9 表示整数部分(24 bit)，那么 32 bit 可以表示 0到 999999.99 这样的数组范围。">
 <meta name="keywords" content="极客时间笔记,浮点型精度问题">
 <meta property="og:type" content="article">
 <meta property="og:title" content="浮点型数据的精度问题">
 <meta property="og:url" content="/2019/08/01/浮点型数据的精度问题/index.html">
 <meta property="og:site_name" content="GY">
-<meta property="og:description" content="如何表示定点数使用二进制来表示十进制的编码称为 BCD 编码。 这种编码方式把小数点固定在某一位，所以其表示的数称为 定点数。 那么 4 个比特最大的表示是十进制数为 9 (1001)。 32 bit 使用右侧的 2 个 0-9 的整数，当成小数部分，左侧的6 个 0-9 表示整数部分，那么 32 bit 可以表示 0到 999999.99 这样的数组范围。">
+<meta property="og:description" content="如何表示定点数使用二进制来表示十进制的编码称为 BCD 编码。 这种编码方式把小数点固定在某一位，所以其表示的数称为 定点数。 那么 4 个比特最大的表示是十进制数为 9 (1001)。 32 bit 使用右侧的 2 个 0-9 的整数(8 bit)，当成小数部分，左侧的6 个 0-9 表示整数部分(24 bit)，那么 32 bit 可以表示 0到 999999.99 这样的数组范围。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://static001.geekbang.org/resource/image/51/50/5168fce3f313f4fc0b600ce5d1805c50.jpeg">
 <meta property="og:image" content="https://static001.geekbang.org/resource/image/f9/ae/f9213c43f5fa658a2192a68cd26435ae.jpg">
 <meta property="og:image" content="https://static001.geekbang.org/resource/image/9a/27/9ace5a7404d1790b03d07bd1b3cb5a27.jpeg">
 <meta property="og:image" content="https://static001.geekbang.org/resource/image/51/50/5168fce3f313f4fc0b600ce5d1805c50.jpeg">
-<meta property="og:updated_time" content="2019-08-01T10:19:54.533Z">
+<meta property="og:updated_time" content="2019-08-01T10:21:52.897Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浮点型数据的精度问题">
-<meta name="twitter:description" content="如何表示定点数使用二进制来表示十进制的编码称为 BCD 编码。 这种编码方式把小数点固定在某一位，所以其表示的数称为 定点数。 那么 4 个比特最大的表示是十进制数为 9 (1001)。 32 bit 使用右侧的 2 个 0-9 的整数，当成小数部分，左侧的6 个 0-9 表示整数部分，那么 32 bit 可以表示 0到 999999.99 这样的数组范围。">
+<meta name="twitter:description" content="如何表示定点数使用二进制来表示十进制的编码称为 BCD 编码。 这种编码方式把小数点固定在某一位，所以其表示的数称为 定点数。 那么 4 个比特最大的表示是十进制数为 9 (1001)。 32 bit 使用右侧的 2 个 0-9 的整数(8 bit)，当成小数部分，左侧的6 个 0-9 表示整数部分(24 bit)，那么 32 bit 可以表示 0到 999999.99 这样的数组范围。">
 <meta name="twitter:image" content="https://static001.geekbang.org/resource/image/51/50/5168fce3f313f4fc0b600ce5d1805c50.jpeg">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
@@ -187,7 +187,7 @@
         <h3 id="如何表示定点数"><a href="#如何表示定点数" class="headerlink" title="如何表示定点数"></a>如何表示定点数</h3><p>使用二进制来表示十进制的编码称为 <strong>BCD 编码</strong>。
 这种编码方式把小数点固定在某一位，所以其表示的数称为 <strong>定点数</strong>。</p>
 <p>那么 4 个比特最大的表示是十进制数为 9 (1001)。</p>
-<p>32 bit 使用右侧的 2 个 0-9 的整数，当成小数部分，左侧的6 个 0-9 表示整数部分，那么 32 bit 可以表示 0到 999999.99 这样的数组范围。</p>
+<p>32 bit 使用右侧的 2 个 0-9 的整数(8 bit)，当成小数部分，左侧的6 个 0-9 表示整数部分(24 bit)，那么 32 bit 可以表示 0到 999999.99 这样的数组范围。</p>
 <a id="more"></a>
 
 <p>缺点：</p>
@@ -510,31 +510,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Binder</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Dagger2</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DI</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -547,6 +527,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">工具</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Dagger2</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">DI</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -570,15 +562,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Collections</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">List</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -590,7 +582,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
+                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -598,7 +590,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
+                <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">adb</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -606,7 +610,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
+                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -618,11 +626,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">adb</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+                <a href="javascript:void(0)" class="js-tag color4">VIM</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -634,7 +638,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">VIM</a>
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -642,7 +646,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -658,10 +662,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">极客时间笔记</a>
               </li>
              
@@ -670,15 +670,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">JNI</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">深入理解 Android 读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -706,15 +706,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
               </li>
             
             <div class="clearfix"></div>
