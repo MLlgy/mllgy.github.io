@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html>
-<head><meta name="generator" content="Hexo 3.8.0">
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link rel="dns-prefetch" href="">
+  <link rel="dns-prefetch" href>
   <title>Jetpack之ViewModle 笔记 | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="概述ViewModel 是一个设计通过用来存储、管理 UI 相关的数据 ViewModel 类旨在通过生命周期感知的方式存储、管理与 UI 相关的数据。ViewModel 类可以在屏幕旋转情况下保持数据处于 存活 的状态。 Android 通过 Framework 层管理 UI(Activity/Fragment) 的生命周期。响应用户的动作系统可能会新建或重建 UI，但是这并不在用户的控制范围内">
+  <meta name="description" content="0x0000 概述ViewModel 是一个设计通过用来存储、管理 UI 相关的数据类。 ViewModel 类旨在通过生命周期感知的方式存储、管理与 UI 相关的数据。ViewModel 类可以在屏幕旋转情况下保持数据处于 存活 的状态。 Android 通过 Framework 层管理 UI(Activity/Fragment) 的生命周期。响应用户的动作系统可能会新建或重建 UI，但是这并不">
 <meta name="keywords" content="Jetpack,ViewModle">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Jetpack之ViewModle 笔记">
 <meta property="og:url" content="/2019/05/06/Jetpack之ViewModle笔记/index.html">
 <meta property="og:site_name" content="GY">
-<meta property="og:description" content="概述ViewModel 是一个设计通过用来存储、管理 UI 相关的数据 ViewModel 类旨在通过生命周期感知的方式存储、管理与 UI 相关的数据。ViewModel 类可以在屏幕旋转情况下保持数据处于 存活 的状态。 Android 通过 Framework 层管理 UI(Activity/Fragment) 的生命周期。响应用户的动作系统可能会新建或重建 UI，但是这并不在用户的控制范围内">
+<meta property="og:description" content="0x0000 概述ViewModel 是一个设计通过用来存储、管理 UI 相关的数据类。 ViewModel 类旨在通过生命周期感知的方式存储、管理与 UI 相关的数据。ViewModel 类可以在屏幕旋转情况下保持数据处于 存活 的状态。 Android 通过 Framework 层管理 UI(Activity/Fragment) 的生命周期。响应用户的动作系统可能会新建或重建 UI，但是这并不">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://developer.android.google.cn/images/topic/libraries/architecture/viewmodel-lifecycle.png">
-<meta property="og:updated_time" content="2019-05-23T02:52:44.059Z">
+<meta property="og:updated_time" content="2019-07-11T11:18:51.033Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Jetpack之ViewModle 笔记">
-<meta name="twitter:description" content="概述ViewModel 是一个设计通过用来存储、管理 UI 相关的数据 ViewModel 类旨在通过生命周期感知的方式存储、管理与 UI 相关的数据。ViewModel 类可以在屏幕旋转情况下保持数据处于 存活 的状态。 Android 通过 Framework 层管理 UI(Activity/Fragment) 的生命周期。响应用户的动作系统可能会新建或重建 UI，但是这并不在用户的控制范围内">
+<meta name="twitter:description" content="0x0000 概述ViewModel 是一个设计通过用来存储、管理 UI 相关的数据类。 ViewModel 类旨在通过生命周期感知的方式存储、管理与 UI 相关的数据。ViewModel 类可以在屏幕旋转情况下保持数据处于 存活 的状态。 Android 通过 Framework 层管理 UI(Activity/Fragment) 的生命周期。响应用户的动作系统可能会新建或重建 UI，但是这并不">
 <meta name="twitter:image" content="https://developer.android.google.cn/images/topic/libraries/architecture/viewmodel-lifecycle.png">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
@@ -161,7 +161,7 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Jetpack之ViewModle笔记" class="article article-type-post " itemscope="" itemprop="blogPost">
+            <article id="post-Jetpack之ViewModle笔记" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
@@ -181,19 +181,37 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>ViewModel 是一个设计通过用来存储、管理 UI 相关的数据</p>
+        <h3 id="0x0000-概述"><a href="#0x0000-概述" class="headerlink" title="0x0000 概述"></a>0x0000 概述</h3><p>ViewModel 是一个设计通过用来存储、管理 UI 相关的数据类。</p>
 <p>ViewModel 类旨在通过生命周期感知的方式存储、管理与 UI 相关的数据。ViewModel 类可以在屏幕旋转情况下保持数据处于 <strong>存活</strong> 的状态。</p>
 <p>Android 通过 Framework 层管理 UI(Activity/Fragment) 的生命周期。响应用户的动作系统可能会新建或重建 UI，但是这并不在用户的控制范围内。</p>
 <a id="more"></a>
 
-<p>如果系统销毁或者新建 UI，则存储在其中的任何瞬态UI相关数据都将丢失。对于简单的数据， Activity 可以在  onSaveInstanceState() 中保存下来，在新建的 Activity 的 onCreate() 方法中重新获得这些数据，但是这方法只适用于数据量较小、可以序列化和反序列化的数据，不使用大量的数据，例如对象列表、Bitmap 列表。<br>另外一个问题是：UI 中频繁的异步任务会占用一些时间返回数据。UI 控制器需要管理这些请求并且保证系统能够在 UI 销毁后回收这些请求，避免潜在的内存泄漏。管理上述情况会占用大量的资源。</p>
+<p><strong>面临问题：</strong></p>
+<ol>
+<li><p>如果系统销毁或者新建 UI，则存储在其中的任何与 UI 相关短暂的数据都将丢失。对于简单的数据， Activity 可以在  onSaveInstanceState() 中保存下来，在新建的 Activity 的 onCreate() 方法中重新获得这些数据，但是这方法只适用于数据量较小、可以序列化和反序列化的数据，不使用大量的数据，例如对象列表、Bitmap 列表。</p>
+</li>
+<li><p>另外一个问题是：UI 中频繁的异步任务会占用一些时间返回数据。UI 控制器需要管理这些请求并且保证系统能够在 UI 销毁后回收这些请求，避免潜在的内存泄漏，而管理上述情况会占用大量的资源。</p>
+</li>
+</ol>
 <p>UI 的主要职责是用来展示数据、响应用户的动作或者组件间交流，例如权限请求。让 UI 承担从网络或者数据库获取数据等职责，使得类变的十分的臃肿，同时使 UI 变得难以测试。我们不应该为 UI 分配过多的职责，不能让一个类去处理所有的工作，而不是将工作委托给其他类。这其实是 MVC、MVP、MVVM 这些架构演进的重要原因。</p>
-<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>Activity 重建后会复用第一次建立 Activity 的 ViewModel 对象。当 ViewModel 的宿主 Activity 销毁后，系统会调用 ViewModel 对象的 onCleared() 方法，用来清除资源。</p>
+<p>将视图数据所有权与 UI 控制器逻辑分离，使逻辑更加简单、更易于维护。</p>
+<h3 id="0x0001-ViewModel-使用"><a href="#0x0001-ViewModel-使用" class="headerlink" title="0x0001 ViewModel 使用"></a>0x0001 ViewModel 使用</h3><p>ViewModel 的主要职责是为 UI 提供数据，Activity 重建后会复用第一次建立 Activity 的 ViewModel 对象。与之前的写法不同，现在我们需要将获取到的数据保存到 ViewModel，这样就保证数据在当前 Activity 重建后可以复用数据。</p>
+<p>官方文档示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class MyViewModel : ViewModel() &#123;</span><br><span class="line">    private val users: MutableLiveData&lt;List&lt;User&gt;&gt; by lazy &#123;</span><br><span class="line">        MutableLiveData().also &#123;</span><br><span class="line">            loadUsers()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    fun getUsers(): LiveData&lt;List&lt;User&gt;&gt; &#123;</span><br><span class="line">        return users</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private fun loadUsers() &#123;</span><br><span class="line">        // Do an asynchronous operation to fetch users.</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class MyActivity : AppCompatActivity() &#123;</span><br><span class="line"></span><br><span class="line">    override fun onCreate(savedInstanceState: Bundle?) &#123;</span><br><span class="line">        // Create a ViewModel the first time the system calls an activity&apos;s onCreate() method.</span><br><span class="line">        // Re-created activities receive the same MyViewModel instance created by the first activity.</span><br><span class="line"></span><br><span class="line">        val model = ViewModelProviders.of(this).get(MyViewModel::class.java)</span><br><span class="line">        model.getUsers().observe(this, Observer&lt;List&lt;User&gt;&gt;&#123; users -&gt;</span><br><span class="line">            // update UI</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>If the activity is re-created, it receives the same MyViewModel instance that was created by the first activity。<br>当 ViewModel 的宿主 Activity 销毁后，系统会调用 ViewModel 对象的 onCleared() 方法，用来清除资源。</p>
 <p><strong>ViewModel 禁止引用 View、Lifecycle 以及其他任何引用 Activity 环境变量的对象。</strong></p>
-<p>ViewModel 对象旨在超过 View 或 LifecycleOwners 的特定实例。这使得你可以更加容易的测试 ViewModel ，因为不需要知道 View 或 Lifecycle 对象。</p>
-<p>ViewModel 可以持有 LifecycleObserver ，例如 LiveData 对象。但是 ViewModel 对象不能观察到生命周期感知的可观察对象（例如LiveData对象）的更改。如果 ViewModel 需要 Application 上下文，例如查找系统服务，它可以扩展AndroidViewModel 类并具有在构造函数中接收 Application 的构造函数，因为Application 继承了 Context。</p>
-<h3 id="ViewModel-的生命周期"><a href="#ViewModel-的生命周期" class="headerlink" title="ViewModel 的生命周期"></a>ViewModel 的生命周期</h3><p><img src="https://developer.android.google.cn/images/topic/libraries/architecture/viewmodel-lifecycle.png" alt="ViewModel 的生命周期"></p>
-<p>获取 ViewModel 对象时，ViewModel 对象的范围限定为传递给ViewModelProvider 的生命周期。</p>
+<p>ViewModel 旨在创建超过 View 或 LifecycleOwners 对象生命周期的对象。这使得你可以更加容易的测试 ViewModel ，因为不需要知道 View 或 Lifecycle 对象。</p>
+<p>ViewModel 可以持有 LifecycleObserver ，例如 LiveData 对象。但是 ViewModel 对象不能观察到生命周期感知的可观察对象（例如LiveData对象）的更改。</p>
+<p>如果 ViewModel 需要 Application 上下文，例如查找系统服务，可以使用 ViewModel 的子类 AndroidViewModel 类，并在构造函数中传入 Application 对象。</p>
+<h3 id="0x0002-ViewModel-的生命周期"><a href="#0x0002-ViewModel-的生命周期" class="headerlink" title="0x0002 ViewModel 的生命周期"></a>0x0002 ViewModel 的生命周期</h3><p><img src="https://developer.android.google.cn/images/topic/libraries/architecture/viewmodel-lifecycle.png" alt="ViewModel 的生命周期"></p>
+<p>You usually request a ViewModel the first time the system calls an activity object’s onCreate() method. The system may call onCreate() several times throughout the life of an activity, such as when a device screen is rotated. The ViewModel exists from when you first request a ViewModel until the activity is finished and destroyed.</p>
+<p>ViewModel 会在 Activity 第一次创建存在，直到该 Activity 被彻底销毁不再重建。</p>
+<p>获取 ViewModel 对象时，ViewModel 对象的范围限定为传递给ViewModelProvider 的对象的生命周期。</p>
+<hr>
+<p>有问题欢迎点击：<a href="https://developer.android.com/topic/libraries/architecture/viewmodel" target="_blank" rel="noopener">官方文档</a></p>
 
       
 
@@ -445,6 +463,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">《深入理解 Java 虚拟机》读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
               </li>
              
@@ -465,19 +487,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -506,6 +520,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">工具</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -549,7 +567,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
+                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -557,7 +575,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
+                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -569,19 +587,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">RxJava</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Transformer</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">VIM</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">adb</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -593,11 +607,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
+                <a href="javascript:void(0)" class="js-tag color2">RxJava</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Transformer</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -605,7 +623,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -617,6 +635,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">JNI</a>
               </li>
              
@@ -625,11 +647,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -641,11 +663,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
+                <a href="javascript:void(0)" class="js-tag color4">内部类</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">内部类</a>
+                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -669,7 +691,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
         </div>
         <ul class="search-ul">
           <p q-show="jsonFail" style="padding: 20px; font-size: 12px;">
-            缺失模块。<br>1、请确保node版本大于6.2<br>2、在博客根目录（注意不是yilia根目录）执行以下命令：<br> npm i hexo-generator-json-content --save<br><br>
+            缺失模块。<br/>1、请确保node版本大于6.2<br/>2、在博客根目录（注意不是yilia根目录）执行以下命令：<br/> npm i hexo-generator-json-content --save<br/><br/>
             3、在根目录_config.yml里添加配置：
 <pre style="font-size: 12px;" q-show="jsonFail">
   jsonContent:

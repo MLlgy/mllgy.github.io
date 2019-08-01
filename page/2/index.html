@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
-<head><meta name="generator" content="Hexo 3.8.0">
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link rel="dns-prefetch" href="">
+  <link rel="dns-prefetch" href>
   <title>GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta property="og:type" content="website">
@@ -156,7 +156,7 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-深入浅出计算机组成原理-二-CPU是如何执行指令的" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+    <article id="post-深入浅出计算机组成原理-二-CPU是如何执行指令的" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
@@ -236,7 +236,7 @@
 
 
   
-    <article id="post-深入浅出计算机组成原理-一-计算机指令" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+    <article id="post-深入浅出计算机组成原理-一-计算机指令" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
@@ -268,7 +268,7 @@
       
 
       
-    </p></div>
+    </div>
     <div class="article-info article-info-index">
       
       
@@ -317,7 +317,7 @@
 
 
   
-    <article id="post-Jetpack之WorkManager笔记" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+    <article id="post-Jetpack之WorkManager笔记" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
@@ -402,7 +402,7 @@
 
 
   
-    <article id="post-Java集合之Map" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+    <article id="post-Java集合之Map" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
@@ -490,7 +490,7 @@
 
 
   
-    <article id="post-Java集合之Queue" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+    <article id="post-Java集合之Queue" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
@@ -525,7 +525,7 @@
       
 
       
-    </li></ol></div>
+    </div>
     <div class="article-info article-info-index">
       
       
@@ -582,7 +582,7 @@
 
 
   
-    <article id="post-Java集合之List" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+    <article id="post-Java集合之List" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
@@ -672,7 +672,7 @@
 
 
   
-    <article id="post-Jetpack之Lifecycle-笔记" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+    <article id="post-Jetpack之Lifecycle-笔记" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
@@ -692,10 +692,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>在 A/F 生命周期变化后，生命周期感知组件(Lifecycle—aware component)会响应相应动作，它会帮助你编写有良好组织的、轻量级、易维护的代码。</p>
+        <h3 id="0x0000-概述"><a href="#0x0000-概述" class="headerlink" title="0x0000 概述"></a>0x0000 概述</h3><p>在 A/F 生命周期变化后，生命周期感知组件(Lifecycle—aware component)会响应相应动作，它会帮助你编写有良好组织的、轻量级、易维护的代码。</p>
 <p>传统模式下，要想做的生命感知需要做的是实现其他组件的接口，并在 A/F 的生命周期函数中调用其他组件的方法。但是这样并不是好的代码组织方式，并且容易产生错误。而通过 生命周期感知组件(Lifecycle—aware component) 可以把这部分逻辑从 A/F 中移到组件自身中。</p>
 <p><code>android.arch.lifecycle</code> 包下的类和接口允许你创建 生命周期感知组件(lifecycle-aware components),它们可以根据 A/F 的生命周期来调整自己的行为。</p>
-<h3 id="Lifecycle"><a href="#Lifecycle" class="headerlink" title="Lifecycle"></a>Lifecycle</h3><p>Lifecycle 持有 A/F 组件有关生命周期的信息，并且允许其他对象监听它的状态。在 Android API 26.0.1以及其后 A/F实现了LifecycleOwner，  可在 A/F 中通过 getLifecycle() 获得 A/F 的 Lifecycle 对象。</p>
+<h3 id="0x0001-Lifecycle"><a href="#0x0001-Lifecycle" class="headerlink" title="0x0001 Lifecycle"></a>0x0001 Lifecycle</h3><p>Lifecycle 持有 A/F 组件有关生命周期的信息，并且允许其他对象监听它的状态。在 Android API 26.0.1以及其后 A/F实现了LifecycleOwner，  可在 A/F 中通过 getLifecycle() 获得 A/F 的 Lifecycle 对象。</p>
         
           <a class="article-more-a" href="/2019/05/10/Jetpack之Lifecycle-笔记/#more">more >></a>
         
@@ -755,7 +755,7 @@
 
 
   
-    <article id="post-Java-集合之-Set" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+    <article id="post-Java-集合之-Set" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
@@ -847,7 +847,7 @@
 
 
   
-    <article id="post-Java-集合概述" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+    <article id="post-Java-集合概述" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
@@ -936,7 +936,7 @@
 
 
   
-    <article id="post-Jetpack之LiveData-笔记" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+    <article id="post-Jetpack之LiveData-笔记" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
@@ -956,10 +956,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>在官方文档中首先对 LiveData 做了一个概述 : <code>LiveData is an observable data holder class</code>, LiveData 是一个 <strong>可观察的</strong> <strong>数据持有者类</strong>。它是可以感知 Activity/Fragment/Service 的生命周期的，这使得 LiveData 只会在以上组件处于 <strong>活跃状态下</strong> 更新组件。</p>
-<p>LiveData 认为上述中的 <strong>活跃状态</strong> 为对应的 Observer 处于 STARTED 或 RESUMED 状态。LiveData 数据更改不会触发非活跃组件的更新。</p>
+        <h3 id="0x000-概述"><a href="#0x000-概述" class="headerlink" title="0x000 概述"></a>0x000 概述</h3><p>在官方文档中首先对 LiveData 做了一个概述 : <code>LiveData is an observable data holder class</code>, LiveData 是一个 <strong>可观察的</strong> <strong>数据持有者类</strong>。它是可以感知 Activity/Fragment/Service 的生命周期的，这使得 LiveData 只会在以上组件处于 <strong>活跃状态下</strong> 更新组件。</p>
+<p>LiveData 认为上述中的 <strong>活跃状态</strong> 为对应的 Observer 处于 <strong>STARTED</strong> 或 <strong>RESUMED</strong> 状态。LiveData 数据更改不会触发非活跃组件的更新。</p>
 <p>LiveData 与 观察者(实现 LifecycleOwner 的类) 建立的连接会在组件处于 DESTORY 状态后被移除。</p>
-<h3 id="个人理解"><a href="#个人理解" class="headerlink" title="个人理解"></a>个人理解</h3><p>官方文档看了几遍，大致明白了 LiveData 的作用， LiveData 可持有数据，并且它有一个重要的方法:</p>
+<h3 id="0x0001-个人理解"><a href="#0x0001-个人理解" class="headerlink" title="0x0001 个人理解"></a>0x0001 个人理解</h3><p>官方文档看了几遍，大致明白了 LiveData 的作用， LiveData 可持有数据，并且它有一个重要的方法:</p>
 <p><code>public void observe(@NonNull LifecycleOwner owner, @NonNull Observer&lt;? super T&gt; observer)</code> </p>
         
           <a class="article-more-a" href="/2019/05/08/Jetpack之LiveData-笔记/#more">more >></a>
@@ -1113,6 +1113,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">《深入理解 Java 虚拟机》读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
               </li>
              
@@ -1133,19 +1137,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1174,6 +1170,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">工具</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1217,7 +1217,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
+                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1225,7 +1225,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
+                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1237,19 +1237,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">RxJava</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Transformer</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">VIM</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">adb</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1261,11 +1257,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
+                <a href="javascript:void(0)" class="js-tag color2">RxJava</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Transformer</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1273,7 +1273,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1285,6 +1285,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">JNI</a>
               </li>
              
@@ -1293,11 +1297,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1309,11 +1313,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
+                <a href="javascript:void(0)" class="js-tag color4">内部类</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">内部类</a>
+                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1337,7 +1341,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
         </div>
         <ul class="search-ul">
           <p q-show="jsonFail" style="padding: 20px; font-size: 12px;">
-            缺失模块。<br>1、请确保node版本大于6.2<br>2、在博客根目录（注意不是yilia根目录）执行以下命令：<br> npm i hexo-generator-json-content --save<br><br>
+            缺失模块。<br/>1、请确保node版本大于6.2<br/>2、在博客根目录（注意不是yilia根目录）执行以下命令：<br/> npm i hexo-generator-json-content --save<br/><br/>
             3、在根目录_config.yml里添加配置：
 <pre style="font-size: 12px;" q-show="jsonFail">
   jsonContent:
