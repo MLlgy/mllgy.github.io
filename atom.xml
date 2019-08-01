@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="/"/>
-  <updated>2019-07-09T09:45:56.939Z</updated>
+  <updated>2019-08-01T10:06:19.947Z</updated>
   <id>/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>浮点型数据的精度问题</title>
+    <link href="/2019/08/01/%E6%B5%AE%E7%82%B9%E5%9E%8B%E6%95%B0%E6%8D%AE%E7%9A%84%E7%B2%BE%E5%BA%A6%E9%97%AE%E9%A2%98/"/>
+    <id>/2019/08/01/浮点型数据的精度问题/</id>
+    <published>2019-08-01T10:05:17.000Z</published>
+    <updated>2019-08-01T10:06:19.947Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="如何表示定点数"><a href="#如何表示定点数" class="headerlink" title="如何表示定点数"></a>如何表示定点数</h3><p>使用二进制来表示十进制的编码称为 <strong>BCD 编码</strong>。这种编码方式把小数点固定在某一位，所以其表示的数称为 <strong>定点数</strong>。</p><p>那么 4 个比特最大的表示是十进制数为 9 (1001)。</p><p>32 bit 使用右侧的 2 个 0<del>9 的整数，当成小数部分，左侧的6 个 0</del>9 表示整数部分，那么 32 bit 可以表示 0到 999999.99 这样的数组范围。</p><a id="more"></a><p>缺点：</p><ul><li>极大的浪费。本来 4 bit 可以表示 0<del>15，现在只可以表示 0</del>9。</li><li>无法表示很大和很小的数。</li></ul><h3 id="如何表示浮点数"><a href="#如何表示浮点数" class="headerlink" title="如何表示浮点数"></a>如何表示浮点数</h3><ul><li>32 bit 表示单精度的浮点数，float 或 float32。</li><li>64 bit 表示双精度的浮点数，double 或 float64。</li></ul><p>以单精度为准看如何表示浮点数</p><table><thead><tr><th>s:符号位</th><th>e:指数位</th><th>f:有效数位</th></tr></thead><tbody><tr><td>1 bit</td><td>8 bit</td><td>23 bit</td></tr></tbody></table><p>e:8 bit 组成的指数位，表示整数范围 0<del>254,其中 1</del>254 映射到带符号的整数 -126~127，这样浮点数不仅可以表示很大的数，也可以表示很小的数。</p><p>最终浮点数表示为：<br>(-1)^s×1.f×2^e (e = 指数位对应的整数 -127)</p><p>关于 e 为什么要这样计算查看 <a href="http://www.ruanyifeng.com/blog/2010/06/ieee_floating-point_representation.html" target="_blank" rel="noopener">浮点数的二进制表示–阮一峰</a> 中关于 IEEE-754 的相关内容。</p><p>以 0.5 为准：</p><p>0.5=(−1)^0×1.0×2^−1=0.5</p><p><img src="https://static001.geekbang.org/resource/image/51/50/5168fce3f313f4fc0b600ce5d1805c50.jpeg" alt></p><h3 id="浮点数的二进制表示"><a href="#浮点数的二进制表示" class="headerlink" title="浮点数的二进制表示"></a>浮点数的二进制表示</h3><p>十进制浮点数二进制表示：9.1</p><p>9：1001</p><p>小数部分转换成二进制使用乘法操作，就是乘以 2，然后看看是否超过 1。如果超过 1，我们就记下 1，并把结果减去 1，进一步循环操作。</p><p><img src="https://static001.geekbang.org/resource/image/f9/ae/f9213c43f5fa658a2192a68cd26435ae.jpg" alt></p><p>0.1：000110011…(0011 无限循环)</p><p>9.1:1001.000110011，使用科学计数法，将小数点向左移三位，表示如下：</p><p>1.001000110011..x2^3</p><p>对应浮点数表示的公式：(-1)^s×1.f×2^e </p><p>s=0、f=001000110011( 0011 循环至23位)、e=3 (根据指数位计算方式 指数位对于的十进制整数为 +3+127 = 130，对应二进制为 01111110)，所以 9.1 在 32bit 下的二进制表示为：</p><p><img src="https://static001.geekbang.org/resource/image/9a/27/9ace5a7404d1790b03d07bd1b3cb5a27.jpeg" alt></p><p>在一位的小数中，只有 0.5 可以精确表示：</p><p><img src="https://static001.geekbang.org/resource/image/51/50/5168fce3f313f4fc0b600ce5d1805c50.jpeg" alt></p><p>其他均为近似表示，这就是为什么浮点数计算出现精度问题的原因。</p><h3 id="浮点数的加法与精度丢失"><a href="#浮点数的加法与精度丢失" class="headerlink" title="浮点数的加法与精度丢失"></a>浮点数的加法与精度丢失</h3><p>浮点数的加法规则：<strong>先对齐，再计算</strong>。</p><p>其中对齐是将两个浮点数的指数位对齐，即通过位移使指数位相同。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">0.5 + 0.125：</span><br><span class="line"></span><br><span class="line">0.5：1.0x2^(-1)</span><br><span class="line">0.125: 1.0x2^(-3)=0.01x2^(-1)</span><br><span class="line"></span><br><span class="line">1.0x2^(-1) + 0.01x2^(-1) = 1.01x2^(-1)</span><br><span class="line"></span><br><span class="line">1.01x2^(-1) 的十进制表示为 0.625</span><br></pre></td></tr></table></figure><p>在加法前，浮点型数据的二进制表示就可能会发生精度丢失，如果相加的两个数相差比较大，那么在指数对齐过程中，有可能会丢失有效位，位移就会越大，那么丢失的精度就越大，那么产生的误差也会越大。但是如果丢失的全为 0 ，那么加法的数值不会有精度丢失。</p><h3 id="如何避免精度损失"><a href="#如何避免精度损失" class="headerlink" title="如何避免精度损失"></a>如何避免精度损失</h3><p><a href="https://en.wikipedia.org/wiki/Kahan_summation_algorithm" target="_blank" rel="noopener"><strong>Kahan Summation 算法</strong></a></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class KahanSummation &#123;</span><br><span class="line">  public static void main(String[] args) &#123;</span><br><span class="line">    float sum = 0.0f;</span><br><span class="line">    float c = 0.0f;</span><br><span class="line">    for (int i = 0; i &lt; 20000000; i++) &#123;</span><br><span class="line">    float x = 1.0f;</span><br><span class="line">    float y = x - c;</span><br><span class="line">    float t = sum + y;</span><br><span class="line">    c = (t-sum)-y;</span><br><span class="line">    sum = t;    </span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(&quot;sum is &quot; + sum);   </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p><strong>使用 BigDecimal</strong></p><p>BigDecimal 是专门为弥补浮点数无法精确计算的缺憾而设计的，它本身提供了加减乘除。</p><p><strong>使用整型</strong></p><p>如果保留小数点后 2 位，那么将参与运算的值扩大 100 倍 并转换为整型，在展示时再缩小 100 倍。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;如何表示定点数&quot;&gt;&lt;a href=&quot;#如何表示定点数&quot; class=&quot;headerlink&quot; title=&quot;如何表示定点数&quot;&gt;&lt;/a&gt;如何表示定点数&lt;/h3&gt;&lt;p&gt;使用二进制来表示十进制的编码称为 &lt;strong&gt;BCD 编码&lt;/strong&gt;。
+这种编码方式把小数点固定在某一位，所以其表示的数称为 &lt;strong&gt;定点数&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;那么 4 个比特最大的表示是十进制数为 9 (1001)。&lt;/p&gt;
+&lt;p&gt;32 bit 使用右侧的 2 个 0&lt;del&gt;9 的整数，当成小数部分，左侧的6 个 0&lt;/del&gt;9 表示整数部分，那么 32 bit 可以表示 0到 999999.99 这样的数组范围。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="极客时间" scheme="/tags/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/"/>
+    
+      <category term="浮点型精度问题" scheme="/tags/%E6%B5%AE%E7%82%B9%E5%9E%8B%E7%B2%BE%E5%BA%A6%E9%97%AE%E9%A2%98/"/>
+    
+  </entry>
   
   <entry>
     <title>Hprof 拾遗</title>
