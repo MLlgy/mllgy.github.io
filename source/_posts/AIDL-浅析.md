@@ -1,8 +1,10 @@
 ---
 title: AIDL 浅析
-tags:
+date: 2019-08-07 18:01:49
+tags: [AIDL,Android]
 ---
 
+AIDL 是理解 Android 系统不可避免的知识点。
 
 0x0001 自定义 AIDL
 
@@ -10,6 +12,7 @@ tags:
 
 自定义一个 aidl 文件，里面定义方法(如：MyAidl.aidl)，AS 会帮我们生产对于的类文件(MyAidl.java)。
 
+<!-- more -->
 
 1. 建立 java 同级目录 aidl：
 
@@ -151,7 +154,7 @@ public void addBook(com.mk.aidldemo.Book book) throws android.os.RemoteException
 3. Server 端通过 onTransact 方法来接收 Client 传过来的数据(包括函数名称、函数的参数、函数的标识)，找到指定的函数，就相应的数据传入，得到结果并将结果写回。
 
 
-### 0x0003 
+### 0x0003 具体分析
 
 针对 Binder 跨进程通信机制，在每次通信过程中都需要有 Binder Client 端和 Binder Server 端。
 
