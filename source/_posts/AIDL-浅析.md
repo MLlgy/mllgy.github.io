@@ -16,9 +16,10 @@ AIDL 是理解 Android 系统不可避免的知识点。
 
 1. 建立 java 同级目录 aidl：
 
-![](/../images/2019_08_06_01.png)
 
-2. 自定义 Aidl 文件
+<img src="/../images/2019_08_06_01.png" width="50%" height = "50%">
+
+1. 自定义 Aidl 文件
 
 建立与 java 目录相同的包层级结构。
 
@@ -50,18 +51,17 @@ interface IBookManager {
 
 此时 aidl 的文件目录如下：
 
-![](/../images/2019_08_06_02.png)
-
+<img src="/../images/2019_08_06_02.png" width="50%" height = "50%">
 
 3. AS build 目录下生成对应的 Java 文件
 
 此处不会生成 Book.aidl 的 Java 文件，因为已经有 Book 类。
 
 
-![](/../images/2019_08_06_03.png)
+<img src="/../images/2019_08_06_03.png" width="50%" height = "50%">
 
 
-将 build 文件中的 IBookManager.java 拷贝出来，源码如下： [IBookManager.java](https://github.com/leeGYPlus/AidlDemo/blob/master/app/src/main/java/com/mk/aidldemo/server/IBookManager2.java)
+将 build 文件中的 IBookManager.java 拷贝出来,新建 IBookManager2.java，源码如下:[IBookManager.java](https://github.com/leeGYPlus/AidlDemo/blob/master/app/src/main/java/com/mk/aidldemo/server/IBookManager2.java)
 
 
 IBookManager 的内部层级结构：
@@ -85,7 +85,9 @@ public interface IBookManager extends android.os.IInterface {
 
 ```
 
+IBookManager 的成员方法如下：
 
+<img src="/../images/2019_08_08_01.png" width="50%" height = "50%">
 
 
 ### 0X0002 流程分析
@@ -97,20 +99,34 @@ public interface IBookManager extends android.os.IInterface {
 
 起决定性作用的是 Stub 的 asInterface 方法和 onTranscact 方法，首先通过一个示意图大致了解其过程。
 
+<img src="/../images/2019_08_07_01.jpg" width="50%" height = "50%">
 
-![](/../images/2019_08_07_01.jpg)
+1. 对于 Client 端，作为 AIDL 的使用端，调用相关方法：
 
-1. 对于 Client 端，作为 AIDL 的使用端，我们开启相关的业务：
+
 
 ```
 IBookManager.asInterface(IBinder 对象).addBook(Book(countId, "Book $countId"))
 ```
 
-> 这个 Binder 对象就是在 bindService 时，相关 Service 中的 onBinder 方法的返回对象。
+> 这个 Binder 对象就是在 bindService 时 Service 中的 onBinder 方法返回的 IBinder 对象。
+> ```
+>  override fun onBind(intent: Intent?): IBinder? {
+>      return mBinder
+>  }
+> ```
+
+该方法用于将服务端的 Binder 对象转换成客户端所需的 AIDL 接口类型的对象，这种转换过程是区分进程的，如果客户端和服务端位于同一进程，那么此方法返回的就是服务端的 Stub 对象本身，否则返回的是系统封装后的 Stub.Proxy 。
+
+
 
 asInterface 方法主要是判断参数，也就是 IBinder 对象，**是和与自己同处一个进程**：
+
 * 是，则直接转换、直接使用，则接下来的操作与 Binder 跨进程无关。
 * 否，则会把这个 IBinder 对象包装成一个 Proxy 对象，这时调用的 Stub 的方法，间接调用 Proxy 的相应方法。
+
+
+此处为两者位于不同进程。
 
 ```
 public static IBookManager2 asInterface(android.os.IBinder obj) {
@@ -158,6 +174,8 @@ public void addBook(com.mk.aidldemo.Book book) throws android.os.RemoteException
 
 针对 Binder 跨进程通信机制，在每次通信过程中都需要有 Binder Client 端和 Binder Server 端。
 
+在上面例子中应用程序进程(`com.mk.aidldemo`)为 Binder Client 端，用来发起请求，而新进程(`com.mk.aidldemo:remote`)为 Binder Server 端，用以处理请求。
+
 
 在上文的流程图中，可以看到  Stub 为相应的 Binder Server 端，即为 Service 所在的进程中，我们通过加入 Log 日志，查看相应的操作执行哪个进程。
 
@@ -184,11 +202,13 @@ E/process onTransact add: com.mk.aidldemo:remote
 
 **onTransact**
 
-这个方法运行在 **服务端中的 Binder线程池** 中，当客户端发起跨进程请求时，远程请求会通过 `系统底层封装` 后交由此方法来处理。该方法的原型为`publicBooleanonTransact(intcode,android.os.Parceldata,android.os.Parcelreply,intflags)`。服务端通过 code 可以确定客户端所请求的目标方法是什么，接着从data中取出目标方法所需的参数（如果目标方法有参数的话），然后执行目标方法。当目标方法执行完毕后，就向 reply 中写入返回值（如果目标方法有返回值的话），onTransact 方法的执行过程就是这样的。需要注意的是，如果此方法返回false，那么客户端的请求会失败，因此我们可以利用这个特性来做权限验证，毕竟我们也不希望随便一个进程都能远程调用我们的服务。
+这个方法运行在 **服务端中的 Binder线程池** 中，当客户端发起跨进程请求时，远程请求会通过 `系统底层封装` 后交由此方法来处理。该方法的原型为`publicBooleanonTransact(int code,android.os.Parcel data,android.os.Parcel reply,int flags)`。服务端通过 code 可以确定客户端所请求的目标方法是什么，接着从 data 中取出目标方法所需的参数（如果目标方法有参数的话），然后执行目标方法。当目标方法执行完毕后，就向 reply 中写入返回值（如果目标方法有返回值的话）。
+
+onTransact 方法的执行过程就是这样的。需要注意的是，如果此方法返回 false，那么客户端的请求会失败，因此我们可以利用这个特性来做权限验证，毕竟我们也不希望随便一个进程都能远程调用我们的服务。
 
 **transact**
 
-Proxy#getBookList 这个方法运行在 **客户端**，当客户端远程调用此方法时，它的内部实现是这样的：首先创建该方法所需要的输入型Parcel对象_data、输出型Parcel对象_reply和返回值对象List；然后把该方法的参数信息写入_data中（如果有参数的话）；**接着调用 transact 方法来发起RPC（远程过程调用）请求，同时当前线程挂起**； 然后 **服务端的onTransact 方法会被调用**，直到 RPC 过程返回后，当前线程继续执行，并从_reply中取出RPC过程的返回结果；最后返回_reply中的数据。
+`Proxy#getBookList、Proxy#addBook` 这个方法运行在 **客户端**，当客户端远程调用此方法时，它的内部实现是这样的：首先创建该方法所需要的输入型 Parcel 对象_data、输出型Parcel对象 _reply 和返回值对象 List；然后把该方法的参数信息写入 _data 中（如果有参数的话）；**接着调用 transact 方法来发起 RPC（远程过程调用）请求，同时当前线程挂起**； 然后 **服务端的onTransact 方法会被调用**，直到 RPC 过程返回后，当前线程继续执行，并从 _reply 中取出 RPC 过程的返回结果；最后返回 _reply 中的数据。
 
 
 这两个方法都为 Binder 的方法，至于底层是如何实现 RPC 实现了，需学习相关细节，期待。
