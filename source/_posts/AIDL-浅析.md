@@ -6,7 +6,7 @@ tags: [AIDL,Android]
 
 AIDL 是理解 Android 系统不可避免的知识点。
 
-0x0001 自定义 AIDL
+### 0x0001 自定义 AIDL
 
 为了更加直观的展示相关内容，我们通过具体示例来展示相关的细节。
 
@@ -99,7 +99,7 @@ IBookManager 的成员方法如下：
 
 起决定性作用的是 Stub 的 asInterface 方法和 onTranscact 方法，首先通过一个示意图大致了解其过程。
 
-<img src="/../images/2019_08_07_01.jpg" width="50%" height = "50%">
+<img src="/../images/2019_08_08_02.png" width="80%" height = "80%">
 
 1. 对于 Client 端，作为 AIDL 的使用端，调用相关方法：
 
@@ -168,6 +168,48 @@ public void addBook(com.mk.aidldemo.Book book) throws android.os.RemoteException
 
 
 3. Server 端通过 onTransact 方法来接收 Client 传过来的数据(包括函数名称、函数的参数、函数的标识)，找到指定的函数，就相应的数据传入，得到结果并将结果写回。
+
+```
+/*
+* 运行在 Binder 线程池
+*/
+@Override
+public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags) throws android.os.RemoteExcepti
+    String descriptor = DESCRIPTOR;
+    switch (code) {
+        case INTERFACE_TRANSACTION: {
+            reply.writeString(descriptor);
+            return true;
+        }
+        case TRANSACTION_getBookList: {
+            data.enforceInterface(descriptor);
+            // 此处的 getBookList 为 Server 端中 Binder 对象中的 getBookList
+            java.util.List<com.mk.aidldemo.Book> _result = this.getBookList();
+            reply.writeNoException();
+            Log.e("process onTransact list", ProcessUtils.getCurrentProcessName());
+            reply.writeTypedList(_result);
+            return true;
+        }
+        case TRANSACTION_addBook: {
+            data.enforceInterface(descriptor);
+            com.mk.aidldemo.Book _arg0;
+            if ((0 != data.readInt())) {
+                _arg0 = com.mk.aidldemo.Book.CREATOR.createFromParcel(data);
+            } else {
+                _arg0 = null;
+            }
+            // Service 中 onBinder 方法中返回的 Binder 对象值。
+            this.addBook(_arg0);
+            Log.e("process onTransact add", ProcessUtils.getCurrentProcessName());
+            reply.writeNoException();
+            return true;
+        }
+        default: {
+            return super.onTransact(code, data, reply, flags);
+        }
+    }
+}
+```
 
 
 ### 0x0003 具体分析
