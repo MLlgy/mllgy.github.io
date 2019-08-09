@@ -253,8 +253,7 @@ onTransact 方法的执行过程就是这样的。需要注意的是，如果此
 `Proxy#getBookList、Proxy#addBook` 这个方法运行在 **客户端**，当客户端远程调用此方法时，它的内部实现是这样的：首先创建该方法所需要的输入型 Parcel 对象_data、输出型Parcel对象 _reply 和返回值对象 List；然后把该方法的参数信息写入 _data 中（如果有参数的话）；**接着调用 transact 方法来发起 RPC（远程过程调用）请求，同时当前线程挂起**； 然后 **服务端的onTransact 方法会被调用**，直到 RPC 过程返回后，当前线程继续执行，并从 _reply 中取出 RPC 过程的返回结果；最后返回 _reply 中的数据。
 
 
-这两个方法都为 Binder 的方法，至于底层是如何实现 RPC 实现了，需学习相关细节，期待。
-
+这两个方法都为 Binder 的方法，至于底层是如何实现 RPC 实现了，需学习相关细节，期待学习，关于其基本原理可以查看：[Binder 基本原理](https://leegyplus.github.io/2019/06/05/Binder%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/#more)。
 
 ----
 

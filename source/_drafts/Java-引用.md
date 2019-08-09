@@ -1,6 +1,6 @@
 ---
 title: Java 引用
-tags: [《深入理解 Java 虚拟机》读书笔记]
+tags: [Java,《深入理解 Java 虚拟机》读书笔记]
 ---
 
 
@@ -47,7 +47,7 @@ tags: [《深入理解 Java 虚拟机》读书笔记]
 
 
 4. 虚引用(PhantomReference)
-5. 
+
     虚引用也称为幽灵引用或者幻影引用，它是最弱的一种引用关系。一个对象是否有虚引用的存在，完全不会对其生存时间构成影响，也无法通过虚引用获取一个对象实例。
 
     为一个对象设置虚引用关联的唯一目的就是**能在这个对象被垃圾回收器回收时收到一个系统通知**。
@@ -69,4 +69,4 @@ tags: [《深入理解 Java 虚拟机》读书笔记]
 > 在创建 Reference 类型时，将创建的 ReferenceQueue 注册到 Reference 中，当 Reference 所引用的对象被 GC 回收时，JVM
 就会就该对象对应的 Reference 对象放到改该队列中，我们可以通过操作这个队列来完成一定的需求。
 
-> 使用SoftReference，WeakReference，PhantomReference 的时候，可以关联一个ReferenceQueue。那么当垃圾回收器准备回收一个被引用包装的对象时，该引用会被加入到关联的ReferenceQueue。程序可以通过判断引用队列中是否已经加入引用,来了解被引用的对象是否被GC回收。
+> 使用SoftReference，WeakReference，PhantomReference 的时候，可以关联一个ReferenceQueue。那么当垃圾回收器准备回收一个被引用包装的对象时，该引用会被加入到关联的ReferenceQueue。程序可以通过判断引用队列中是否已经加入引用,来了解被引用的对象是否被 GC 回收。
