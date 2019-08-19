@@ -156,6 +156,408 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-从缓存文件的角度帮你理解-Okhttp3-缓存原理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/08/19/从缓存文件的角度帮你理解-Okhttp3-缓存原理/">从缓存文件的角度帮你理解 Okhttp3 缓存原理</a>
+    </h1>
+  
+
+        
+        <a href="/2019/08/19/从缓存文件的角度帮你理解-Okhttp3-缓存原理/" class="archive-article-date">
+  	<time datetime="2019-08-19T08:07:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-19</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>@[toc]</p>
+<blockquote>
+<p>本文以一个不同的角度来解读 Okhttp3 实现缓存功能的思路，即：对于对于的缓存空间(文件夹)中的缓存文件的生成时机、不同时期下个文件的状态、不同时期下日志文件读写。通过这些方法来真正理解 Okhttp3 的缓存功能。如果你理解 DiskLrcCache 开源库的设计，那么对于 Okhttp3 的缓存实现你就已经掌握了，因为前者以后者为基础，你甚至没有看本文的必要。</p>
+</blockquote>
+        
+          <a class="article-more-a" href="/2019/08/19/从缓存文件的角度帮你理解-Okhttp3-缓存原理/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Okhttp3</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Okhttp3 缓存文件</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/08/19/从缓存文件的角度帮你理解-Okhttp3-缓存原理/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Java-多线程-四-静态同步synchronize方法与synchronize-class-代码块" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/08/19/Java-多线程-四-静态同步synchronize方法与synchronize-class-代码块/">Java 多线程(四):静态同步synchronize方法与synchronize(class)代码块</a>
+    </h1>
+  
+
+        
+        <a href="/2019/08/19/Java-多线程-四-静态同步synchronize方法与synchronize-class-代码块/" class="archive-article-date">
+  	<time datetime="2019-08-19T07:12:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-19</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="静态同步-synchronize-方法"><a href="#静态同步-synchronize-方法" class="headerlink" title="静态同步 synchronize 方法"></a>静态同步 synchronize 方法</h3><p>关键字 synchronize 可以添加到静态方法上，这样的写法是对所属的 Class 进行加锁，从而可以实现同步效果。</p>
+<p>虽然静态同步 synchronize 方法 和 非同步 synchronize 方法 的同步效果是一样的，但是其本质是不同的：</p>
+<pre><code>静态同步 synchronize 方法为添加在 static 方法的上，是给 Class 类上锁。
+
+非静态同步 synchronize 方法是给对象加锁。</code></pre><p>Class 锁可以对类的所有对象实例起作用，多线程中其所有该类的实例对象调用 <strong>静态同步 synchronize 方法</strong> 都是同步的，但是与非静态同步 synchronize 方法间是异步的。</p>
+        
+          <a class="article-more-a" href="/2019/08/19/Java-多线程-四-静态同步synchronize方法与synchronize-class-代码块/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Java 多线程</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/08/19/Java-多线程-四-静态同步synchronize方法与synchronize-class-代码块/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Java 多线程(三):同步代码块" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/08/19/Java 多线程(三):同步代码块/">Java 多线程(三):同步代码块</a>
+    </h1>
+  
+
+        
+        <a href="/2019/08/19/Java 多线程(三):同步代码块/" class="archive-article-date">
+  	<time datetime="2019-08-19T07:12:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-19</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="synchronize-this-同步代码块"><a href="#synchronize-this-同步代码块" class="headerlink" title="synchronize(this) 同步代码块"></a>synchronize(this) 同步代码块</h3><p>synchronize 同步方法在某些情况下会有一些弊端：比如 A 线程调用同步方法执行一个长时间的任务，那么 B 线程必须等待比较长的时间才可以获得对象锁。在这种情况下可以使用 synchronize 同步代码块可以解决。</p>
+<p><strong>synchronize 方法</strong>是对 <strong>当前对象</strong> 进行加锁，而 <strong>synchronize 代码块</strong> 是对 <strong>某一个对象</strong> 进行加锁。</p>
+<p><a href="https://github.com/leeGYPlus/JavaCode/blob/master/src/thread/SynchronizedMethodBlock.kt" target="_blank" rel="noopener">SynchronizedMethodBlock</a> 中的方法 one、two、three 分别展示了非同步情况、同步方法、同步代码块，通过日志打印可知同步代码块可以有效的避免同步方法执行的低效率。</p>
+        
+          <a class="article-more-a" href="/2019/08/19/Java 多线程(三):同步代码块/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Java 多线程</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/08/19/Java 多线程(三):同步代码块/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Java-多线程-二-并发" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/08/19/Java-多线程-二-并发/">Java 多线程(二):并发</a>
+    </h1>
+  
+
+        
+        <a href="/2019/08/19/Java-多线程-二-并发/" class="archive-article-date">
+  	<time datetime="2019-08-19T07:12:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-19</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="synchronized-同步方法"><a href="#synchronized-同步方法" class="headerlink" title="synchronized 同步方法"></a>synchronized 同步方法</h3><p>多个线程同时访问 <strong>同一个对象</strong> 的实例变量，则很有可能发生“非线程安全”问题。</p>
+<p>在操作实例变量的方法前添加关键字 synchronize 关键字，则可以使原本“非线程安全” 变为 “线程安全”。</p>
+<p>在 method 方法前添加 synchronize 关键字，使得多个线程在执行该方法时，以排队的方法进行处理。当一个线程执行 method 方法前，首先判断该方法有没有被上锁，如果上锁，说明有其他线程在调用 method 方法，必须等其他线程对 method 方法调用结束后才可以继续调用 method 方法。这样实现了排队调用 method 方法的目的，达到了顺序操作实例变量的目的。</p>
+        
+          <a class="article-more-a" href="/2019/08/19/Java-多线程-二-并发/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Java 多线程</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/08/19/Java-多线程-二-并发/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Java 多线程一-基本概念" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/08/19/Java 多线程一-基本概念/">Java 多线程(一):基本概念</a>
+    </h1>
+  
+
+        
+        <a href="/2019/08/19/Java 多线程一-基本概念/" class="archive-article-date">
+  	<time datetime="2019-08-19T07:12:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-19</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h3><p>线程可以理解为在进程中独立运行的子任务，使用多线程后可以最大限度的利用 CPU 的空闲时间来处理其他任务。</p>
+<p>多线程的执行是异步的。</p>
+<h3 id="Thread-的常用-API"><a href="#Thread-的常用-API" class="headerlink" title="Thread 的常用 API"></a>Thread 的常用 API</h3><p>currentThread()(静态方法)</p>
+<blockquote>
+<p>currentThread() 方法返回的 <strong>代码段正在被哪个线程调用</strong>。</p>
+</blockquote>
+<p>getName()：获得线程的 Name</p>
+<p>注意 <code>currentThread().getName()</code> 与 <code>getName()</code> 的不同。</p>
+        
+          <a class="article-more-a" href="/2019/08/19/Java 多线程一-基本概念/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Java 多线程</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/08/19/Java 多线程一-基本概念/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Java-对象拷贝" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -579,459 +981,6 @@
 
 
   
-    <article id="post-刷机资源" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/26/刷机资源/">刷机资源</a>
-    </h1>
-  
-
-        
-        <a href="/2019/06/26/刷机资源/" class="archive-article-date">
-  	<time datetime="2019-06-26T09:42:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-TWRP"><a href="#1-TWRP" class="headerlink" title="1.TWRP"></a>1.TWRP</h3><p><a href="https://twrp.me/Devices/" target="_blank" rel="noopener">TeamWin - TWRP</a></p>
-<h3 id="2-SuperSu"><a href="#2-SuperSu" class="headerlink" title="2.SuperSu"></a>2.SuperSu</h3><p><a href="http://www.supersu.com/download" target="_blank" rel="noopener">SuperSu</a></p>
-<p>2018 年 5 月，SuperSU 的作者 Chainfire 正式宣布停止开发所有 root 相关的应用，此后 Magisk 称为 root 利器。</p>
-        
-          <a class="article-more-a" href="/2019/06/26/刷机资源/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Android 刷机</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/26/刷机资源/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-灵感来源" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/12/灵感来源/">灵感来源</a>
-    </h1>
-  
-
-        
-        <a href="/2019/06/12/灵感来源/" class="archive-article-date">
-  	<time datetime="2019-06-12T10:54:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-12</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="https://github.com/" target="_blank" rel="noopener">GayHub 交友社区</a></p>
-<p><a href="https://www.ctolib.com/article/compares/53292" target="_blank" rel="noopener">CTOLib码库</a></p>
-<p><a href="https://p.codekk.com/" target="_blank" rel="noopener">CodeKK</a></p>
-<p><a href="https://www.diycode.cc/categories/Android" target="_blank" rel="noopener">diycode</a></p>
-<p><a href="https://android-arsenal.com/" target="_blank" rel="noopener"> Android Arsenal</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/12/灵感来源/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-性能优化之优化-App-启动速度" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/11/性能优化之优化-App-启动速度/">性能优化之优化 App 启动速度</a>
-    </h1>
-  
-
-        
-        <a href="/2019/06/11/性能优化之优化-App-启动速度/" class="archive-article-date">
-  	<time datetime="2019-06-11T09:13:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-11</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>主要面临的问题：<br> APP 冷启动白屏。</p>
-<p>针对于这个问题，基本上主流的解决方法存在两个：</p>
-<pre><code>1. 主题替换。
-2. 减少冷启动时主线程的工作量。</code></pre><p>本文的重点不在解决问题方法，而在于解决问题的过程，包括影响启动速度的因素、时间统计工具、解决思路。</p>
-<p>优化 App 启动速度主要是优化冷启动时的 App 启动速度，官方文档 (<a href="https://developer.android.com/topic/performance/vitals/launch-time" target="_blank" rel="noopener">App startup time</a>) 中指出优化冷启动方式的同时，温启动和热启动也会得到改善。</p>
-<p>在分析过程之前，首先了解启动方式。</p>
-<h3 id="冷启动、温启动、热启动"><a href="#冷启动、温启动、热启动" class="headerlink" title="冷启动、温启动、热启动"></a>冷启动、温启动、热启动</h3><ul>
-<li><p>冷启动</p>
-<p>App 安装后第一次启动或者杀死 App 进程后重新启动称为冷启动。冷启动的启动成本较高，一切都要重新建立，包括新建应用进程、初始化应用以及首页的布局、渲染等操作。</p>
-</li>
-</ul>
-<ul>
-<li><p>热启动</p>
-<p>  App 所在进程存活，并且所有 Activity 均未被销毁，热启动做的只是把应用从后台切换至前台，如果 Activity 实例中的被回收的实例变量会重新创建。</p>
-<p>  具体场景为在微信中切换到桌面，后马上回到微信。</p>
-</li>
-<li><p>温启动</p>
-<p>  Activity 被杀死但是 App 所在的进程在内存中依然存在。</p>
-</li>
-</ul>
-<h4 id="启动时间组成"><a href="#启动时间组成" class="headerlink" title="启动时间组成"></a>启动时间组成</h4><p>很多时候解决问题需要我们拥有上帝视角，全面把控事态的发展，跳出事件本身，以俯视的角度看待整个流程，找出问题的关键点。总的来说我们需要纵观全局来看待问题、解决问题。</p>
-<p>从在 Launcher 中点击 App 的 icon 到 App 的第一面展示的时间差称为冷启动时间，那么这段时间整个系统都经历了什么。用上帝之眼看待整个流程，从而寻找解决问题的切入点，首先我们分析一下整个过程都经历了什么。</p>
-<p>在 Launcher 中我们点击 App 图标，经过一系列过程，涉及 AMS、 Binder、IPC 等组件和过程。</p>
-<p>在启动 App 的主页面之前，系统操作如下：</p>
-<ol>
-<li>创建并启动 App 所在应用</li>
-<li>启动 App 后会马上展示系统的 start window</li>
-<li>创建 App 进程</li>
-</ol>
-<p>在系统创建完成 App 所在的进程后，App 进程负责完成下列一系列步骤：</p>
-<ol>
-<li>创建 App 对象</li>
-<li>启动 App 主线程</li>
-<li>创建主 Activity</li>
-<li>加载 View 视图</li>
-<li>布局屏幕</li>
-<li>执行初始化绘制 View</li>
-</ol>
-<p>在 App 进程完成第一帧的绘制后，start window 会被替换，此时在屏幕上展示的就是在主 Activity 加载的布局。</p>
-<p><img src="/../images/2019_06_01_01.png" alt="App 页面替换"></p>
-<p>根据 <a href="https://www.youtube.com/watch?v=Vw1G1s73DsY" target="_blank" rel="noopener">Colt McAnlis</a> 在 Yutobe 上的关于 App 启动时间的描述，以上过程可以形象的图形化表示如下：</p>
-<p><img src="/../images/2019_06_01_02.png" alt="App 启动时间"></p>
-<h4 id="为什么是白屏或黑屏"><a href="#为什么是白屏或黑屏" class="headerlink" title="为什么是白屏或黑屏"></a>为什么是白屏或黑屏</h4><p>在清单文件中我们需要设置 Application 的 Theme，比如自己设置如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;application</span><br><span class="line">        ...</span><br><span class="line">        android:theme=&quot;@style/sixcatTheme&quot;&gt;</span><br></pre></td></tr></table></figure>
-
-
-<p>我们需要查看 sixcatTheme 主题的继承关系</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">1. &lt;style name=&quot;sixcatTheme&quot; parent=&quot;Theme.AppCompat.Light.NoActionBar&quot;&gt;</span><br><span class="line"></span><br><span class="line">2. &lt;style name=&quot;Theme.AppCompat.Light&quot; parent=&quot;Base.Theme.AppCompat.Light&quot;/&gt;</span><br><span class="line"></span><br><span class="line">3. &lt;style name=&quot;Base.Theme.AppCompat.Light&quot; parent=&quot;Base.V7.Theme.AppCompat.Light&quot;&gt;</span><br><span class="line"></span><br><span class="line">4. &lt;style name=&quot;Base.V7.Theme.AppCompat.Light&quot; parent=&quot;Platform.AppCompat.Light&quot;&gt;</span><br><span class="line"></span><br><span class="line">5. &lt;style name=&quot;Platform.AppCompat.Light&quot; parent=&quot;android:Theme.Holo.Light&quot;&gt;</span><br><span class="line"></span><br><span class="line">6. &lt;style name=&quot;Theme.Holo.Light&quot; parent=&quot;Theme.Light&quot;&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">7. &lt;style name=&quot;Theme.Light&quot;&gt;</span><br><span class="line">      &lt;item name=&quot;windowBackground&quot;&gt;@drawable/screen_background_selector_light&lt;/item&gt;</span><br><span class="line">   &lt;/style&gt;</span><br><span class="line"></span><br><span class="line">8. &lt;style name=&quot;Theme&quot;&gt;</span><br></pre></td></tr></table></figure>
-
-<p>层级自 1~8 自上而下具有继承关系。</p>
-<p>可以看到在第 7 层中存在 windowBackground 属性，这是一路下来与背景唯一相关属性。</p>
-<p>看一下 windowBackground 的 drawable 显示如何：</p>
-<p><img src="/../images/2019_06_11_01.jpg" alt="drawable"></p>
-<p>事实证明确实是这个属性决定着点击 App 后显示的白屏或黑屏，当然这也为解决此问题提供了一个思路。</p>
-<p>官方图</p>
-<p>拆解为两部分。</p>
-<p>分析、找出优化点</p>
-<h4 id="启动时间统计"><a href="#启动时间统计" class="headerlink" title="启动时间统计"></a>启动时间统计</h4><h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><p>更换主题</p>
-<p>截图 + 解决方法 + 截图</p>
-<p>延时加载</p>
-<p>CPU profile<br>trace 文件<br>命令行<br>Displayed Time</p>
-<p>方法一</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;item name=&quot;android:windowIsTranslucent&quot;&gt;true&lt;/item&gt;</span><br></pre></td></tr></table></figure>
-
-<p>在原来的 MainActivity 设定的主题中添加以上代码。</p>
-<p>带来的效果：<br>透明效果，即点击 App icon 后的白屏时间变为 透明 状态，避免了白屏，但是两者的时间几乎相同。给人的错觉时点击 icon 后一段时间后，app 才调起，给人的印象不好。</p>
-<p>方法二 主题替换</p>
-<p>在 App 启动时</p>
-<hr>
-<p>App 启动时间统计</p>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell am start -W package/activity</span><br></pre></td></tr></table></figure>
-
-<p><a href="https://www.youtube.com/watch?v=Vw1G1s73DsY" target="_blank" rel="noopener">Google Developer</a></p>
-<p><a href="https://www.youtube.com/watch?v=Vw1G1s73DsY" target="_blank" rel="noopener">Youtube 性能优化视频</a></p>
-<p><a href="https://www.zhihu.com/question/35487841" target="_blank" rel="noopener">https://www.zhihu.com/question/35487841</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">性能优化</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/11/性能优化之优化-App-启动速度/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Binder基本原理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/05/Binder基本原理/">Binder基本原理</a>
-    </h1>
-  
-
-        
-        <a href="/2019/06/05/Binder基本原理/" class="archive-article-date">
-  	<time datetime="2019-06-05T05:33:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-05</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Binder 机制是 Android 特有的跨进程通信机制，本文为 <a href>Android 插件化开发</a> 相关章节的阅读笔记。</p>
-<h4 id="00x01"><a href="#00x01" class="headerlink" title="00x01"></a>00x01</h4><p>Binder 分为 Client 端和 Server 端，在进行跨进程通信时，两端分别为两个不同的进程。发消息者为 Client，相应的接收消息者为 Server。根据消息的流向，一端可以同时为 Client 和 Server。</p>
-<h4 id="00x02"><a href="#00x02" class="headerlink" title="00x02"></a>00x02</h4><p>Binder 组成：</p>
-<ul>
-<li>Client</li>
-<li>Server</li>
-<li>ServerManager(管理 Server )</li>
-</ul>
-        
-          <a class="article-more-a" href="/2019/06/05/Binder基本原理/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Binder</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/05/Binder基本原理/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Kindle-资源集" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/30/Kindle-资源集/">Kindle 资源网站集</a>
-    </h1>
-  
-
-        
-        <a href="/2019/05/30/Kindle-资源集/" class="archive-article-date">
-  	<time datetime="2019-05-30T02:28:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-30</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="http://www.kaka3.com/" target="_blank" rel="noopener">kaka</a></p>
-<p><a href="http://www.ireadweek.com/index.php/Index/index.html" target="_blank" rel="noopener">行行</a></p>
-        
-          <a class="article-more-a" href="/2019/05/30/Kindle-资源集/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Kindle</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/30/Kindle-资源集/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1121,11 +1070,43 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">《深入理解 Java 虚拟机》读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Coroutines</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1137,7 +1118,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1153,11 +1134,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1165,11 +1146,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Java Basic</a>
+                <a href="javascript:void(0)" class="js-tag color4">Java 多线程</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">对象拷贝</a>
+                <a href="javascript:void(0)" class="js-tag color1">Java Basic</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1185,7 +1166,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+                <a href="javascript:void(0)" class="js-tag color5">对象拷贝</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1205,11 +1186,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
+                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1217,7 +1198,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
+                <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1241,14 +1222,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">View</a>
               </li>
              
@@ -1257,15 +1230,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1285,10 +1262,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">JNI</a>
               </li>
              
@@ -1301,35 +1274,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">OOP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">《深入理解 Java 虚拟机》读书笔记</a>
+                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Coroutines</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
+                <a href="javascript:void(0)" class="js-tag color3">动画</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1365,7 +1322,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">动画</a>
+                <a href="javascript:void(0)" class="js-tag color3">Okhttp3 缓存文件</a>
               </li>
             
             <div class="clearfix"></div>
