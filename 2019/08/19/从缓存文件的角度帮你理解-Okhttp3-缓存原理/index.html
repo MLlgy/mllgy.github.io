@@ -8,19 +8,19 @@
   <link rel="dns-prefetch" href>
   <title>从缓存文件的角度帮你理解 Okhttp3 缓存原理 | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="@[toc]  本文以一个不同的角度来解读 Okhttp3 实现缓存功能的思路，即：对于对于的缓存空间(文件夹)中的缓存文件的生成时机、不同时期下个文件的状态、不同时期下日志文件读写。通过这些方法来真正理解 Okhttp3 的缓存功能。如果你理解 DiskLrcCache 开源库的设计，那么对于 Okhttp3 的缓存实现你就已经掌握了，因为前者以后者为基础，你甚至没有看本文的必要。">
+  <meta name="description" content="本文以一个不同的角度来解读 Okhttp3 实现缓存功能的思路，即：对于对于的缓存空间(文件夹)中的缓存文件的生成时机、不同时期下个文件的状态、不同时期下日志文件读写。通过这些方法来真正理解 Okhttp3 的缓存功能。如果你理解 DiskLrcCache 开源库的设计，那么对于 Okhttp3 的缓存实现你就已经掌握了，因为前者以后者为基础，你甚至没有看本文的必要。  1. 需要了解的概念缓存">
 <meta name="keywords" content="Okhttp3,Okhttp3 缓存文件">
 <meta property="og:type" content="article">
 <meta property="og:title" content="从缓存文件的角度帮你理解 Okhttp3 缓存原理">
 <meta property="og:url" content="/2019/08/19/从缓存文件的角度帮你理解-Okhttp3-缓存原理/index.html">
 <meta property="og:site_name" content="GY">
-<meta property="og:description" content="@[toc]  本文以一个不同的角度来解读 Okhttp3 实现缓存功能的思路，即：对于对于的缓存空间(文件夹)中的缓存文件的生成时机、不同时期下个文件的状态、不同时期下日志文件读写。通过这些方法来真正理解 Okhttp3 的缓存功能。如果你理解 DiskLrcCache 开源库的设计，那么对于 Okhttp3 的缓存实现你就已经掌握了，因为前者以后者为基础，你甚至没有看本文的必要。">
+<meta property="og:description" content="本文以一个不同的角度来解读 Okhttp3 实现缓存功能的思路，即：对于对于的缓存空间(文件夹)中的缓存文件的生成时机、不同时期下个文件的状态、不同时期下日志文件读写。通过这些方法来真正理解 Okhttp3 的缓存功能。如果你理解 DiskLrcCache 开源库的设计，那么对于 Okhttp3 的缓存实现你就已经掌握了，因为前者以后者为基础，你甚至没有看本文的必要。  1. 需要了解的概念缓存">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/1969719-74b5b0b5c7ff7db3?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp">
-<meta property="og:updated_time" content="2019-08-19T08:10:51.983Z">
+<meta property="og:updated_time" content="2019-08-19T08:12:43.637Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从缓存文件的角度帮你理解 Okhttp3 缓存原理">
-<meta name="twitter:description" content="@[toc]  本文以一个不同的角度来解读 Okhttp3 实现缓存功能的思路，即：对于对于的缓存空间(文件夹)中的缓存文件的生成时机、不同时期下个文件的状态、不同时期下日志文件读写。通过这些方法来真正理解 Okhttp3 的缓存功能。如果你理解 DiskLrcCache 开源库的设计，那么对于 Okhttp3 的缓存实现你就已经掌握了，因为前者以后者为基础，你甚至没有看本文的必要。">
+<meta name="twitter:description" content="本文以一个不同的角度来解读 Okhttp3 实现缓存功能的思路，即：对于对于的缓存空间(文件夹)中的缓存文件的生成时机、不同时期下个文件的状态、不同时期下日志文件读写。通过这些方法来真正理解 Okhttp3 的缓存功能。如果你理解 DiskLrcCache 开源库的设计，那么对于 Okhttp3 的缓存实现你就已经掌握了，因为前者以后者为基础，你甚至没有看本文的必要。  1. 需要了解的概念缓存">
 <meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/1969719-74b5b0b5c7ff7db3?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
@@ -181,13 +181,13 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>@[toc]</p>
-<blockquote>
+        <blockquote>
 <p>本文以一个不同的角度来解读 Okhttp3 实现缓存功能的思路，即：对于对于的缓存空间(文件夹)中的缓存文件的生成时机、不同时期下个文件的状态、不同时期下日志文件读写。通过这些方法来真正理解 Okhttp3 的缓存功能。如果你理解 DiskLrcCache 开源库的设计，那么对于 Okhttp3 的缓存实现你就已经掌握了，因为前者以后者为基础，你甚至没有看本文的必要。</p>
 </blockquote>
+<h1 id="1-需要了解的概念"><a href="#1-需要了解的概念" class="headerlink" title="1. 需要了解的概念"></a>1. 需要了解的概念</h1><p>缓存功能的实现，理所当然的涉及文件的读写操作、缓存机制方案的设计。Okhttp3 缓存功能的实现涉及到 Okio 和 DiskLruCache，在阐述具体缓存流程之前，我们需要了解两者的一些基本概念。</p>
 <a id="more"></a>
 
-<h1 id="1-需要了解的概念"><a href="#1-需要了解的概念" class="headerlink" title="1. 需要了解的概念"></a>1. 需要了解的概念</h1><p>缓存功能的实现，理所当然的涉及文件的读写操作、缓存机制方案的设计。Okhttp3 缓存功能的实现涉及到 Okio 和 DiskLruCache，在阐述具体缓存流程之前，我们需要了解两者的一些基本概念。</p>
+
 <h2 id="1-2-Okio"><a href="#1-2-Okio" class="headerlink" title="1.2 Okio"></a>1.2 Okio</h2><p>Okio 中有两个关键的接口: <strong>Sink</strong> 和 <strong>Source</strong> ，对比 Java 中 I/O 流概念，我们可以把 Sink 看作 OutputStream , 把 Source 看作 InputStream 。</p>
 <p>其具体实现非本文重点，有兴趣自己可以查看源码。</p>
 <h2 id="1-1-DiskLruCache"><a href="#1-1-DiskLruCache" class="headerlink" title="1.1 DiskLruCache"></a>1.1 DiskLruCache</h2><p>Okhttp3 中 DiskLruCache 与JakeWharton 大神的 <a href="https://github.com/JakeWharton/DiskLruCache" target="_blank" rel="noopener">DiskLruCache</a> 指导思想一致，但是具体细节不同，比如前者使用 Okio 进行 IO 操作，更加高效。</p>
@@ -561,6 +561,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
               </li>
              
@@ -573,23 +577,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Dagger2</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DI</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Binder</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -605,11 +605,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+                <a href="javascript:void(0)" class="js-tag color3">Dagger2</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+                <a href="javascript:void(0)" class="js-tag color3">DI</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -629,7 +629,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">对象拷贝</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Java Collection</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -637,15 +649,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">对象拷贝</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">List</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -657,7 +661,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+                <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -665,15 +669,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
+                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -685,11 +685,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">adb</a>
+                <a href="javascript:void(0)" class="js-tag color4">VIM</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">VIM</a>
+                <a href="javascript:void(0)" class="js-tag color4">adb</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -705,6 +705,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
               </li>
              
@@ -713,15 +717,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -741,19 +745,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">OOP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -781,15 +781,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
               </li>
              
               <li class="article-tag-list-item">
