@@ -1,5 +1,5 @@
 ---
-title: adb 运行原理和常用命令
+title: Adb 运行原理和常用命令
 date: 2019-03-26 11:32:49
 tags: [adb]
 ---
@@ -137,6 +137,26 @@ adb shell wm density reset: 恢复屏幕密度
 adb shell dumpsys
 adb shell service list
 ```
+
+查看正在运行中的 Service
+```
+adb shell dumpsys activity services [<packagename>]
+```
+
+查看应用的详细信息：
+
+```
+adb shell dumpsys package <packagename>
+```
+
+输出中包含很多信息，包括 Activity Resolver Table、Registered ContentProviders、包名、userId、安装后的文件资源代码等路径、版本信息、权限信息和授予状态、签名版本信息等
+
+查看应用安装路径
+
+```
+
+```
+
 查看屏幕分辨率
 ```
 adb shell dumpsys window displays

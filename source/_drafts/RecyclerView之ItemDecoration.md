@@ -6,9 +6,6 @@ tags:
 
 ### Recyclerview#ItemDecoration 的方法
 
-
-
-
 **getItemOffsets**
 ```
 void getItemOffsets (Rect outRect, 
@@ -35,3 +32,22 @@ void onDrawOver (Canvas c,
 
 ![](/../images/2019_08_09_01.png)
 
+**onDraw**
+```
+void onDraw (Canvas c, 
+                RecyclerView parent, 
+                RecyclerView.State state)
+```
+
+> Draw any appropriate decorations into the Canvas supplied to the RecyclerView. Any content drawn by this method will be drawn before the item views are drawn, and will thus appear underneath the views.
+
+对 Canvas 的任何绘制动作都会应用到 Recyclerview 上，但是由于此方法在 Item 的 View 的之前绘制，所以在 Item 的 View 的下方，示意图如下：
+
+![](/../images/2019_08_13_01.png)
+
+
+
+----
+**知识链接**
+
+[RecyclerView之ItemDecoration由浅入深](https://www.jianshu.com/p/b46a4ff7c10a)
