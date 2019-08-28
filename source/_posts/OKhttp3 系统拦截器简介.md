@@ -1,5 +1,5 @@
 ---
-title: OKhttp3 拦截器
+title: OKhttp3 核心拦截器、应用拦截器、网络拦截器
 date: 2019-01-17 14:31:26
 tags: [Okhttp3]
 ---
@@ -302,6 +302,53 @@ if (forWebSocket && code == 101) {
 ```
 
 至此，网络请求经过拦截器链获得 Response ，那么再按照拦截器链逆向返回 Response，在此过程中对 Response 进行相应的处理。
+
+
+
+### addInterceptor 与 addNetworkInterceptor 的区别
+
+![](https://images2018.cnblogs.com/blog/1105320/201804/1105320-20180403182754939-2128769288.png)
+
+通过 addInterceptor 添加的拦截器称为 **应用拦截器**，通过 addNetworkInterceptor 添加的拦截器称为 **网络拦截器**。
+由官方给出的示意图可知，两者都能够对请求的 requests 和 responses 进行拦截，并进行相关的操作，但是 **两者不同的时在整个网络请求链中位置不同**：
+
+具体可以看一下 OkHttp 的源码：
+
+```
+
+    Response getResponseWithInterceptorChain() throws IOException {
+        // Build a full stack of interceptors.
+        List<Interceptor> interceptors = new ArrayList<>();
+        // 首先添加 应用拦截器
+        interceptors.addAll(client.interceptors());
+        // 然后添加 OkhttpCore 的核心拦截器，这是 Okhttp 能够完成网络请求的核心代码
+        interceptors.add(retryAndFollowUpInterceptor);
+        interceptors.add(new BridgeInterceptor(client.cookieJar()));
+        interceptors.add(new CacheInterceptor(client.internalCache()));// 在 CacheInterceptor 中传入 缓存路径、大小等相关的对象
+        interceptors.add(new ConnectInterceptor(client));
+        // 接着添加 网络拦截器
+        if (!forWebSocket) {
+            interceptors.addAll(client.networkInterceptors());
+        }
+        interceptors.add(new CallServerInterceptor(forWebSocket));
+        //originalRequest 最原始的 request
+        Interceptor.Chain chain = new RealInterceptorChain(
+                interceptors, null, null, null, 0, originalRequest);
+        return chain.proceed(originalRequest);
+    }
+```
+
+* 应用拦截器在 Application 与 OkhttpCore 之间。
+* 网络拦截器在 OkhttpCore 与 NetWork 服务器之间。
+
+由于其位置的不同，那么 **应用拦截器** 能够拦截的是应用发起的请求的requests、responses以及其他操作，而 **网络拦截器** 可以拦截的是 OkhttpCore 与 NetWork 服务器间网络请求的 requests、responses。
+
+由于存在重定向等操作，由应用发起的一次网络请求可能会多次请求网络服务器，这时 应用拦截器 与 网络拦截器 的不同就显示出来了：
+
+* 应用拦截器 只能拦截到一次网络请求相关的 requests、responses 以及其他信息。
+* 由于存在重定向，网络拦截器 可以拦截到多次 OkhttpCore 与 NetWork 服务器间的requests、responses 以及其他信息。
+
+
 
 ### 总结
 在对开源库的研读中，我们首先需要做的是对大致流程有个清晰的认识，但是不能深陷细节、具体实现上在后期对相关功能的具体使用时在进行相关研究。而自己在此过程中，就深陷入细节，针对具体的实现真是绞尽脑汁，最后还是 "一败涂地"。此处再次告诫自己和后来人：对开源库的研读不要纠结于细节、不要纠结于细节、不要纠结于细节。
