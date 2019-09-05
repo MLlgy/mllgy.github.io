@@ -1,0 +1,72 @@
+---
+title: Prepare For InterView
+tags:
+---
+
+
+### 图片
+
+图片处理
+
+图片压缩
+
+大图片处理
+
+图片缓存
+
+oom
+
+[Album 开源项目](https://github.com/yanzhenjie/Album)：看一下几条的实现
+
+glide 使用、源码
+picaso 使用、源码
+Fracso 使用、源码
+ImageLoader 使用、源码
+
+以上框架的对比：优点、缺点、如何选择
+
+
+
+### 网络
+
+[NoHttp](https://github.com/yanzhenjie/NoHttp)
+
+
+### 屏幕适配
+
+
+[官方文档](https://developer.android.com/training/multiscreen/screensizes#TaskUseSWQuali)
+
+[提示Android屏幕适配方案分析](https://cloud.tencent.com/developer/article/1426238)
+
+
+https://www.jianshu.com/p/1c577893d7d3
+
+https://www.v2ex.com/t/495425
+
+https://www.cnblogs.com/dongweiq/p/10487511.html
+
+
+[骚年你的屏幕适配方式该升级了!-SW 限定符适配方案](https://www.zhihu.com/tardis/sogou/art/44915232)
+
+
+[Android屏幕values-sw适配](https://blog.csdn.net/nihaomabmt/article/details/71215507): 以 values文件为基础
+
+[提供不同分辨率的位图](https://developer.android.com/training/multiscreen/screendensities)
+
+百分比
+
+宽高限定符适配
+
+
+[头条适配](https://mp.weixin.qq.com/s?__biz=MzI1MzYzMjE0MQ==&mid=2247484502&idx=2&sn=a60ea223de4171dd2022bc2c71e09351&scene=21#wechat_redirect)
+
+
+
+## 几种常见的数据结构的源码、原理
+
+
+ArrayList
+
+HashMap 相关
+
