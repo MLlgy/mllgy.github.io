@@ -6,20 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href>
-  <title>OKhttp3 拦截器 | GY</title>
+  <title>OKhttp3 核心拦截器、应用拦截器、网络拦截器 | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="RetryAndFollowUpInterceptor功能：实现重试、跟踪 实现原理：  while(true) 死循环的实现。 检验返回的 Response ，如果没有异常（包括请求失败、重定向等），那么执行 return Response, return 会直接结束循环操作，将结果返回到下一个拦截器中进行处理。 检验返回的 Response ，如果出现异常情况，那么会根据 Response 新">
 <meta name="keywords" content="Okhttp3">
 <meta property="og:type" content="article">
-<meta property="og:title" content="OKhttp3 拦截器">
+<meta property="og:title" content="OKhttp3 核心拦截器、应用拦截器、网络拦截器">
 <meta property="og:url" content="/2019/01/17/OKhttp3 系统拦截器简介/index.html">
 <meta property="og:site_name" content="GY">
 <meta property="og:description" content="RetryAndFollowUpInterceptor功能：实现重试、跟踪 实现原理：  while(true) 死循环的实现。 检验返回的 Response ，如果没有异常（包括请求失败、重定向等），那么执行 return Response, return 会直接结束循环操作，将结果返回到下一个拦截器中进行处理。 检验返回的 Response ，如果出现异常情况，那么会根据 Response 新">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-16T07:53:37.063Z">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/1105320/201804/1105320-20180403182754939-2128769288.png">
+<meta property="og:updated_time" content="2019-08-26T08:06:41.358Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="OKhttp3 拦截器">
+<meta name="twitter:title" content="OKhttp3 核心拦截器、应用拦截器、网络拦截器">
 <meta name="twitter:description" content="RetryAndFollowUpInterceptor功能：实现重试、跟踪 实现原理：  while(true) 死循环的实现。 检验返回的 Response ，如果没有异常（包括请求失败、重定向等），那么执行 return Response, return 会直接结束循环操作，将结果返回到下一个拦截器中进行处理。 检验返回的 Response ，如果出现异常情况，那么会根据 Response 新">
+<meta name="twitter:image" content="https://images2018.cnblogs.com/blog/1105320/201804/1105320-20180403182754939-2128769288.png">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
   
@@ -166,7 +168,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      OKhttp3 拦截器
+      OKhttp3 核心拦截器、应用拦截器、网络拦截器
     </h1>
   
 
@@ -283,6 +285,22 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">if (forWebSocket &amp;&amp; code == 101) &#123;</span><br><span class="line">            // Connection is upgrading, but we need to ensure interceptors see a non-null response body.</span><br><span class="line">            response = response.newBuilder()</span><br><span class="line">                    .body(Util.EMPTY_RESPONSE)</span><br><span class="line">                    .build();</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            response = response.newBuilder()</span><br><span class="line">                    .body(httpCodec.openResponseBody(response))</span><br><span class="line">                    .build();</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
 
 <p>至此，网络请求经过拦截器链获得 Response ，那么再按照拦截器链逆向返回 Response，在此过程中对 Response 进行相应的处理。</p>
+<h3 id="addInterceptor-与-addNetworkInterceptor-的区别"><a href="#addInterceptor-与-addNetworkInterceptor-的区别" class="headerlink" title="addInterceptor 与 addNetworkInterceptor 的区别"></a>addInterceptor 与 addNetworkInterceptor 的区别</h3><p><img src="https://images2018.cnblogs.com/blog/1105320/201804/1105320-20180403182754939-2128769288.png" alt></p>
+<p>通过 addInterceptor 添加的拦截器称为 <strong>应用拦截器</strong>，通过 addNetworkInterceptor 添加的拦截器称为 <strong>网络拦截器</strong>。
+由官方给出的示意图可知，两者都能够对请求的 requests 和 responses 进行拦截，并进行相关的操作，但是 <strong>两者不同的时在整个网络请求链中位置不同</strong>：</p>
+<p>具体可以看一下 OkHttp 的源码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Response getResponseWithInterceptorChain() throws IOException &#123;</span><br><span class="line">    // Build a full stack of interceptors.</span><br><span class="line">    List&lt;Interceptor&gt; interceptors = new ArrayList&lt;&gt;();</span><br><span class="line">    // 首先添加 应用拦截器</span><br><span class="line">    interceptors.addAll(client.interceptors());</span><br><span class="line">    // 然后添加 OkhttpCore 的核心拦截器，这是 Okhttp 能够完成网络请求的核心代码</span><br><span class="line">    interceptors.add(retryAndFollowUpInterceptor);</span><br><span class="line">    interceptors.add(new BridgeInterceptor(client.cookieJar()));</span><br><span class="line">    interceptors.add(new CacheInterceptor(client.internalCache()));// 在 CacheInterceptor 中传入 缓存路径、大小等相关的对象</span><br><span class="line">    interceptors.add(new ConnectInterceptor(client));</span><br><span class="line">    // 接着添加 网络拦截器</span><br><span class="line">    if (!forWebSocket) &#123;</span><br><span class="line">        interceptors.addAll(client.networkInterceptors());</span><br><span class="line">    &#125;</span><br><span class="line">    interceptors.add(new CallServerInterceptor(forWebSocket));</span><br><span class="line">    //originalRequest 最原始的 request</span><br><span class="line">    Interceptor.Chain chain = new RealInterceptorChain(</span><br><span class="line">            interceptors, null, null, null, 0, originalRequest);</span><br><span class="line">    return chain.proceed(originalRequest);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>应用拦截器在 Application 与 OkhttpCore 之间。</li>
+<li>网络拦截器在 OkhttpCore 与 NetWork 服务器之间。</li>
+</ul>
+<p>由于其位置的不同，那么 <strong>应用拦截器</strong> 能够拦截的是应用发起的请求的requests、responses以及其他操作，而 <strong>网络拦截器</strong> 可以拦截的是 OkhttpCore 与 NetWork 服务器间网络请求的 requests、responses。</p>
+<p>由于存在重定向等操作，由应用发起的一次网络请求可能会多次请求网络服务器，这时 应用拦截器 与 网络拦截器 的不同就显示出来了：</p>
+<ul>
+<li>应用拦截器 只能拦截到一次网络请求相关的 requests、responses 以及其他信息。</li>
+<li>由于存在重定向，网络拦截器 可以拦截到多次 OkhttpCore 与 NetWork 服务器间的requests、responses 以及其他信息。</li>
+</ul>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在对开源库的研读中，我们首先需要做的是对大致流程有个清晰的认识，但是不能深陷细节、具体实现上在后期对相关功能的具体使用时在进行相关研究。而自己在此过程中，就深陷入细节，针对具体的实现真是绞尽脑汁，最后还是 “一败涂地”。此处再次告诫自己和后来人：对开源库的研读不要纠结于细节、不要纠结于细节、不要纠结于细节。</p>
 
       
@@ -547,10 +565,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
               </li>
              
@@ -563,6 +577,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
               </li>
              
@@ -571,7 +589,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+                <a href="javascript:void(0)" class="js-tag color3">Dagger2</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">DI</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -591,11 +613,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Dagger2</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DI</a>
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -623,19 +641,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Collections</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">List</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -648,6 +662,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -675,10 +693,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">adb</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">View</a>
               </li>
              
@@ -687,11 +701,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
+                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+                <a href="javascript:void(0)" class="js-tag color4">adb</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -715,14 +733,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">极客时间笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">浮点型精度问题</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">JNI</a>
               </li>
              
@@ -731,15 +741,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">OOP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">极客时间笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">浮点型精度问题</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -767,6 +785,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
               </li>
              
@@ -775,7 +797,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
+                <a href="javascript:void(0)" class="js-tag color2">Thread</a>
               </li>
              
               <li class="article-tag-list-item">
