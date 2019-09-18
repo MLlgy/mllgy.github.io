@@ -1,6 +1,6 @@
 ---
 title: Prepare For InterView
-tags:
+tags: [Android 面试]
 ---
 
 
@@ -30,6 +30,8 @@ ImageLoader 使用、源码
 ### 网络
 
 [NoHttp](https://github.com/yanzhenjie/NoHttp)
+
+[Socket 编程](http://c.biancheng.net/socket/)
 
 
 ### 屏幕适配
@@ -70,3 +72,11 @@ ArrayList
 
 HashMap 相关
 
+
+
+## 简历
+
+[南尘](http://www.imooc.com/article/280388)
+---
+
+[面试集合](https://www.diycode.cc/wiki/androidinterview)

@@ -6,6 +6,8 @@ tags: [Java Basic,Java Collection,Set]
 
 ### Set 集合
 
+![List、Set、Queue](/../images/2019_05_09_01.jpg)
+
 Set 集合的特点无序、不可重复。
 
 Set 集合不能记住元素的添加顺序。Set 集合不能包含相同的元素，把两个相同的元素添加到同一个 Set 集合中，则添加失败，add() 方法返回 false，且新元素不会被添加。
@@ -138,16 +140,22 @@ System.out.println("8 " +treeSet);
 private static void test2() {
         TreeSet treeSet = new TreeSet((o1, o2) -> {
             ClassD classD1 = (ClassD) o1;
-            ClassD classD = (ClassD) o1;
+            ClassD classD2 = (ClassD) o2;
+            if(classD1.getNum() == classD2.getNum()){
+                return 0;
+            }
             return classD1.getNum() > classD2.getNum() ? -1 : 1;
         });
         treeSet.add(new ClassD(1));
         treeSet.add(new ClassD(-1));
         treeSet.add(new ClassD(0));
+//        ClassD classD = new ClassD(2);
+//        treeSet.add(classD);
+//        treeSet.add(classD);
         System.out.println(treeSet);
     }
     
-// 打印日志：[ClassD{num=1}, ClassD{num=-1}, ClassD{num=0}]
+// 打印日志：[ClassD{num=1}, ClassD{num=0}, ClassD{num=-1}]
 ```
 
 对于自然排序和定制排序而言，添加到 TreeSet 集合对象中的元素应该为同一种类型的对象，否则会引发 ClassCastException 异常。

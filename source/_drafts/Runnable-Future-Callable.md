@@ -1,12 +1,11 @@
 ---
-title: Runnable Future Callable
+title: Runnable Future Callable FutureTask
 tags:
 ---
 
-
+> Future Callable FutureTask(FutureTask 由于实现了 RunnableFuture  是可以使用在 Thread 的，但是运行效果和 Runnable 一样，没有什么意义) 只能运用到线程池中，而 Runnable 既能运行在 Thread 中，又能运用在线程池中。
 
 ### Runnable 
-
 
 ```
 public interface Runnable {
@@ -61,6 +60,8 @@ public class CallableTask implements Callable<String> {
 ```
 ### Future
 
+
+
 ```
 public interface Future<V> {
     boolean cancel(boolean mayInterruptIfRunning);
@@ -89,6 +90,9 @@ public interface Future<V> {
         throws InterruptedException, ExecutionException, TimeoutException;
 }
 ```
+Runnable 和 Callable 一旦开启，就难以管理，而 Future 为线程池制定了一个可管理的任务标准，它提供了对 Runnable  和 Callable 任务的执行结果进行取消、查询是否完成、获取结果、设置结果的操作，分别对应于 cancel、isDone、get、set 函数，get 方法会阻塞，直到返回结果。
+
+
 
 在 ExecutorService 中声明了 3 个 submit() 方法和一个定义的 Future 类支持获得任务执行的结果的需求。
 
@@ -140,6 +144,7 @@ protected <T> RunnableFuture<T> newTaskFor(Runnable runnable, T value) {
 
 ### FutureTask
 
+
 ```
 public interface RunnableFuture<V> extends Runnable, Future<V> {
     /**
@@ -160,6 +165,7 @@ public class FutureTask<V> implements RunnableFuture<V> {
 }
 
 ```
+Future 只是定义了一些接口规范，而 Future 则是它的实现类。根据以上实现关系
 
 FutureTask 为可以被取消的任务，它提供实现了 Future 的基本方法：启动、终止、查询是否执行完毕、返回执行结果。
 

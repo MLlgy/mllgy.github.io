@@ -6,6 +6,9 @@ tags: [Java Collection,List,Java Basic]
 
 ### 概述
 
+![List、Set、Queue](/../images/2019_05_09_01.jpg)
+
+
 List 集合为元素有序、可重复的集合。
 
 List 集合判断元素相等的标准：两个对象的 equals() 方法比较返回值为 true 。
@@ -46,7 +49,7 @@ ListIterator listIterator = list.listIterator();
 int a = 6;
 while (listIterator.hasNext()) {
     ClassE classE = (ClassE) listIterator.next();
-    if (classE.getNum() == 3) {
+    if (classE.getNum() == 2) {
         listIterator.add(new ClassE(6));
     }
     System.out.println("listIterator " + classE.toString());

@@ -5,16 +5,39 @@ tags: [Java Collection,Queue,Java Basic]
 ---
 ### 概述
 
+![List、Set、Queue](/../images/2019_05_09_01.jpg)
+
 Queue 用于模拟 "队列" 这种数据结构，队列为 先进先出(First In First Out,FIFO) 的容器。队列可以将元素插入尾部，可以访问位于队列头部的元素，所以队列不能随机访问队列的元素。
 
-常用的 API：
-1. void add(Object obj):将指定元素加入队列的尾部。
-2. boolean offer(Object obj):将指定元素加入队列的尾部。
-3. Object element(): 获取队列头部的元素，但是不删除该元素。
-4. Object peek():获取队列头部的元素，不删除该元素。
-5. Object poll():获取队列头部的元素，并删除该元素。
-6. Object remove():获取队列头部的元素，并删除该元素。
-<!-- more -->
+```
+public interface Queue<E> extends Collection<E> {
+    /**
+     * 将指定元素加入队列的尾部，内部调用 offer
+     */
+    boolean add(E e);
+    /**
+     * 将指定元素加入队列的尾部
+     */
+    boolean offer(E e);
+    /**
+     * 获取队列头部的元素，并删除该元素
+     */
+    E remove();
+    /**
+     * 获取队列头部的元素，并删除该元素
+     */
+    E poll();
+    /**
+     * 获取队列头部的元素，但是不删除该元素，与 peek 唯一不同是会抛出 NoSuchElementException 异常
+     */    
+    E element();
+    /**
+     * 获取队列头部的元素，不删除该元素
+     */
+    E peek();
+}
+
+```
 
 Queue 有 PriorityQueue 实现类，同时 Queue 还有一个 Deque 接口，Deque 代表一个 “双端队列”，双端队列可以在两端进行添加、删除元素，Deque 的实现类既可以当做队列来使用也可以当做栈来使用，其有两个实现类： ArrayDeque、LinkedList。
 
@@ -23,6 +46,9 @@ Queue 有 PriorityQueue 实现类，同时 Queue 还有一个 Deque 接口，Deq
 ### PriorityQueue 类
 
 PriorityQueue 保存队列元素的顺序不是按加入队列的顺序，而是按队列元素的大小进行重新排序。而其排序方式有：自然排序和定制排序。两种排序规则的实现与 TreeSet 相同，不赘述。
+
+PriorityQueue 内部通过数组实现。
+
 
 ### Deque 接口与 ArrayDeque 实现类
 
@@ -33,7 +59,7 @@ Deque 为 Queue 的子接口，代表了一个 **双端队列**，可以在双�
 我们可以把 Deque 当做 **队列** 使用，也可以当做 **栈** 来使用。
 
 
-与 ArrayList 相同，它们底层都是采用 **一个动态的、可重新分配的 Objectp[] 数组** 来存储集合元素。
+与 ArrayList 相同，它们底层都是采用 **一个动态的、可重新分配的 Object[] 数组** 来存储集合元素。
 
 **把 ArrayDeque 当做 “栈”(Fitst In Last Out,FILO) 来使用**
 ```
@@ -94,8 +120,14 @@ one
 
 ### LinkedList
 
-LinkedList 是 List 的实现类，同时它也实现了 Deque 接口，所以 LinkedList 可以 根据 **索引** 来随机访问集合的元素，也可以被当做 **双端队列**
- 来使用，由此可见 LinkedList **既可以当做队列也可以当做栈来使用**。
+
+```
+public class LinkedList<E>
+    extends AbstractSequentialList<E>
+    implements List<E>, Deque<E>, Cloneable, java.io.Serializable
+```
+
+LinkedList 是 List 的实现类，同时它也实现了 Deque 接口，所以 LinkedList 可以 根据 **索引** 来随机访问集合的元素，也可以被当做 **双端队列** 来使用，由此可见 LinkedList **既可以当做队列也可以当做栈来使用**。
 
 LinkedList 内部实现机制与 ArrayList 、 ArrayDeque 不同，后两者内部维护动态、可扩容的 Object[] 数组，**因此访问随机集合元素的性能较高**；LinkedList 内部以 **链表** 的形式来保存集合中的元素，因此随机访问集合元素的性能较差，但是在 **插入、删除集合元素性能较高(只需改变指针所指的地址)**。
 

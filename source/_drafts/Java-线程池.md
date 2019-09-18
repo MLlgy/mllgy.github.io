@@ -6,6 +6,20 @@ tags:
 [java并发编程--Executor框架
 ](https://www.cnblogs.com/MOBIN/p/5436482.html)
 
+### 为什么使用线程池
+
+有了 Thread，可以凭此开启子线程，执行耗时操作，那么为什么还有 Java 还有线程池这种类存在呢？
+
+这是因为当业务需要我们频繁创建多个线程并进行耗时操作时，每次通过 new Thread 的方式来创建线程的方式是十分不好的。虽然线程是十分轻量的，但是新建和销毁消耗线程成本是系统操作，是十分消耗资源的，同时通过 new Thread 创建的大量线程是难以统一管理的，线程间相互竞争，可能占用过多系统资源而导致死锁。
+
+
+而线程池可以做到以下几点：
+
+* 重用线程池中存在的线程，减少对象创建、销毁的开销。
+* 有效控制最大并发，提高系统资源利用率，避免资源争夺，避免阻塞。
+* 可以提供定时执行、定期执行、单线程、并发数的控制。
+
+
 
 ### Executor UML 图
 
@@ -72,15 +86,13 @@ ExecutorService 被关闭后就不会再执行新的任务，ExecutorService 提
 submit() 方法通过创建并返回可用于取消执行和/或等待完成的 Future来扩展基本方法 Executor#execute（Runnable）。
 
 
-### AbstractExecutorService 
+#### AbstractExecutorService 
 
 AbstractExecutorService 为 ExecutorService  的默认实现类，
 Java 1.5 引入。
 
 
-#### Executors 
 
-Executors 提供了方便获得 ExecutorService 的工厂方法，如 FixedThreadPool、CachedThreadPool、ScheduledThreadPool、SingleThreadPool 等。
 
 ### ThreadPoolExcutor 参数含义
 
@@ -118,6 +130,9 @@ workQueue：
 
     线程池的任务队列，通过线程池的 execute 方法提交的 Runnable 对象被添加到这个队列中。
 
+
+   
+
 threadFactory：
 
     线程工厂，为线程池实现创建新的线程的功能，ThreadFactory 为一个接口，只有 newThread(Runnable runnable) 方法。
@@ -125,6 +140,19 @@ threadFactory：
 handler:
 
     定义处理被拒绝任务的策略，默认使用ThreadPoolExecutor.AbortPolicy,任务被拒绝时将抛出RejectExecutorException。
+
+
+**workQueue 的几个常见实现：**
+
+1. ArrayBlockingQueue
+
+    基于数组结构的有界队列，按照 FIFO 的规则对任务进行排序。若队列满了，执行拒绝策略。
+  
+2. LinkedBlockingQueue
+
+    基于链表结构的无界队列，按照 FIFO 的规则对任务进行排序。因为是无界队列，所以不存在队列满的情况，所以使用此队列的线程池忽略拒绝策略参数，同时还将忽略最大线程数 maximumPoolsize 等参数。
+
+3. Synch
 
 ### ThreadPoolExecutor 执行步骤
 
@@ -138,7 +166,9 @@ ThreadPoolExecutor 执行任务时大致遵循如下规则：
    
     4. 如果步骤 3 中线程数量已经达到线程池规定的最大值，那么就拒绝执行此任务，ThreadPoolExecutor 会调用 RejectedExecutionHandler 的 rejectedExecution 方法来通知调用者。
 
+### Executors 
 
+Executors 提供了方便获得 ExecutorService 的工厂方法，如 FixedThreadPool、CachedThreadPool、ScheduledThreadPool、SingleThreadPool 等。
 
 ### 常见的四种线程池的创建
 
@@ -177,7 +207,7 @@ public static ExecutorService newCachedThreadPool() {
 
     由构建函数知 CachedThreadPool 没有核心线程，线程的数量的最大值为 Integer.MAX_VALUE。当新的任务来临时，如果线程池中存在处于空闲状态下的线程，那么会复用该线程来处理任务，否则会创建新的线程。线程池中的空闲线程如果超过 60s 会被回收。SynchronousQueue 为不可添加任务的队列，这就意味着任何新的任务都会被立即执行。
 
-
+为了保证最大的吞吐量，如果线程池中没有空闲线程，该线程池会创建新的线程。
 
 
 **ScheduledThreadPool**：
