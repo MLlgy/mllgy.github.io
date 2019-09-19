@@ -156,6 +156,356 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-ThreadLocal(Jdk1.8) 使用及源码分析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/09/19/ThreadLocal(Jdk1.8) 使用及源码分析/">ThreadLocal(Jdk1.8) 使用及源码分析</a>
+    </h1>
+  
+
+        
+        <a href="/2019/09/19/ThreadLocal(Jdk1.8) 使用及源码分析/" class="archive-article-date">
+  	<time datetime="2019-09-19T06:30:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-19</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="0x0001-ThreadLocal-简介"><a href="#0x0001-ThreadLocal-简介" class="headerlink" title="0x0001 ThreadLocal 简介"></a>0x0001 ThreadLocal 简介</h3><p>使用 ThreadLocal 对象存储 <strong>线程相关</strong> 的变量，只能有存储动作执行所在线程内才能够获取相应变量。</p>
+<h3 id="0x0002-ThreadLocal-中相关类简介"><a href="#0x0002-ThreadLocal-中相关类简介" class="headerlink" title="0x0002 ThreadLocal 中相关类简介"></a>0x0002 ThreadLocal 中相关类简介</h3><h4 id="1-ThreadLocalMap"><a href="#1-ThreadLocalMap" class="headerlink" title="1. ThreadLocalMap"></a>1. ThreadLocalMap</h4><p>ThreadLocalMap 是 ThreadLocal 中一个自定义的哈希映射，仅适用于维护线程本地值。不会在 ThreadLocal 类之外导出任何操作。该类是包私有的，允许在 Thread 类中声明字段。为了帮助处理非常大且长期使用的用法，哈希表条目使用WeakReferences 作为键。但是，由于未使用引用队列，因此只有在表开始空间不足时才能保证删除过时条目。</p>
+<h4 id="2-ThreadLocalMap-中的-Entry"><a href="#2-ThreadLocalMap-中的-Entry" class="headerlink" title="2. ThreadLocalMap 中的 Entry"></a>2. ThreadLocalMap 中的 Entry</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">static class Entry extends WeakReference&lt;ThreadLocal&lt;?&gt;&gt; &#123;</span><br><span class="line">    /** The value associated with this ThreadLocal. */</span><br><span class="line">    Object value;</span><br><span class="line">    Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">        super(k);</span><br><span class="line">        value = v;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在类中以下是对 Entry 的介绍：</p>
+<blockquote>
+<p>The entries in this hash map extend WeakReference, using<br>its main ref field as the key (which is always a<br>ThreadLocal object).  Note that null keys (i.e. entry.get()<br>== null) mean that the key is no longer referenced, so the<br>entry can be expunged from table.  Such entries are referred to<br>as “stale entries” in the code that follows.</p>
+</blockquote>
+<blockquote>
+<p>Entry 继承了 WeakReference，使用 Entry 对象的引用作为 ThreadLocalMap 存储元素的 key。当通过 entry.get() 获得为 null 时，说明不再引用该 key，因此可以从表中删除该条目。</p>
+</blockquote>
+<h3 id="0x0003-ThreadLocal-实现的关键"><a href="#0x0003-ThreadLocal-实现的关键" class="headerlink" title="0x0003 ThreadLocal 实现的关键"></a>0x0003 ThreadLocal 实现的关键</h3><p>这也是 ThreadLocal 可以存储线程相关的变量的关键，这是 <strong>因为 ThreadLocalMap 的对象是在 Thread 中维护的</strong>。</p>
+<p>在通过 set 存储变量时：</p>
+<ol>
+<li>首先会获得所在线程对象</li>
+<li>接着可以获取线程的属性 ThreadLocalMap 对象</li>
+<li>从而实现以 ThreadLocal 为 key 的变量存储在 ThreadLocalMap 对象中，这一步就实现了存储线程相关的变量。</li>
+</ol>
+<p>在通过 get 获取变量时：</p>
+<ol>
+<li>首先获得所在线程对象，</li>
+<li>接着那么就自然可以获得其属性值 – ThreadLocalMap 对象，</li>
+<li>以当前 ThreadLocal 对象为 key 自然可以获得其中存储的变量。</li>
+</ol>
+<p>当然这只是大致步骤，其中还是有许多细节的。</p>
+<h3 id="0x0004-ThreadLocal-set-方法"><a href="#0x0004-ThreadLocal-set-方法" class="headerlink" title="0x0004 ThreadLocal#set 方法"></a>0x0004 ThreadLocal#set 方法</h3><p>ThreadLocal#set</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public void set(T value) &#123;</span><br><span class="line">    // 步骤一：获取当前线程</span><br><span class="line">    Thread t = Thread.currentThread();</span><br><span class="line">    // 步骤二：获取当前线程的属性值 -- ThreadLocalMap 对象</span><br><span class="line">    ThreadLocalMap map = getMap(t);</span><br><span class="line">    // 步骤三：存储变量值，其中 key 为当前 ThreadLocal 对象</span><br><span class="line">    if (map != null)</span><br><span class="line">        map.set(this, value);</span><br><span class="line">    else</span><br><span class="line">        createMap(t, value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以下为步骤二的具体代码，可以看到线程维护了 ThreadLocalMap 对象，为 ThreadLocal 能够存储线程相关的变量提供可能。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ThreadLocalMap getMap(Thread t) &#123;</span><br><span class="line">    return t.threadLocals;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">private void set(ThreadLocal&lt;?&gt; key, Object value) &#123;</span><br><span class="line">    // We don&apos;t use a fast path as with get() because it is at</span><br><span class="line">    // least as common to use set() to create new entries as</span><br><span class="line">    // it is to replace existing ones, in which case, a fast</span><br><span class="line">    // path would fail more often than not.</span><br><span class="line">    Entry[] tab = table;</span><br><span class="line">    int len = tab.length;</span><br><span class="line">    int i = key.threadLocalHashCode &amp; (len-1);</span><br><span class="line">    for (Entry e = tab[i];</span><br><span class="line">         e != null;</span><br><span class="line">         e = tab[i = nextIndex(i, len)]) &#123;</span><br><span class="line">        ThreadLocal&lt;?&gt; k = e.get();</span><br><span class="line">        // 更新 key 对应的 value</span><br><span class="line">        if (k == key) &#123;</span><br><span class="line">            e.value = value;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        if (k == null) &#123;</span><br><span class="line">            // 经过一系列算法操作，添加 value</span><br><span class="line">            replaceStaleEntry(key, value, i);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    tab[i] = new Entry(key, value);</span><br><span class="line">    int sz = ++size;</span><br><span class="line">    if (!cleanSomeSlots(i, sz) &amp;&amp; sz &gt;= threshold)</span><br><span class="line">        rehash();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="0x0005-ThreadLocal-get-方法"><a href="#0x0005-ThreadLocal-get-方法" class="headerlink" title="0x0005 ThreadLocal#get 方法"></a>0x0005 ThreadLocal#get 方法</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 返回当前线程相关的 threadlocal 中变量，如果变量为 null，则返回 setInitialValue() 线程相关的初始值(null)。</span><br><span class="line">public T get() &#123;</span><br><span class="line">    Thread t = Thread.currentThread();</span><br><span class="line">    ThreadLocalMap map = getMap(t);</span><br><span class="line">    if (map != null) &#123;  </span><br><span class="line">        // 很明显，通过 key 获取 Map 中的 value</span><br><span class="line">        ThreadLocalMap.Entry e = map.getEntry(this);</span><br><span class="line">        if (e != null) &#123;</span><br><span class="line">            @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">            T result = (T)e.value;</span><br><span class="line">            // 返回相应的 value</span><br><span class="line">            return result;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    // 线程相关的变量，返回初始化值</span><br><span class="line">    return setInitialValue();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果获取到的 ThreadLocalMap 对象 map 为 null ，会进行如下操作：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">private T setInitialValue() &#123;</span><br><span class="line">    T value = initialValue();</span><br><span class="line">    Thread t = Thread.currentThread();</span><br><span class="line">    ThreadLocalMap map = getMap(t);</span><br><span class="line">    if (map != null)</span><br><span class="line">        map.set(this, value);</span><br><span class="line">    else</span><br><span class="line">        createMap(t, value);</span><br><span class="line">    return value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">protected T initialValue() &#123;</span><br><span class="line">    return null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果获取到的 ThreadLocalMap 对象 map 为 null ，会进行如下步骤，获取对应的 ThreadLocalMap.Entry 对象：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">private Entry getEntry(ThreadLocal&lt;?&gt; key) &#123;</span><br><span class="line">    int i = key.threadLocalHashCode &amp; (table.length - 1);</span><br><span class="line">    Entry e = table[i];</span><br><span class="line">    // </span><br><span class="line">    if (e != null &amp;&amp; e.get() == key)</span><br><span class="line">        return e;</span><br><span class="line">    else</span><br><span class="line">        // 通过散列的 hash 索引获取不到值的话，那么就需要变量 ThreadLocalMap 中的数组进行遍历。</span><br><span class="line">        return getEntryAfterMiss(key, i, e);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// 通过遍历 table 中元素，寻找对对应的 Entry 对象</span><br><span class="line">private Entry getEntryAfterMiss(ThreadLocal&lt;?&gt; key, int i,  Entrye) &#123;</span><br><span class="line">    Entry[] tab = table;</span><br><span class="line">    int len = tab.length;</span><br><span class="line">    while (e != null) &#123;</span><br><span class="line">        ThreadLocal&lt;?&gt; k = e.get();</span><br><span class="line">        if (k == key)</span><br><span class="line">            return e;</span><br><span class="line">        if (k == null)</span><br><span class="line">            expungeStaleEntry(i);</span><br><span class="line">        else</span><br><span class="line">            i = nextIndex(i, len);</span><br><span class="line">        e = tab[i];</span><br><span class="line">    &#125;</span><br><span class="line">    return null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="0x0006-多线程与多-同一个-ThreadLocal-对象"><a href="#0x0006-多线程与多-同一个-ThreadLocal-对象" class="headerlink" title="0x0006 多线程与多 同一个 ThreadLocal 对象"></a>0x0006 多线程与多 同一个 ThreadLocal 对象</h3><p>对 ThreadLocal 的原理有一定的理解，那么以下两个场景理解就十分容易了。</p>
+<ul>
+<li>情景一：同一个 ThreadLocal 对象，维护不同线程的变量</li>
+</ul>
+<p>明白了 ThreadLocal 原理，这个问题就不难理解了，因为每一个线程都维护者自己的 ThreadLocalMap 对象，不同所存储的变量在各自 ThreadLocalMap 对象中，所以即使同一个 ThreadLocal 对象，也是可以实现在各自线程获取属于各自存储的变量。</p>
+<p>由于存储元素时，ThreadLocalMap 是以 ThreadLocal 对象的哈希值(一系列操作的 hash)为key，所以在同一个线程中对同一个 ThreadLocal 对象进行多次 set 的调用，那么会对值进行覆盖。</p>
+<ul>
+<li>情景二：同一线程下，使用多个 ThreadLocal 对象进行变量存储</li>
+</ul>
+<p>由上面的分析值，在同一个线程下只维护 ThreadLocalMap 对象，而存储是以 ThreadLocal 对象的哈希值为 key 进行存储的，所以多个 ThreadLocal 对象获取的变量一定是自己存储的。</p>
+<h3 id="0x0007-使用场景"><a href="#0x0007-使用场景" class="headerlink" title="0x0007 使用场景"></a>0x0007 使用场景</h3><h4 id="1-线程内单例"><a href="#1-线程内单例" class="headerlink" title="1. 线程内单例"></a>1. 线程内单例</h4><p>我们平时使用到的单例为进程为单例，而通过 ThreadLocal 可实现线程内同步，具体代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public class User &#123;</span><br><span class="line">    private static ThreadLocal&lt;User&gt; threadLocal = new ThreadLocal&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    private User() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static User getInstance() &#123;</span><br><span class="line">        User instance = threadLocal.get();</span><br><span class="line">        if (instance == null) &#123;</span><br><span class="line">            instance = new User();</span><br><span class="line">            threadLocal.set(instance);</span><br><span class="line">        &#125;</span><br><span class="line">        return instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-变量的作用域为线程"><a href="#2-变量的作用域为线程" class="headerlink" title="2. 变量的作用域为线程"></a>2. 变量的作用域为线程</h4><p>当一些数据是以线程为作用域，并且不同线程拥有数据的不同副本的时候，就可以考虑使用 ThreadLocal。</p>
+<h4 id="3-复杂逻辑下的对象传递"><a href="#3-复杂逻辑下的对象传递" class="headerlink" title="3. 复杂逻辑下的对象传递"></a>3. 复杂逻辑下的对象传递</h4><p>有时候一个线程的逻辑过于复杂，导致函数的调用栈比较深，而这时候我们需要监视器能够贯穿整个线程的执行过程，这是就可以使用 ThreadLocal 。使用 ThreadLocal 存储监视器，这样就可以在线程中获得监视器对象。</p>
+<p>其他能够想到的两种方式：</p>
+<ol>
+<li><p>将监视器对象通过参数的方式传递</p>
+<p>这种方式当调用栈过深时，会让整个逻辑更加复杂、难懂。</p>
+</li>
+<li><p>将监视器作为静态变量供线程访问 </p>
+<p> 这种方式是可以接受的，但是这种方式是不具有扩充性，如果有两个线程在执行，那么就需要提供两个静态的监听对象。如果是更多的线程呢？这无疑是代码中的”坏味道“。</p>
+</li>
+</ol>
+<p>而使用 ThreadLocal 则完全不会遇到上面问题。</p>
+<hr>
+<p><strong>知识链接</strong></p>
+<p><a href="https://item.jd.com/11760209.html" target="_blank" rel="noopener">Android 开发艺术探索</a></p>
+<p><a href="https://www.jianshu.com/p/4167d7ff5ec1" target="_blank" rel="noopener">带你了解源码中的 ThreadLocal</a></p>
+<p><a href="https://www.bilibili.com/video/av7592261?from=search&seid=7861472405873308618" target="_blank" rel="noopener">ThreadLocal类及应用技巧</a> : 视频建议 2 倍速看完，没什么营养，但可以向你展示如何使用 ThreadLocal </p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Java 多线程</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Java Basic</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/09/19/ThreadLocal(Jdk1.8) 使用及源码分析/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Java-引用类型及回收机制简单解析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/09/18/Java-引用类型及回收机制简单解析/">Java 引用类型及回收机制简单解析</a>
+    </h1>
+  
+
+        
+        <a href="/2019/09/18/Java-引用类型及回收机制简单解析/" class="archive-article-date">
+  	<time datetime="2019-09-18T09:23:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-18</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="什么是引用"><a href="#什么是引用" class="headerlink" title="什么是引用"></a>什么是引用</h3><p>在 JDK1.2 以前对引用的定义为：<br>    如果 reference 类型的数据中存储的数值代表另外一块内存的起始地址，那么就称这块内存代表一个引用。</p>
+<p>此定义将一个对象分为被引用或者没有被引用的两种状态，但是如果内存不足时被引用的对象由于不能被释放，自然就会导致 OOM。</p>
+<p>所以我们需要定义一类这样的对象：当内存空间足够时，我们希望对象继续保存在内存中，如果内存不够时，我们可以回收这些对象。</p>
+<p>所以在 JDK1.2 之后就对 Java 引用的概念进行了扩充，将引用细分为</p>
+<ul>
+<li>强引用(Strong Reference)</li>
+<li>软引用(Soft Reference)</li>
+<li>弱引用(Weak Reference)</li>
+<li>虚引用(Phantom Reference)</li>
+</ul>
+<h3 id="不同引用类型的回收机制"><a href="#不同引用类型的回收机制" class="headerlink" title="不同引用类型的回收机制"></a>不同引用类型的回收机制</h3><ol>
+<li><p>强引用</p>
+<p> 永远不会被回收，即使系统 OOM 也不会被回收，就是这么刚。</p>
+<p> 对于一个普通的而对象，如果没有其他引用关系，只要超过了引用的作用域或者显式的将相应的引用赋值为 null，就可以被 GC 回收了。</p>
+</li>
+<li><p>软引用</p>
+<p> 用来描述一些还有用并非必需的对象，对于软引用的关联的对象，在系统将要发生 <strong>OOM 之前</strong>，将会把这些对象列入回收范围内，进行第二次回收，如果此时内存还是不够，才会报出 OOM。</p>
+<p> 软引用通常用来实现内存敏感的内存，如果还有空闲内存，就可以暂时保留缓存。当内存不足时才会清理掉，这样就保证了使用缓存的同时，不会耗尽内存。</p>
+</li>
+</ol>
+<ol start="3">
+<li><p>弱引用(WeakReference)</p>
+<p> 弱引用也用了描述非必需的对象，但是它的强度比弱引用更弱一些，被软引用关联的对象只能生存到 <strong>下一次垃圾收集发生之前</strong>。当垃圾收集器工作时，无论当前的内存是否够用，都会回收掉只被弱引用关联的对象。</p>
+<p> 弱引用仅仅是提供一种访问在弱引用状态下对象的途径，这样就可以构建一种没有特定约束的关系，比如维护一种非强制的映射关系，如果试图获取时该对象还在，就是用它，否则就重新实例化。</p>
+<p> 和软引用一样，弱引用也是很多缓存实现的选择。</p>
+</li>
+</ol>
+<ol start="4">
+<li><p>虚引用(PhantomReference)</p>
+<p> 虚引用也称为幽灵引用或者幻影引用，它是最弱的一种引用关系。一个对象是否有虚引用的存在，完全不会对其生存时间构成影响，也无法通过虚引用获取一个对象实例。</p>
+<p> 为一个对象设置虚引用关联的唯一目的就是<strong>能在这个对象被垃圾回收器回收时收到一个系统通知</strong>。</p>
+</li>
+</ol>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p>所有的引用类型，都是抽象类 java.lang.ref.Reference 的子类，它提供了 get() 方法，除了幻象引用( get() 获得的永远是 null)，如果对象还没有被销毁，都可以通过 get 方法获得原有的对象，这就意味着，可以利用软引用和弱引用将访问的对象重新指向强引用，所以引用类型之间是可以转换的。</p>
+<p>但是如果我们将通过弱引用或软引用获得对象 (get() 方法) 指向错误的强引用(比如说 static 变量)，那么这个对象就不可能再变回之前的弱引用或软引用的状态的了，就导致产生内存泄漏。所以检查弱引用指向的对象有没有被 GC，这是检查特定对象是否引起内存泄漏的思路。</p>
+<h3 id="引用队列-ReferenceQueue-的使用"><a href="#引用队列-ReferenceQueue-的使用" class="headerlink" title="引用队列(ReferenceQueue)的使用"></a>引用队列(ReferenceQueue)的使用</h3><blockquote>
+<p>在创建 Reference 类型时，将创建的 ReferenceQueue 注册到 Reference 中，当 Reference 所引用的对象被 GC 回收时，JVM<br>就会就该对象对应的 Reference 对象放到该队列中，我们可以通过操作这个队列来完成一定的需求。</p>
+</blockquote>
+<blockquote>
+<p>使用SoftReference，WeakReference，PhantomReference 的时候，可以关联一个ReferenceQueue。那么当垃圾回收器准备回收一个被引用包装的对象时，该引用会被加入到关联的ReferenceQueue。程序可以通过判断引用队列中是否已经加入引用,来了解被引用的对象是否被 GC 回收。</p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">《深入理解 Java 虚拟机》读书笔记</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/09/18/Java-引用类型及回收机制简单解析/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-EventBus-线程模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/09/12/EventBus-线程模式/">EventBus 线程模式</a>
+    </h1>
+  
+
+        
+        <a href="/2019/09/12/EventBus-线程模式/" class="archive-article-date">
+  	<time datetime="2019-09-12T03:37:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="ThreadMode-POSTING-default"><a href="#ThreadMode-POSTING-default" class="headerlink" title="ThreadMode:POSTING (default)"></a>ThreadMode:POSTING (default)</h3><p>订阅者将在同一个线程中发布事件,这是默认情况。订阅者将在事件发布者的线程中响应事件，这是默认情况。事件传送将<code>同步</code>完成，一旦发布完成，所有订阅者就会被调用。这种 ThreadMode 避免了线程间的切换，因此所需的开销最小。因此，当任务简单、所需时间短、不需要占用主线程时，这种 ThreadMode 是推荐使用的。但由于事件分发可能发生在主线程，所以使用此模式的事件处理程序应该快速返回，以避免阻塞发布线程。处理函数中禁止更新UI操作。</p>
+        
+          <a class="article-more-a" href="/2019/09/12/EventBus-线程模式/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">EventBus</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/09/12/EventBus-线程模式/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-线程的几个方法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -718,259 +1068,9 @@
 
 
   
-    <article id="post-AIDL-浅析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/08/07/AIDL-浅析/">AIDL 浅析</a>
-    </h1>
-  
-
-        
-        <a href="/2019/08/07/AIDL-浅析/" class="archive-article-date">
-  	<time datetime="2019-08-07T10:01:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>AIDL 是理解 Android 系统不可避免的知识点。</p>
-<h3 id="0x0001-自定义-AIDL"><a href="#0x0001-自定义-AIDL" class="headerlink" title="0x0001 自定义 AIDL"></a>0x0001 自定义 AIDL</h3><p>为了更加直观的展示相关内容，我们通过具体示例来展示相关的细节。</p>
-<p>自定义一个 aidl 文件，里面定义方法(如：MyAidl.aidl)，AS 会帮我们生产对于的类文件(MyAidl.java)。</p>
-        
-          <a class="article-more-a" href="/2019/08/07/AIDL-浅析/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">AIDL</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/08/07/AIDL-浅析/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-浮点型数据的精度问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/08/01/浮点型数据的精度问题/">浮点型数据的精度问题</a>
-    </h1>
-  
-
-        
-        <a href="/2019/08/01/浮点型数据的精度问题/" class="archive-article-date">
-  	<time datetime="2019-08-01T10:05:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="如何表示定点数"><a href="#如何表示定点数" class="headerlink" title="如何表示定点数"></a>如何表示定点数</h3><p>使用二进制来表示十进制的编码称为 <strong>BCD 编码</strong>。
-这种编码方式把小数点固定在某一位，所以其表示的数称为 <strong>定点数</strong>。</p>
-<p>那么 4 个比特最大的表示是十进制数为 9 (1001)。</p>
-<p>32 bit 使用右侧的 2 个 0-9 的整数(8 bit)，当成小数部分，左侧的6 个 0-9 表示整数部分(24 bit)，那么 32 bit 可以表示 0到 999999.99 这样的数组范围。</p>
-        
-          <a class="article-more-a" href="/2019/08/01/浮点型数据的精度问题/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">极客时间笔记</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">浮点型精度问题</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/08/01/浮点型数据的精度问题/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Hprof-拾遗" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/07/09/Hprof-拾遗/">Hprof 拾遗</a>
-    </h1>
-  
-
-        
-        <a href="/2019/07/09/Hprof-拾遗/" class="archive-article-date">
-  	<time datetime="2019-07-09T09:43:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-09</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="0x0001-引用一"><a href="#0x0001-引用一" class="headerlink" title="0x0001 引用一"></a>0x0001 引用一</h3><p>以下内容来自：<a href="https://www.baeldung.com/java-heap-dump-capture" target="_blank" rel="noopener">Different Ways to Capture Java Heap Dumps</a></p>
-<p>A heap dump is a snapshot of all the objects that are in memory in the JVM at a certain moment. They are very useful to troubleshoot memory-leak problems and optimize memory usage in Java applications. <strong>Heap dumps are usually stored in binary format hprof files.</strong> </p>
-        
-          <a class="article-more-a" href="/2019/07/09/Hprof-拾遗/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Hprof</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">内存泄漏</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">工具</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/07/09/Hprof-拾遗/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 
@@ -1061,19 +1161,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">《深入理解 Java 虚拟机》读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Coroutines</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1097,10 +1193,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Dagger2</a>
               </li>
              
@@ -1109,7 +1201,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1125,7 +1225,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1149,6 +1253,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">《深入理解 Java 虚拟机》读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Java Collection</a>
               </li>
              
@@ -1165,6 +1273,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Jetpack</a>
               </li>
              
@@ -1177,19 +1289,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
+                <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
+                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1201,7 +1309,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">adb</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">VIM</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1210,14 +1326,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">事件分发机制</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">adb</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1233,6 +1341,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
               </li>
              
@@ -1241,7 +1353,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+                <a href="javascript:void(0)" class="js-tag color2">极客时间笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">浮点型精度问题</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1254,22 +1370,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">极客时间笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">浮点型精度问题</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1297,15 +1397,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
               </li>
              
               <li class="article-tag-list-item">
