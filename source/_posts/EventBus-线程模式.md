@@ -4,6 +4,11 @@ tags: [EventBus]
 date: 2019-09-12 11:37:55
 ---
 
+
+
+
+EventBus 可以处理 Android 中的线程切换的问题：事件发布的线程可以与线程处理的线程不同。以下几种模式为事件处理的线程。EventBus 可以帮助使用者子线程与主线程的同步问题。
+
 ### ThreadMode:POSTING (default)
 订阅者将在同一个线程中发布事件,这是默认情况。订阅者将在事件发布者的线程中响应事件，这是默认情况。事件传送将`同步`完成，一旦发布完成，所有订阅者就会被调用。这种 ThreadMode 避免了线程间的切换，因此所需的开销最小。因此，当任务简单、所需时间短、不需要占用主线程时，这种 ThreadMode 是推荐使用的。但由于事件分发可能发生在主线程，所以使用此模式的事件处理程序应该快速返回，以避免阻塞发布线程。处理函数中禁止更新UI操作。
 
@@ -34,6 +39,8 @@ textField.setText(event.message);
 ### ThreadMode: MAIN_ORDERED
 
  在这种模式下，订阅者会在主线程中执行。该模式下，事件总是排队等待以后发送给订阅者，因此对 post 的调用将立即返回。这使事件处理更加严格且更加一致（因此名称为MAIN_ORDERED）。例如，如果您在具有 MAIN 线程模式的事件处理程序中发布另一个事件，则第二个事件处理程序将在第一个事件处理程序之前完成（因为它被同步调用 - 将其与方法调用进行比较）。使用 MAIN_ORDERED，第一个事件处理程序将完成，然后第二个事件处理程序将在稍后的时间点调用（一旦主线程具有容量）。
+
+ 这种模式和 MAIN 不同的是发布事件是否在主线程，如果不是的话就会采用这种模式，通过其源码可知实现原理为通过 Handler 将事件发布到主线程中。
 
 由于在主线程中执行，则应避免耗时操作。
 ```
@@ -68,9 +75,49 @@ public void onMessage(MessageEvent event){
 }
 ```
 
+### 总结
 
 
-
+```
+private void postToSubscription(Subscription subscription, Object event, boolean isMainThread) {
+    switch (subscription.subscriberMethod.threadMode) {
+        case POSTING:
+            invokeSubscriber(subscription, event);
+            break;
+        case MAIN:
+            if (isMainThread) {
+                invokeSubscriber(subscription, event);
+            } else {
+                mainThreadPoster.enqueue(subscription, event);
+            }
+            break;
+        case MAIN_ORDERED:
+            if (mainThreadPoster != null) {
+                mainThreadPoster.enqueue(subscription, event);
+            } else {
+                // temporary: technically not correct as poster not decoupled from subscriber
+                invokeSubscriber(subscription, event);
+            }
+            break;
+        case BACKGROUND:
+            if (isMainThread) {
+                backgroundPoster.enqueue(subscription, event);
+            } else {
+                invokeSubscriber(subscription, event);
+            }
+            break;
+        case ASYNC:
+            asyncPoster.enqueue(subscription, event);
+            break;
+        default:
+            throw new IllegalStateException("Unknown thread mode: " + subscription.subscriberMethod.threadMode);
+    }
+}    
+```
+根据源码有以下结论：
+POSTING 模式下只有一种执行方式：在事件发布的线程执行。
+MAIN、MAIN_ORDERED、MAIN_ORDERED、BACKGROUND：这四种模式都会根据发布事件所在的线程是否为主线程而执行不同的方式。
+ASYNC：不管发布事件的线程是否为主线程，均在子线程中执行相关动作。
 
 ---
 

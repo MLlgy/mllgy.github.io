@@ -1,5 +1,5 @@
 ---
-title: Shell 基础学习
+title: Shell 基础学习一
 tags:
 ---
 ### Bash 常用快捷键
