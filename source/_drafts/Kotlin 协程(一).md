@@ -1,24 +1,21 @@
 ---
 title: Kotlin 协程
 date: 2019-05-22 11:31:22
-tags: [Kotlin,Coroutines]
+tags: [Kotlin 官方文档,Coroutines(协程)]
 ---
 
 
-
-上下文 协程 挂起函数
-
-
+### 协程的基本介绍
 
 协程，本质上是轻量级的线程。
 
-它们在某些 CoroutineScope 上下文中与 launch 协程构建器 一起启动。
+它们在某些 `CoroutineScope 上下文中` 与 `launch 协程构建器` 一起启动。
 
 在 GlobalScope 中启动了一个新的协程，这意味着新协程的生命周期只受整个应用程序的生命周期限制。
 
 
 
-delay是挂起函数不会造成线程阻塞，但是会挂起协程，并且挂起函数只能在协程中使用。
+delay 是挂起函数不会造成线程阻塞，但是会挂起协程，并且挂起函数只能在协程中使用。
 
 
 
@@ -26,6 +23,7 @@ delay是挂起函数不会造成线程阻塞，但是会挂起协程，并且挂
 
 阻塞与非阻塞都是针对于是否阻塞主线程来说的。
 
+<!-- more -->
 
 ```
 // 示例 1
@@ -34,16 +32,16 @@ fun main() {
         delay(1000L)
         println("World!")
     }
-    println("Hello,") // 主线程中的代码会立即执行
+    println("Hello") // 主线程中的代码会立即执行
     runBlocking {     // 但是这个表达式阻塞了主线程
-        delay(2000L)  // ……我们延迟 2 秒来保证 JVM 的存活
+        delay(2000L)  // 我们延迟 2 秒来保证 JVM 的存活
     } 
 }
 ```
 
-例如上程序中 GlobalScope.launch{} 中的 delay(1000L) 只会阻塞协程，但是不会阻塞主线程的执行。
+例如上程序中 GlobalScope.launch{} 中的 delay(1000L) 只会阻塞协程，但是 **不会阻塞主线程的执行**，所以以上代码会首先打印: Hello ，然后打印: World!。
 
-runBlocking{} 代码块确实阻塞式的。
+runBlocking{} 代码块为阻塞式的。
 
 ### 定义 Job
 
@@ -66,13 +64,16 @@ fun main() = runBlocking {
 
 ### 结构化并发
 
-定义一个外部协程，在其内部也可以定义新的协程，包括外部协程在内的每个协程构建器都将 CoroutineScope 的实例添加到其代码块所在的作用域中。 我们可以在这个作用域中启动协程而无需显式 join 之，因为外部协程（示例中的 runBlocking）直到在其作用域中启动的所有协程都执行完毕后才会结束。
+
+使用 GlobalScope.launch 会创建顶部协程，它会消耗一定的资源，如此的话启动多个协程会导致内存不足，此时使用 **结构化并发** 可以解决这个问题。
+
+定义一个外部协程，在其内部也可以定义新的协程，包括外部协程在内的每个协程构建器都将 CoroutineScope 的实例添加到其代码块所在的作用域中。 我们可以在这个作用域中启动协程而无需显式调用 join ，因为 **外部协程（示例中的 runBlocking）直到在其作用域中启动的所有协程都执行完毕后才会结束**。
 
 ```
 fun main() = runBlocking { //this:CoroutineScope
-    
+
+    // 在 runBlocking 作用域中启动一个新协程
     launch {// this: CoroutineScope
-        // 在 runBlocking 作用域中启动一个新协程
         delay(1000L)
         println("World!")
 
@@ -91,7 +92,7 @@ fun main() = runBlocking { //this:CoroutineScope
 
 除了使用构建器(如: launch、async 等)提供协程作用域之外，还可以使用 coroutineScope 构建器声明自己的作用域。
 
-使用  coroutineScope 可以构建协程作用域，构建的协程作用域在所有子协程执行完毕之前不会结束。
+使用  coroutineScope 可以构建协程作用域，**构建的协程作用域在所有子协程执行完毕之前不会结束**。
 
 
 ```
@@ -130,6 +131,32 @@ Coroutine scope is over
 
 协程是可以被取消的。
 
+```
+fun main() = runBlocking {
+    val job = launch {
+        repeat(1000) { i ->
+                println("job: I'm sleeping $i ...")
+            delay(500L)
+        }
+    }
+    delay(1300L) // 延迟一段时间
+    println("main: I'm tired of waiting!")
+    job.cancel() // 取消该作业
+    job.join() // 等待作业执行结束
+    println("main: Now I can quit.")
+}
+```
+
+打印日志：
+
+```
+job: I'm sleeping 0 ...
+job: I'm sleeping 1 ...
+job: I'm sleeping 2 ...
+main: I'm tired of waiting!
+main: Now I can quit.
+```
+
 当协程中在执行计算任务是协程是不能被取消的。
 
 
@@ -147,7 +174,7 @@ withTimeout(1300L) {
 
 ### 挂起函数
 
-使用 suspend 修饰的函数，排列的挂起函数默认顺序执行。
+使用 `suspend` 修饰的函数，排列的挂起函数 **默认顺序执行**。
 
 ```
 suspend fun doSomethingUsefulOne(): Int {
@@ -174,7 +201,7 @@ The answer is 42
 Completed in 2012 ms
 ```
 通过打印时间可以得知默认挂起函数为顺序执行的。
-### lauch async
+### lauch 、 async
 
 async 与 lauch 一样，开启了一个单独的协程，与其他协程一起进行并行工作。
 不同的 launch 返回一个 Job 不附带任何结果值，而 async 返回 Deffered ，它是一个轻量级的非阻塞 future， 这代表了一个将会在稍后提供结果的 promise。你可以使用 **.await() 在一个延期的值上得到它的最终结果**， 但是 Deferred 也是一个 Job，所以如果需要的话，你可以取消它 。
@@ -193,7 +220,7 @@ println("Completed in $time ms")
 The answer is 42
 Completed in 1029 ms
 ```
-从执行时间可知使用 async 修饰函数为并行执行的。
+从执行时间可知使用 async 修饰函数为 **并行执行** 的。
 
 
 ### 惰性 async
@@ -201,6 +228,7 @@ Completed in 1029 ms
 如果懒加载一样，惰性 async 只有在使用时才会执行，执行 start() 方法执行该方法。
 
 ```
+fun main() = runBlocking<Unit> {
 val time = measureTimeMillis {
     val one = async(start = CoroutineStart.LAZY) { doSomethingUsefulOne() }
     val two = async(start = CoroutineStart.LAZY) { doSomethingUsefulTwo() }
@@ -210,11 +238,12 @@ val time = measureTimeMillis {
     println("The answer is ${one.await() + two.await()}")
 }
 println("Completed in $time ms")
-
+}
 //执行结果：
 The answer is 42
 Completed in 1017 ms
 ```
+以上 one、two 只是定义的两个协程，由于 `start = CoroutineStart.LAZY` 的存在没有真正的执行，只有在执行 start 方法后两个协程才会真正的执行
 
 
 ### async 风格函数
@@ -223,7 +252,7 @@ Completed in 1017 ms
 
 ### 结构化 async 函数
 
-结构化 async 函数 就是使多个 async 函数执行时如果一个函数发生异常则结束执行其他未执行的async 函数,此功能使用  coroutineScope 来实现.
+结构化 async 函数 **就是使多个 async 函数执行时如果一个函数发生异常,则其他未执行的 async 函数也不会得到执行**,此功能使用  coroutineScope 来实现.
 
 ```
 fun main() = runBlocking<Unit> {
@@ -266,7 +295,9 @@ Computation failed with ArithmeticException
 
 如果在上面函数执行过程中 two 发生异常,那么此时正在等待执行的 one 将中断执行,但是之前的 three 则可以正常的执行。
 
------
+----
+
+**知识链接**
 
 
 [Improve app performance with Kotlin coroutines](https://developer.android.com/kotlin/coroutines)
@@ -278,13 +309,3 @@ Computation failed with ArithmeticException
 [Kotlin-24.协程和线程(Coroutine & Thread)](https://blog.csdn.net/qq_32115439/article/details/74018755)
 
 [使用协程进行 UI 编程指南](https://github.com/hltj/kotlinx.coroutines-cn/blob/master/ui/coroutines-guide-ui.md)
-
-
-----
-
-协程构建起
-
-launch
-async
-runBlocking
-delay 
