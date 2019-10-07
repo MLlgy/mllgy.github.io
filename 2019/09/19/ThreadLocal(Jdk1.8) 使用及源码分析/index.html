@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="GY">
 <meta property="og:description" content="0x0001 ThreadLocal 简介使用 ThreadLocal 对象存储 线程相关 的变量，只能有存储动作执行所在线程内才能够获取相应变量。 0x0002 ThreadLocal 中相关类简介1. ThreadLocalMapThreadLocalMap 是 ThreadLocal 中一个自定义的哈希映射，仅适用于维护线程本地值。不会在 ThreadLocal 类之外导出任何操作。该类是包">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-09-19T07:46:17.190Z">
+<meta property="og:updated_time" content="2019-09-19T07:51:19.916Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ThreadLocal(Jdk1.8) 使用及源码分析">
 <meta name="twitter:description" content="0x0001 ThreadLocal 简介使用 ThreadLocal 对象存储 线程相关 的变量，只能有存储动作执行所在线程内才能够获取相应变量。 0x0002 ThreadLocal 中相关类简介1. ThreadLocalMapThreadLocalMap 是 ThreadLocal 中一个自定义的哈希映射，仅适用于维护线程本地值。不会在 ThreadLocal 类之外导出任何操作。该类是包">
@@ -213,24 +213,30 @@
 <p>以下为步骤二的具体代码，可以看到线程维护了 ThreadLocalMap 对象，为 ThreadLocal 能够存储线程相关的变量提供可能。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ThreadLocalMap getMap(Thread t) &#123;</span><br><span class="line">    return t.threadLocals;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>ThreadLocal#set</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">private void set(ThreadLocal&lt;?&gt; key, Object value) &#123;</span><br><span class="line">    // We don&apos;t use a fast path as with get() because it is at</span><br><span class="line">    // least as common to use set() to create new entries as</span><br><span class="line">    // it is to replace existing ones, in which case, a fast</span><br><span class="line">    // path would fail more often than not.</span><br><span class="line">    Entry[] tab = table;</span><br><span class="line">    int len = tab.length;</span><br><span class="line">    int i = key.threadLocalHashCode &amp; (len-1);</span><br><span class="line">    for (Entry e = tab[i];</span><br><span class="line">         e != null;</span><br><span class="line">         e = tab[i = nextIndex(i, len)]) &#123;</span><br><span class="line">        ThreadLocal&lt;?&gt; k = e.get();</span><br><span class="line">        // 更新 key 对应的 value</span><br><span class="line">        if (k == key) &#123;</span><br><span class="line">            e.value = value;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        if (k == null) &#123;</span><br><span class="line">            // 经过一系列算法操作，添加 value</span><br><span class="line">            replaceStaleEntry(key, value, i);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    tab[i] = new Entry(key, value);</span><br><span class="line">    int sz = ++size;</span><br><span class="line">    if (!cleanSomeSlots(i, sz) &amp;&amp; sz &gt;= threshold)</span><br><span class="line">        rehash();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="0x0005-ThreadLocal-get-方法"><a href="#0x0005-ThreadLocal-get-方法" class="headerlink" title="0x0005 ThreadLocal#get 方法"></a>0x0005 ThreadLocal#get 方法</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 返回当前线程相关的 threadlocal 中变量，如果变量为 null，则返回 setInitialValue() 线程相关的初始值(null)。</span><br><span class="line">public T get() &#123;</span><br><span class="line">    Thread t = Thread.currentThread();</span><br><span class="line">    ThreadLocalMap map = getMap(t);</span><br><span class="line">    if (map != null) &#123;  </span><br><span class="line">        // 很明显，通过 key 获取 Map 中的 value</span><br><span class="line">        ThreadLocalMap.Entry e = map.getEntry(this);</span><br><span class="line">        if (e != null) &#123;</span><br><span class="line">            @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">            T result = (T)e.value;</span><br><span class="line">            // 返回相应的 value</span><br><span class="line">            return result;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    // 线程相关的变量，返回初始化值</span><br><span class="line">    return setInitialValue();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="0x0005-ThreadLocal-get-方法"><a href="#0x0005-ThreadLocal-get-方法" class="headerlink" title="0x0005 ThreadLocal#get 方法"></a>0x0005 ThreadLocal#get 方法</h3><p>ThreadLocal#get</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 返回当前线程相关的 threadlocal 中变量，如果变量为 null，则返回 setInitialValue() 线程相关的初始值(null)。</span><br><span class="line">public T get() &#123;</span><br><span class="line">    Thread t = Thread.currentThread();</span><br><span class="line">    ThreadLocalMap map = getMap(t);</span><br><span class="line">    if (map != null) &#123;  </span><br><span class="line">        // 很明显，通过 key 获取 Map 中的 value</span><br><span class="line">        ThreadLocalMap.Entry e = map.getEntry(this);</span><br><span class="line">        if (e != null) &#123;</span><br><span class="line">            @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">            T result = (T)e.value;</span><br><span class="line">            // 返回相应的 value</span><br><span class="line">            return result;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    // 线程相关的变量，返回初始化值</span><br><span class="line">    return setInitialValue();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li>如果获取到的 ThreadLocalMap 对象 map 为 null ，会进行如下操作：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">private T setInitialValue() &#123;</span><br><span class="line">    T value = initialValue();</span><br><span class="line">    Thread t = Thread.currentThread();</span><br><span class="line">    ThreadLocalMap map = getMap(t);</span><br><span class="line">    if (map != null)</span><br><span class="line">        map.set(this, value);</span><br><span class="line">    else</span><br><span class="line">        createMap(t, value);</span><br><span class="line">    return value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
+<li>如果获取到的 ThreadLocalMap 对象 map 为 null ，会进行如下操作：</li>
 </ul>
+<p>ThreadLocal#setInitialValue</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">private T setInitialValue() &#123;</span><br><span class="line">    T value = initialValue();</span><br><span class="line">    Thread t = Thread.currentThread();</span><br><span class="line">    ThreadLocalMap map = getMap(t);</span><br><span class="line">    if (map != null)</span><br><span class="line">        map.set(this, value);</span><br><span class="line">    else</span><br><span class="line">        createMap(t, value);</span><br><span class="line">    return value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">protected T initialValue() &#123;</span><br><span class="line">    return null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>如果获取到的 ThreadLocalMap 对象 map 为 null ，会进行如下步骤，获取对应的 ThreadLocalMap.Entry 对象：</li>
 </ul>
+<p>ThreadLocalMap#getEntry</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">private Entry getEntry(ThreadLocal&lt;?&gt; key) &#123;</span><br><span class="line">    int i = key.threadLocalHashCode &amp; (table.length - 1);</span><br><span class="line">    Entry e = table[i];</span><br><span class="line">    // </span><br><span class="line">    if (e != null &amp;&amp; e.get() == key)</span><br><span class="line">        return e;</span><br><span class="line">    else</span><br><span class="line">        // 通过散列的 hash 索引获取不到值的话，那么就需要变量 ThreadLocalMap 中的数组进行遍历。</span><br><span class="line">        return getEntryAfterMiss(key, i, e);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>ThreadLocalMap#getEntryAfterMiss</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// 通过遍历 table 中元素，寻找对对应的 Entry 对象</span><br><span class="line">private Entry getEntryAfterMiss(ThreadLocal&lt;?&gt; key, int i,  Entrye) &#123;</span><br><span class="line">    Entry[] tab = table;</span><br><span class="line">    int len = tab.length;</span><br><span class="line">    while (e != null) &#123;</span><br><span class="line">        ThreadLocal&lt;?&gt; k = e.get();</span><br><span class="line">        if (k == key)</span><br><span class="line">            return e;</span><br><span class="line">        if (k == null)</span><br><span class="line">            expungeStaleEntry(i);</span><br><span class="line">        else</span><br><span class="line">            i = nextIndex(i, len);</span><br><span class="line">        e = tab[i];</span><br><span class="line">    &#125;</span><br><span class="line">    return null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>通过 Entry 对象就可以获得具体的变量值。</p>
 <h3 id="0x0006-多线程与多-同一个-ThreadLocal-对象"><a href="#0x0006-多线程与多-同一个-ThreadLocal-对象" class="headerlink" title="0x0006 多线程与多 同一个 ThreadLocal 对象"></a>0x0006 多线程与多 同一个 ThreadLocal 对象</h3><p>对 ThreadLocal 的原理有一定的理解，那么以下两个场景理解就十分容易了。</p>
 <ul>
 <li>情景一：同一个 ThreadLocal 对象，维护不同线程的变量</li>
@@ -379,6 +385,15 @@
   
 <nav id="article-nav">
   
+    <a href="/2019/10/07/Kotlin协程学习(一):协程的基本了解/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Kotlin协程学习(一):协程的基本了解
+        
+      </div>
+    </a>
+  
   
     <a href="/2019/09/18/Java-引用类型及回收机制简单解析/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-title">Java 引用类型及回收机制简单解析</div>
@@ -499,43 +514,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Coroutines</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -547,23 +526,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Hprof</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">内存泄漏</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
+                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -576,6 +547,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Hprof</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存泄漏</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -595,10 +578,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">《深入理解 Java 虚拟机》读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Java Collection</a>
               </li>
              
@@ -607,15 +586,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">《深入理解 Java 虚拟机》读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -635,7 +618,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Kotlin 泛型</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Kotlin 协程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -651,15 +646,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">adb</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">VIM</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">adb</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -671,15 +670,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -688,6 +679,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -703,11 +698,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">JNI</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">深入理解 Android 读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -719,11 +722,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">动画</a>
+                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -760,6 +775,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Thread</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Kotlin 官方文档</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">动画</a>
               </li>
              
               <li class="article-tag-list-item">

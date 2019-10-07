@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href>
   <title>EventBus 线程模式 | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="ThreadMode:POSTING (default)订阅者将在同一个线程中发布事件,这是默认情况。订阅者将在事件发布者的线程中响应事件，这是默认情况。事件传送将同步完成，一旦发布完成，所有订阅者就会被调用。这种 ThreadMode 避免了线程间的切换，因此所需的开销最小。因此，当任务简单、所需时间短、不需要占用主线程时，这种 ThreadMode 是推荐使用的。但由于事件分发可能发生在">
+  <meta name="description" content="EventBus 可以处理 Android 中的线程切换的问题：事件发布的线程可以与线程处理的线程不同。以下几种模式为事件处理的线程。EventBus 可以帮助使用者子线程与主线程的同步问题。 ThreadMode:POSTING (default)订阅者将在同一个线程中发布事件,这是默认情况。订阅者将在事件发布者的线程中响应事件，这是默认情况。事件传送将同步完成，一旦发布完成，所有订阅者就会被调">
 <meta name="keywords" content="EventBus">
 <meta property="og:type" content="article">
 <meta property="og:title" content="EventBus 线程模式">
 <meta property="og:url" content="/2019/09/12/EventBus-线程模式/index.html">
 <meta property="og:site_name" content="GY">
-<meta property="og:description" content="ThreadMode:POSTING (default)订阅者将在同一个线程中发布事件,这是默认情况。订阅者将在事件发布者的线程中响应事件，这是默认情况。事件传送将同步完成，一旦发布完成，所有订阅者就会被调用。这种 ThreadMode 避免了线程间的切换，因此所需的开销最小。因此，当任务简单、所需时间短、不需要占用主线程时，这种 ThreadMode 是推荐使用的。但由于事件分发可能发生在">
+<meta property="og:description" content="EventBus 可以处理 Android 中的线程切换的问题：事件发布的线程可以与线程处理的线程不同。以下几种模式为事件处理的线程。EventBus 可以帮助使用者子线程与主线程的同步问题。 ThreadMode:POSTING (default)订阅者将在同一个线程中发布事件,这是默认情况。订阅者将在事件发布者的线程中响应事件，这是默认情况。事件传送将同步完成，一旦发布完成，所有订阅者就会被调">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-09-12T03:39:04.744Z">
+<meta property="og:updated_time" content="2019-09-20T09:15:50.456Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="EventBus 线程模式">
-<meta name="twitter:description" content="ThreadMode:POSTING (default)订阅者将在同一个线程中发布事件,这是默认情况。订阅者将在事件发布者的线程中响应事件，这是默认情况。事件传送将同步完成，一旦发布完成，所有订阅者就会被调用。这种 ThreadMode 避免了线程间的切换，因此所需的开销最小。因此，当任务简单、所需时间短、不需要占用主线程时，这种 ThreadMode 是推荐使用的。但由于事件分发可能发生在">
+<meta name="twitter:description" content="EventBus 可以处理 Android 中的线程切换的问题：事件发布的线程可以与线程处理的线程不同。以下几种模式为事件处理的线程。EventBus 可以帮助使用者子线程与主线程的同步问题。 ThreadMode:POSTING (default)订阅者将在同一个线程中发布事件,这是默认情况。订阅者将在事件发布者的线程中响应事件，这是默认情况。事件传送将同步完成，一旦发布完成，所有订阅者就会被调">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
   
@@ -179,7 +179,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="ThreadMode-POSTING-default"><a href="#ThreadMode-POSTING-default" class="headerlink" title="ThreadMode:POSTING (default)"></a>ThreadMode:POSTING (default)</h3><p>订阅者将在同一个线程中发布事件,这是默认情况。订阅者将在事件发布者的线程中响应事件，这是默认情况。事件传送将<code>同步</code>完成，一旦发布完成，所有订阅者就会被调用。这种 ThreadMode 避免了线程间的切换，因此所需的开销最小。因此，当任务简单、所需时间短、不需要占用主线程时，这种 ThreadMode 是推荐使用的。但由于事件分发可能发生在主线程，所以使用此模式的事件处理程序应该快速返回，以避免阻塞发布线程。处理函数中禁止更新UI操作。</p>
+        <p>EventBus 可以处理 Android 中的线程切换的问题：事件发布的线程可以与线程处理的线程不同。以下几种模式为事件处理的线程。EventBus 可以帮助使用者子线程与主线程的同步问题。</p>
+<h3 id="ThreadMode-POSTING-default"><a href="#ThreadMode-POSTING-default" class="headerlink" title="ThreadMode:POSTING (default)"></a>ThreadMode:POSTING (default)</h3><p>订阅者将在同一个线程中发布事件,这是默认情况。订阅者将在事件发布者的线程中响应事件，这是默认情况。事件传送将<code>同步</code>完成，一旦发布完成，所有订阅者就会被调用。这种 ThreadMode 避免了线程间的切换，因此所需的开销最小。因此，当任务简单、所需时间短、不需要占用主线程时，这种 ThreadMode 是推荐使用的。但由于事件分发可能发生在主线程，所以使用此模式的事件处理程序应该快速返回，以避免阻塞发布线程。处理函数中禁止更新UI操作。</p>
 <a id="more"></a>
 
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// Called in the same thread (default)</span><br><span class="line">// ThreadMode is optional here</span><br><span class="line">@Subscribe(threadMode = ThreadMode.POSTING)</span><br><span class="line">public void onMessage(MessageEvent event) &#123;</span><br><span class="line">    log(event.message);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -188,6 +189,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// Called in Android UI&apos;s main thread</span><br><span class="line">@Subscribe(threadMode = ThreadMode.MAIN)</span><br><span class="line">public void onMessage(MessageEvent event) &#123;</span><br><span class="line">textField.setText(event.message);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="ThreadMode-MAIN-ORDERED"><a href="#ThreadMode-MAIN-ORDERED" class="headerlink" title="ThreadMode: MAIN_ORDERED"></a>ThreadMode: MAIN_ORDERED</h3><p> 在这种模式下，订阅者会在主线程中执行。该模式下，事件总是排队等待以后发送给订阅者，因此对 post 的调用将立即返回。这使事件处理更加严格且更加一致（因此名称为MAIN_ORDERED）。例如，如果您在具有 MAIN 线程模式的事件处理程序中发布另一个事件，则第二个事件处理程序将在第一个事件处理程序之前完成（因为它被同步调用 - 将其与方法调用进行比较）。使用 MAIN_ORDERED，第一个事件处理程序将完成，然后第二个事件处理程序将在稍后的时间点调用（一旦主线程具有容量）。</p>
+<p> 这种模式和 MAIN 不同的是发布事件是否在主线程，如果不是的话就会采用这种模式，通过其源码可知实现原理为通过 Handler 将事件发布到主线程中。</p>
 <p>由于在主线程中执行，则应避免耗时操作。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// Called in Android UI&apos;s main thread</span><br><span class="line">@Subscribe(threadMode = ThreadMode.MAIN_ORDERED)</span><br><span class="line">public void onMessage(MessageEvent event) &#123;</span><br><span class="line">    textField.setText(event.message);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -197,6 +199,9 @@
 <h3 id="ThradMode-ASYNC"><a href="#ThradMode-ASYNC" class="headerlink" title="ThradMode: ASYNC"></a>ThradMode: ASYNC</h3><p>事件处理方法会在单独的线程中被调用，这个线程与主线程、事件发布线程相互独立。在这种模式下，事件发布不需要等待事件处理方法。当事件处理方法需要进行耗时操作，比如：网络请求等，这是需要使用这种模式。为了限制并发线程的数量，应避免同时触发大量长时间运行的异步处理操作。EventBus通过线程池通过重用，使用线程池从完成的异步事件处理程序通知中有效地重用线程。<br>EventBus 通过重用线程池中已经完成异步事件的线程来达到线程的高效复用。处理函数中禁止更新UI操作。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// Called in a separate thread</span><br><span class="line">@Subscribe(threadMode = ThreadMode.ASYNC)</span><br><span class="line">public void onMessage(MessageEvent event)&#123;</span><br><span class="line">    backend.send(event.message);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">private void postToSubscription(Subscription subscription, Object event, boolean isMainThread) &#123;</span><br><span class="line">    switch (subscription.subscriberMethod.threadMode) &#123;</span><br><span class="line">        case POSTING:</span><br><span class="line">            invokeSubscriber(subscription, event);</span><br><span class="line">            break;</span><br><span class="line">        case MAIN:</span><br><span class="line">            if (isMainThread) &#123;</span><br><span class="line">                invokeSubscriber(subscription, event);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                mainThreadPoster.enqueue(subscription, event);</span><br><span class="line">            &#125;</span><br><span class="line">            break;</span><br><span class="line">        case MAIN_ORDERED:</span><br><span class="line">            if (mainThreadPoster != null) &#123;</span><br><span class="line">                mainThreadPoster.enqueue(subscription, event);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                // temporary: technically not correct as poster not decoupled from subscriber</span><br><span class="line">                invokeSubscriber(subscription, event);</span><br><span class="line">            &#125;</span><br><span class="line">            break;</span><br><span class="line">        case BACKGROUND:</span><br><span class="line">            if (isMainThread) &#123;</span><br><span class="line">                backgroundPoster.enqueue(subscription, event);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                invokeSubscriber(subscription, event);</span><br><span class="line">            &#125;</span><br><span class="line">            break;</span><br><span class="line">        case ASYNC:</span><br><span class="line">            asyncPoster.enqueue(subscription, event);</span><br><span class="line">            break;</span><br><span class="line">        default:</span><br><span class="line">            throw new IllegalStateException(&quot;Unknown thread mode: &quot; + subscription.subscriberMethod.threadMode);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据源码有以下结论：<br>POSTING 模式下只有一种执行方式：在事件发布的线程执行。<br>MAIN、MAIN_ORDERED、MAIN_ORDERED、BACKGROUND：这四种模式都会根据发布事件所在的线程是否为主线程而执行不同的方式。<br>ASYNC：不管发布事件的线程是否为主线程，均在子线程中执行相关动作。</p>
 <hr>
 <p><strong>知识链接</strong></p>
 <p><a href="http://greenrobot.org/eventbus/documentation/delivery-threads-threadmode/" target="_blank" rel="noopener">官方地址</a></p>
@@ -443,43 +448,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Coroutines</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -491,23 +460,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Hprof</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">内存泄漏</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
+                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -520,6 +481,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Hprof</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存泄漏</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -539,10 +512,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">《深入理解 Java 虚拟机》读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Java Collection</a>
               </li>
              
@@ -551,15 +520,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">《深入理解 Java 虚拟机》读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -579,7 +552,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Kotlin 泛型</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Kotlin 协程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -595,15 +580,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">adb</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">VIM</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">adb</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -615,15 +604,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -632,6 +613,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -647,11 +632,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">JNI</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">深入理解 Android 读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -663,11 +656,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">动画</a>
+                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -704,6 +709,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Thread</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Kotlin 官方文档</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">动画</a>
               </li>
              
               <li class="article-tag-list-item">
