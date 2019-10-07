@@ -156,6 +156,94 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-设计六大准则" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/19/设计六大准则/">设计六大准则(设计模式之禅)</a>
+    </h1>
+  
+
+        
+        <a href="/2019/03/19/设计六大准则/" class="archive-article-date">
+  	<time datetime="2019-03-19T04:58:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-19</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="单一职责原则-Single-Responsibility-Principle-SRP"><a href="#单一职责原则-Single-Responsibility-Principle-SRP" class="headerlink" title="单一职责原则 (Single Responsibility Principle)(SRP)"></a>单一职责原则 (Single Responsibility Principle)(SRP)</h3><p><strong>定义：</strong> 应该有且仅有一个原因引起类的变更。</p>
+<p><strong>操作：</strong></p>
+<ol>
+<li>当一个类的几个职责之间没有相互依赖时，可以考虑将职责进行拆分。</li>
+<li>SRP原则适用于接口、类，同时也适用于方法，一个方法尽可能的做一件事。</li>
+</ol>
+<p><strong>好处：</strong></p>
+<ol>
+<li>降低类的复杂度，实现什么职责都有明显的定义</li>
+<li>可读性提高、可维护性强</li>
+<li>变更风险低</li>
+</ol>
+<p><strong>对于单一职责原则，接口一定要做到单一职责，类的设计尽量做到只要一个原因引起变化。</strong></p>
+        
+          <a class="article-more-a" href="/2019/03/19/设计六大准则/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">设计模式六大原则</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/03/19/设计六大准则/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Java-Basic-三" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -886,88 +974,6 @@
 
 
   
-    <article id="post-RxJava 使用 Transformer 进行变换" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/17/RxJava 使用 Transformer 进行变换/">RxJava Transformer</a>
-    </h1>
-  
-
-        
-        <a href="/2019/01/17/RxJava 使用 Transformer 进行变换/" class="archive-article-date">
-  	<time datetime="2019-01-17T09:26:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="0x81-Observable、Observer-线程切换"><a href="#0x81-Observable、Observer-线程切换" class="headerlink" title="0x81 Observable、Observer 线程切换"></a>0x81 Observable、Observer 线程切换</h3><p>在 Retrofit 结合 RxJava 进行开发时，我们可以通过 subscribeOn()、observeOn() 分别设置被订阅者和订阅者的线程。在此场景中，我们要在应用中的所有请求中执行上面操作，这下重复工作就需要 Transformer 来优化。</p>
-<h3 id="0x82-Transformer-实现对调用链的处理"><a href="#0x82-Transformer-实现对调用链的处理" class="headerlink" title="0x82 Transformer 实现对调用链的处理"></a>0x82 Transformer 实现对调用链的处理</h3><p>我们可能有以下实现方式：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">abstract class SchedulerTransformer&lt;T&gt; protected constructor(private val subscribeOnScheduler: Scheduler = Schedulers.io(), </span><br><span class="line">                                                      private val observeOnScheduler: Scheduler = AndroidSchedulers.mainThread()) : ObservableTransformer&lt;T, T&gt;,</span><br><span class="line">        SingleTransformer&lt;T, T&gt;,</span><br><span class="line">        MaybeTransformer&lt;T, T&gt;,</span><br><span class="line">        CompletableTransformer,</span><br><span class="line">        FlowableTransformer&lt;T, T&gt; &#123;</span><br><span class="line"></span><br><span class="line">    override fun apply(upstream: Completable): CompletableSource &#123;</span><br><span class="line">        return upstream.subscribeOn(subscribeOnScheduler)</span><br><span class="line">                .observeOn(observeOnScheduler)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun apply(upstream: Flowable&lt;T&gt;): Publisher&lt;T&gt; &#123;</span><br><span class="line">        return upstream.subscribeOn(subscribeOnScheduler)</span><br><span class="line">                .observeOn(observeOnScheduler)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun apply(upstream: Maybe&lt;T&gt;): MaybeSource&lt;T&gt; &#123;</span><br><span class="line">        return upstream.subscribeOn(subscribeOnScheduler)</span><br><span class="line">                .observeOn(observeOnScheduler)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun apply(upstream: Observable&lt;T&gt;): ObservableSource&lt;T&gt; &#123;</span><br><span class="line">        return upstream.subscribeOn(subscribeOnScheduler)</span><br><span class="line">                .observeOn(observeOnScheduler)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun apply(upstream: Single&lt;T&gt;): SingleSource&lt;T&gt; &#123;</span><br><span class="line">        return upstream.subscribeOn(subscribeOnScheduler)</span><br><span class="line">                .observeOn(observeOnScheduler)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-        
-          <a class="article-more-a" href="/2019/01/17/RxJava 使用 Transformer 进行变换/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">RxJava</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Transformer</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/01/17/RxJava 使用 Transformer 进行变换/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
@@ -1085,15 +1091,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
+                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1102,6 +1104,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">DI</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1114,10 +1124,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">工具</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1177,11 +1183,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
+                <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
+                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1193,15 +1199,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Kotlin 协程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Kotlin 协程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1273,15 +1279,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">OOP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1317,15 +1323,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
               </li>
              
               <li class="article-tag-list-item">
