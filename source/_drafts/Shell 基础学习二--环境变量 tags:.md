@@ -1,5 +1,5 @@
 ---
-title: Shell 基础学习二
+title: Shell 基础学习二--环境变量
 tags:
 ---
 
