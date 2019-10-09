@@ -6,18 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href>
-  <title>Kotlin协程学习(二):挂起函数(来自扔物线线上视频) | GY</title>
+  <title>Kotlin协程学习(二):挂起函数 | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="本文是对 Kotlin 协程的挂起好神奇好难懂？今天我把它的皮给扒了 的文字记录，确实香啊！  1. Kotlin 协程挂起的基本了解 Q:Kotlin 协程中挂起的是什么？   A:挂起的是协程。  Q:那什么是协程？  A:kotlin 协程为 launch()、async() 等中的代码。 launch 在创建的一个协程，在执行到某一个 suspend 函数(挂起函数)时，这个协程会被 s">
+<meta name="keywords" content="Kotlin 协程">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Kotlin协程学习(二):挂起函数(来自扔物线线上视频)">
+<meta property="og:title" content="Kotlin协程学习(二):挂起函数">
 <meta property="og:url" content="/2019/10/07/Kotlin协程学习(二):挂起函数/index.html">
 <meta property="og:site_name" content="GY">
 <meta property="og:description" content="本文是对 Kotlin 协程的挂起好神奇好难懂？今天我把它的皮给扒了 的文字记录，确实香啊！  1. Kotlin 协程挂起的基本了解 Q:Kotlin 协程中挂起的是什么？   A:挂起的是协程。  Q:那什么是协程？  A:kotlin 协程为 launch()、async() 等中的代码。 launch 在创建的一个协程，在执行到某一个 suspend 函数(挂起函数)时，这个协程会被 s">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-10-07T07:47:18.780Z">
+<meta property="og:updated_time" content="2019-10-09T07:52:32.349Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Kotlin协程学习(二):挂起函数(来自扔物线线上视频)">
+<meta name="twitter:title" content="Kotlin协程学习(二):挂起函数">
 <meta name="twitter:description" content="本文是对 Kotlin 协程的挂起好神奇好难懂？今天我把它的皮给扒了 的文字记录，确实香啊！  1. Kotlin 协程挂起的基本了解 Q:Kotlin 协程中挂起的是什么？   A:挂起的是协程。  Q:那什么是协程？  A:kotlin 协程为 launch()、async() 等中的代码。 launch 在创建的一个协程，在执行到某一个 suspend 函数(挂起函数)时，这个协程会被 s">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
@@ -165,7 +166,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Kotlin协程学习(二):挂起函数(来自扔物线线上视频)
+      Kotlin协程学习(二):挂起函数
     </h1>
   
 
@@ -286,6 +287,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Kotlin 协程</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -503,11 +515,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+                <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -515,19 +527,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Dagger2</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DI</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -543,11 +543,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Dagger2</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">DI</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -579,15 +591,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">List</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Map</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+                <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -599,7 +607,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -607,7 +619,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
+                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -619,11 +631,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Kotlin 泛型</a>
+                <a href="javascript:void(0)" class="js-tag color5">Kotlin 协程</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Kotlin 协程</a>
+                <a href="javascript:void(0)" class="js-tag color5">Kotlin 泛型</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -643,19 +655,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">View</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">事件分发机制</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Exception</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">View</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">事件分发机制</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -695,15 +707,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">OOP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -739,15 +751,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
               </li>
              
               <li class="article-tag-list-item">

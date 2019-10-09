@@ -6,15 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href>
-  <title>Tag: Collections | GY</title>
+  <title>Kotlin协程学习(三)：协程的非阻塞式挂起是什么？ | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="GY">
-<meta property="og:url" content="/tags/Collections/index.html">
+  <meta name="description" content="Kotlin 协程的 非阻塞式挂起是什么？什么事非阻塞式：不卡当前线程。 Kotlin 协程的非阻塞原因： 因为使用挂起函数会切换线程，既然切换了线程，那么肯定就不卡当前线程了。其实线程也是非阻塞式的线程中的阻塞式是 在单线程 下，在单线程下执行耗时操作是会阻塞线程的，如果在多线程情况下，那么此时的线程也是非阻塞式的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kotlin协程学习(三)：协程的非阻塞式挂起是什么？">
+<meta property="og:url" content="/2019/10/09/Kotlin协程学习(三)：协程的非阻塞式挂起是什么/index.html">
 <meta property="og:site_name" content="GY">
+<meta property="og:description" content="Kotlin 协程的 非阻塞式挂起是什么？什么事非阻塞式：不卡当前线程。 Kotlin 协程的非阻塞原因： 因为使用挂起函数会切换线程，既然切换了线程，那么肯定就不卡当前线程了。其实线程也是非阻塞式的线程中的阻塞式是 在单线程 下，在单线程下执行耗时操作是会阻塞线程的，如果在多线程情况下，那么此时的线程也是非阻塞式的。">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-10-09T07:52:17.777Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="GY">
+<meta name="twitter:title" content="Kotlin协程学习(三)：协程的非阻塞式挂起是什么？">
+<meta name="twitter:description" content="Kotlin 协程的 非阻塞式挂起是什么？什么事非阻塞式：不卡当前线程。 Kotlin 协程的非阻塞原因： 因为使用挂起函数会切换线程，既然切换了线程，那么肯定就不卡当前线程了。其实线程也是非阻塞式的线程中的阻塞式是 在单线程 下，在单线程下执行耗时操作是会阻塞线程的，如果在多线程情况下，那么此时的线程也是非阻塞式的。">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
   
@@ -154,68 +158,178 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Kotlin协程学习(三)：协程的非阻塞式挂起是什么" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/29/Java-集合工具类-Collections/" class="archive-article-date">
-  	<time datetime="2019-05-29T09:17:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-29</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/29/Java-集合工具类-Collections/">Java 集合工具类--Collections</a>
+    <h1 class="article-title" itemprop="name">
+      Kotlin协程学习(三)：协程的非阻塞式挂起是什么？
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Java Basic</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Java Collection</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Collections</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        <a href="/2019/10/09/Kotlin协程学习(三)：协程的非阻塞式挂起是什么/" class="archive-article-date">
+  	<time datetime="2019-10-09T07:51:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-09</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="Kotlin-协程的-非阻塞式挂起是什么？"><a href="#Kotlin-协程的-非阻塞式挂起是什么？" class="headerlink" title="Kotlin 协程的 非阻塞式挂起是什么？"></a>Kotlin 协程的 非阻塞式挂起是什么？</h3><p>什么事非阻塞式：不卡当前线程。</p>
+<p>Kotlin 协程的非阻塞原因：</p>
+<pre><code>因为使用挂起函数会切换线程，既然切换了线程，那么肯定就不卡当前线程了。</code></pre><h3 id="其实线程也是非阻塞式的"><a href="#其实线程也是非阻塞式的" class="headerlink" title="其实线程也是非阻塞式的"></a>其实线程也是非阻塞式的</h3><p>线程中的阻塞式是 <code>在单线程</code> 下，在单线程下执行耗时操作是会阻塞线程的，如果在<code>多线程</code>情况下，那么此时的线程也是非阻塞式的。</p>
+<a id="more"></a>
+<p>但是 Kotlin 协程在 <strong>单协程的情况下也是非阻塞式</strong> 的，因为它可以利用挂起函数来切换线程。</p>
+<p>协程是一种 <code>看起来阻塞，但是其实是非阻塞</code> 的写法,因为它有挂起函数。</p>
+<pre><code>看起来阻塞：是因为确实你没有看到相关线程切换的代码，为顺序执行的代码。
+其实是非阻塞：是因为挂起函数可以自动帮助我们完成线程切换。</code></pre><h3 id="协程和线程的关系"><a href="#协程和线程的关系" class="headerlink" title="协程和线程的关系"></a>协程和线程的关系</h3><p>在 Kotlin 中协程是 <strong>基于线程而实现的一套更上层的工具 API</strong>，为基于线程的上层框架，类似 Executors ，并且和 Executors 的性能也差不多，所以 “轻量级线程说法，比线程更高效” 这种说法有待商榷。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>协程：就是切线程<br>挂起：可以自动切回来的切线程<br>非阻塞：协程可以用看起来阻塞的代码写出非阻塞式的操作</p>
+<p>。</p>
+<hr>
+<p><strong>知识链接</strong></p>
+<p><a href="https://www.bilibili.com/video/av69354029" target="_blank" rel="noopener">到底什么是「非阻塞式」挂起？协程真的比线程更轻量级吗？</a></p>
 
-          
+      
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/img/alipay.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/img/wxpay.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http:/2019/10/09/Kotlin协程学习(三)：协程的非阻塞式挂起是什么/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2019/10/07/Kotlin 协程二/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Kotlin 协程二</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -238,9 +352,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,

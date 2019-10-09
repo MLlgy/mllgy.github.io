@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="/"/>
-  <updated>2019-10-07T09:12:43.816Z</updated>
+  <updated>2019-10-09T07:52:17.777Z</updated>
   <id>/</id>
   
   <author>
@@ -15,6 +15,26 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Kotlin协程学习(三)：协程的非阻塞式挂起是什么？</title>
+    <link href="/2019/10/09/Kotlin%E5%8D%8F%E7%A8%8B%E5%AD%A6%E4%B9%A0(%E4%B8%89)%EF%BC%9A%E5%8D%8F%E7%A8%8B%E7%9A%84%E9%9D%9E%E9%98%BB%E5%A1%9E%E5%BC%8F%E6%8C%82%E8%B5%B7%E6%98%AF%E4%BB%80%E4%B9%88/"/>
+    <id>/2019/10/09/Kotlin协程学习(三)：协程的非阻塞式挂起是什么/</id>
+    <published>2019-10-09T07:51:42.000Z</published>
+    <updated>2019-10-09T07:52:17.777Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="Kotlin-协程的-非阻塞式挂起是什么？"><a href="#Kotlin-协程的-非阻塞式挂起是什么？" class="headerlink" title="Kotlin 协程的 非阻塞式挂起是什么？"></a>Kotlin 协程的 非阻塞式挂起是什么？</h3><p>什么事非阻塞式：不卡当前线程。</p><p>Kotlin 协程的非阻塞原因：</p><pre><code>因为使用挂起函数会切换线程，既然切换了线程，那么肯定就不卡当前线程了。</code></pre><h3 id="其实线程也是非阻塞式的"><a href="#其实线程也是非阻塞式的" class="headerlink" title="其实线程也是非阻塞式的"></a>其实线程也是非阻塞式的</h3><p>线程中的阻塞式是 <code>在单线程</code> 下，在单线程下执行耗时操作是会阻塞线程的，如果在<code>多线程</code>情况下，那么此时的线程也是非阻塞式的。</p><a id="more"></a><p>但是 Kotlin 协程在 <strong>单协程的情况下也是非阻塞式</strong> 的，因为它可以利用挂起函数来切换线程。</p><p>协程是一种 <code>看起来阻塞，但是其实是非阻塞</code> 的写法,因为它有挂起函数。</p><pre><code>看起来阻塞：是因为确实你没有看到相关线程切换的代码，为顺序执行的代码。其实是非阻塞：是因为挂起函数可以自动帮助我们完成线程切换。</code></pre><h3 id="协程和线程的关系"><a href="#协程和线程的关系" class="headerlink" title="协程和线程的关系"></a>协程和线程的关系</h3><p>在 Kotlin 中协程是 <strong>基于线程而实现的一套更上层的工具 API</strong>，为基于线程的上层框架，类似 Executors ，并且和 Executors 的性能也差不多，所以 “轻量级线程说法，比线程更高效” 这种说法有待商榷。</p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>协程：就是切线程<br>挂起：可以自动切回来的切线程<br>非阻塞：协程可以用看起来阻塞的代码写出非阻塞式的操作</p><p>。</p><hr><p><strong>知识链接</strong></p><p><a href="https://www.bilibili.com/video/av69354029" target="_blank" rel="noopener">到底什么是「非阻塞式」挂起？协程真的比线程更轻量级吗？</a></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;Kotlin-协程的-非阻塞式挂起是什么？&quot;&gt;&lt;a href=&quot;#Kotlin-协程的-非阻塞式挂起是什么？&quot; class=&quot;headerlink&quot; title=&quot;Kotlin 协程的 非阻塞式挂起是什么？&quot;&gt;&lt;/a&gt;Kotlin 协程的 非阻塞式挂起是什么？&lt;/h3&gt;&lt;p&gt;什么事非阻塞式：不卡当前线程。&lt;/p&gt;
+&lt;p&gt;Kotlin 协程的非阻塞原因：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;因为使用挂起函数会切换线程，既然切换了线程，那么肯定就不卡当前线程了。&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&quot;其实线程也是非阻塞式的&quot;&gt;&lt;a href=&quot;#其实线程也是非阻塞式的&quot; class=&quot;headerlink&quot; title=&quot;其实线程也是非阻塞式的&quot;&gt;&lt;/a&gt;其实线程也是非阻塞式的&lt;/h3&gt;&lt;p&gt;线程中的阻塞式是 &lt;code&gt;在单线程&lt;/code&gt; 下，在单线程下执行耗时操作是会阻塞线程的，如果在&lt;code&gt;多线程&lt;/code&gt;情况下，那么此时的线程也是非阻塞式的。&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>Kotlin 协程二</title>
@@ -93,11 +113,11 @@
   </entry>
   
   <entry>
-    <title>Kotlin协程学习(二):挂起函数(来自扔物线线上视频)</title>
+    <title>Kotlin协程学习(二):挂起函数</title>
     <link href="/2019/10/07/Kotlin%E5%8D%8F%E7%A8%8B%E5%AD%A6%E4%B9%A0(%E4%BA%8C):%E6%8C%82%E8%B5%B7%E5%87%BD%E6%95%B0/"/>
     <id>/2019/10/07/Kotlin协程学习(二):挂起函数/</id>
     <published>2019-10-07T07:46:13.000Z</published>
-    <updated>2019-10-07T07:47:18.780Z</updated>
+    <updated>2019-10-09T07:52:32.349Z</updated>
     
     <content type="html"><![CDATA[<blockquote><p>本文是对 <a href="https://www.bilibili.com/video/av68241619" target="_blank" rel="noopener">Kotlin 协程的挂起好神奇好难懂？今天我把它的皮给扒了</a> 的文字记录，确实香啊！</p></blockquote><h3 id="1-Kotlin-协程挂起的基本了解"><a href="#1-Kotlin-协程挂起的基本了解" class="headerlink" title="1. Kotlin 协程挂起的基本了解"></a>1. Kotlin 协程挂起的基本了解</h3><blockquote><p>Q:Kotlin 协程中挂起的是什么？ </p></blockquote><p>A:挂起的是协程。</p><blockquote><p>Q:那什么是协程？</p></blockquote><p>A:kotlin 协程为 launch()、async() 等中的代码。</p><p>launch 在创建的一个协程，在执行到某一个 suspend 函数(挂起函数)时，这个协程会被 suspend(被挂起)。</p><blockquote><p>Q:从哪挂起？</p></blockquote><p>A:从当前线程挂起，就是这个协程从正在执行它的线程上脱离了，注意不是协程停下来了，而是协程所在的线程从这行代码开始不再运行这个协程了(意思就是挂起函数将由自己指定的线程运行)，那么分离了的线程和协程会各自发生什么？</p><a id="more"></a><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">launch(Dispatchers.Main)&#123;</span><br><span class="line">    ...</span><br><span class="line">    //suspendingGetImage 为挂起函数</span><br><span class="line">    val image = suspendingGetImage(imageId)</span><br><span class="line">    imageIv.setImageBitmap(image)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>分离了的线程和协程将如何执行？线程和协程分离了，具体到代码是什么意思？</p><h3 id="2-分离后的线程"><a href="#2-分离后的线程" class="headerlink" title="2.分离后的线程"></a>2.分离后的线程</h3><p>协程的代码块，在线程中到了 suspend 函数的时候，突然执行完毕了，返回了，完毕之后线程该干嘛呢？当然该干嘛干嘛去。</p><ul><li>线程为后台线程<br>如果线程是后台线程，那么接下来该线程就没有事或者去执行其他的后台任务，和 Java 中的线程池中线程做完工作是一样的，要么回收掉，要么再利用；</li></ul><ul><li>线程为主线程<br>如果是 Android 中的主线程，那么它会继续执行接下来的工作。<br>以上代码相当于：</li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">handler.post&#123;</span><br><span class="line">    ...</span><br><span class="line">    val image = suspendingGetImage(imageId)</span><br><span class="line">    imageIv.setImageBitmap(image)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>此时挂起就相当于 post 的这个任务提前结束了。</p><h3 id="3-分离后的协程"><a href="#3-分离后的协程" class="headerlink" title="3. 分离后的协程"></a>3. 分离后的协程</h3><p>函数的代码在执行到挂起函数的时候被掐断了，所以接下来，它会在指定线程中从这个挂起函数开始向下执行，那么这个线程是谁指定的？当然是挂起函数指定的。在上面的例子钟就是 suspendingGetImage 这个函数中通过 withContext 指定的。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">suspend fun suspendingGetImage(imageId:String)&#123;</span><br><span class="line">    withContext(Dispatchers.IO)&#123;</span><br><span class="line">        getImage(imageId)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>那么在此例中，所指定的线程为函数内部的 withContext() 所指定的 IO 线程。</p><p>在挂起函数执行完毕后，它 <strong>会自动把线程再切回来</strong>。</p><p>在上面的例子中，在挂起函数执行完毕后，协程会再 post 一个任务，<strong>让剩下的代码继续回到主线程中去执行</strong>。</p><p>这也就是为什么协程中指定线程的参数不是 Thread ，而是 Dispatchers(调度器)，调度器不止能指定协程执行的线程，还能在 suspend 挂起函数执行完毕后再自动切回来，当然也可以指定特殊的 Dispatchers ，在指定挂起函数后不切换回来。</p><p>挂起的含义就是：<strong>暂时切走，稍后在切回来</strong>。<strong>就是切换线程，不过在执行完毕会切换回来</strong>，这个切回来的动作在协程中称为 <em>resume (恢复)*</em>。</p><h3 id="4-为什么挂起函数只能在协程里或者另一个挂起函数中调用？"><a href="#4-为什么挂起函数只能在协程里或者另一个挂起函数中调用？" class="headerlink" title="4. 为什么挂起函数只能在协程里或者另一个挂起函数中调用？"></a>4. 为什么挂起函数只能在协程里或者另一个挂起函数中调用？</h3><p>首先，挂起之后是需要恢复的，也就是把线程给切回来，而恢复这个动作是协程的，所以一个挂起函数不在协程/另一个挂起函数中被调用，那么这个恢复的动作是不能实现的。</p><h3 id="5-挂起是怎么做到的"><a href="#5-挂起是怎么做到的" class="headerlink" title="5. 挂起是怎么做到的"></a>5. 挂起是怎么做到的</h3><p>在 挂起函数中使用 withContext 指定切换的线程。</p><p>其实 suspend 关键字并不能起到挂起函数的作用，并不是因为使用 suspend 修饰，函数就可以实现挂起动作，而真正想要挂起协程，还需要在挂起函数里面去调用另外一个挂起函数，而里面的这个挂起函数需要是协程自带的、内部实现了协程挂起代码的，或者它的内部直接或间接的调用了某一个自带的挂起函数，最终需要调用一个协程自带的挂起函数，让它来做真正的挂起，实现线程切换的工作。</p><h3 id="6-suspend-真正的作用：提醒"><a href="#6-suspend-真正的作用：提醒" class="headerlink" title="6. suspend 真正的作用：提醒"></a>6. suspend 真正的作用：提醒</h3><p>既然 suspend 不能真正的做到挂起函数，那么 suspend 的作用是什么呢?</p><p>在语法上 suspend 的作用：它其实是一个 <strong>提醒</strong>，函数的创建者对函数的调用者的提醒：我是一个耗时函数，因此我被我的创建者用挂起函数的方式放到了后台运行，所以请在协程中调用我。</p><p>提醒调用者该函数为耗时操作，那么这个提醒有什么作用呢？</p><p>这个提醒有效避免主线程的卡顿，因为一旦不小心在主线程调用了一个耗时操作，那么主线程会产生卡顿。而协程通过挂起函数这种形式，把耗时任务切换线程的工作交给了函数的创建者而不是调用者，对于调用者会十分的简单，他看到 suspend 这个关键字就明白了应该在协程中调用，从而避免了调用者不熟悉调用的函数的情况下在主线程调用耗时操作的行为。</p><p>所以创建一个挂起函数，一定要在内部调用别的挂起函数，否则这个挂起函数就是没有必要的。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 这个挂起函数是没有意义的</span><br><span class="line">suspend fun test(str:String)&#123;</span><br><span class="line">    sout(str)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="7-自定义挂起函数"><a href="#7-自定义挂起函数" class="headerlink" title="7. 自定义挂起函数"></a>7. 自定义挂起函数</h3><ul><li><p>什么时候需要自定义挂起函数</p><ul><li>原则：耗时(特殊：等待)</li></ul></li></ul><p>如果某个函数比较耗时，两类：</p><ul><li>I/O 操作</li><li>计算工作</li></ul><p>比如文件读写、网络交互、图片操作等，还有在等待情况下，比如等待 5s 后继续操作，这些都可以写在挂起函数中。</p><ul><li>怎么写</li></ul><p>函数添加关键字 suspend，内部代码使用 withContext获取他挂起函数包裹。</p><hr><p><strong>知识链接</strong></p><p><a href="https://www.bilibili.com/video/av68241619" target="_blank" rel="noopener">Kotlin 协程的挂起好神奇好难懂？今天我把它的皮给扒了</a></p>]]></content>
     
@@ -122,6 +142,8 @@
     
     </summary>
     
+    
+      <category term="Kotlin 协程" scheme="/tags/Kotlin-%E5%8D%8F%E7%A8%8B/"/>
     
   </entry>
   
