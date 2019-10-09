@@ -1,15 +1,25 @@
 ---
-title: Kotlin 泛型
-date: 2019-10-07 15:50:47
-tags: [Kotlin 泛型]
+title: Kotlin 学习之泛型
+tags:
 ---
+
+
 
 ### Java 中的泛型
 
 
-协变(covariance)：子类的泛型类型也属于泛型类型的子类。
+协变(covariance)：
 
-由于 Java 中类型擦除的存在，所以 Java 不支持协变，Kotlin 继承了这种限制。在 Java 中可以通过使用通配符(?) 来解除这种限制。
+
+子类的泛型类型也属于泛型类型的子类。
+
+由于 Java 中类型擦除的存在，所以 Java 不支持协变。
+
+
+Kotlin 继承了这种限制。
+
+Java 使用了通配符(?) 来解除这种限制。
+
 
 这样的话有：
 
@@ -21,15 +31,16 @@ List<? extends TextView> textViews = new ArrayList<Button>();
 虽然这种写法解除了赋值的限制，但是却增加了另外一个限制：在使用这个引用的时候，不能调用它的参数包含类型参数的方法，也不能给它的包含类型参数的字段赋值(除了空值)。
 
 限制：父类的泛型类型声明的实际值不能是子类的泛型类型对象
-
-<!-- more -->
+ 
 
 ```
 private ArrayList<? extends TextView> mList = new ArrayList<Button>();
 //mList.add(textView); 此调用是错误的 
 ```
 
+
 看下例：
+
 
 ```
 public void showTexts(List<TextView> list){
@@ -96,6 +107,8 @@ PECS 法则：Producer extends，Conssumer super。
 ? extends --> out:只能输出，不能输入，只能读不能写。
 
 ? super --> in：只能输入不能输出，只能写不能读。
+
+
 
 
 Kotlin 中的 in 和 out 不仅可以直接使用在变量和参数的声明里，还可以使用在泛型类型声明的类型参数上。
@@ -201,7 +214,6 @@ inline fun <refield T> test(item: Any){
 但是 refield 自身有限制，只能用在 inline 函数上
 
 
-  
 ---
 
 [Kotlin 泛型](https://www.bilibili.com/video/av66340216)

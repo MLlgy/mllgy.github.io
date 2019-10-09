@@ -1,6 +1,7 @@
 ---
-title: Kotlin 协程 二
-tags:
+title: Kotlin 协程二
+date: 2019-10-07 17:12:00
+tags: [Kotlin 官方文档,Coroutines(协程)]
 ---
 
 
@@ -16,6 +17,7 @@ tags:
 
 所有的协程构建器(比如：launch、async) 会接收一个可选的 CoroutineContext 参数，它可以被显示的为一个新的协程或其他上下文元素指定一个调度器。
 
+<!-- more -->
 ```
 fun main() = runBlocking<Unit> {
     launch { // 运行在父协程的上下文中，即 runBlocking 主协程

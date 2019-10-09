@@ -95,6 +95,7 @@ lauch(Dispatchers.IO){
 
 ```
 launch(Dispatchers.Main){
+    // 在 Dispatchers.IO 线程中执行相关代码，执行完毕后切换后 Dispatchers.Main 线程
     val image = withContext(Dispatchers.IO){
         api.getImage()
     }
