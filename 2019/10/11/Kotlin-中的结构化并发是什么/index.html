@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href>
   <title>Kotlin 中的结构化并发是什么? | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="在接触到 Kotlin 的协程后，在官方文档知道，通过结构化的并发可以避免很多问题，具体参见官方文档 结构化的并发，但是什么是结构化的并发呢？通过搜索引擎没有查询到有用的信息。此处只是记录自己通过网上博客的学习后理解，不一定正确，但是是自己现阶段的理解，同时这个话题也会持续更新。  Kotlin 协程中如何实现结构化并发呢?先看一下官方文档中是基于什么问题使用结构化的并发？首先看一下这段代码：">
+  <meta name="description" content="在接触到 Kotlin 的协程后，在官方文档知道，通过结构化的并发可以避免很多问题，具体参见官方文档 结构化的并发，但是什么是结构化的并发呢？通过搜索引擎没有查询到有用的信息。此处只是记录自己通过网上博客的学习，为自己现阶段的记录和理解，这个话题也会持续更新。  Kotlin 协程中如何实现结构化并发呢？ 先看一下官方文档中是基于什么问题使用结构化的并发？首先看一下这段代码： 12345678f">
 <meta name="keywords" content="Coroutines(协程),Kotlin">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kotlin 中的结构化并发是什么?">
 <meta property="og:url" content="/2019/10/11/Kotlin-中的结构化并发是什么/index.html">
 <meta property="og:site_name" content="GY">
-<meta property="og:description" content="在接触到 Kotlin 的协程后，在官方文档知道，通过结构化的并发可以避免很多问题，具体参见官方文档 结构化的并发，但是什么是结构化的并发呢？通过搜索引擎没有查询到有用的信息。此处只是记录自己通过网上博客的学习后理解，不一定正确，但是是自己现阶段的理解，同时这个话题也会持续更新。  Kotlin 协程中如何实现结构化并发呢?先看一下官方文档中是基于什么问题使用结构化的并发？首先看一下这段代码：">
+<meta property="og:description" content="在接触到 Kotlin 的协程后，在官方文档知道，通过结构化的并发可以避免很多问题，具体参见官方文档 结构化的并发，但是什么是结构化的并发呢？通过搜索引擎没有查询到有用的信息。此处只是记录自己通过网上博客的学习，为自己现阶段的记录和理解，这个话题也会持续更新。  Kotlin 协程中如何实现结构化并发呢？ 先看一下官方文档中是基于什么问题使用结构化的并发？首先看一下这段代码： 12345678f">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-10-11T10:43:43.357Z">
+<meta property="og:updated_time" content="2019-10-18T06:46:03.091Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kotlin 中的结构化并发是什么?">
-<meta name="twitter:description" content="在接触到 Kotlin 的协程后，在官方文档知道，通过结构化的并发可以避免很多问题，具体参见官方文档 结构化的并发，但是什么是结构化的并发呢？通过搜索引擎没有查询到有用的信息。此处只是记录自己通过网上博客的学习后理解，不一定正确，但是是自己现阶段的理解，同时这个话题也会持续更新。  Kotlin 协程中如何实现结构化并发呢?先看一下官方文档中是基于什么问题使用结构化的并发？首先看一下这段代码：">
+<meta name="twitter:description" content="在接触到 Kotlin 的协程后，在官方文档知道，通过结构化的并发可以避免很多问题，具体参见官方文档 结构化的并发，但是什么是结构化的并发呢？通过搜索引擎没有查询到有用的信息。此处只是记录自己通过网上博客的学习，为自己现阶段的记录和理解，这个话题也会持续更新。  Kotlin 协程中如何实现结构化并发呢？ 先看一下官方文档中是基于什么问题使用结构化的并发？首先看一下这段代码： 12345678f">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
   
@@ -180,9 +180,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         <blockquote>
-<p>在接触到 Kotlin 的协程后，在官方文档知道，通过结构化的并发可以避免很多问题，具体参见官方文档 <a href="https://www.kotlincn.net/docs/reference/coroutines/basics.html#%E7%BB%93%E6%9E%84%E5%8C%96%E7%9A%84%E5%B9%B6%E5%8F%91" target="_blank" rel="noopener">结构化的并发</a>，但是什么是结构化的并发呢？通过搜索引擎没有查询到有用的信息。此处只是记录自己通过网上博客的学习后理解，不一定正确，但是是自己现阶段的理解，同时这个话题也会持续更新。</p>
+<p>在接触到 Kotlin 的协程后，在官方文档知道，通过结构化的并发可以避免很多问题，具体参见官方文档 <a href="https://www.kotlincn.net/docs/reference/coroutines/basics.html#%E7%BB%93%E6%9E%84%E5%8C%96%E7%9A%84%E5%B9%B6%E5%8F%91" target="_blank" rel="noopener">结构化的并发</a>，但是什么是结构化的并发呢？通过搜索引擎没有查询到有用的信息。此处只是记录自己通过网上博客的学习，为自己现阶段的记录和理解，这个话题也会持续更新。</p>
 </blockquote>
-<p>Kotlin 协程中如何实现结构化并发呢?先看一下官方文档中是基于什么问题使用结构化的并发？首先看一下这段代码：</p>
+<p>Kotlin 协程中如何实现结构化并发呢？ 先看一下官方文档中是基于什么问题使用结构化的并发？首先看一下这段代码：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">fun main() = runBlocking &#123;</span><br><span class="line">    val job = GlobalScope.launch &#123; // 启动一个新协程并保持对这个作业的引用</span><br><span class="line">        delay(1000L)</span><br><span class="line">        println(&quot;World!&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">    println(&quot;Hello,&quot;)</span><br><span class="line">    job.join() // 等待直到子协程执行结束</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>线程的启动总是全局的，一般是在程序的上下文启动的，对应协程，就如上面例子一样通过 GlobalScope 创建一个全局协程。不过官方文档上针对 GlobalScope 所阐述的确定，抱歉没看懂。。。</p>
@@ -324,6 +324,15 @@
 
   
 <nav id="article-nav">
+  
+    <a href="/2019/10/18/Rxjava 源码学习(一):基本流程分析/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Rxjava 源码学习(一):基本流程分析
+        
+      </div>
+    </a>
   
   
     <a href="/2019/10/09/Kotlin协程学习(三)：协程的非阻塞式挂起是什么/" id="article-nav-older" class="article-nav-link-wrap">
@@ -469,11 +478,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
+                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
+                <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -481,11 +490,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+                <a href="javascript:void(0)" class="js-tag color3">Dagger2</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
+                <a href="javascript:void(0)" class="js-tag color3">DI</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -501,11 +514,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Dagger2</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DI</a>
+                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -529,7 +538,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">对象拷贝</a>
+                <a href="javascript:void(0)" class="js-tag color5">《深入理解 Java 虚拟机》读书笔记</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -541,15 +550,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">《深入理解 Java 虚拟机》读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Map</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">List</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">对象拷贝</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -561,15 +570,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -585,10 +594,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Kotlin 泛型</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
@@ -597,11 +602,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">RxJava</a>
+                <a href="javascript:void(0)" class="js-tag color5">Kotlin 泛型</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Transformer</a>
+                <a href="javascript:void(0)" class="js-tag color4">adb</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -609,7 +614,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">adb</a>
+                <a href="javascript:void(0)" class="js-tag color2">RxJava</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Transformer</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -669,11 +678,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
+                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -686,10 +695,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -717,7 +722,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Thread</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
               </li>
              
               <li class="article-tag-list-item">
