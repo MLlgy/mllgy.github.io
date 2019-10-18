@@ -1,7 +1,7 @@
 ---
 title: 'Rxjava 源码学习(一):基本流程分析'
 date: 2019-10-18 15:02:06
-tags: [Rxjava 源码分析,]
+tags: [Rxjava 源码分析]
 ---
 
 
@@ -467,7 +467,7 @@ public final void subscribe(Observer<? super T> observer) {
 多个 Observable 和 Observer 通过两个方法的往复调用，最终构建完整的事件流。
 
 
-如果把第一个构建的 Observable 标记为 A，把自定义的 Observer 标记为 Z，那么各种操作符会构建不同的 Observer 标记为 B、C、D ....,通过 subscribeActual、 subscribe 方法使 A、B、C、D ... 、Z 形成链式关系，最终由 Observable 对象 A 开启事件分发，将事件通过操作符定义的 Observer 对象 B、C、D ... 进行各自处理，最终传递到 Observer 对象 Z 中，这个事件流得以完成，其实这就是平时所说的 Rxjava 中** Observer 由下向上 传递**，其实这也是 observerOn 只能只能指定下游 Observer 的线程的原因。
+如果把第一个构建的 Observable 标记为 A，把自定义的 Observer 标记为 Z，那么各种操作符会构建不同的 Observer 标记为 B、C、D ....,通过 subscribeActual、 subscribe 方法使 A、B、C、D ... 、Z 形成链式关系，最终由 Observable 对象 A 开启事件分发，将事件通过操作符定义的 Observer 对象 B、C、D ... 进行各自处理，最终传递到 Observer 对象 Z 中，这个事件流得以完成，其实这就是平时所说的 Rxjava 中 **Observer 由下向上传递**，其实这也是 observerOn 只能只能指定下游 Observer 的线程的原因。
 
 
 
