@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="GY">
 <meta property="og:description" content="Rxjava 源码版本：Rxjava2.2.8   1. Rxjava 的基本实现首先看一下最简单的例子，具体查看其内部实现：通过以下代码查看 Rxjava 的典型使用：">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-10-18T07:33:27.424Z">
+<meta property="og:updated_time" content="2019-10-18T08:10:25.399Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Rxjava 源码学习(一):基本流程分析">
 <meta name="twitter:description" content="Rxjava 源码版本：Rxjava2.2.8   1. Rxjava 的基本实现首先看一下最简单的例子，具体查看其内部实现：通过以下代码查看 Rxjava 的典型使用：">
@@ -256,7 +256,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public final void subscribe(Observer&lt;? super T&gt; observer) &#123;</span><br><span class="line">    observer = RxJavaPlugins.onSubscribe(this, observer);</span><br><span class="line">    .... </span><br><span class="line">    subscribeActual(observer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>多个 Observable 和 Observer 通过两个方法的往复调用，最终构建完整的事件流。</p>
-<p>如果把第一个构建的 Observable 标记为 A，把自定义的 Observer 标记为 Z，那么各种操作符会构建不同的 Observer 标记为 B、C、D ….,通过 subscribeActual、 subscribe 方法使 A、B、C、D … 、Z 形成链式关系，最终由 Observable 对象 A 开启事件分发，将事件通过操作符定义的 Observer 对象 B、C、D … 进行各自处理，最终传递到 Observer 对象 Z 中，这个事件流得以完成，其实这就是平时所说的 Rxjava 中** Observer 由下向上 传递**，其实这也是 observerOn 只能只能指定下游 Observer 的线程的原因。</p>
+<p>如果把第一个构建的 Observable 标记为 A，把自定义的 Observer 标记为 Z，那么各种操作符会构建不同的 Observer 标记为 B、C、D ….,通过 subscribeActual、 subscribe 方法使 A、B、C、D … 、Z 形成链式关系，最终由 Observable 对象 A 开启事件分发，将事件通过操作符定义的 Observer 对象 B、C、D … 进行各自处理，最终传递到 Observer 对象 Z 中，这个事件流得以完成，其实这就是平时所说的 Rxjava 中 <strong>Observer 由下向上传递</strong>，其实这也是 observerOn 只能只能指定下游 Observer 的线程的原因。</p>
 
       
 
@@ -528,7 +528,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+                <a href="javascript:void(0)" class="js-tag color3">Dagger2</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">DI</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -536,15 +540,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Dagger2</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DI</a>
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -560,7 +560,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -604,6 +604,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Queue</a>
               </li>
              
@@ -612,19 +616,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
+                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -652,6 +652,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">RxJava</a>
               </li>
              
@@ -660,19 +664,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">adb</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">View</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">事件分发机制</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -681,6 +673,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">View</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">事件分发机制</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -716,14 +716,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">JNI</a>
               </li>
              
@@ -732,7 +724,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">OOP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
