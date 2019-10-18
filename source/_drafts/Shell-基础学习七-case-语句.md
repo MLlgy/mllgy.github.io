@@ -48,3 +48,37 @@ case "$cho" in
 
 esac
 ```
+
+
+
+
+
+
+touch local.properties
+echo "sdk.dir=/Users/daojia/Library/Android/sdk" >> local.properties
+
+chmod a+x gradlew
+./gradlew clean
+./gradlew assembleRelease
+
+
+
+
+cp -a /Users/daojia/Documents/jiagubao360 ./
+
+cd jiagubao360/jiagu/
+#yangxl_dj@163.com  yxl66080101 daojia123
+read  -t 30 -p "输入登录名: " name
+read  -t 30 -p "输入登录密码: " pass
+read  -t 30 -p "输入签名密码: " aspass
+java -jar jiagu.jar -login $name  #pass
+
+java -jar jiagu.jar  -importsign ../../app/sheep.jks $aspass sheep $aspass
+
+java -jar jiagu.jar  -config -x86
+
+java -jar jiagu.jar -jiagu ../../app/build/outputs/apk/release/*.apk ./ -autosign
+
+rm ../../app/build/outputs/apk/release/*release.apk
+
+cp -a *.apk ../../app/build/outputs/apk/release/

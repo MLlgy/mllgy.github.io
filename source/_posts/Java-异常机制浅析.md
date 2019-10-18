@@ -54,9 +54,13 @@ tags: [Java Basic,Exception]
 **对于这种异常，Java 编译器强制要求对这类异常进行 try/catch 并处理 或将异常抛出，否则程序就不能编译通过。**
 
 
+
 #### 声明受查异常
 
 派生于 Error 或 RuntimeException 类所有的异常称为 **非受查异常**，其他所有的异常称为 **受查异常**。
+
+**需要手动的捕获或抛出受检异常，而在代码层面尽力避免非受检异常。**
+
 
 **编译器将检查是否为所有的受查异常提供了异常处理器。**
 
@@ -247,14 +251,13 @@ private static void showTest() {
 
 场景描述：
 
-如果开发一个供其他程序员使用的子系统，那么用于表示子系统故障的异常类型可能有多种。 ServletException 就是这样一个异常的例子，执行servlet 的代码可能不想知道发生错误的细节原因，但是希望知道 servlet 是否有问题。
-
-下面是一个捕获异常将它再次抛出的基本方法：
+如果开发一个供其他程序员使用的子系统，那么用于表示子系统故障的异常类型可能有多种。 ServletException 就是这样一个异常的例子，执行servlet 的代码可能不想知道发生错误的细节原因，但是希望知道 servlet 是否有问题，这是可以通过再次抛出异常。下面是一个捕获异常将它再次抛出的基本方法：
 
 ```
 try{
     acess the database
 }catch(SQLException e){
+    // 这样的话通过异常信息，可以知道更多出错的细节。
     throw new ServletException("database error: " + e.getMessage());
 }
 ```
@@ -308,7 +311,6 @@ public void read(String filename) throws Throwable {
 
 应用场景：
 在 finally 语句中释放资源。
-
 ```
 InputStream in = new InputStream(...);
 try{
@@ -328,9 +330,11 @@ try{
 
 1. 代码没有抛出异常。代码会执行 1、2、5、6
 2. 抛出一个在 catch 子句中捕获的异常。try 语句中，程序发生异常，跳过剩余代码，执行 catch 子句中代码。
+   
     1. 如果 catch 中子句没有抛出异常，那么执行 1、3、4、5、6。
     2. 如果 catch 中子句抛出一个异常，异常将被抛回给这个方法的调用者，执行 1、3、5.
-3. 代码抛出了一个不是 catch 捕获的异常，这种情况下，程序执行 try 语句中所有的语句，直到有异常被抛出为止，代码执行 1、5。
+   
+3. 代码抛出了一个不是 catch 捕获的异常(代码 1 处)，这种情况下，程序执行 try 语句中所有的语句，直到有异常被抛出为止，代码执行 1、5。
 
 在日常代码中，**强烈建议解耦 try/catch 和 try/finally**，这样可以提高代码的清晰度，上面的代码可以这样书写：
 
@@ -347,7 +351,7 @@ try{
 }
 ```
 
-内存 try 代码的职责是关闭输入流，外层的 try 语句的职责就是报告出现的错误。
+内层 try 代码的职责是关闭输入流，外层的 try 语句的职责就是报告出现的错误。
 
 面临的问题：
 **finally 语句也可能抛出异常，这时会覆盖原来的异常。**
@@ -365,7 +369,7 @@ try{
 }
 ```
 
-假如资源属于一个实现了 AutoCloseable/Closeable 的类，Java 7 提供了一个有用的快捷方式，AutoCloseable 与一个接口方法：
+假如资源属于一个实现了 AutoCloseable/Closeable 的类，Java 7 提供了一个有用的快捷方式，AutoCloseable 有一个接口方法：
 
 `void close() throw Exception`
 
@@ -419,9 +423,9 @@ for(StackTraceElement frame: frames){
 }
 ```
 
-StackTraceElement 类含有能够获得文件名和当前执行的代码行号的方法，同时还含有获得类名和方法名的方法。
+**StackTraceElement 类含有能够获得文件名和当前执行的代码行号的方法，同时还含有获得类名和方法名的方法**，这是一切能够实现的基础。
 
-静态的Thread.getAllStackTrace() 方法，它可以产生所有线程的堆栈轨迹，下面给出这个方法的绝唱方式。
+静态的Thread.getAllStackTrace() 方法，它可以产生所有线程的堆栈轨迹，下面给出这个方法的具体方式。
 
 ```
 Map<Thread,StackTraceElement[]> map = Thread.getAllStackTrace();

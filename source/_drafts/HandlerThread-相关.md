@@ -3,7 +3,7 @@ title: HandlerThread 相关
 tags:
 ---
 
-### 源码
+### HandlerThread 源码
 
 ```
 public class HandlerThread extends Thread {
@@ -31,6 +31,7 @@ public class HandlerThread extends Thread {
     protected void onLooperPrepared() {
     }
 
+    // 此时会对线程相关的 Looper 进行初始化，并 notifyAll()
     @Override
     public void run() {
         mTid = Process.myTid();
@@ -68,9 +69,6 @@ public class HandlerThread extends Thread {
         return mLooper;
     }
 
-    /**
-     * @return a shared {@link Handler} associated with this thread
-     */
     @NonNull
     public Handler getThreadHandler() {
         if (mHandler == null) {
@@ -107,15 +105,12 @@ public class HandlerThread extends Thread {
         return false;
     }
 
-    /**
-     * Returns the identifier of this thread. See Process.myTid().
-     */
     public int getThreadId() {
         return mTid;
     }
 }
 ```
-从 HandlerThread 的字面可以猜想 HandlerThread 是一个和 Handler 、Thread 均相关的类，根据上面源码可以 HandlerThread 是可以使用 Handler 的 Thread。但是与普通 Thread 只执行后台耗时任务不同，HanderThread 内部创建了消息队列，我们可以着重看一下 HanderThread 的 run 方法：
+从 HandlerThread 的字面可以猜想 HandlerThread 是一个和 Handler 、Thread 均相关的类，根据上面源码可以 HandlerThread 是可以使用 Handler 的 Thread。但是与普通 Thread 只执行后台耗时任务不同，HanderThread 内部创建了 **线程相关的消息队列 Looper**，至于为什么是线程相关可以看一下:[ThreadLocal(Jdk1.8) 使用及源码分析](https://leegyplus.github.io/2019/09/19/ThreadLocal(Jdk1.8)%20%E4%BD%BF%E7%94%A8%E5%8F%8A%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/)。我们可以着重看一下 HanderThread 的 run 方法：
 
 ```
     @Override
@@ -138,9 +133,22 @@ public class HandlerThread extends Thread {
 具体使用：
     外部需要通过 Handler 的消息方式来通知 HandlerThread 执行一个具体的任务。
 
+```
+```
+HandlerThread handlerThread = new HandlerThread("HandlerThread");
+handlerThread.start();
+Handler mHandler = new Handler(handlerThread.getLooper()){
+    @Override
+    public void handleMessage(Message msg) {
+        super.handleMessage(msg);
+        Log.d("Log","current thread is "+Thread.currentThread().getName());
+    }
+};
+mHandler.sendEmptyMessage(1);
+```
+```
 
-
-### HandlerThread 使用 IntentService
+### 使用 HandlerThread 实现 IntentService 相关功能
 
 
 

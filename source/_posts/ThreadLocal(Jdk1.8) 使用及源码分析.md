@@ -245,6 +245,56 @@ public class User {
 当一些数据是以线程为作用域，并且不同线程拥有数据的不同副本的时候，就可以考虑使用 ThreadLocal。
 
 
+
+在子线程中初始化 Handler 需要手动的创建 Looper，因为 Looper 是线程相关的，那么 Looper 是怎样实现线程相关的呢？本质就是使用了 ThreadLocal。
+
+```
+Handler mHandler;
+new Thread(new Runnable() {
+    @Override
+    public void run() {
+        Looper.prepare();//Looper初始化
+        //Handler初始化 需要注意, Handler初始化传入Looper对象是子线程中缓存的Looper对象
+        mHandler = new Handler(Looper.myLooper());
+        Looper.loop();//死循环
+    }
+}).start();
+```
+具体看一下源码：
+
+```
+static final ThreadLocal<Looper> sThreadLocal = new ThreadLocal<Looper>();
+public static void prepare() {
+    prepare(true);
+}
+private static void prepare(boolean quitAllowed) {
+    if (sThreadLocal.get() != null) {
+        throw new RuntimeException("Only one Looper may be created per thread");
+    }
+    sThreadLocal.set(new Looper(quitAllowed));
+}
+public static @Nullable Looper myLooper() {
+    return sThreadLocal.get();
+}
+```
+
+可以看到如果不执行 `Looper.prepare()` ，则 `Looper.myLooper()` 就无法获取到线程相关的 Looper 实例对象。
+
+当然 Android 给了更为简单的实现方式： HandlerThread，但是本质还是 ThreadLocal。
+
+```
+HandlerThread handlerThread = new HandlerThread("HandlerThread");
+handlerThread.start();
+Handler mHandler = new Handler(handlerThread.getLooper()){
+    @Override
+    public void handleMessage(Message msg) {
+        super.handleMessage(msg);
+        Log.d("Log","current thread is "+Thread.currentThread().getName());
+    }
+};
+mHandler.sendEmptyMessage(1);
+```
+
 #### 3. 复杂逻辑下的对象传递
 
 
@@ -260,6 +310,8 @@ public class User {
     这种方式是可以接受的，但是这种方式是不具有扩充性，如果有两个线程在执行，那么就需要提供两个静态的监听对象。如果是更多的线程呢？这无疑是代码中的”坏味道“。
 
 而使用 ThreadLocal 则完全不会遇到上面问题。
+
+
 
 
 ---

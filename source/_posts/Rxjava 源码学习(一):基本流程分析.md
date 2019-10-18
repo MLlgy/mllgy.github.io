@@ -1,13 +1,20 @@
 ---
-title: Rxjava 源码学习(一):基本流程
-tags:
+title: 'Rxjava 源码学习(一):基本流程分析'
+date: 2019-10-18 15:02:06
+tags: [Rxjava 源码分析,]
 ---
 
 
-版本：Rxjava2.2.8 
+
+> Rxjava 源码版本：Rxjava2.2.8 
+
+
+### 1. Rxjava 的基本实现
 
 首先看一下最简单的例子，具体查看其内部实现：
+通过以下代码查看 Rxjava 的典型使用：
 
+<!-- more -->
 
 ```
 Observable.create(new ObservableOnSubscribe<String>() {
@@ -44,16 +51,34 @@ onNext：two
 onComplete
 ```
 
-### create
+### 2. 创建 Observable 对象
 
 
+在上面的代码中，Observable 通过 create 来创建 Observable 对象，其具体源码如下：
+
+Observable#create
 ```
 public static <T> Observable<T> create(ObservableOnSubscribe<T> source)
     ObjectHelper.requireNonNull(source, "source is null");
     return RxJavaPlugins.onAssembly(new ObservableCreate<T>(source));
 }
 ```
-source 即为我们在使用 Rxjava 的 create 中传入的匿名对象，在上文中为 ObservableOnSubscribe，其方法 -- subscribe 的参数为事件发生器，可以用来发送事件，事件发生器为整个事件流的驱动。
+
+通过调用 RxJavaPlugins.onAssembly 去组装 Observable，具体代码：
+
+```
+public static <T> Observable<T> onAssembly(@NonNull Observable<T> source) {
+    Function<? super Observable, ? extends Observable> f = onObservableAssembly;
+    if (f != null) {
+        return apply(f, source);
+    }
+    return source;
+}
+```
+
+至于 onObservableAssembly 是什么没看懂，但是不影响对流程的分析，在此方法中，我们可以认为直接返回传入的 Observable 对象。
+
+其中 source 即为我们在使用 Rxjava 的 create 中传入的匿名对象，在上文中为 ObservableOnSubscribe，其方法 -- subscribe 的参数为 `事件发生器`，可以用来发送事件，事件发生器为整个事件流的驱动。
 
 其中涉及了 ObservableCreate，由于这个类对流程进行十分重要，所以我们查看一下其具体实现：
 
@@ -112,29 +137,12 @@ source.subscribe(parent);
 
 以上代码使 Obervable、Observer 与时间发射器分别产生关联，是事件流得以进行下去的关键。其实 `observer.onSubscribe(parent)` 即为在使用 Rxjava 过程的 Observer 中的 `onSubscribe(Disposable d)`，而 `source.subscribe(parent)` 即为 即为在使用 Rxjava 过程的 Observable 中的 `public void subscribe(ObservableEmitter<String> emitter)`，以上全是在方法 subscribeActual 中调用的，具体 subscribeActual 什么时候调用，查看下面的分析。
 
-
-**组装**
-
-通过调用 RxJavaPlugins.onAssembly 去组装 Observable，具体代码：
-
-```
-public static <T> Observable<T> onAssembly(@NonNull Observable<T> source) {
-    Function<? super Observable, ? extends Observable> f = onObservableAssembly;
-    if (f != null) {
-        return apply(f, source);
-    }
-    return source;
-}
-```
-
-至于 onObservableAssembly 是什么没看懂，但是不影响对流程的分析，在此方法中，我们可以认为直接返回传入的 Observable 对象。
-
-**订阅**
+### 3. 产生订阅关系
 
 
 Observable 对象通过 subscribe 与 Observer 产生调用关系。
 
-
+Observable#subscribe
 ```
 public final void subscribe(Observer<? super T> observer) {
     ObjectHelper.requireNonNull(observer, "observer is null");
@@ -172,9 +180,7 @@ Observable.create(new ObservableOnSubscribe<String>() {
 });
 ```
 
-**发布事件**
-
-
+### 4. 发布事件
 
 既然 Observer、Observable 分别和事件发生器(Emitter) 产生关联，并且通过回调来到事件发射现场，那么具体查看是如何发生事件，以及观察者如何对每个事件是如何调用的。
 
@@ -202,13 +208,6 @@ Observable.create(new ObservableOnSubscribe<String>() {
             }
             if (!isDisposed()) {
                 observer.onNext(t);
-            }
-        }
-
-        @Override
-        public void onError(Throwable t) {
-            if (!tryOnError(t)) {
-                RxJavaPlugins.onError(t);
             }
         }
 
@@ -254,7 +253,7 @@ Observable.create(new ObservableOnSubscribe<String>() {
 emitter.onNext("one");
 ```
 
-此时会调用到 CreateEmitter#onNext：
+最终会调用到 CreateEmitter#onNext：
 
 ```
         @Override
@@ -309,11 +308,14 @@ public boolean tryOnError(Throwable t) {
 至此，Rxjava 的基本流程分析结束。
 
 
-事件流可以而上而下进行下去，原因是 Observable.操作符 得到的还是 Observable，通过通过 Observable.subsribe 方法实现订阅关系。
+事件流可以而上而下进行下去，原因是 Observable 操作符 得到的还是 Observable，通过通过 Observable.subsribe 方法实现订阅关系。
 
-### Map 操作符
+### 5. 一个操作符：Map 
 
-map 操作符使用代码：
+我们通过 map 操作符去理解 Rxjava 中数量众多的操作符的基本原理。
+
+示例代码如下：
+
 ```
 Observable.create(new ObservableOnSubscribe<String>() {
     @Override
@@ -346,8 +348,7 @@ Observable.create(new ObservableOnSubscribe<String>() {
     }
 });
 ```
-
-map 操作符：
+map 操作符源码：
 ```
 public final <R> Observable<R> map(Function<? super T, ? extends R> mapper) {
     ObjectHelper.requireNonNull(mapper, "mapper is null");
@@ -408,8 +409,7 @@ public final class ObservableMap<T, U> extends AbstractObservableWithUpstream<T,
 }
 ```
 
-接下来的流程和 Rxjava 基本流程基本相同：
-在执行产生订阅关系的方法： subscribe 时调用了 ObservableMap#subscribeActual：
+接下来的流程和 Rxjava 基本流程基本相同,执行产生订阅关系的方法 - subscribe 时调用 ObservableMap#subscribeActual：
 
 ```
 @Override
@@ -441,17 +441,35 @@ public final void subscribe(Observer<? super T> observer) {
 其中最重要的方法 subscribeActual 调用的为 ObservableCreate 的 subscribeActual 方法，接下来和基本流程一样会调用 ObservableCreate 的 subscribe 从而开启事件的分发，与 Rxjava 基本流程不同的是 map 操作符构建了 MapObserver，完成 MapObserver 的相关操作后，才会最终调用自定义的 Observer 对象。
 
 
-### 总结
+### 6. 总结
 
+以 map 操作符为例，可以基本理清 Rxjava 中操作符的基本原理，
+Rxjava **整个事件流向的核心代码** 如下：
 
-如果把第一个构建的 Observable 标记为 A，把自定义的 Observer 标记为 Z，那么各种操作符会构建不同的 Observer 标记为 B、C、D ....,通过 subscribeActual 方法使 A、B、C、D ... 、Z 形成链式关系，最终由 Observable 对象 A 开启事件分发，将事件通过操作符定义的 Observer 对象 B、C、D ... 进行各自处理，最终传递到 Observer 对象 Z 中，这个事件流得以完成。
-
+xxxObservable#subscribeActual
 ```
 @Override
 public void subscribeActual(Observer<? super U> t) {
     source.subscribe(new XxxxObserver<T, U>(t, function));
 }
 ```
+
+Observable#subscribe
+```
+public final void subscribe(Observer<? super T> observer) {
+    observer = RxJavaPlugins.onSubscribe(this, observer);
+    .... 
+    subscribeActual(observer);
+}
+```
+
+
+多个 Observable 和 Observer 通过两个方法的往复调用，最终构建完整的事件流。
+
+
+如果把第一个构建的 Observable 标记为 A，把自定义的 Observer 标记为 Z，那么各种操作符会构建不同的 Observer 标记为 B、C、D ....,通过 subscribeActual、 subscribe 方法使 A、B、C、D ... 、Z 形成链式关系，最终由 Observable 对象 A 开启事件分发，将事件通过操作符定义的 Observer 对象 B、C、D ... 进行各自处理，最终传递到 Observer 对象 Z 中，这个事件流得以完成，其实这就是平时所说的 Rxjava 中** Observer 由下向上 传递**，其实这也是 observerOn 只能只能指定下游 Observer 的线程的原因。
+
+
 
 
 
