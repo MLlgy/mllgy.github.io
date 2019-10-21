@@ -21,7 +21,7 @@ tags: [Rxjava 源码分析]
 
 ![](/../images/2019_10_18_01.png)
 
-**关于源码中的 upsteam 和 downstream**
+### 1. 关于源码中的 upsteam 和 downstream
 
 从图上可以看到，在最终订阅 Observer 之前，执行每一个操作符并不会同时生成相应的 Observable 和 Observer，以调用 subscribe 为分界线，将整个事件流分成两部分：
 1. 调用 subscribe 之前，生成相应操作符的 Observable。
@@ -30,7 +30,7 @@ tags: [Rxjava 源码分析]
 需要注意的一点是在查看源码会看到 upstream、downstream，具体的 up 和 down 不是有相应对象的生成顺序决定的，而是有 Rxjava 相应操作符的调用先后决定。
 
 
-**关于自定义 Observer 的 onSubscribe 方法的执行线程问题**
+### 2. 关于自定义 Observer 的 onSubscribe 方法的执行线程问题
 
 
 Rxjava 中的 observerOn 和 subscribeOn 可以指定相应的 Observer 和 Observable 的运行线程，但是通过打印日志我们可以看到 onSubscribe 运行的线程并不是两个操作符指定的线程，而是代码执行的线程。
@@ -69,7 +69,7 @@ public final void subscribe(Observer<? super T> observer) {
 
 
 
-**关于取消订阅关系**
+### 3. 关于取消订阅关系
 
 在日常开发中，我们会遇到类似这样的需求：当退出 Activity 时，需要取消正在执行的实现，此功能的实现就是通过取消订阅关系来实现。
 
@@ -131,3 +131,45 @@ private void test(){
         compositeDisposable.clear();
     }
 ```
+
+在自定义 Observer(最下游) 调用 Disposable#dispose():
+```
+@Override
+public void dispose() {
+    upstream.dispose();
+}
+```
+ 最终会通过事件流将取消订阅的动作传递到最上游：
+
+ ```
+// CreateEmitter#dispose
+@Override
+public void dispose() {
+    DisposableHelper.dispose(this);
+}
+```
+
+由于订阅关系取消，所以后续事件无法发布：
+
+```
+// CreateEmitter#onNext
+@Override
+public void onNext(T t) {
+    if (t == null) {
+        onError(new NullPointerException("onN
+        return;
+    }
+    // 取消订阅后 isDisposed 为 false
+    if (!isDisposed()) {
+        observer.onNext(t);
+    }
+}
+CreateEmitter#isDisposed
+@Override
+public boolean isDisposed() {
+    return DisposableHelper.isDisposed(get());
+}
+```
+
+
+至此整个事件流被终止。

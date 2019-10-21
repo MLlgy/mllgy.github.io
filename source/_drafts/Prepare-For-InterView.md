@@ -74,9 +74,51 @@ HashMap 相关
 
 
 
-## 简历
+## 性能优化
+
+
+
+### 1. 压缩 apk 
+### 2. 内存泄漏
+
+#### 工具
+
+Trace 
+
+#### 实践
+
+
+LeakCanary 的实践
+
+
+### 3. 网络优化
+
+
+### 4. 电量优化
+
+
+
+## Jetpack
+
+具体实践
+
+## kotlin
+
+
+协程
+
+
+
+
+## 简历、面试题
 
 [南尘](http://www.imooc.com/article/280388)
 ---
 
 [面试集合](https://www.diycode.cc/wiki/androidinterview)
+
+
+[面试题](https://juejin.im/post/5da16523e51d45780931efb5)
+
+
+

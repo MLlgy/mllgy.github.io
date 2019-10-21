@@ -24,3 +24,14 @@ Maybe - MaybeSource - MaybeObserver
 定义操作符
 
 [Rxjava 操作符分类 中文翻译文档](https://mcxiaoke.gitbooks.io/rxdocs/content/Operators.html)
+
+
+---
+基本流程
+
+线程切换
+订阅 
+背压
+为什么有人反对使用 Rxjava？
+
+subject

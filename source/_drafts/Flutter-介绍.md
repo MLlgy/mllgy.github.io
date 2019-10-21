@@ -15,3 +15,13 @@ tags:
 ### 路由
 * 在 Flutter 中页面称为路由(Router)。
 * 在 Flutter 中，**导航器** 管理应用程序的 **路由栈**，将路由推入 (push) 到导航器的栈中，将会显示该路由界面，从导航器中弹出 (pop) 路由，将返回到前一个路由(页面)。
+
+
+
+
+
+-----
+[全网最全 Flutter 与 React Native 深入对比分析](https://juejin.im/post/5d0bac156fb9a07ec56e7f15)
+
+
+[一个 Flutter 学习贴](https://juejin.im/user/5b5d45f4e51d453526175c06/posts)
