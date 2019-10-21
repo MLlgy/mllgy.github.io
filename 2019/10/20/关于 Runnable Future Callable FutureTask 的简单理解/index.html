@@ -12,11 +12,11 @@
 <meta name="keywords" content="多线程,Future,FutureTask">
 <meta property="og:type" content="article">
 <meta property="og:title" content="关于 Runnable Future Callable FutureTask 的简单理解">
-<meta property="og:url" content="/2019/10/20/Runnable-Future-Callable/index.html">
+<meta property="og:url" content="/2019/10/20/关于 Runnable Future Callable FutureTask 的简单理解/index.html">
 <meta property="og:site_name" content="GY">
 <meta property="og:description" content="1. Runnable 源代码123public interface Runnable &amp;#123;    public abstract void run();&amp;#125;  但是 Runnable 不允许声明受检异常以及定义返回值。不允许声明受检异常意味着必须手动的捕获并处理受检异常，这是十分麻烦的。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-10-21T02:54:45.808Z">
+<meta property="og:updated_time" content="2019-10-21T03:25:14.593Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于 Runnable Future Callable FutureTask 的简单理解">
 <meta name="twitter:description" content="1. Runnable 源代码123public interface Runnable &amp;#123;    public abstract void run();&amp;#125;  但是 Runnable 不允许声明受检异常以及定义返回值。不允许声明受检异常意味着必须手动的捕获并处理受检异常，这是十分麻烦的。">
@@ -159,7 +159,7 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Runnable-Future-Callable" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-关于 Runnable Future Callable FutureTask 的简单理解" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
@@ -171,7 +171,7 @@
   
 
         
-        <a href="/2019/10/20/Runnable-Future-Callable/" class="archive-article-date">
+        <a href="/2019/10/20/关于 Runnable Future Callable FutureTask 的简单理解/" class="archive-article-date">
   	<time datetime="2019-10-20T08:02:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-20</time>
 </a>
         
@@ -201,7 +201,10 @@
 <p>Future 只是定义了一些接口规范，而 FutureTask 则是它的实现类。</p>
 <p>FutureTask 理解为 <strong>可以被取消的任务</strong>，它提供实现了 Future 的基本方法：启动、终止、查询是否执行完毕、返回执行结果。</p>
 <p>可以通过执行 get() 获取执行结果，在任务执行结束之前，会一直阻塞，直到任务执行完成，获取结果。<strong>阻塞的原因</strong>为执行的循环 <code>for(;;)</code>, 只有在状态为结束后才会继续执行。</p>
-<p>Future 实现了 RunnableFuture，而RunnableFuture 实现了 Runnable 和 Future，所以它可以被当做 Runnable 被线程执行，也可以作为 Future 得到 Callable 的返回值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">// FutureTask#get()</span><br><span class="line">public V get() throws InterruptedException, ExecutionException &#123;</span><br><span class="line">    int s = state;</span><br><span class="line">    if (s &lt;= COMPLETING)</span><br><span class="line">        s = awaitDone(false, 0L);</span><br><span class="line">    return report(s);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private int awaitDone(boolean timed, long nanos)</span><br><span class="line">    throws InterruptedException &#123;</span><br><span class="line">    final long deadline = timed ? System.nanoTime() + nanos : 0L;</span><br><span class="line">    WaitNode q = null;</span><br><span class="line">    boolean queued = false;</span><br><span class="line">    for (;;) &#123;</span><br><span class="line">        //最终返回状态，如果状态为完成，则执行 report(s)</span><br><span class="line">        return state;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public void run() &#123;</span><br><span class="line">    </span><br><span class="line">    try &#123;</span><br><span class="line">        Callable&lt;V&gt; c = callable;</span><br><span class="line">        if (c != null &amp;&amp; state == NEW) &#123;</span><br><span class="line">            V result;</span><br><span class="line">            boolean ran;</span><br><span class="line">            try &#123;</span><br><span class="line">                // 执行 call 方法，最终执行相应的操作，置位状态</span><br><span class="line">                result = c.call();</span><br><span class="line">                ran = true;</span><br><span class="line">            &#125; catch (Throwable ex) &#123;</span><br><span class="line">                result = null;</span><br><span class="line">                ran = false;</span><br><span class="line">                setException(ex);</span><br><span class="line">            &#125;</span><br><span class="line">            if (ran)</span><br><span class="line">                set(result);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        int s = state;</span><br><span class="line">        if (s &gt;= INTERRUPTING)</span><br><span class="line">            handlePossibleCancellationInterrupt(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>s
+Future 实现了 RunnableFuture，而RunnableFuture 实现了 Runnable 和 Future，所以它可以被当做 Runnable 被线程执行，也可以作为 Future 得到 Callable 的返回值。</p>
 <h4 id="3-3-通过-Thread-执行-FutureTask-任务"><a href="#3-3-通过-Thread-执行-FutureTask-任务" class="headerlink" title="3.3 通过 Thread 执行 FutureTask 任务"></a>3.3 通过 Thread 执行 FutureTask 任务</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">FutureTask&lt;Integer&gt; futureTask</span><br><span class="line">            = new FutureTask&lt;&gt;(() -&gt; 1 + 2);</span><br><span class="line">Thread thread = new Thread(futureTask);</span><br><span class="line">thread.start();</span><br><span class="line">System.out.println(&quot;result 2： &quot; + futureTask.get().intValue());</span><br></pre></td></tr></table></figure>
 
 <h4 id="3-4-通过-ThreadPoolExecutor-执行-FutureTask-任务"><a href="#3-4-通过-ThreadPoolExecutor-执行-FutureTask-任务" class="headerlink" title="3.4 通过 ThreadPoolExecutor 执行 FutureTask 任务"></a>3.4 通过 ThreadPoolExecutor 执行 FutureTask 任务</h4><p>通过线程池执行 FutureTask 任务：</p>
@@ -330,7 +333,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http:/2019/10/20/Runnable-Future-Callable/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http:/2019/10/20/关于 Runnable Future Callable FutureTask 的简单理解/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -492,10 +495,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Dagger2</a>
               </li>
              
@@ -504,15 +503,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -568,15 +571,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Queue</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Jetpack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -592,18 +599,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Kotlin 泛型</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
               </li>
              
@@ -612,7 +607,39 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Kotlin 泛型</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Kotlin 协程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">RxJava</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Transformer</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">VIM</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">adb</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -628,23 +655,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">RxJava</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Transformer</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">VIM</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">adb</a>
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -656,15 +667,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -673,10 +680,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -700,11 +703,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -724,11 +727,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
+                <a href="javascript:void(0)" class="js-tag color4">内部类</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">内部类</a>
+                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -740,15 +743,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
               </li>
              
               <li class="article-tag-list-item">
