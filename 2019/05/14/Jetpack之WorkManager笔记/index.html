@@ -8,17 +8,18 @@
   <link rel="dns-prefetch" href>
   <title>Jetpack之WorkManager基本了解 | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="概述通过WorkManager API，可以轻松安排即使应用程序退出或设备重新启动也可以运行的可延迟的异步任务。 feature 向后兼容到 API 14  在 API 23+ 的设备上使用 JobScheduler。 在 API 14-22 的设备上使用 BroadcastReceiver 以及 AlarmManager。   为网络或获取充电状态添加约束  安排一次性异步任务或定期任务">
+  <meta name="description" content="0x0000 概述通过WorkManager API，可以轻松安排即使应用程序退出或设备重新启动也可以运行的可延迟的异步任务。 0x0001 feature 向后兼容到 API 14  在 API 23+ 的设备上使用 JobScheduler。 在 API 14-22 的设备上使用 BroadcastReceiver 以及 AlarmManager。   为网络或获取充电状态添加约束  安排一次">
+<meta name="keywords" content="Jetpack,WorkManager">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Jetpack之WorkManager基本了解">
 <meta property="og:url" content="/2019/05/14/Jetpack之WorkManager笔记/index.html">
 <meta property="og:site_name" content="GY">
-<meta property="og:description" content="概述通过WorkManager API，可以轻松安排即使应用程序退出或设备重新启动也可以运行的可延迟的异步任务。 feature 向后兼容到 API 14  在 API 23+ 的设备上使用 JobScheduler。 在 API 14-22 的设备上使用 BroadcastReceiver 以及 AlarmManager。   为网络或获取充电状态添加约束  安排一次性异步任务或定期任务">
+<meta property="og:description" content="0x0000 概述通过WorkManager API，可以轻松安排即使应用程序退出或设备重新启动也可以运行的可延迟的异步任务。 0x0001 feature 向后兼容到 API 14  在 API 23+ 的设备上使用 JobScheduler。 在 API 14-22 的设备上使用 BroadcastReceiver 以及 AlarmManager。   为网络或获取充电状态添加约束  安排一次">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-23T02:54:04.047Z">
+<meta property="og:updated_time" content="2019-10-21T07:24:00.404Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Jetpack之WorkManager基本了解">
-<meta name="twitter:description" content="概述通过WorkManager API，可以轻松安排即使应用程序退出或设备重新启动也可以运行的可延迟的异步任务。 feature 向后兼容到 API 14  在 API 23+ 的设备上使用 JobScheduler。 在 API 14-22 的设备上使用 BroadcastReceiver 以及 AlarmManager。   为网络或获取充电状态添加约束  安排一次性异步任务或定期任务">
+<meta name="twitter:description" content="0x0000 概述通过WorkManager API，可以轻松安排即使应用程序退出或设备重新启动也可以运行的可延迟的异步任务。 0x0001 feature 向后兼容到 API 14  在 API 23+ 的设备上使用 JobScheduler。 在 API 14-22 的设备上使用 BroadcastReceiver 以及 AlarmManager。   为网络或获取充电状态添加约束  安排一次">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
   
@@ -178,8 +179,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>通过WorkManager API，可以轻松安排即使应用程序退出或设备重新启动也可以运行的可延迟的异步任务。</p>
-<h3 id="feature"><a href="#feature" class="headerlink" title="feature"></a>feature</h3><ul>
+        <h3 id="0x0000-概述"><a href="#0x0000-概述" class="headerlink" title="0x0000 概述"></a>0x0000 概述</h3><p>通过WorkManager API，可以轻松安排即使应用程序退出或设备重新启动也可以运行的可延迟的异步任务。</p>
+<h3 id="0x0001-feature"><a href="#0x0001-feature" class="headerlink" title="0x0001 feature"></a>0x0001 feature</h3><ul>
 <li><p>向后兼容到 API 14</p>
 <ul>
 <li>在 API 23+ 的设备上使用 JobScheduler。</li>
@@ -207,7 +208,7 @@
 <li>定期将应用程序数据与服务器同步</li>
 </ul>
 <p>WorkManager 不适用于在应用程序进程消失时，安全退出的后台工作，也不适用于需要立即执行的任务。</p>
-<h3 id="使用-Work"><a href="#使用-Work" class="headerlink" title="使用 Work"></a>使用 Work</h3><ol>
+<h3 id="0x0002-使用-Work"><a href="#0x0002-使用-Work" class="headerlink" title="0x0002 使用 Work"></a>0x0002 使用 Work</h3><ol>
 <li>通过 Work 来定义 任务</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class UploadWorker(context:Context,workerParameters: WorkerParameters):Worker(context,workerParameters) &#123;</span><br><span class="line"></span><br><span class="line">    override fun doWork(): Result &#123;</span><br><span class="line">        return Result.success()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -231,11 +232,11 @@
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WorkManager.getInstance().enqueue(uploadWorkRequest)</span><br></pre></td></tr></table></figure>
 
-<h3 id="Work、WorkRequest、WorkManager-关系"><a href="#Work、WorkRequest、WorkManager-关系" class="headerlink" title="Work、WorkRequest、WorkManager 关系"></a>Work、WorkRequest、WorkManager 关系</h3><p>Work 定义任务, WorkRequest 基于 Work 创建 执行任务的请求，WorkManager 作为管理者执行 任务请求。</p>
-<h3 id="定义-WorkRequest"><a href="#定义-WorkRequest" class="headerlink" title="定义 WorkRequest"></a>定义 WorkRequest</h3><h4 id="为-WorkRequest-添加约束条件"><a href="#为-WorkRequest-添加约束条件" class="headerlink" title="为 WorkRequest 添加约束条件"></a>为 WorkRequest 添加约束条件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// Create a Constraints object that defines when the task should run</span><br><span class="line">val constraints = Constraints.Builder()</span><br><span class="line">        .setRequiresDeviceIdle(true)</span><br><span class="line">        .setRequiresCharging(true)</span><br><span class="line">        .build()</span><br><span class="line"></span><br><span class="line">// ...then create a OneTimeWorkRequest that uses those constraints</span><br><span class="line">val compressionWork = OneTimeWorkRequestBuilder&lt;CompressWorker&gt;()</span><br><span class="line">        .setConstraints(constraints)</span><br><span class="line">        .build()</span><br></pre></td></tr></table></figure>
+<h3 id="0x0004-Work、WorkRequest、WorkManager-关系"><a href="#0x0004-Work、WorkRequest、WorkManager-关系" class="headerlink" title="0x0004 Work、WorkRequest、WorkManager 关系"></a>0x0004 Work、WorkRequest、WorkManager 关系</h3><p>Work 定义任务, WorkRequest 基于 Work 创建 执行任务的请求，WorkManager 作为管理者执行 任务请求。</p>
+<h3 id="0x0005-定义-WorkRequest"><a href="#0x0005-定义-WorkRequest" class="headerlink" title="0x0005 定义 WorkRequest"></a>0x0005 定义 WorkRequest</h3><h4 id="0x0006-为-WorkRequest-添加约束条件"><a href="#0x0006-为-WorkRequest-添加约束条件" class="headerlink" title="0x0006 为 WorkRequest 添加约束条件"></a>0x0006 为 WorkRequest 添加约束条件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// Create a Constraints object that defines when the task should run</span><br><span class="line">val constraints = Constraints.Builder()</span><br><span class="line">        .setRequiresDeviceIdle(true)</span><br><span class="line">        .setRequiresCharging(true)</span><br><span class="line">        .build()</span><br><span class="line"></span><br><span class="line">// ...then create a OneTimeWorkRequest that uses those constraints</span><br><span class="line">val compressionWork = OneTimeWorkRequestBuilder&lt;CompressWorker&gt;()</span><br><span class="line">        .setConstraints(constraints)</span><br><span class="line">        .build()</span><br></pre></td></tr></table></figure>
 
 <p>当所有的约束条件满足时，work 会执行。如果在执行 work 过程中不再满足约束条件，那么 WorkManager 会停止 work 的执行，等待约束条件满足后再次执行 work。</p>
-<h4 id="延迟执行"><a href="#延迟执行" class="headerlink" title="延迟执行"></a>延迟执行</h4><p>以下是将任务设置为在排队后至少10分钟后运行。</p>
+<h4 id="0x0007-延迟执行"><a href="#0x0007-延迟执行" class="headerlink" title="0x0007 延迟执行"></a>0x0007 延迟执行</h4><p>以下是将任务设置为在排队后至少10分钟后运行。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">val uploadWorkRequest = OneTimeWorkRequestBuilder&lt;UploadWorker&gt;()</span><br><span class="line">        .setInitialDelay(10, TimeUnit.MINUTES)</span><br><span class="line">        .build()</span><br></pre></td></tr></table></figure>
       
 
@@ -275,6 +276,21 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Jetpack</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">WorkManager</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -496,10 +512,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Dagger2</a>
               </li>
              
@@ -508,11 +520,27 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -525,18 +553,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">工具</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -564,19 +580,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">List</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Collections</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+                <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -588,7 +596,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -596,11 +608,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
+                <a href="javascript:void(0)" class="js-tag color2">WorkManager</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Kotlin 泛型</a>
+                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -612,11 +624,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Kotlin 泛型</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Kotlin 协程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -625,10 +649,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Transformer</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -648,10 +668,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多线程</a>
               </li>
              
@@ -661,6 +677,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">FutureTask</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -744,15 +764,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
               </li>
              
               <li class="article-tag-list-item">

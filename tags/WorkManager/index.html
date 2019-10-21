@@ -6,22 +6,15 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href>
-  <title>Java集合之Queue | GY</title>
+  <title>Tag: WorkManager | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="概述 Queue 用于模拟 “队列” 这种数据结构，队列为 先进先出(First In First Out,FIFO) 的容器。队列可以将元素插入尾部，可以访问位于队列头部的元素，所以队列不能随机访问队列的元素。 1234567891011121314151617181920212223242526public interface Queue&amp;lt;E&amp;gt; extends Collection">
-<meta name="keywords" content="Java Basic,Java Collection,Queue">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Java集合之Queue">
-<meta property="og:url" content="/2019/05/10/Java集合之Queue/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="GY">
+<meta property="og:url" content="/tags/WorkManager/index.html">
 <meta property="og:site_name" content="GY">
-<meta property="og:description" content="概述 Queue 用于模拟 “队列” 这种数据结构，队列为 先进先出(First In First Out,FIFO) 的容器。队列可以将元素插入尾部，可以访问位于队列头部的元素，所以队列不能随机访问队列的元素。 1234567891011121314151617181920212223242526public interface Queue&amp;lt;E&amp;gt; extends Collection">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="/images/2019_05_09_01.jpg">
-<meta property="og:updated_time" content="2019-09-06T06:09:29.812Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java集合之Queue">
-<meta name="twitter:description" content="概述 Queue 用于模拟 “队列” 这种数据结构，队列为 先进先出(First In First Out,FIFO) 的容器。队列可以将元素插入尾部，可以访问位于队列头部的元素，所以队列不能随机访问队列的元素。 1234567891011121314151617181920212223242526public interface Queue&amp;lt;E&amp;gt; extends Collection">
-<meta name="twitter:image" content="/images/2019_05_09_01.jpg">
+<meta name="twitter:title" content="GY">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
   
@@ -161,230 +154,64 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Java集合之Queue" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      Java集合之Queue
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2019" class="archive-year">2019</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2019/05/14/Jetpack之WorkManager笔记/" class="archive-article-date">
+  	<time datetime="2019-05-14T07:15:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-14</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2019/05/14/Jetpack之WorkManager笔记/">Jetpack之WorkManager基本了解</a>
     </h1>
   
 
-        
-        <a href="/2019/05/10/Java集合之Queue/" class="archive-article-date">
-  	<time datetime="2019-05-10T09:57:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-10</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p><img src="/../images/2019_05_09_01.jpg" alt="List、Set、Queue"></p>
-<p>Queue 用于模拟 “队列” 这种数据结构，队列为 先进先出(First In First Out,FIFO) 的容器。队列可以将元素插入尾部，可以访问位于队列头部的元素，所以队列不能随机访问队列的元素。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">public interface Queue&lt;E&gt; extends Collection&lt;E&gt; &#123;</span><br><span class="line">    /**</span><br><span class="line">     * 将指定元素加入队列的尾部，内部调用 offer</span><br><span class="line">     */</span><br><span class="line">    boolean add(E e);</span><br><span class="line">    /**</span><br><span class="line">     * 将指定元素加入队列的尾部</span><br><span class="line">     */</span><br><span class="line">    boolean offer(E e);</span><br><span class="line">    /**</span><br><span class="line">     * 获取队列头部的元素，并删除该元素</span><br><span class="line">     */</span><br><span class="line">    E remove();</span><br><span class="line">    /**</span><br><span class="line">     * 获取队列头部的元素，并删除该元素</span><br><span class="line">     */</span><br><span class="line">    E poll();</span><br><span class="line">    /**</span><br><span class="line">     * 获取队列头部的元素，但是不删除该元素，与 peek 唯一不同是会抛出 NoSuchElementException 异常</span><br><span class="line">     */    </span><br><span class="line">    E element();</span><br><span class="line">    /**</span><br><span class="line">     * 获取队列头部的元素，不删除该元素</span><br><span class="line">     */</span><br><span class="line">    E peek();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Queue 有 PriorityQueue 实现类，同时 Queue 还有一个 Deque 接口，Deque 代表一个 “双端队列”，双端队列可以在两端进行添加、删除元素，Deque 的实现类既可以当做队列来使用也可以当做栈来使用，其有两个实现类： ArrayDeque、LinkedList。</p>
-<h3 id="PriorityQueue-类"><a href="#PriorityQueue-类" class="headerlink" title="PriorityQueue 类"></a>PriorityQueue 类</h3><p>PriorityQueue 保存队列元素的顺序不是按加入队列的顺序，而是按队列元素的大小进行重新排序。而其排序方式有：自然排序和定制排序。两种排序规则的实现与 TreeSet 相同，不赘述。</p>
-<p>PriorityQueue 内部通过数组实现。</p>
-<h3 id="Deque-接口与-ArrayDeque-实现类"><a href="#Deque-接口与-ArrayDeque-实现类" class="headerlink" title="Deque 接口与 ArrayDeque 实现类"></a>Deque 接口与 ArrayDeque 实现类</h3><p>Deque 为 Queue 的子接口，代表了一个 <strong>双端队列</strong>，可以在双端添加、删除数据的，具体操作可以查看 Deque 的 Api。</p>
-<p>与 Queue 方法不同为以上方法可以拆分为 xxxFirst()、xxxLast() 方法，代表对队列的两端进行的处理。</p>
-<p>我们可以把 Deque 当做 <strong>队列</strong> 使用，也可以当做 <strong>栈</strong> 来使用。</p>
-<p>与 ArrayList 相同，它们底层都是采用 <strong>一个动态的、可重新分配的 Object[] 数组</strong> 来存储集合元素。</p>
-<p><strong>把 ArrayDeque 当做 “栈”(Fitst In Last Out,FILO) 来使用</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">private static void test2() &#123;</span><br><span class="line">    ArrayDeque arrayDeque = new ArrayDeque();</span><br><span class="line">    //将 3 个元素 push 入栈</span><br><span class="line">    arrayDeque.push(&quot;one&quot;);</span><br><span class="line">    arrayDeque.push(&quot;two&quot;);</span><br><span class="line">    arrayDeque.push(&quot;three&quot;);</span><br><span class="line">    System.out.println(arrayDeque);</span><br><span class="line">    // 访问第一个元素，但不出栈</span><br><span class="line">    System.out.println(arrayDeque.peek());</span><br><span class="line">    System.out.println(arrayDeque);</span><br><span class="line">    // 第一个元素出栈</span><br><span class="line">    System.out.println(arrayDeque.pop());// 实现栈的关键</span><br><span class="line">    System.out.println(arrayDeque);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>打印日志：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[three, two, one]</span><br><span class="line">three</span><br><span class="line">[three, two, one]</span><br><span class="line">three</span><br><span class="line">[two, one]</span><br></pre></td></tr></table></figure>
-
-<p>ArrayDeque 很好的实现了 “栈” – <strong>先入后出</strong> 这种数据结构。在程序中使用栈时推荐使用 ArrayDeque ，避免使用 Stack(性能较差)。</p>
-<p><strong>把 ArrayDeque 当做 “队列” 来使用</strong></p>
-<p>当然 ArrayDeque 也可以当做队列使用，使用 <strong>先进先出</strong> 的方式操作集合元素。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">private static void test3() &#123;</span><br><span class="line">    ArrayDeque arrayDeque = new ArrayDeque();</span><br><span class="line">    // 将 3 个元素加入队列</span><br><span class="line">    arrayDeque.offer(&quot;one&quot;);</span><br><span class="line">    arrayDeque.offer(&quot;two&quot;);</span><br><span class="line">    arrayDeque.offer(&quot;three&quot;);</span><br><span class="line">    System.out.println(arrayDeque);</span><br><span class="line">    System.out.println(arrayDeque.peek());</span><br><span class="line">    System.out.println(arrayDeque);</span><br><span class="line">    System.out.println(arrayDeque.poll());//实现队列的关键</span><br><span class="line">    System.out.println(arrayDeque);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>打印日志：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[one, two, three]</span><br><span class="line">one</span><br><span class="line">[one, two, three]</span><br><span class="line">one</span><br><span class="line">[two, three]</span><br></pre></td></tr></table></figure>
-
-<h3 id="LinkedList"><a href="#LinkedList" class="headerlink" title="LinkedList"></a>LinkedList</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public class LinkedList&lt;E&gt;</span><br><span class="line">    extends AbstractSequentialList&lt;E&gt;</span><br><span class="line">    implements List&lt;E&gt;, Deque&lt;E&gt;, Cloneable, java.io.Serializable</span><br></pre></td></tr></table></figure>
-
-<p>LinkedList 是 List 的实现类，同时它也实现了 Deque 接口，所以 LinkedList 可以 根据 <strong>索引</strong> 来随机访问集合的元素，也可以被当做 <strong>双端队列</strong> 来使用，由此可见 LinkedList <strong>既可以当做队列也可以当做栈来使用</strong>。</p>
-<p>LinkedList 内部实现机制与 ArrayList 、 ArrayDeque 不同，后两者内部维护动态、可扩容的 Object[] 数组，<strong>因此访问随机集合元素的性能较高</strong>；LinkedList 内部以 <strong>链表</strong> 的形式来保存集合中的元素，因此随机访问集合元素的性能较差，但是在 <strong>插入、删除集合元素性能较高(只需改变指针所指的地址)</strong>。</p>
-<h3 id="各种线性表的性能表现"><a href="#各种线性表的性能表现" class="headerlink" title="各种线性表的性能表现"></a>各种线性表的性能表现</h3><p>Java 中 List 是一个线性表接口，最具代表性的实现类为：ArrayList(基于数组的线性表)、LinkedList(基于链的线性表)。Queue 代表了队列，Deque 代表了双端队列。</p>
-<p>由于数组以一块连续内存来保存数组元素，所以数组的随机访问的性能较好，那么以数组为底层实现的集合在随机访问时性能较好；而内部以链表为顶层实现的集合在添加、删除集合元素时有较好的性能。总体上 ArrayList 的性能比 LinkedList 的性能较好，因此大部分时候选用 ArrayList。</p>
-<p>关于使用 List 几点建议：</p>
-<ol>
-<li>遍历 List 集合。对于 ArrayList 、ArrayDeque 等底层实现为数组集合使用随机访问来遍历元素，这样性能更好；而对于 LinkedList 则应该使用 Itertor 迭代器来遍历集合元素。</li>
-<li>经常添加、删除元素操作的集合，可考虑 LinkedList。使用 ArrayList、Vector 集合可能需要经常重新分配内部数组的大小，性能较差。</li>
-<li>多个线程访问 List 集合，可以使用 Collections 工具类对集合进行包装来实现线程安全。</li>
-</ol>
-
-      
-
-      
-        <div class="page-reward">
-          <a href="javascript:;" class="page-reward-btn tooltip-top">
-            <div class="tooltip tooltip-east">
-            <span class="tooltip-item">
-              赏
-            </span>
-            <span class="tooltip-content">
-              <span class="tooltip-text">
-                <span class="tooltip-inner">
-                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
-                  <div class="reward-box">
-                    
-                    <div class="reward-box-item">
-                      <img class="reward-img" src="/img/alipay.jpg">
-                      <span class="reward-type">支付宝</span>
-                    </div>
-                    
-                    
-                    <div class="reward-box-item">
-                      <img class="reward-img" src="/img/wxpay.jpg">
-                      <span class="reward-type">微信</span>
-                    </div>
-                    
-                  </div>
-                </span>
-              </span>
-            </span>
-          </div>
-          </a>
-        </div>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Java Basic</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Jetpack</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Java Collection</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Queue</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">WorkManager</a>
         		</li>
       		
 		</ul>
 	</div>
 
-      
+          
 
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
         </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http:/2019/05/10/Java集合之Queue/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2019/05/10/Java集合之Map/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Java集合之Map
-        
-      </div>
-    </a>
   
   
-    <a href="/2019/05/10/Java集合之List/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Java集合之List</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-  
-  
+    </div></section>
   
 
-  
-
-  
-
-  
+    
 
 
           </div>
@@ -407,9 +234,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
+		isPost: false,
 		isArchive: false,
-		isTag: false,
+		isTag: true,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
