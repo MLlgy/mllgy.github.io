@@ -1,16 +1,16 @@
 ---
-title: Kotlin 协程二
+title: Kotlin 协程官方文档学习(二)
 date: 2019-10-07 17:12:00
 tags: [Kotlin 官方文档,Coroutines(协程)]
 ---
 
 
-### 协程上下文和调度器
+### 1. 协程上下文和调度器
 
 协程总是要运行在 CoroutineContext 类型为代表的协程上下文中，协程上下文是各种不同元素的集合，其中主元素为 Job，同事我们也会使用他的调度器。
 
 
-#### 调度器与线程
+### 2. 调度器与线程
 
 协程上下文包括了一个协程调度器，它确定了协程执行时使用的一个或多个线程。协程调度器可以指定协程运行在指定线程，也可以调度它运行在线程池中或不受限的运行。
 
@@ -40,7 +40,7 @@ newSingleThreadContext: I'm working in thread MyOwnThread
 main runBlocking      : I'm working in thread main
 ```
 
-#### 非受限调度器 vs 受限调度器
+### 3. 非受限调度器 vs 受限调度器
 
 在上面的例子中有 Dispatchers.Unconfined ，此为非受限调度器。
 
@@ -71,7 +71,7 @@ Dispatchers.Unconfined协程调度器会在程序运行到第一个挂起点时�
 。非受限调度器适合协程不消耗 CPU 时间也不更新任何限于特定线程的共享数据（如 UI）的情境。
 
 
-#### 调试协程与线程 
+### 4. 调试协程与线程 
 
 由上面可知协程可以在一个线程中挂挂起在另外一个线程中恢复。在单一线程中也难弄清楚协程在何时何地在做什么事，所以这时我们需要打印正在执行代码的线程名。
 
@@ -98,7 +98,7 @@ fun main() = runBlocking<Unit> {
 可以很清楚的知道协程执行的线程以及协程上下文。
 
 
-#### 在不同线程间切换
+### 5. 在不同线程间切换
 
 ```
 fun log(msg: String) = println("[${Thread.currentThread().name}] $msg")
@@ -125,7 +125,7 @@ fun main() {
 从打印日志中可知 可以为 runBlocking() 显式的设置线程上下文，同时可以使用 withContext 函数来改变协程的线程上下文，从每条日志的`@coroutine#1`知它们仍运行在相同的协程中，以上函数只是改变了协程运行的线程，但是并没有改变协程的执行。
 
 
-#### 上下文中的 Job
+### 6. 上下文中的 Job
 
 Job 是它上下文中的一部分，协程可以在它所属的上下文中使用 coroutineContext[Job] 表达式来获取 Job 实例对象：
 
@@ -146,7 +146,7 @@ Job is active?: true
 CoroutineScope 中的 isActive 只是 coroutineContext[Job]?.isActive == true 的一种方便的快捷方式。
 
 
-#### 子协程
+### 7. 子协程
 
 
 当一个协程被其它协程在 CoroutineScope 中启动的时候， 它将通过 CoroutineScope.coroutineContext 来承袭上下文，并且这个新协程的 Job 将会成为父协程的子 Job。**当一个父协程被取消的时候，所有它的子协程也会被递归的取消**。
@@ -192,7 +192,7 @@ main: Who has survived request cancellation?
 ```
 
 
-#### 父协程的职责
+### 8. 父协程的职责
 
 父协程总是等待它所有的子协程全部执行完毕，父协程不必显式的跟踪所有子协程的启用，也不必使用 Job.join 在最后的时候等待它们。
 
@@ -245,7 +245,7 @@ Coroutine 2 is done
 所以父协程不调用 join() 函数，也是会等待所有的子协程执行完毕。
 
 
-#### 为协程命名
+### 9. 为协程命名
 
 ```
 fun main() = runBlocking(CoroutineName("runBlockingName")) {
@@ -270,7 +270,7 @@ fun main() = runBlocking(CoroutineName("runBlockingName")) {
 [main @runBlockingName#1] The answer for v1 / v2 = 42
 ```
 
-#### 协程作用域
+### 10. 协程作用域
 
 在日常开发过程中，在 Activity 中我们需要开启多个协程来获取网络数据、后台绘制、执行动画等，这协程动作必须在 Activity 销毁时取消，否则就会引起内存泄漏。
 
@@ -333,5 +333,3 @@ Coroutine 0 is done
 Coroutine 1 is done
 Destroying activity!
 ```
-
-#### 线程局部数据

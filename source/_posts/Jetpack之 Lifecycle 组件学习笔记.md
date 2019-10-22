@@ -1,8 +1,11 @@
 ---
-title: Jetpack之Lifecycle 笔记
+title: Jetpack 之 Lifecycle 组件学习笔记
 date: 2019-05-10 10:42:25
 tags: [Jetpack,Lifecycle]
 ---
+
+
+> 2019.10.21 更新
 
 ### 0x0000 概述
 
@@ -10,11 +13,14 @@ tags: [Jetpack,Lifecycle]
 
 传统模式下，要想做的生命感知需要做的是实现其他组件的接口，并在 A/F 的生命周期函数中调用其他组件的方法。但是这样并不是好的代码组织方式，并且容易产生错误。而通过 生命周期感知组件(Lifecycle—aware component) 可以把这部分逻辑从 A/F 中移到组件自身中。
 
-` android.arch.lifecycle ` 包下的类和接口允许你创建 生命周期感知组件(lifecycle-aware components),它们可以根据 A/F 的生命周期来调整自己的行为。
+` android.arch.lifecycle (androidx 下为 androidx.lifecycle )` 包下的类和接口允许你创建 生命周期感知组件(lifecycle-aware components),它们可以根据 A/F 的生命周期来调整自己的行为。
+
+像 Activity、Service 等组件的生命周期均是由 Android Framework 管理，同样的，Lifecycle 也由运行的系统或者 Framework 中的进程管理，在编写 Andorid 程序时需要遵守相应的规则，不然会产生内存泄漏，甚至会导致应用奔溃。
+
 
 ### 0x0001 Lifecycle
 
-Lifecycle 持有 A/F 组件有关生命周期的信息，并且允许其他对象监听它的状态。在 Android API 26.0.1以及其后 A/F实现了LifecycleOwner，  可在 A/F 中通过 getLifecycle() 获得 A/F 的 Lifecycle 对象。
+**Lifecycle 持有 A/F 组件有关生命周期的信息，并且允许其他对象监听它的状态**。在 Android API 26.0.1以及其后 A/F实现了LifecycleOwner，可在 A/F 中通过 getLifecycle() 获得 A/F 的 Lifecycle 对象。
 
 <!-- more -->
 
@@ -29,13 +35,31 @@ Lifecycle 使用两个重要的枚举类来跟踪它所关联的组件的生命�
 
 下图展示 Event 和 State 的关联关系
 
-![Event和Statue](https://developer.android.com/images/topic/libraries/architecture/lifecycle-states.png)
+![Event和Statue](/source/images/2019_10_21_01.png)
 
 在图中 State 作为一个个结点，作为事件间的边缘。
 
 LifecycleObserver 通过在在其方法上添加注解来监听组件的状态，LifecycleOwner 通过 addObserver() 关联此 Observer 。
 
 ### 0x0002 LifecycleOwner 
+
+LifecycleOwner 是只有一个方法的接口：
+
+```
+public interface LifecycleOwner {
+    /**
+     * Returns the Lifecycle of the provider.
+     *
+     * @return The lifecycle of the provider.
+     */
+    @NonNull
+    Lifecycle getLifecycle();
+}
+```
+
+LifecycleOwner 接口抽象出单个类的生命周期所有权，比如 A/F，并且允许编写其他组件和它配合。owner 可以提供生命周期的变化，而 observer 可以注册到 owner 并且监听其生命周期的变化。
+
+
 
 通过实现 LifecycleOwner 接口来 **表明该类具有生命周期**，例如：
 
@@ -45,15 +69,16 @@ public class ComponentActivity extends Activity
 ```
 LifecycleOwner 只有一个方法 getLifecycle()。
 
-可见我们最常使用的 AppCompatActivity 已经对 LifecycleOwner 做了兼容。实现 LifecycleObserver 的类作为 `观察者` 监听实现 实现 LifecycleOwner 接口类的声明周期的变化。
+可见我们最常使用的 AppCompatActivity 已经实现了 LifecycleOwner 。实现 LifecycleObserver 的类作为 `观察者` 监听实现 LifecycleOwner 接口的类，监听 LifecycleOwner(也就是 Activity) 生命周期的变化。
 
 **LiveData 的生命周期相关就是通过这种方式实现的。**
 
 ### 0x0003 自定义 LifecycleOwner
 
-如果自定义实现 LifecycleOwner ,那么需要使用 LifecycleRegistry ,这个类用来管理多个 LifecycleObserver ,在其内部通过 Map 来存储 LifecycleObserver 对象。
+平时通过实现 AppCompatActivity 创建的 Activity 已经实现了 LifecycleOwner 接口，如果想要自定义 LifecycleOwner，同样也需要实现 LifecycleOwner 接口，并且需要通过 LifecycleRegistry 对象来管理多个 LifecycleObserver，LifecycleRegistry 内部通过 Map 来存储 LifecycleObserver 对象。
 
-自定义 LifecycleOwner 时，需要在相应的方法中显示的声明事件：
+
+自定义 LifecycleOwner 时，需要在相应的方法中显示的声明状态，其中生命周期事件 Event 与状态的对应关系可以参见上图。
 
 ```
 class MyActivity : Activity(), LifecycleOwner {
@@ -64,6 +89,7 @@ class MyActivity : Activity(), LifecycleOwner {
         super.onCreate(savedInstanceState)
 
         lifecycleRegistry = LifecycleRegistry(this)
+        // 在该方法中声明对应声明周期的状态
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
@@ -78,6 +104,7 @@ class MyActivity : Activity(), LifecycleOwner {
 }
 ```
 
+从以上代码可以看到，自定义实现 LifecycleOwner 需要定义 LifecycleRegistry 对象，该对象可以在 LifeOwner 的每个 Event 中标记该 Event 的 State，这样 LifeObserver 才可以在不同的 state 下执行相应的操作。
 
 
 ### 0x0004 LifecycleObserver
@@ -111,9 +138,6 @@ class TestLifecycleActivity : AppCompatActivity() {
 ```
 
 
-
-
-
 ### 0x0005 Lifecycle-aware 组件最佳实践
 
 
@@ -131,9 +155,9 @@ class TestLifecycleActivity : AppCompatActivity() {
 2. 暂停和恢复动画。UI 在后台暂停动画，在前台恢复动画。
 
 
-### 0x0007 关于 LiveData 的实现
+### 0x0007 关于 LiveData 的关于感知生命周期的实现
 
-LiveData 同为 生命中期感知组件，其实它这种功能的实现主要是依托了 Lifecycle 的实现。在 LiveData 的 obsever() 方法中将 LiveData的 Observer 包装成 LifecycleObserver 并与 LifecycleOwner 相关联，至此 LiveData 实现了生命周期的感知功能。
+LiveData 同为 生命中期感知组件，其实它这种功能的实现主要是依托了 Lifecycle 的实现。在 LiveData 的 obsever() 方法中将 LiveData 的 Observer 包装成 LifecycleObserver 并与 LifecycleOwner 相关联，至此 LiveData 实现了生命周期的感知功能。
 
 LiveData#observe(@NonNull LifecycleOwner owner, @NonNull Observer<T> observer) 源码：
 ```

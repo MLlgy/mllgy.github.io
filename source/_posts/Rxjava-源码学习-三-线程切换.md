@@ -1,7 +1,9 @@
 ---
 title: 'Rxjava 源码学习(三):线程切换'
+date: 2019-10-21 15:06:53
 tags:
 ---
+
 
 根据官方文档的翻译：
 subscribeOn 操作符指定 Observable 将在哪个线程上开始操作，无论该运算符在运算符链中的哪个点被调用。 ObserveOn 操作符影响下游 Observer 的运行线程，因此，可以在 Observable 操作符链中的各个点多次调用 ObserveOn，以更改某些运算符的运行线程。
@@ -83,7 +85,7 @@ public void subscribeActual(Observer<? super U> t) {
 
 ### observeOn 操作符
 
-observeOn 操作符只能用来指定下游 Observer 的 onNext 等方法的线程，上面流程图可以非常形象的明确这一点。与 subscribeOn 指定订阅关系发生的线程，observeOn 指定具体的动作的执行线程，下面通过源码具体说明：
+observeOn 操作符只能用来指定下游 Observer 的 onNext 等方法的线程，上面流程图可以非常形象的明确这一点。与 **subscribeOn 指定订阅关系发生的线程不同，observeOn 指定具体的动作的执行线程**，下面通过源码具体说明：
 
 ```
 @Override

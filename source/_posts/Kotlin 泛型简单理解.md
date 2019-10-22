@@ -1,10 +1,10 @@
 ---
-title: Kotlin 泛型
+title: Kotlin 泛型简单理解
 date: 2019-10-07 15:50:47
 tags: [Kotlin 泛型]
 ---
 
-### Java 中的泛型
+### 1. Java 中的泛型
 
 
 协变(covariance)：子类的泛型类型也属于泛型类型的子类。
@@ -91,7 +91,7 @@ addTextView(views);// 如此更改，无错
 PECS 法则：Producer extends，Conssumer super。
 
 
-### Kotlin
+### 2. Kotlin 中的泛型
 
 ? extends --> out:只能输出，不能输入，只能读不能写。
 
@@ -114,7 +114,7 @@ interface Consumer<in T>{
 
 
 
-### * 
+### Kotlin 中的星号(*) 
 
 
 Kotlin 中 * 相当于 Java 中的 ？
@@ -145,7 +145,7 @@ var counter:Counter<*> =
 
 
 
-### Java 声明中的上界和下界
+### 4. Java 声明中的上界和下界
 
 
 Java 在类型声明时可以指定类型声明的上界,和 ？ extends 不同
@@ -166,7 +166,7 @@ class Bird<T> where T:Animal, T:Food{
 ```
 
 
-### Kotin 与 Java 的不同
+### 5. Kotin 与 Java 的不同
 
 
 Kotlin中有一个 Java 中没有的关键字： refield

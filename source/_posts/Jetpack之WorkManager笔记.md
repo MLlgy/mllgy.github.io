@@ -1,16 +1,16 @@
 ---
 title: Jetpack之WorkManager基本了解
 date: 2019-05-14 15:15:58
-tags:
+tags: [Jetpack,WorkManager]
 ---
 
 
-### 概述
+### 0x0000 概述
 
 通过WorkManager API，可以轻松安排即使应用程序退出或设备重新启动也可以运行的可延迟的异步任务。
 
 
-### feature
+### 0x0001 feature
 
 * 向后兼容到 API 14
 
@@ -34,7 +34,7 @@ WorkManager 适用于可延迟的任务-即不需要立即运行，即使应用�
 WorkManager 不适用于在应用程序进程消失时，安全退出的后台工作，也不适用于需要立即执行的任务。
 
 
-### 使用 Work
+### 0x0002 使用 Work
 
 
 1. 通过 Work 来定义 任务
@@ -66,14 +66,14 @@ WorkManager.getInstance().enqueue(uploadWorkRequest)
 ```
 
 
-### Work、WorkRequest、WorkManager 关系
+### 0x0004 Work、WorkRequest、WorkManager 关系
 
 Work 定义任务, WorkRequest 基于 Work 创建 执行任务的请求，WorkManager 作为管理者执行 任务请求。
 
 
-### 定义 WorkRequest
+### 0x0005 定义 WorkRequest
 
-#### 为 WorkRequest 添加约束条件
+#### 0x0006 为 WorkRequest 添加约束条件
 
 ```
 // Create a Constraints object that defines when the task should run
@@ -90,7 +90,7 @@ val compressionWork = OneTimeWorkRequestBuilder<CompressWorker>()
 
 当所有的约束条件满足时，work 会执行。如果在执行 work 过程中不再满足约束条件，那么 WorkManager 会停止 work 的执行，等待约束条件满足后再次执行 work。
 
-#### 延迟执行
+#### 0x0007 延迟执行
 
 
 以下是将任务设置为在排队后至少10分钟后运行。

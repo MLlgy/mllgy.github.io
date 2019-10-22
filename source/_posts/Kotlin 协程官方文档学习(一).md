@@ -1,11 +1,11 @@
 ---
-title: Kotlin 协程一
+title: Kotlin 协程官方文档学习(一)
 date: 2019-10-07 17:11:30
 tags: [Kotlin 官方文档,Coroutines(协程)]
 ---
 
 
-### 协程的基本介绍
+### 1. 协程的基本介绍
 
 协程，本质上是轻量级的线程。
 
@@ -19,7 +19,7 @@ delay 是挂起函数不会造成线程阻塞，但是会挂起协程，并且�
 
 
 
-### 阻塞与非阻塞
+### 2. 阻塞与非阻塞
 
 阻塞与非阻塞都是针对于是否阻塞主线程来说的。
 
@@ -43,7 +43,7 @@ fun main() {
 
 runBlocking{} 代码块为阻塞式的。
 
-### 定义 Job
+### 3. 定义 Job
 
 示例 1 中通过阻塞主线程一段时间:
 `(runBlocking{delay(2000L)})`，
@@ -62,7 +62,7 @@ fun main() = runBlocking {
 
 调用 `Job#join()` 主线程会一直阻塞，直到指定协程执行完毕。
 
-### 结构化并发
+### 4. 结构化并发
 
 
 使用 GlobalScope.launch 会创建顶部协程，它会消耗一定的资源，如此的话启动多个协程会导致内存不足，此时使用 **结构化并发** 可以解决这个问题。
@@ -88,7 +88,7 @@ fun main() = runBlocking { //this:CoroutineScope
 
 
 
-### 构建作用域
+### 5. 构建作用域
 
 除了使用构建器(如: launch、async 等)提供协程作用域之外，还可以使用 coroutineScope 构建器声明自己的作用域。
 
@@ -172,7 +172,7 @@ withTimeout(1300L) {
 在执行超过 1300ms 会报出错误。
 
 
-### 挂起函数
+### 6. 挂起函数
 
 使用 `suspend` 修饰的函数，排列的挂起函数 **默认顺序执行**。
 
@@ -201,7 +201,7 @@ The answer is 42
 Completed in 2012 ms
 ```
 通过打印时间可以得知默认挂起函数为顺序执行的。
-### lauch 、 async
+### 7. lauch 、 async
 
 async 与 lauch 一样，开启了一个单独的协程，与其他协程一起进行并行工作。
 不同的 launch 返回一个 Job 不附带任何结果值，而 async 返回 Deffered ，它是一个轻量级的非阻塞 future， 这代表了一个将会在稍后提供结果的 promise。你可以使用 **.await() 在一个延期的值上得到它的最终结果**， 但是 Deferred 也是一个 Job，所以如果需要的话，你可以取消它 。
@@ -223,7 +223,7 @@ Completed in 1029 ms
 从执行时间可知使用 async 修饰函数为 **并行执行** 的。
 
 
-### 惰性 async
+### 8. 惰性 async
 
 如果懒加载一样，惰性 async 只有在使用时才会执行，执行 start() 方法执行该方法。
 
@@ -246,11 +246,11 @@ Completed in 1017 ms
 以上 one、two 只是定义的两个协程，由于 `start = CoroutineStart.LAZY` 的存在没有真正的执行，只有在执行 start 方法后两个协程才会真正的执行
 
 
-### async 风格函数
+### 9. async 风格函数
 
 在 Kotlin 中不推荐使用此类型的函数,故不详述.
 
-### 结构化 async 函数
+### 10. 结构化 async 函数
 
 结构化 async 函数 **就是使多个 async 函数执行时如果一个函数发生异常,则其他未执行的 async 函数也不会得到执行**,此功能使用  coroutineScope 来实现.
 
