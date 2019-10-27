@@ -85,8 +85,30 @@ val name = if (isTrue) {
 }
 ```
 
+**字符串判等**
 
 
+* 结构相等：通过操作符 == 判断两个对象的内容是否相等。
+* 引用相等：通过操作符 === 两个对象的引用是否相等。
+
+```
+val a = "Kotlin"
+val b = "Kotlin"
+val c = "Kot"
+val d = "lin"
+val e = c +d
+println("a==b? :${a == b}")
+println("a===b? :${a === b}")
+println("a==e? :${a == e}")
+println("a===e? :${a === e}")
+```
+打印日志：
+```
+a==b? :true
+a===b? :true
+a==e? :true
+a===e? :false
+```
 
 ### 高阶函数和 Lambda 
 

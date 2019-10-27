@@ -252,9 +252,67 @@ fun test301() {
     }
 }
 
-fun foo(int: Int) {
+// 注意这里是 Lambda，不是普通的函数
+fun foo(int: Int) = {
     println(int)
 }
 ```
 
-可以在 test301 看到关键字 **it**，
+可以在 test301 看到关键字 **it**，这是 Kotlin 简化 Lambda 表达的一种语法糖，叫做 单个参数的隐式名称，代表了 **这个 Lambda 所接收的单个参数**。
+
+带有 it 的写法其实和以下等效：
+
+```
+listOf(1, 2, 4).forEach { item ->
+    foo(item).invoke()
+}
+```
+
+
+但是以上方法却不会有任何的打印效果，因为 Kotlin 的 Lambda 在编译以后会被编译成匿名内部类，而 foo 编译后会被编译成如下：
+
+```
+    @NotNull
+   public static final Function0 foo(final int var0) {
+      return (Function0)(new Function0() {
+         // $FF: synthetic method
+         // $FF: bridge method
+         public Object invoke() {
+            this.invoke();
+            return Unit.INSTANCE;
+         }
+
+         public final void invoke() {
+            int var1 = var0;
+            boolean var2 = false;
+            System.out.println(var1);
+         }
+      });
+   }
+```
+
+所以在调用 foo 时其实只是返回了一个 Function0 对象，要想指定其方法需要执行器 invoke 方法。至于 Kotlin 为什么这么设计，是因为在 Java 中实现 Lambda 的前提是该接口为函数接口，而 Kotlin 这么设计就是为了能够在 Kotlin 中调用 Java 的 Lambda，例如：
+
+
+```
+tvSelectedCh.setOnClickListener {
+    // doSomethings
+}
+```
+
+同时如果觉得调用 invoke 显得比较丑陋，那么可以使用括号来代替：
+
+```
+listOf(1, 2, 4).forEach { item ->
+    foo(item)()
+}
+```
+
+Lambda 最大参数为22，如果想要添加更多的参数，需要自定义接口，具体代码可参见：[23]()。
+
+
+
+
+### 闭包
+
+在 Kotlin 中，由花括号包裹的代码块如果 `访问了外部的环境变量` 则被称为 **闭包**，闭包可以被当做参数传递或者直接使用，Lambda 是 Kotin 中最常见的闭包。

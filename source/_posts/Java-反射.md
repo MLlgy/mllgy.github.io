@@ -1,5 +1,5 @@
 ---
-title: Java 反射
+title: 简单理解 Java 反射机制
 date: 2019-04-30 10:35:03
 tags: [Java Basic,Inflection]
 ---
@@ -200,3 +200,65 @@ TestClass.printStatics();
 ```
 
 ## 对泛型进行反射
+
+
+通过指定类对应的 Class 对象，可以获得该类包含的所有成员变量，如获取指定成员变量的类型：
+
+```
+Class<?> clazz = f.getType();
+```
+
+但是这种方式只对普通的变量生效，如果该变量有泛型类型，如 Map<String,String>，则不能准确的获得该成员的泛型类型。为了获得指定变量的泛型类型，可以使用如下方法获得该变量的泛型类想：
+
+```
+Type type = f.getGenericType();// Field 的方法
+```
+然后将 Type 类型的对象强制转换为 ParameterizedType 类型对象，ParameterizedType 代表被参数化的类型，也就是增加泛型限制的类型，ParameterizedType 有以下两个方法：
+```
+Type getRawType();// 返回没有泛型信息的原始类型
+Type[] getActualTypeArguments();// 返回泛型参数的类型
+```
+
+以下为示例：
+
+```
+public class GenericsClass {
+
+    private Map<String,Integer> map;
+
+    public static void main(String[] args) throws Exception {
+        Class<GenericsClass> clazz = GenericsClass.class;
+        Field field = clazz.getDeclaredField("map");
+        // getType 只对普通成员变量有效
+        Class<?> fieldType = field.getType();
+        System.out.println("map 的数据类型是：" + fieldType);
+
+        Type type = field.getGenericType();
+        if(type instanceof ParameterizedType){
+            ParameterizedType parameterizedType = (ParameterizedType) type;
+            Type rawType = parameterizedType.getRawType();
+            System.out.println("map 的原始类型是：" + rawType);
+            // 取得泛型的的泛型参数
+            System.out.println("取得泛型的的泛型参数:");
+            Type[] types = parameterizedType.getActualTypeArguments();
+            for(int i = 0;i < types.length;i++){
+                System.out.println("map 的第 " + i + " 个泛型类型是：" + types[i]);
+            }
+        }else {
+            System.out.println("取得泛型类型错误");
+        }
+    }
+}
+```
+
+打印日志：
+
+```
+map 的数据类型是：interface java.util.Map
+map 的原始类型是：interface java.util.Map
+取得泛型的的泛型参数:
+map 的第 0 个泛型类型是：class java.lang.String
+map 的第 1 个泛型类型是：class java.lang.Integer
+```
+
+使用以上 API 可以获得泛型成员变量的类型参数。
