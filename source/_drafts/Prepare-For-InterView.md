@@ -120,6 +120,8 @@ LeakCanary 的实践
 
 [面试题](https://juejin.im/post/5da16523e51d45780931efb5)
 
+[Android面试题集 & 答案，助你拿到心仪Offer](https://github.com/Ellen2018/AndroidFaceInterview?utm_source=androidweekly.io&utm_medium=website)
+
 
 
 ## 算法与数据结构
