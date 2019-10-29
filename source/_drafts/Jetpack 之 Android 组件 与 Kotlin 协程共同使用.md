@@ -1,31 +1,38 @@
 ---
-title: Jetpack 之 ViewModle 与 Kotlin 协程共同使用
-tags:
+title: 译:Jetpack 之 Android 组件 与 Kotlin 协程共同使用
+tags: [Jetpack, Kotlin 协程]
 ---
 
 
 ### 0x0001 概述
 
+Kotlin 协程提供了 API 以供开发者写出简单的异步代码。在 Kotlin 协程中，可以定义 CoroutineScope 作用域，它可以帮助开发者何时运行协程，每一个异步操作运行在特定的作用域内。
 
-### 0x0002 如何使用
 
-每个组件的内置的协程作用域包括在 KTX 扩展包中，可以根据需要添加具体的 KTX 依赖：
 
+本主题说明如何协程如何与系统组件一起有效使用。
+
+### 0x0002 添加组件的协程依赖
+
+通过引入对应的 KTX 扩展包，来使用相应组件的内置 Kotlin 协程作用域，相应依赖如下：
 
 ```
 // ViewModelScope
-
+androidx.lifecycle:lifecycle-viewmodel-ktx:xxx
 // LifeCycleScope
-
+use androidx.lifecycle:lifecycle-runtime-ktx:xxx
 // LiveData
-
-
+androidx.lifecycle:lifecycle-livedata-ktx:xxx
 ```
 
+<!-- more -->
+在不同组件中使用 Kotlin 协程需要引入不同的依赖。
 
-### 0x0003 生命周期可感知的协程作用域
+
+### 0x0003 不同组件的内置协程作用域
 
 Android 框架定义了以下几种内置的作用域，可以在应该开发中使用它们。
+
 
 **ViewModelScope**
 
@@ -67,7 +74,7 @@ class MyFragment: Fragment() {
 }
 ```
 
-### 0x0004 挂起生命周期感知的协程
+### 0x0004 挂起特定生命周期状态下的协程
 
 尽管 CoroutineScope 提供了一种自动取消长时间的运行操作的方式，但是也存在这样一种需求：在 Lifecycle 处于特定的状态才会执行相应的代码。
 
@@ -102,7 +109,7 @@ class MyFragment: Fragment {
 }
 ```
 
-当协程是通过 lifecycleScope 的 whenxxx 方法开启的，如果生命周期处于销毁(destroyed) 状态，那么这个协程会被自动取消，示例如下：
+当协程是通过 lifecycleScope 的 whenxxx 方法开启的，如果组件生命周期处于销毁(destroyed) 状态，那么这个协程会被自动取消，示例如下：
 
 ```
 class MyFragment: Fragment {
@@ -125,11 +132,9 @@ class MyFragment: Fragment {
 
 在这里例子中，一旦生命周期处于 DESTROYED 状态，那么就会执行 finally 闭包中的代码，此处为了确保安全调用，对生命周期的状态进行校验。
 
+> 注意：尽管这些方法在使用 Lifecycle 时提供了便利，但仅在信息（例如，预先计算的文本）在组件生命周期范围内，才能使用它们。需要注意的是:如果 Activity 重新启动，协程将不会重新启动。
 
-
-> 注意：尽管这些方法在使用 Lifecycle 时提供了便利，但仅当信息在 Lifecycle 范围内有效时（例如，预先计算的文本）才能使用它们。但是需要注意的是:如果 Activity 重新启动，协程将不会重新启动。
-
-### 与 LiveData 一起使用协程
+### 0x0005 LiveData 组件与 Kotlin 协程组合使用
 
 在使用 LiveData 时，你可以需要异步的计算的操作。比如你想要获取用户的选择项，并把选择呈现到 UI 上，在这个场景下就可以使用 `livedata 构造器方法` 去调用挂起函数，并且将然后的结果包装成 LiveData 对象，代码如下：
 ```
@@ -139,13 +144,13 @@ val user: LiveData<User> = liveData {
 }
 ```
 
-liveData 构建块在 协程和 LiveData 之间充当 结构化并发原始函数 的作用。以上代码块在 LiveData 变为活跃状态后开始执行，在 LiveData 变为非活跃状态下会自动取消，其取消时间是可配置的。如果在完成之前取消，那么该闭包会在 LiveData 变为活跃状态后重新执行，而如果在取消前已经完成，那么该闭包就不会重新执行。由其他原因(比如抛出异常)导致该闭包取消执行，那么该闭包不会重复执行。
+liveData 构建块在 协程和 LiveData 之间充当 `结构化并发函数` 的作用。以上代码块在 LiveData 变为活跃状态后开始执行，在 LiveData 变为非活跃状态下会自动取消，其取消时间是可配置的。如果在完成之前取消，那么该闭包会在 LiveData 变为活跃状态后重新执行，而如果在取消前已经完成，那么该闭包就不会重新执行。由其他原因(比如抛出异常)导致该闭包取消执行，那么该闭包不会重复执行。
 
-同时可以在该闭包内发送多个值，每个 emit（）调用都会暂停该闭包的执行，直到在主线程上设置 LiveData 值为止，代码如下：
+同时可以在该闭包内发送多个值，每次调用 emit() 都会挂起该闭包的执行，直到在主线程上设置 LiveData 值为止，代码如下：
 
 ```
 val user: LiveData<Result> = liveData {
-    emit(Result.loading())
+    emit(Result.loading())//挂起，直到 Result.loading() 执行完毕
     try {
         emit(Result.success(fetchUser()))
     } catch(ioException: Exception) {
@@ -154,7 +159,7 @@ val user: LiveData<Result> = liveData {
 }
 ```
 
-可以使用 Transformations API 来组合 liveData，示例如下：
+同时可以使用 Transformations API 来组合 liveData，示例如下：
 
 ```
 class MyViewModel: ViewModel() {
@@ -166,7 +171,6 @@ class MyViewModel: ViewModel() {
     }
 }
 ```
-
 
 每当要发出新值时，都可以通过调用 embedSource() 函数从 LiveData 中发出多个值。请注意，每次调用emit() 或 emitSource()都会删除先前添加的源,示例如下：
 
@@ -211,3 +215,9 @@ class MyRepository {
     }
 }
 ```
+
+----
+
+**知识链接**
+
+[Google 官方文档 : Use Kotlin coroutines with Architecture components](https://developer.android.com/topic/libraries/architecture/coroutines)
