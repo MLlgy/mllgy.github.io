@@ -9,7 +9,7 @@ tags:
 Kotlin 天然支持函数特性，与 Java 类为一等公民不同，在 Kotlin 中 **函数为一等公民**，函数可以直接定义在 kt 文件中。
 
 
-在 Java 中限制方法只能接收数据作为参数，而高阶函数除此外，还可以 **接收方法为参数或者返回值为函数**。
+在 Java 中限制方法只能接收数据作为参数，而高阶函数除此外，**方法的参数可以是函数**，**并且函数的返回值也可以为函数**。
 
 
 ### 一个实例说明为什么使用高阶函数
@@ -80,7 +80,7 @@ class CountApp {
 }
 ```
 
-按照这样的设计，当筛选条件类间时，业务逻辑也会高度耦合。解决问题的核心是 **把 filterCounties 方法进行解耦**，常见的思路是传入一个类对象，根据不同需求创建不同的子类。但是在 Kotlin 中支持高阶函数，可以吧筛选条件抽象成一个方法传入。
+按照这样的设计，当筛选条件增加时，业务逻辑也会高度耦合，业务维护成长较大。解决问题的核心是 **把 filterCounties 方法进行解耦**，常见的思路是传入一个类对象，根据不同需求创建不同的子类。但是在 Kotlin 中支持高阶函数，可以把筛选条件抽象成一个方法传入。
 
 根据此可以很快的抽象出一个方法：
 
@@ -91,16 +91,16 @@ class CountryTest{
     }
 }
 ```
-但是如何将一个函数作为另一个函数的参数，很明显直接传入方法名 isWantCountries 是不满足要求的，而且函数时类型是什么？
+但是如何将一个函数作为另一个函数的参数？很明显如果直接传入方法名 isWantCountries， 函数名不是一个表达式，不具有类型信息，而且在 Kotlin 中万物都有类型，那么函数时类型是什么？
 
+
+基于上面的描述，我们可以终结出，使用高阶函数的一个重要目标是：**解耦**。
 #### 函数作为参数时的声明类型
-
-
 
 参数中声明函数的类型：
 
-* 通过 -> 符号组织参数类型和返回值，左边是参数类型，右边是返回值类型。
-* 参数必须使用括号包裹。
+* 通过 `->` 符号组织参数类型和返回值，左边是参数类型，右边是返回值类型。
+* **参数必须使用括号包裹**。
 * 返回值类型为 Unit，也要显式声明。
 
 基于此我们可以举例如下：
@@ -117,14 +117,25 @@ class CountryTest{
 
 这里需要注意的是，以上声明的是 **作为参数** 时的函数的类型，而在定义函数时需要注意写法：
 
-**此处预留一个问题**
 ```
 // 以 (Int) -> ((Int,String) -> Unit) 为例编写方法
+fun showTest() {
+    show { a: Int ->
+        { age: Int, name: String ->
+            println("$a $age $name")
+        }
+    }
+}
+
+fun show(block: (Int) -> ((Int, String) -> Unit)) {
+    //此处的调用为下文中描述的 柯里化风格
+    block(1)(1,"")
+}
+
+// 声明函数的返回值为泛型
+fun showAnother():(Int) ->String = {a:Int -> ""}
 ```
-
-
-这是可以重新定义 filterCounties 方法:
-
+这时可以重新定义 filterCounties 方法:
 
 ```
 fun filterCounties(test: (Country) -> Boolean, countries: List<Country>): List<Country> {
@@ -242,7 +253,7 @@ val sum:(Int,Int) -> Int = {x,y -> x + y}
 至此，代码解耦了过滤方法，可以按照需求传入过滤 Lambda 表达式。
 
 
-### Lambda 表达式的进阶使用
+### Lambda 表达式是如何实现的
 
 
 ```
@@ -258,16 +269,15 @@ fun foo(int: Int) = {
 }
 ```
 
-可以在 test301 看到关键字 **it**，这是 Kotlin 简化 Lambda 表达的一种语法糖，叫做 单个参数的隐式名称，代表了 **这个 Lambda 所接收的单个参数**。
+可以在 test301 看到关键字 **it**，这是 Kotlin 简化 Lambda 表达的一种语法糖，叫做 **单个参数的隐式名称**，代表了 **这个 Lambda 所接收的单个参数**。
 
 带有 it 的写法其实和以下等效：
 
 ```
 listOf(1, 2, 4).forEach { item ->
-    foo(item).invoke()
+    foo(item)
 }
 ```
-
 
 但是以上方法却不会有任何的打印效果，因为 Kotlin 的 Lambda 在编译以后会被编译成匿名内部类，而 foo 编译后会被编译成如下：
 
@@ -291,7 +301,28 @@ listOf(1, 2, 4).forEach { item ->
    }
 ```
 
-所以在调用 foo 时其实只是返回了一个 Function0 对象，要想指定其方法需要执行器 invoke 方法。至于 Kotlin 为什么这么设计，是因为在 Java 中实现 Lambda 的前提是该接口为函数接口，而 Kotlin 这么设计就是为了能够在 Kotlin 中调用 Java 的 Lambda，例如：
+所以在调用 foo 时其实只是返回了一个 Function0 对象，要想指定其方法需要执行其 invoke 方法。
+
+```
+listOf(1, 2, 4).forEach { item ->
+    foo(item).invoke()
+}
+```
+
+
+
+同时如果觉得调用 invoke 显得比较丑陋，那么可以使用括号来代替,invoke 和 括号 的作用是一样的：
+
+```
+listOf(1, 2, 4).forEach { item ->
+    foo(item)()
+}
+```
+
+
+为什么在 Kotlin 要如此的设计？
+
+这是因为需要兼容 Java 的 Lambda 表达式，而在 Java 中实现 Lambda 的前提是该接口为函数接口，而 Kotlin 这么设计就是为了能够在 Kotlin 中调用 Java 的 Lambda，例如：
 
 
 ```
@@ -300,19 +331,80 @@ tvSelectedCh.setOnClickListener {
 }
 ```
 
-同时如果觉得调用 invoke 显得比较丑陋，那么可以使用括号来代替：
-
-```
-listOf(1, 2, 4).forEach { item ->
-    foo(item)()
-}
-```
 
 Lambda 最大参数为22，如果想要添加更多的参数，需要自定义接口，具体代码可参见：[23]()。
 
 
 
 
-### 闭包
 
-在 Kotlin 中，由花括号包裹的代码块如果 `访问了外部的环境变量` 则被称为 **闭包**，闭包可以被当做参数传递或者直接使用，Lambda 是 Kotin 中最常见的闭包。
+
+### 函数、Lambda 和闭包
+
+* fun 在没有等号、只有花括号的情况下，为我们常见的函数，函数返回值类型为 Unit时，必须声明。
+
+```
+// 函数
+fun test(){...}
+```
+* fun 带有等号，是 **单表达式函数体**。
+* 不管是 val 还是 fun，如果是等号加花括号的语法，那么构建的就是 Lambda 表达式。如果左侧是 fun，那么就是 Lambda 表达式函数体，必须通过 invoke 或者 () 来调用 Lambda 表达式。
+
+```
+//单表达式函数体、Lambda 表达式
+fun test(x:Int,y：Int):Int = x+y
+// 调用
+test.invoke(1,2)
+test(1,2)
+```
+
+* 在 Kotlin 中，由花括号包裹的代码块如果 `访问了外部的环境变量` 则被称为 **闭包**，闭包可以被当做参数传递或者直接使用，Lambda 是 Kotin 中最常见的闭包。
+
+Kotlin 中的闭包与 Java 中不同，Kotlin 中的闭包不仅可以访问外部变量还可以修改外部变量。
+
+```
+public void test(){
+    int a = 1;
+    oneMain.setIClick(() -> {
+        System.out.println(a);
+        //a++; 报错，不可以修改外部变量
+    });
+}
+```
+
+Kotlin
+
+```
+fun test(){
+    var a = 1
+    oneMain.setIClick {
+        println(a)
+        a++
+    }
+}
+```
+
+
+### 柯里化风格
+
+柯里化语法是 **将函数作为返回值** 的一种典型的应用
+
+简单来说，柯里化是指把接收到的多个参数的函数变换成一系列仅接受单一参数函数的过程，在返回最终结果前，前面的函数可以依次接收单个参数，然后返回下一个新的函数。
+
+概念有点晦涩，直接看代码:
+
+正常编写的代码：
+
+```
+fun method(a: Int, b: Int): Int = a + b
+// 进行调用
+method(1,2)
+```
+
+// 按照柯里化的思想，重新编写
+
+```
+fun method(a: Int) = { b: Int -> a + b }
+// 进行调用
+method(1)(2)
+```

@@ -1,11 +1,8 @@
 ---
 title: Jetpack 之 Android 组件 与 Kotlin 协程共同使用
-tags:
-  - Jetpack
-  - Kotlin 协程
+tags: [Jetpack,Kotlin 协程]
 date: 2019-10-29 11:39:37
 ---
-
 
 
 ### 0x0001 概述

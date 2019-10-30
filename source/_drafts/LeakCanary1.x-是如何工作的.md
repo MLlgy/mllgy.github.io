@@ -367,13 +367,14 @@ xxx.hprof.result 文件，从而拿到泄漏信息，至此我们就获取到我
 
 ----
 
+**知识链接：**
+
+
 [WeakRefenerce 的理解和使用](https://blog.csdn.net/zmx729618/article/details/54093532)
 
 https://mp.weixin.qq.com/s/uwDk5D986OdMzKgtjpHdHg
 
 https://mp.weixin.qq.com/s/idjFaJsLpVLw52RSYHA_Vg
-
-
 
 
 [LeakCanary 1.x 源码原理](https://mp.weixin.qq.com/s/idjFaJsLpVLw52RSYHA_Vg)

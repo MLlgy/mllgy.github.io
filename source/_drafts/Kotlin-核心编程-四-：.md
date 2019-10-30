@@ -12,13 +12,25 @@ tags:
 * Unit 类型让函数称为表达式，没有返回值的函数此时的返回类型为 Unit，产生了新值。
 
 
+
+
+### 常见的表达式
+
 if 和 when 作为表达式时必须要有 else 语句。
 
+枚举类结合 when 表达式可以十分方便的表示多分支情况，同时keyi使用 when 来代替 if-else 表达式。
+
+**范围表达式**
+
+..:表示范围，包括前面不包括后面，如 1..3 表示 12
+in:表示成员关系，意为在的含义。
+
+until、step、downTo、in 等
 
 
 ### 中缀函数和中缀表达式
-
-downTo 的定义
+until、step 等可以不通过点号，而是中缀表达式来调用。
+downTo 的定义：
 ```
 public infix fun Int.downTo(to: Int): IntProgression {
     return IntProgression.fromClosedRange(this, to, -1)
@@ -26,8 +38,8 @@ public infix fun Int.downTo(to: Int): IntProgression {
 ```
 
 在 Kotlin 中，像 downTo 这样形式定义的函数称为中缀函数。定义一个中缀函数满足以下条件：
-* 为某个类型的扩展函数或者成员方法。
-* 只有一个参数。
+* **为某个类型的扩展函数或者成员方法**。
+* **只有一个参数**。
 * 参数不支持默认值，不为可变参数。
 
 定义中缀函数需要使用 infix 修饰，下面为示例：
@@ -54,7 +66,7 @@ fun main(args: Array<String>) {
 
 ```
 
-**中缀表达式**：类似 A 中缀方法 B 的形式。
+**中缀表达式**：类似 `A 中缀方法 B` 的形式。
 
 像 in、step、until、downTo 这样不通过点号，而是通过中缀表达式调用。
 

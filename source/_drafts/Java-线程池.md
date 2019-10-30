@@ -1,10 +1,8 @@
 ---
 title: Java 线程池
-tags:
+tags: [Java 多线程]
 ---
 
-[java并发编程--Executor框架
-](https://www.cnblogs.com/MOBIN/p/5436482.html)
 
 ### 为什么使用线程池
 
@@ -254,3 +252,13 @@ public static ExecutorService newSingleThreadExecutor() {
     由构建方法可知，SingleThreadPool 中只有一个核心线程，这意味着所有的任务都会被顺序执行。
     
     SingleThreadExecutor的意义在于统一所有的外界任务到一个线程中，这使得在这些任务之间不需要处理线程同步的问题。
+
+
+
+----
+
+**知识链接**
+
+[java并发编程--Executor框架
+](https://www.cnblogs.com/MOBIN/p/5436482.html)
+
