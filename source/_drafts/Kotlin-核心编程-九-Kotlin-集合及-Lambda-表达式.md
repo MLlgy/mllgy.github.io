@@ -180,3 +180,222 @@ Kotlin 中 Lambda 的额外开销：
 在 Kotliln 声明的每一个 Lambda 会在字节码中产生一个匿名类，每次调用都会创建一个新的对象，所以存在额外开销。
 
 **内联函数：**
+使用 inline 关键字来修饰函数，这些函数就成为了内联函数。内联函数的函数体在编译期会被嵌入每一个调用的地方，以免减少额外生产的匿名类数量，同时减少函数执行的时间开销。
+
+示例代码：
+
+```
+fun main(args: Array<String>) {
+    foo { println("block") }
+}
+
+fun foo(block:()->Unit){
+    println("before block")
+    block()
+    println("after block")
+}
+```
+代码反编译后的相关代码：
+
+```
+public final class TwoKt {
+   public static final void main(@NotNull String[] args) {
+      Intrinsics.checkParameterIsNotNull(args, "args");
+      foo((Function0)null.INSTANCE);
+   }
+
+   public static final void foo(@NotNull Function0 block) {
+      Intrinsics.checkParameterIsNotNull(block, "block");
+      String var1 = "before block";
+      System.out.println(var1);
+      block.invoke();
+      var1 = "after block";
+      System.out.println(var1);
+   }
+}
+```
+
+通过前面的内容，我们知道 Lambda 表达式会生成相应的匿名内部类，在这里调用 foo 会产生一个 Function0 类型的 block 类，通过调用其 invoke 方法来执行，这就是所说的增加的额外的生成类和调用开销。
+
+使用 inline 关键子修饰 foo 函数，如下：
+```
+inline fun foo(block:()->Unit){
+    println("before block")
+    block()
+    println("after block")
+}
+```
+
+反编译后的代码：
+
+```
+public final class TwioKt {
+   public static final void main(@NotNull String[] args) {
+      Intrinsics.checkParameterIsNotNull(args, "args");
+      String var1 = "before block";
+      System.out.println(var1);
+      // block 函数体从这里开始粘贴
+      String var2 = "block";
+      System.out.println(var2);
+      // block 函数体从这里结束粘贴
+      var1 = "after block";
+      System.out.println(var1);
+   }
+
+   public static final void foo(@NotNull Function0 block) {
+      Intrinsics.checkParameterIsNotNull(block, "block");
+      String var2 = "before block";
+      System.out.println(var2);
+      block.invoke();
+      var2 = "after block";
+      System.out.println(var2);
+   }
+}
+```
+可以看到 foo 函数体代码以及被调用的 Lambda 代码都粘贴到了相应的调用位置，从而减少匿名类的生产和调用开销。但是内联函数存在的一个问题是会增加空间复杂度，通过空间换取时间上的优势。
+
+使用内联函数需要注意：
+* 普通函数不需要使用 inline 关键字修饰。
+* 避免对具有大量函数体的函数进行内联，会导致过多的字节码数量。
+* 函数被定义为内联函数，则不能访问闭包类中的私有成员，除非声明为 internal。
+
+### 使用 online 避免参数被内联
+
+通过上节可是看到内联函数的整个函数会被粘贴到调用函数中，但是
+
+存在这样一种情况：函数接收多个参数，我们只想对部分 Lambda 参数进行内联，而其他不内联，应该如何操作。
+
+
+针对以上情况，我们可以使用关键字 noline 来修饰不想内联的参数，那么该参数就不会有内联效果。我们对以上的示例进行修改：
+
+```
+fun main(args: Array<String>) {
+    foo ({ println("block1")},{ println("block2")}, "tree") 
+}
+
+inline fun foo(block:()->Unit,noinline block2: () -> Unit,mess:String){
+    println("before block")
+    block()
+    block2()
+    println(mess)
+    println("after block")
+}
+```
+
+反编译后的代码：
+
+```
+public final class TwioKt {
+   public static final void main(@NotNull String[] args) {
+      Intrinsics.checkParameterIsNotNull(args, "args");
+      Function0 block2$iv = (Function0)null.INSTANCE;
+      String mess$iv = "tree";
+      String var3 = "before block";
+      System.out.println(var3);
+      String var4 = "block1";
+      System.out.println(var4);
+      block2$iv.invoke();
+      System.out.println(mess$iv);
+      var3 = "after block";
+      System.out.println(var3);
+   }
+
+   public static final void foo(@NotNull Function0 block, @NotNull Function0 block2, @NotNull String mess) {
+      Intrinsics.checkParameterIsNotNull(block, "block");
+      Intrinsics.checkParameterIsNotNull(block2, "block2");
+      Intrinsics.checkParameterIsNotNull(mess, "mess");
+      String var4 = "before block";
+      System.out.println(var4);
+      block.invoke();
+      block2.invoke();
+      System.out.println(mess);
+      var4 = "after block";
+      System.out.println(var4);
+   }
+}
+```
+
+使用 online 修饰的 block2 Lambda 表达式， 在调用时并没有将其函数体复制到调用处。
+
+
+
+### 非局部返回和具体化参数类型
+
+
+
+**使用 inline 实现非局部返回**
+
+```
+fun main(args: Array<String>) {
+    // foo { return} 促成为非法调用，Lambda 中不允许 return 关键字出现
+}
+
+
+fun foo(block:() -> Unit){
+    println("before block")
+    block()
+    println("after block")
+}
+```
+此时通过 inline 修饰 foo 函数：
+
+```
+fun main(args: Array<String>) {
+    foo { return} 
+}
+
+
+inline fun foo(block:() -> Unit){
+    println("before block")
+    block()
+    println("after block")
+}
+```
+
+但是打印日志如下：
+```
+before block
+```
+
+只执行 block 上面的操作，原因很容易理解，使用 inline 将代码进行替换，那么 return 在编译期会出现在 main 函数中，当然会针对全局生效。
+
+**使用 inline 实现具体化参数类型**
+
+其实这部分内容在 Kotlin 泛型提及过，在此处探究器原因。
+
+和 Java 一样，由于运行时存心类型擦除，所以不能直接获取一个参数的类型，而使用内联函数会直接在字节码中生成相应的函数体，这种情况下可以获得参数类型，可以通过关键字 refied 实现这一效果。
+
+```
+fun main(args: Array<String>) {
+    getType<String>()
+}
+
+
+inline fun <reified T> getType(){
+    println(T::class)
+}
+```
+
+打印日志：
+
+```
+class java.lang.String
+```
+
+反编译后的代码：
+
+```
+public final class TwioKt {
+   public static final void main(@NotNull String[] args) {
+      Intrinsics.checkParameterIsNotNull(args, "args");
+      KClass var1 = Reflection.getOrCreateKotlinClass(String.class);
+      System.out.println(var1);
+   }
+
+   private static final void getType() {
+      Intrinsics.reifiedOperationMarker(4, "T");
+      KClass var1 = Reflection.getOrCreateKotlinClass(Object.class);
+      System.out.println(var1);
+   }
+}
+```
