@@ -28,3 +28,6 @@ tags:
 
 
 [Flutter 在线学习](https://guoshuyu.cn/home/wx/Flutter-2.html)
+
+
+[Gityuan 关于 Flutter 原理的系列博客](http://gityuan.com/archive/)

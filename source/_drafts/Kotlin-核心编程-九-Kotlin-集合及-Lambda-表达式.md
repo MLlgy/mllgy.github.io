@@ -176,8 +176,7 @@ public inline fun <T> T.apply(block: T.() -> Unit): T {
 
 ### 使用内联函数优化 Kotlin 中 Lambda 表达式额外的开销
 
-Kotlin 中 Lambda 的额外开销：
-在 Kotliln 声明的每一个 Lambda 会在字节码中产生一个匿名类，每次调用都会创建一个新的对象，所以存在额外开销。
+Kotlin 中 Lambda 的额外开销：在 Kotliln 声明的每一个 Lambda 会在字节码中产生一个匿名类，每次调用都会创建一个新的对象，所以存在额外开销。而 Java 中通过 invokedynamic 技术实现了在运行期才产生相应的翻译代码。
 
 **内联函数：**
 使用 inline 关键字来修饰函数，这些函数就成为了内联函数。内联函数的函数体在编译期会被嵌入每一个调用的地方，以免减少额外生产的匿名类数量，同时减少函数执行的时间开销。
@@ -259,11 +258,9 @@ public final class TwioKt {
 * 避免对具有大量函数体的函数进行内联，会导致过多的字节码数量。
 * 函数被定义为内联函数，则不能访问闭包类中的私有成员，除非声明为 internal。
 
-### 使用 online 避免参数被内联
+### 使用 noinline 避免参数被内联
 
-通过上节可是看到内联函数的整个函数会被粘贴到调用函数中，但是
-
-存在这样一种情况：函数接收多个参数，我们只想对部分 Lambda 参数进行内联，而其他不内联，应该如何操作。
+通过上节可是看到内联函数的整个函数会被粘贴到调用函数中，但是存在这样一种情况：函数接收多个参数，我们只想对部分 Lambda 参数进行内联，而其他不内联，应该如何操作。
 
 
 针对以上情况，我们可以使用关键字 noline 来修饰不想内联的参数，那么该参数就不会有内联效果。我们对以上的示例进行修改：
@@ -359,6 +356,22 @@ before block
 
 只执行 block 上面的操作，原因很容易理解，使用 inline 将代码进行替换，那么 return 在编译期会出现在 main 函数中，当然会针对全局生效。
 
+
+**crossinline 关键字**
+但是在某些情况下，非局部返回可能会引发某些问题，因为有时候内联函数所接收的 Lambda 常数往往来自上下文的其他地方。为了避免带有 return 的 Lambda参数带来破话，使用 crossinline 来避免非局部返回的情况：
+
+```
+fun main(args: Array<String>) {
+    //foo { return} 此时 Lambda 中带有 return 参数是非法的
+}
+
+
+inline fun foo(crossinline block:() -> Unit){
+    println("before block")
+    block()
+    println("after block")
+}
+```
 **使用 inline 实现具体化参数类型**
 
 其实这部分内容在 Kotlin 泛型提及过，在此处探究器原因。

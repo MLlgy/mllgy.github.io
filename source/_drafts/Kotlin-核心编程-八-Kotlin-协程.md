@@ -41,3 +41,9 @@ launch 并是声明一个协程(或者说不是立刻去启动一个协程)，�
 
 
 使用同步的代码格式去发起一次异步请求。
+
+
+
+----
+
+[Kotlin 协程原理](https://blog.csdn.net/suyimin2010/article/details/91125803)  -- 写的非常的好
