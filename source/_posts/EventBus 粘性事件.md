@@ -1,11 +1,13 @@
 ---
 title: EventBus 粘性事件
-tags:
+tags: [EventBus,Sticky Event]
+date: 2019-11-04 17:44:35
 ---
 
 
 
-### 普通事件和粘性事件
+
+### 0x0001 普通事件和粘性事件
 
 
 通过源码我们看一下两者的差别：
@@ -58,7 +60,7 @@ tags:
 可以看到在初始化订阅者时，如果订阅方法的 @Subscribe 中的 sticky 属性为 ture， 那么会从 stickyEvents  获得最新的一个事件，并执行 checkPostStickyEventToSubscription 方法直接发布该事件。
 
 
-### 为什么使用 Sticky Event
+### 0x0002 为什么使用 Sticky Event
 
 
 官方文档对 Sticky Event 有以下描述；
@@ -72,7 +74,7 @@ tags:
 
 > 在一个 A/F 中的成功执行结果，比如说定位信息， 项目中定位信息在很多页面都需要，此时如果使用 post 发布事件，其中一些没有初始化成功的页面就不会收到该事件，无关获得定位信息，而如果使用 postSticky 来发布事件，那么其他页面在初始化时也是可以获得该事件，也可以获得包含其中的定位信息。
 
-### 手动获取和删除
+### 0x0003 手动获取和删除
 
 
 手动获得粘性事件：

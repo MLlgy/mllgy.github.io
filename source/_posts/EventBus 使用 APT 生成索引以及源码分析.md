@@ -1,23 +1,24 @@
 ---
 title: EventBus 使用 APT 生成索引以及源码分析
-tags:
+date: 2019-11-04 17:42:24
+tags:[EventBus,EventBus APT
+]
 ---
 
 
-### 配置 EventBus 使用索引
+
+### 0x0001 配置 EventBus 使用 APT 生成索引
 
 [具体可以参见官方文档](http://greenrobot.org/eventbus/documentation/subscriber-index/)
 
 通过文档可以看到可以通过三种方式为 项目配置索引：APT、kapt、android-apt，这只是实现功能的不同方式，本文介绍 APT 生成索引，其他两种原理基本相同.
 
-### 使用 APT 生成索引
 
-
-使用 APT 生成索引，不可在匿名内部类中定义订阅方法。
-
-要想使用 APT 生成索引，需要对项目进行如下配置：
+使用 APT 生成索引，不可在匿名内部类中定义订阅方法。要想使用 APT 生成索引，需要对项目进行如下配置：
 
 针对 app 模块下的 `build.gradle` 文件做以下更改：
+
+<!-- more -->
 
 ```
 defaultConfig {
@@ -36,6 +37,24 @@ dependencies {
 }
 ```
 
+
+kapt 下的配置：
+
+```
+apply plugin: 'kotlin-kapt' // ensure kapt plugin is applied
+ 
+dependencies {
+    implementation 'org.greenrobot:eventbus:3.1.1'
+    kapt 'org.greenrobot:eventbus-annotation-processor:3.1.1'
+}
+ 
+kapt {
+    arguments {
+        arg('eventBusIndex', 'com.example.myapp.MyEventBusIndex')
+    }
+}
+```
+
 在项目自定义的 Application 中添加如下代码:
 
 ```
@@ -50,7 +69,7 @@ public void onCreate() {
 ```
 
 
-### 索引类
+### 0x0002 索引类
 
 重新构建项目，则可以项目 build 相关文件夹下生成 EventBusIndex 源文件，大致如下：
 
@@ -86,7 +105,7 @@ public class MyEventBusIndex implements SubscriberInfoIndex {
 ```
 
 
-### 索引类中相关代码分析
+### 0x0003 索引类中相关代码分析
 
 重点查看一下静态代码块中对 putIndex 方法的调用，传入订阅者信息，并以订阅者为 key 将订阅者存入 SUBSCRIBER_INDEX 中。
 
@@ -139,7 +158,7 @@ public SubscriberMethodInfo(String methodName, Class<?> eventType, ThreadMode th
 最终通过调用 getSubscriberInfo 方法来获得 SubscriberInfo(其实在这里是 SimpleSubscriberInfo 对象)
 
 
-### 使生成的索引生效
+### 0x0004 使生成的索引生效
 
 
 以上主要分析了 APT 生成的索引类的信息，那么如何使这些信息生效，具体分析如下。
@@ -210,10 +229,7 @@ EventBus(EventBusBuilder builder) {
 至此，通过 EventBusBuilder 对象生成的索引信息就会被配置到 EventBus 的属性 SubscriberMethodFinder 上，如上所说，通过 EventBus.getDefault() 获取到的 EventBus 都持有 APT 生成的索引的信息。
 
 
-在此后查询订阅者的订阅方法：
-
-
-那么在接下来的步骤中 `getSubscriberInfo()` 方法返回值不为空，并会调用索引类中的 getSubscriberInfo 来返回订阅者信息，从而可以获取订阅方法。
+在此后查询订阅者的订阅方法，那么在接下来的步骤中 `getSubscriberInfo()` 方法返回值不为空，并会调用索引类中的 getSubscriberInfo 来返回订阅者信息，从而可以获取订阅方法。
 
 SubscriberMethodFinder#findUsingInfo
 ```
@@ -264,7 +280,7 @@ private SubscriberInfo getSubscriberInfo(FindState findState) {
 
 
 
-### 使用 APT 生成索引类的优点
+### 0x0005 使用 APT 生成索引类的优点
 
 
 如上面所说，在编译期通过 APT 生成的索引类，即在编译期就获取了订阅者的信息(所有的订阅者以及其中的订阅方法)，从而取代在代码执行期(运行期)通过反射获得订阅方法的动作，效率大大提高。

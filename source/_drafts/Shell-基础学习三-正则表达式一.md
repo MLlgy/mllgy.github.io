@@ -1,6 +1,6 @@
 ---
 title:  Shell 基础学习三--正则表达式一
-tags:
+tags: [Shell]
 ---
 
 
