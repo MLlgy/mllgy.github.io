@@ -6,22 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href>
-  <title>Jetpack 之 Lifecycle 组件学习笔记 | GY</title>
+  <title>从 EventBus 3.0 源码理解事件总线机制 | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="2019.10.21 更新  0x0000 概述在 A/F 生命周期变化后，生命周期感知组件(Lifecycle—aware component)会响应相应动作，它会帮助你编写有良好组织的、轻量级、易维护的代码。 传统模式下，要想做的生命感知需要做的是实现其他组件的接口，并在 A/F 的生命周期函数中调用其他组件的方法。但是这样并不是好的代码组织方式，并且容易产生错误。而通过 生命周期感知组件(">
-<meta name="keywords" content="Jetpack,Lifecycle">
+  <meta name="description" content="0x0001 基本介绍EventBus 可以将 事件在 线程之间传递，使用简单。 0x0002 项目配置 EventBus 以及基本使用在 app 模块下进行以来配置： 123dependencies &amp;#123;    implementation &amp;quot;org.greenrobot:eventbus:$versions.eventbus_version&amp;quot;&amp;#125;">
+<meta name="keywords" content="EventBus,源码解析">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Jetpack 之 Lifecycle 组件学习笔记">
-<meta property="og:url" content="/2019/05/10/Jetpack之 Lifecycle 组件学习笔记/index.html">
+<meta property="og:title" content="从 EventBus 3.0 源码理解事件总线机制">
+<meta property="og:url" content="/2019/11/04/从 EventBus 3.0 源码理解事件总线机制/index.html">
 <meta property="og:site_name" content="GY">
-<meta property="og:description" content="2019.10.21 更新  0x0000 概述在 A/F 生命周期变化后，生命周期感知组件(Lifecycle—aware component)会响应相应动作，它会帮助你编写有良好组织的、轻量级、易维护的代码。 传统模式下，要想做的生命感知需要做的是实现其他组件的接口，并在 A/F 的生命周期函数中调用其他组件的方法。但是这样并不是好的代码组织方式，并且容易产生错误。而通过 生命周期感知组件(">
+<meta property="og:description" content="0x0001 基本介绍EventBus 可以将 事件在 线程之间传递，使用简单。 0x0002 项目配置 EventBus 以及基本使用在 app 模块下进行以来配置： 123dependencies &amp;#123;    implementation &amp;quot;org.greenrobot:eventbus:$versions.eventbus_version&amp;quot;&amp;#125;">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="/source/images/2019_10_21_01.png">
-<meta property="og:updated_time" content="2019-10-21T09:01:16.485Z">
+<meta property="og:updated_time" content="2019-11-04T10:16:46.005Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Jetpack 之 Lifecycle 组件学习笔记">
-<meta name="twitter:description" content="2019.10.21 更新  0x0000 概述在 A/F 生命周期变化后，生命周期感知组件(Lifecycle—aware component)会响应相应动作，它会帮助你编写有良好组织的、轻量级、易维护的代码。 传统模式下，要想做的生命感知需要做的是实现其他组件的接口，并在 A/F 的生命周期函数中调用其他组件的方法。但是这样并不是好的代码组织方式，并且容易产生错误。而通过 生命周期感知组件(">
-<meta name="twitter:image" content="/source/images/2019_10_21_01.png">
+<meta name="twitter:title" content="从 EventBus 3.0 源码理解事件总线机制">
+<meta name="twitter:description" content="0x0001 基本介绍EventBus 可以将 事件在 线程之间传递，使用简单。 0x0002 项目配置 EventBus 以及基本使用在 app 模块下进行以来配置： 123dependencies &amp;#123;    implementation &amp;quot;org.greenrobot:eventbus:$versions.eventbus_version&amp;quot;&amp;#125;">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
   
@@ -161,89 +159,170 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Jetpack之 Lifecycle 组件学习笔记" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-从 EventBus 3.0 源码理解事件总线机制" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      Jetpack 之 Lifecycle 组件学习笔记
+      从 EventBus 3.0 源码理解事件总线机制
     </h1>
   
 
         
-        <a href="/2019/05/10/Jetpack之 Lifecycle 组件学习笔记/" class="archive-article-date">
-  	<time datetime="2019-05-10T02:42:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-10</time>
+        <a href="/2019/11/04/从 EventBus 3.0 源码理解事件总线机制/" class="archive-article-date">
+  	<time datetime="2019-11-04T09:44:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-04</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
-<p>2019.10.21 更新</p>
-</blockquote>
-<h3 id="0x0000-概述"><a href="#0x0000-概述" class="headerlink" title="0x0000 概述"></a>0x0000 概述</h3><p>在 A/F 生命周期变化后，生命周期感知组件(Lifecycle—aware component)会响应相应动作，它会帮助你编写有良好组织的、轻量级、易维护的代码。</p>
-<p>传统模式下，要想做的生命感知需要做的是实现其他组件的接口，并在 A/F 的生命周期函数中调用其他组件的方法。但是这样并不是好的代码组织方式，并且容易产生错误。而通过 生命周期感知组件(Lifecycle—aware component) 可以把这部分逻辑从 A/F 中移到组件自身中。</p>
-<p><code>android.arch.lifecycle (androidx 下为 androidx.lifecycle )</code> 包下的类和接口允许你创建 生命周期感知组件(lifecycle-aware components),它们可以根据 A/F 的生命周期来调整自己的行为。</p>
-<p>像 Activity、Service 等组件的生命周期均是由 Android Framework 管理，同样的，Lifecycle 也由运行的系统或者 Framework 中的进程管理，在编写 Andorid 程序时需要遵守相应的规则，不然会产生内存泄漏，甚至会导致应用奔溃。</p>
-<h3 id="0x0001-Lifecycle"><a href="#0x0001-Lifecycle" class="headerlink" title="0x0001 Lifecycle"></a>0x0001 Lifecycle</h3><p><strong>Lifecycle 持有 A/F 组件有关生命周期的信息，并且允许其他对象监听它的状态</strong>。在 Android API 26.0.1以及其后 A/F实现了LifecycleOwner，可在 A/F 中通过 getLifecycle() 获得 A/F 的 Lifecycle 对象。</p>
+        <h3 id="0x0001-基本介绍"><a href="#0x0001-基本介绍" class="headerlink" title="0x0001 基本介绍"></a>0x0001 基本介绍</h3><p>EventBus 可以将 事件在 <strong>线程之间传递</strong>，使用简单。</p>
+<h3 id="0x0002-项目配置-EventBus-以及基本使用"><a href="#0x0002-项目配置-EventBus-以及基本使用" class="headerlink" title="0x0002 项目配置 EventBus 以及基本使用"></a>0x0002 项目配置 EventBus 以及基本使用</h3><p>在 app 模块下进行以来配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    implementation &quot;org.greenrobot:eventbus:$versions.eventbus_version&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <a id="more"></a>
 
-<p>Lifecycle 使用两个重要的枚举类来跟踪它所关联的组件的生命周期状态：</p>
+<p>具体使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">// 1. 定义事件</span><br><span class="line">public class EventBusEvent &#123;</span><br><span class="line">    private String msg;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 2. 在相应类中注册 EventBus，定义相应事件的方法，并且在销毁时解绑 EventBus</span><br><span class="line"></span><br><span class="line">public class EventBusActivity extends AppCompatActivity &#123;</span><br><span class="line"></span><br><span class="line">    private Button button;</span><br><span class="line">    private TextView textView;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_event_bus);</span><br><span class="line">        button = findViewById(R.id.button);</span><br><span class="line">        textView = findViewById(R.id.text);</span><br><span class="line">        EventBus.getDefault().register(this);</span><br><span class="line">        button.setOnClickListener(new View.OnClickListener() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onClick(View view) &#123;</span><br><span class="line">                EventBusEvent event = new EventBusEvent();</span><br><span class="line">                event.setMsg(&quot;已接收到事件!&quot;);</span><br><span class="line">                // 发布事件</span><br><span class="line">                EventBus.getDefault().post(event);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Subscribe(threadMode = ThreadMode.MAIN)</span><br><span class="line">    public void onTestEvent(EventBusEvent event) &#123;</span><br><span class="line">        textView.setText(event.getMsg());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onDestroy() &#123;</span><br><span class="line">        EventBus.getDefault().unregister(this);</span><br><span class="line">        super.onDestroy();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 3. 在相应类的操作中向 EventBus 发送事件,就如上面 `EventBus.getDefault().post(event)` 的操作。</span><br></pre></td></tr></table></figure>
+
+<h3 id="0x0003-EventBus-源码中的关键类"><a href="#0x0003-EventBus-源码中的关键类" class="headerlink" title="0x0003 EventBus 源码中的关键类"></a>0x0003 EventBus 源码中的关键类</h3><p>EventBusBuilder：</p>
+<pre><code>为 EventBus 设置初始条件的类。</code></pre><p>SubscriberMethodFinder：</p>
+<pre><code>在订阅者的类中寻找订阅方法 ，即标注 @Subscribe 的方法。从 EventBusBuilder 中获取初始对象。</code></pre><p>FindState:</p>
+<pre><code>保存了订阅者是谁、订阅者的订阅方法。EventBus 防止大量创建 FindState，使用享元模式复用 FindState。</code></pre><p>SubscriberInfo：(子类 AbstractSubscriberInfo、最终子类 SimpleSubscriberInfo))</p>
+<pre><code>见字识意，订阅者的信息，保存了父类信息、订阅方法等信息。</code></pre><p>Subscription：</p>
+<pre><code>一个订阅关系。其中包含的信息有：订阅者、订阅方法。</code></pre><p>SubscriberMethod：</p>
+<pre><code>订阅者方法描述类。</code></pre><p>Map&lt;Object, List&lt;Class&lt;?&gt;&gt;&gt; typesBySubscriber:</p>
+<p> 一个订阅者拥有多少个事件类型。</p>
+<p>Map&lt;Class&lt;?&gt;, CopyOnWriteArrayList<subscription>&gt; subscriptionsByEventType:</subscription></p>
+<p>事件类型下的订阅关系。</p>
+<h3 id="0x0004源码解析"><a href="#0x0004源码解析" class="headerlink" title="0x0004源码解析"></a>0x0004源码解析</h3><h4 id="1-在订阅者中定义-EventBus"><a href="#1-在订阅者中定义-EventBus" class="headerlink" title="1. 在订阅者中定义 EventBus"></a>1. 在订阅者中定义 EventBus</h4><p>具体订阅见上面示例中的代码，最终通过以下代码开始注册逻辑：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">EventBus.getDefault().register(this);</span><br><span class="line"></span><br><span class="line">public void register(Object subscriber) &#123;</span><br><span class="line">    Class&lt;?&gt; subscriberClass = subscriber.getClass();</span><br><span class="line">    // 获取订阅事件</span><br><span class="line">    List&lt;SubscriberMethod&gt; subscriberMethods = subscriberMethodFinder.findSubscriberMethods(subscriberClass);</span><br><span class="line">    synchronized (this) &#123;</span><br><span class="line">        for (SubscriberMethod subscriberMethod : subscriberMethods) &#123;</span><br><span class="line">            // 产生订阅关系</span><br><span class="line">            subscribe(subscriber, subscriberMethod);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过以上代码，EventBus 完成了获得订阅事件、产生订阅关系的过程。</p>
+<h4 id="2-获得订阅者中的订阅事件的方式"><a href="#2-获得订阅者中的订阅事件的方式" class="headerlink" title="2. 获得订阅者中的订阅事件的方式"></a>2. 获得订阅者中的订阅事件的方式</h4><p>获得订阅者中的订阅事件(被 @Subscribe 标记的方法)，会从子类到父类依次寻找订阅方法。</p>
+<p>根据是否配置 APT 分为两种情况：</p>
+<ol>
+<li>没有使用 APT 生成索引</li>
+</ol>
+<p>通过反射识别订阅者中被 @Subscribe 标记的方法。</p>
+<ol start="2">
+<li>使用 APT 生成索引</li>
+</ol>
+<p>通过索引直接获得订阅方法，使用 APT 生成索引不在此处详述。</p>
+<h4 id="3-通过反射的方式获取订阅事件"><a href="#3-通过反射的方式获取订阅事件" class="headerlink" title="3. 通过反射的方式获取订阅事件"></a>3. 通过反射的方式获取订阅事件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;SubscriberMethod&gt; subscriberMethods = subscriberMethodFinder.findSubscriberMethods(subscriberClass);</span><br></pre></td></tr></table></figure>
+
+<p>继续跟进代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">List&lt;SubscriberMethod&gt; findSubscriberMethods(Class&lt;?&gt; subscriberClass) &#123;</span><br><span class="line">    // 首先，检查缓存中是否含义订阅者相应的订阅方法</span><br><span class="line">    List&lt;SubscriberMethod&gt; subscriberMethods = METHOD_CACHE.get(subscriberClass);</span><br><span class="line">    if (subscriberMethods != null) &#123;</span><br><span class="line">        return subscriberMethods;</span><br><span class="line">    &#125;</span><br><span class="line">    // 默认为 false</span><br><span class="line">    if (ignoreGeneratedIndex) &#123;</span><br><span class="line">        subscriberMethods = findUsingReflection(subscriberClass);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        subscriberMethods = findUsingInfo(subscriberClass);</span><br><span class="line">    &#125;</span><br><span class="line">    if (subscriberMethods.isEmpty()) &#123;</span><br><span class="line">        throw new EventBusException(&quot;Subscriber &quot; + subscriberClass</span><br><span class="line">                + &quot; and its super classes have no public methods with the @Subscribe annotation&quot;);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        // 将新的订阅者添加到缓存中</span><br><span class="line">        METHOD_CACHE.put(subscriberClass, subscriberMethods);</span><br><span class="line">        return subscriberMethods;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Eventbus 会通过 findUsingInfo 方法获取订阅者的订阅方法，会在此处根据 findState.subscriberInfo 的具体值产生两个分支：</p>
+<ol>
+<li>通过反射获取订阅事件。</li>
+<li>通过 APT 方式获取订阅事件。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">private List&lt;SubscriberMethod&gt; findUsingInfo(Class&lt;?&gt; subscriberClass) &#123;</span><br><span class="line">    FindState findState = prepareFindState();</span><br><span class="line">    findState.initForSubscriber(subscriberClass);</span><br><span class="line">    while (findState.clazz != null) &#123;</span><br><span class="line">        // 如果使用索引，那么 findState.subscriberInfo 不为 null</span><br><span class="line">        findState.subscriberInfo = getSubscriberInfo(findState);</span><br><span class="line">        if (findState.subscriberInfo != null) &#123;</span><br><span class="line">            SubscriberMethod[] array = findState.subscriberInfo.getSubscriberMethods();</span><br><span class="line">            for (SubscriberMethod subscriberMethod : array) &#123;</span><br><span class="line">                if (findState.checkAdd(subscriberMethod.method, subscriberMethod.eventType)) &#123;</span><br><span class="line">                    findState.subscriberMethods.add(subscriberMethod);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            findUsingReflectionInSingleClass(findState);</span><br><span class="line">        &#125;</span><br><span class="line">        findState.moveToSuperclass();</span><br><span class="line">    &#125;</span><br><span class="line">    return getMethodsAndRelease(findState);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用反射获取订阅事件的具体流程，在 findUsingReflectionInSingleClass 方法中操作如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">private void findUsingReflectionInSingleClass(FindState findState) &#123;</span><br><span class="line">    Method[] methods;</span><br><span class="line">    // 通过反射获取订阅者中的所有方法</span><br><span class="line">    methods = findState.clazz.getMethods();</span><br><span class="line">    ....</span><br><span class="line">    for (Method method : methods) &#123;</span><br><span class="line">        int modifiers = method.getModifiers();</span><br><span class="line">        if ((modifiers &amp; Modifier.PUBLIC) != 0 &amp;&amp; (modifiers &amp; MODIFIERS_IGNORE) == 0) &#123;</span><br><span class="line">            Class&lt;?&gt;[] parameterTypes = method.getParameterTypes();</span><br><span class="line">            if (parameterTypes.length == 1) &#123;</span><br><span class="line">                Subscribe subscribeAnnotation = method.getAnnotation(Subscribe.class);</span><br><span class="line">                if (subscribeAnnotation != null) &#123;</span><br><span class="line">                    Class&lt;?&gt; eventType = parameterTypes[0];</span><br><span class="line">                    if (findState.checkAdd(method, eventType)) &#123;</span><br><span class="line">                        ThreadMode threadMode = subscribeAnnotation.threadMode();</span><br><span class="line">                        findState.subscriberMethods.add(new SubscriberMethod(method, eventType, threadMode,</span><br><span class="line">                                subscribeAnnotation.priority(), subscribeAnnotation.sticky()));</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; else if (strictMethodVerification &amp;&amp; method.isAnnotationPresent(Subscribe.class)) &#123;</span><br><span class="line">                String methodName = method.getDeclaringClass().getName() + &quot;.&quot; + method.getName();</span><br><span class="line">                throw new EventBusException(&quot;@Subscribe method &quot; + methodName +</span><br><span class="line">                        &quot;must have exactly 1 parameter but has &quot; + parameterTypes.length);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else if (strictMethodVerification &amp;&amp; method.isAnnotationPresent(Subscribe.class)) &#123;</span><br><span class="line">            String methodName = method.getDeclaringClass().getName() + &quot;.&quot; + method.getName();</span><br><span class="line">            throw new EventBusException(methodName +</span><br><span class="line">                    &quot; is a illegal @Subscribe method: must be public, non-static, and non-abstract&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过反射的方式遍历订阅者的所有方法，从而获得所有的订阅方法，如果订阅者没有订阅方法，则会报出相应的异常。</p>
+<h4 id="4-产生订阅关系"><a href="#4-产生订阅关系" class="headerlink" title="4. 产生订阅关系"></a>4. 产生订阅关系</h4><p>在第一步中获得了订阅者的所有订阅方法，下面为第二阶段，重点为：订阅者与如何与订阅方法产生订阅关系(订阅者和一个订阅方法产生一个 Subscription 对象)。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">subscribe(subscriber, subscriberMethod);</span><br></pre></td></tr></table></figure>
+
+<p>subscribe d的关键代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">private void subscribe(Object subscriber, SubscriberMethod subscriberMethod) &#123;</span><br><span class="line">    Class&lt;?&gt; eventType = subscriberMethod.eventType;</span><br><span class="line">    // 订阅者和订阅方法产生的订阅关系</span><br><span class="line">    Subscription newSubscription = new Subscription(subscriber, subscriberMethod);</span><br><span class="line">    CopyOnWriteArrayList&lt;Subscription&gt; subscriptions = subscriptionsByEventType.get(eventType);</span><br><span class="line">    if (subscriptions == null) &#123;</span><br><span class="line">        subscriptions = new CopyOnWriteArrayList&lt;&gt;();</span><br><span class="line">        // 以事件类型为 key，将订阅关系集合作为 value ，添加到 Map 中</span><br><span class="line">        subscriptionsByEventType.put(eventType, subscriptions);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        ....</span><br><span class="line">    &#125;</span><br><span class="line">    int size = subscriptions.size();</span><br><span class="line">    for (int i = 0; i &lt;= size; i++) &#123;</span><br><span class="line">        if (i == size || subscriberMethod.priority &gt; subscriptions.get(i).subscriberMethod.priority) &#123;</span><br><span class="line">            // 将 newSubscription 添加到集合中</span><br><span class="line">            subscriptions.add(i, newSubscription);</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    // typesBySubscriber 以 订阅者为 key ，以订阅事件类型为 value 的 Map</span><br><span class="line">    List&lt;Class&lt;?&gt;&gt; subscribedEvents = typesBySubscriber.get(subscriber);</span><br><span class="line">    if (subscribedEvents == null) &#123;</span><br><span class="line">        subscribedEvents = new ArrayList&lt;&gt;();</span><br><span class="line">        typesBySubscriber.put(subscriber, subscribedEvents);</span><br><span class="line">    &#125;</span><br><span class="line">    subscribedEvents.add(eventType);</span><br><span class="line">    ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>至此，订阅的动作得以完成，说是订阅动作，其实就是将订阅关系、事件类型、订阅者三者之间的对应关系通过集合保存下来，重点关注两个 Map 集合。</p>
+<h4 id="5-两个重要的-Map-对象"><a href="#5-两个重要的-Map-对象" class="headerlink" title="5. 两个重要的 Map 对象"></a>5. 两个重要的 Map 对象</h4><p><strong>第一个 Map 集合：subscriptionsByEventType</strong></p>
+<p>根据变量名就可知为以 <strong>事件类型为 key</strong>，以 <strong>订阅关系集合为 value</strong> 的 Map</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private final Map&lt;Class&lt;?&gt;, CopyOnWriteArrayList&lt;Subscription&gt;&gt; subscriptionsByEventType;</span><br></pre></td></tr></table></figure>
+
+<p>以订阅的事件类型(eventType)为 Key，将订阅关系集合存储到对应的 Map 中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// Map&lt;事件类型,List&lt;该事件对应的订阅关系(Subscription 对象)&gt;&gt;</span><br><span class="line"> CopyOnWriteArrayList&lt;Subscription&gt; subscriptions = subscriptionsByEventType.get(eventType);</span><br><span class="line"> ...</span><br><span class="line">subscriptionsByEventType.put(eventType, subscriptions);</span><br></pre></td></tr></table></figure>
+
+<p><strong>第二个 Map 集合：typesBySubscriber</strong></p>
+<p>根据变量名可知，typesBySubscriber 为 <strong>以订阅者为 key</strong>，以 <strong>事件类型为 value</strong> 的 Map 集合</p>
+<p> Map&lt;订阅者(比如在CustomActivity 中有订阅方法，那么 key 为 CustomActivity),该 Class 中所以的订阅事件类型的集合&gt;。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private final Map&lt;Object, List&lt;Class&lt;?&gt;&gt;&gt; typesBySubscriber;</span><br></pre></td></tr></table></figure>
+
+<p>List&lt;Class&lt;?&gt;&gt; subscribedEvents = typesBySubscriber.get(subscriber);</p>
+<p>以订阅者为 Key，对存储该订阅者想所有的订阅事件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Class&lt;?&gt;&gt; subscribedEvents = typesBySubscriber.get(subscriber);</span><br><span class="line">if (subscribedEvents == null) &#123;</span><br><span class="line">    subscribedEvents = new ArrayList&lt;&gt;();</span><br><span class="line">    typesBySubscriber.put(subscriber, subscribedEvents);</span><br><span class="line">&#125;</span><br><span class="line">subscribedEvents.add(eventType);</span><br></pre></td></tr></table></figure>
+
+<p>通过以上两个 Map 对象，可以获得所有的关系：订阅者 -&gt; 订阅事件 -&gt; 订阅关系。</p>
+<h4 id="6-这两个-Map-的使用"><a href="#6-这两个-Map-的使用" class="headerlink" title="6. 这两个 Map 的使用"></a>6. 这两个 Map 的使用</h4><p>以上两个 Map 对象的一个重要用途：解除订阅关系。</p>
+<ol>
+<li>通过 typesBySubscriber 找到该类(订阅者)所有的订阅事件类型</li>
+<li>通过事件类型获得所有该类型事件的所有订阅关系集合，</li>
+<li>根据订阅者类型去 订阅关系集合 中删除对应的订阅关系。</li>
+<li>移除此订阅者</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">// 步骤 1</span><br><span class="line">List&lt;Class&lt;?&gt;&gt; subscribedTypes = typesBySubscriber.get(subscriber);</span><br><span class="line">if (subscribedTypes != null) &#123;</span><br><span class="line">    for (Class&lt;?&gt; eventType : subscribedTypes) &#123;</span><br><span class="line">        unsubscribeByEventType(subscriber, eventType);</span><br><span class="line">    &#125;</span><br><span class="line">    typesBySubscriber.remove(subscriber);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    logger.log(Level.WARNING, &quot;Subscriber to unregister was not registered before: &quot; + subscriber.getClass());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private void unsubscribeByEventType(Object subscriber, Class&lt;?&gt; eventType) &#123;</span><br><span class="line">    // 步骤 2</span><br><span class="line">    List&lt;Subscription&gt; subscriptions = subscriptionsByEventType.get(eventType);</span><br><span class="line">    if (subscriptions != null) &#123;</span><br><span class="line">        int size = subscriptions.size();</span><br><span class="line">        for (int i = 0; i &lt; size; i++) &#123;</span><br><span class="line">            Subscription subscription = subscriptions.get(i);</span><br><span class="line">            // 移除指定订阅者中订阅关系</span><br><span class="line">            if (subscription.subscriber == subscriber) &#123;</span><br><span class="line">                subscription.active = false;</span><br><span class="line">                subscriptions.remove(i);</span><br><span class="line">                i--;</span><br><span class="line">                size--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同样在事件发布时两个 map 对象也发挥十分重要的作用：通过事件类型获得所有的所有的订阅关系(订阅关系中含有订阅者和订阅方法的信息)，为每一个订阅关系发布事件。</p>
+<p>理解这两个 Map 对象的意义，那么可以大致猜想 EventBus 发布事件时的基本流程：会根据事件类型在 subscriptionsByEventType 获得相应的订阅关系，由于订阅关系中含有订阅者和订阅方法的信息，那么就可以执行订阅者的订阅方法来，下面进一步查看事件发布的流程。</p>
+<h3 id="0x0005-事件发布：post-事件"><a href="#0x0005-事件发布：post-事件" class="headerlink" title="0x0005 事件发布：post 事件"></a>0x0005 事件发布：post 事件</h3><p>post 具体代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public void post(Object event) &#123;</span><br><span class="line">    PostingThreadState postingState = currentPostingThreadState.get();</span><br><span class="line">    List&lt;Object&gt; eventQueue = postingState.eventQueue;</span><br><span class="line">    eventQueue.add(event);</span><br><span class="line">    if (!postingState.isPosting) &#123;</span><br><span class="line">        ....</span><br><span class="line">            while (!eventQueue.isEmpty()) &#123;</span><br><span class="line">                postSingleEvent(eventQueue.remove(0), postingState);</span><br><span class="line">            &#125;</span><br><span class="line">        ....</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里需要注意的是 currentPostingThreadState 这个变量，看一下其初始化：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">private final ThreadLocal&lt;PostingThreadState&gt; currentPostingThreadState = new ThreadLocal&lt;PostingThreadState&gt;() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    protected PostingThreadState initialValue() &#123;</span><br><span class="line">        return new PostingThreadState();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是 ThreadLocal 这个类，它存储线程相关的变量，ThreadLocal 原理请查看：<a href="https://leegyplus.github.io/2019/09/19/ThreadLocal(Jdk1.8)%20%E4%BD%BF%E7%94%A8%E5%8F%8A%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" target="_blank" rel="noopener">ThreadLocal 源码分析</a>。使用 ThreadLocal 来存储消息队列，其目的是让每个线程维护自己单独的事件队列，避免重复发送事件，如果多个线程共用同一个事件序列，那么会出现以下情况：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">共用事件队列：Queue</span><br><span class="line"></span><br><span class="line">同一订阅者中开启两个线程：线程 A 和 线程 B，线程 A 向 Queue 成功添加事件 EventOne (事件类型为 Test), 线程 B 向 Queue 成功添加事件 EventTwo (事件类型相同，为 Test)。但是在事件处理过程中，事件 EventOne 由于某种原因长时间阻塞，而事件 EventTwo 顺利完成，并从事件序列 Queue 中移除，但是由于事件 a 此时还在事件序列中，所以此时线程 B 会去执行从线程 A 发送的事件，这样就造成了事件的重复处理现象。</span><br></pre></td></tr></table></figure>
+
+<p>将事件添加到对应的 事件序列 中，循环发送队列中的事件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">private boolean postSingleEventForEventType(Object event, PostingThreadState postingState, Class&lt;?&gt; eventClass) &#123;</span><br><span class="line">        CopyOnWriteArrayList&lt;Subscription&gt; subscriptions;</span><br><span class="line">        synchronized (this) &#123;</span><br><span class="line">            // 获取到以该事件为 key 的所有订阅关系。</span><br><span class="line">            subscriptions = subscriptionsByEventType.get(eventClass);</span><br><span class="line">        &#125;</span><br><span class="line">        if (subscriptions != null &amp;&amp; !subscriptions.isEmpty()) &#123;</span><br><span class="line">            for (Subscription subscription : subscriptions) &#123;</span><br><span class="line">                postingState.event = event;</span><br><span class="line">                postingState.subscription = subscription;</span><br><span class="line">                boolean aborted = false;</span><br><span class="line">                try &#123;</span><br><span class="line">                    // 发布订阅信息</span><br><span class="line">                    postToSubscription(subscription, event, postingState.isMainThread);</span><br><span class="line">                    aborted = postingState.canceled;</span><br><span class="line">                &#125; finally &#123;</span><br><span class="line">                    postingState.event = null;</span><br><span class="line">                    postingState.subscription = null;</span><br><span class="line">                    postingState.canceled = false;</span><br><span class="line">                &#125;</span><br><span class="line">                if (aborted) &#123;</span><br><span class="line">                    break;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>postToSubscription 源码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">private void postToSubscription(Subscription subscription, Object event, boolean isMainThread) &#123;</span><br><span class="line">    switch (subscription.subscriberMethod.threadMode) &#123;</span><br><span class="line">        case POSTING:</span><br><span class="line">            invokeSubscriber(subscription, event);</span><br><span class="line">            break;</span><br><span class="line">        case MAIN:</span><br><span class="line">            if (isMainThread) &#123;</span><br><span class="line">                invokeSubscriber(subscription, event);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                mainThreadPoster.enqueue(subscription, event);</span><br><span class="line">            &#125;</span><br><span class="line">            break;</span><br><span class="line">        case MAIN_ORDERED:</span><br><span class="line">            if (mainThreadPoster != null) &#123;</span><br><span class="line">                mainThreadPoster.enqueue(subscription, event);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                // temporary: technically not correct as poster not decoupled from subscriber</span><br><span class="line">                invokeSubscriber(subscription, event);</span><br><span class="line">            &#125;</span><br><span class="line">            break;</span><br><span class="line">        case BACKGROUND:</span><br><span class="line">            if (isMainThread) &#123;</span><br><span class="line">                backgroundPoster.enqueue(subscription, event);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                invokeSubscriber(subscription, event);</span><br><span class="line">            &#125;</span><br><span class="line">            break;</span><br><span class="line">        case ASYNC:</span><br><span class="line">            asyncPoster.enqueue(subscription, event);</span><br><span class="line">            break;</span><br><span class="line">        default:</span><br><span class="line">            throw new IllegalStateException(&quot;Unknown thread mode: &quot; + subscription.subscriberMethod.threadMode);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>就是在此处实现了 EventBus 实现线程间传递事件的魔法，根据 ThreadMode 的不同，分别在相应的线程执行事件，具体操作如下：</p>
 <ul>
-<li><p>Event</p>
-<p>  从 Android Framework 层面和 Lifecycle 类调度的生命周期事件,这些事件映射到 A/F 中的回调事件。</p>
+<li>POSTING</li>
+</ul>
+<p>在事件发布的线程执行事件操作，最终通过反射实现。</p>
+<ul>
+<li>MAIN</li>
+</ul>
+<p>标记事件在 主线程 中执行，根据事件发布的线程分为两种情况：</p>
+<ol>
+<li>发布者线程为主线程，在主线程执行响应，通过反射实现。</li>
+<li>发布者为非主线程，在子线程中通过 Handler 将事件发布到主线程，在主线程通过反射实现(HandlerPoster)。</li>
+</ol>
+<p>如果事件没有执行完毕，那么后续的 post 操作会被阻塞，直到事件执行完毕，所以订阅者的订阅方法不能执行长时间的操作。</p>
+<ul>
+<li>MAIN_ORDERED</li>
+</ul>
+<p>标记订阅者在主线程中执行订阅方方法，与 Main 不同的是事件会存储在相应的事件序列中，不会阻塞 post 操作，通过序列依次执行相关事件(HandlerPoster)。</p>
+<p>根据 mainThreadPoster 是否为空，分为两种情况：</p>
+<ol>
+<li>mainThreadPoster 不为空，加入主线程事件序列，进行顺序执行。</li>
+<li>mainThreadPoster 为空，通过回调执行</li>
+</ol>
+<ul>
+<li><p>BACKGROUND</p>
+<ol>
+<li>事件发布者所在线程为子线程，那么通过线程池分配线程执行(BackgroundPoster)。</li>
+<li>事件发布者所在线程为主线程，通过反射执行。</li>
+</ol>
 </li>
-<li><p>State</p>
-<p>  Lifecycle 对象跟踪的组件的当前状态。</p>
+<li><p>ASYNC</p>
 </li>
 </ul>
-<p>下图展示 Event 和 State 的关联关系</p>
-<p><img src="/source/images/2019_10_21_01.png" alt="Event和Statue"></p>
-<p>在图中 State 作为一个个结点，作为事件间的边缘。</p>
-<p>LifecycleObserver 通过在在其方法上添加注解来监听组件的状态，LifecycleOwner 通过 addObserver() 关联此 Observer 。</p>
-<h3 id="0x0002-LifecycleOwner"><a href="#0x0002-LifecycleOwner" class="headerlink" title="0x0002 LifecycleOwner"></a>0x0002 LifecycleOwner</h3><p>LifecycleOwner 是只有一个方法的接口：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public interface LifecycleOwner &#123;</span><br><span class="line">    /**</span><br><span class="line">     * Returns the Lifecycle of the provider.</span><br><span class="line">     *</span><br><span class="line">     * @return The lifecycle of the provider.</span><br><span class="line">     */</span><br><span class="line">    @NonNull</span><br><span class="line">    Lifecycle getLifecycle();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>无论事件发布者所在的线程是否为主线程，都会在异步线程中执行(AsyncPoster)。</p>
+<p>通过源码可以看到，子线程为线程池中分配的线程:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eventBus.getExecutorService().execute(this);</span><br></pre></td></tr></table></figure>
 
-<p>LifecycleOwner 接口抽象出单个类的生命周期所有权，比如 A/F，并且允许编写其他组件和它配合。owner 可以提供生命周期的变化，而 observer 可以注册到 owner 并且监听其生命周期的变化。</p>
-<p>通过实现 LifecycleOwner 接口来 <strong>表明该类具有生命周期</strong>，例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">public class ComponentActivity extends Activity</span><br><span class="line">        implements LifecycleOwner, KeyEventDispatcher.Component</span><br></pre></td></tr></table></figure>
-
-<p>LifecycleOwner 只有一个方法 getLifecycle()。</p>
-<p>可见我们最常使用的 AppCompatActivity 已经实现了 LifecycleOwner 。实现 LifecycleObserver 的类作为 <code>观察者</code> 监听实现 LifecycleOwner 接口的类，监听 LifecycleOwner(也就是 Activity) 生命周期的变化。</p>
-<p><strong>LiveData 的生命周期相关就是通过这种方式实现的。</strong></p>
-<h3 id="0x0003-自定义-LifecycleOwner"><a href="#0x0003-自定义-LifecycleOwner" class="headerlink" title="0x0003 自定义 LifecycleOwner"></a>0x0003 自定义 LifecycleOwner</h3><p>平时通过实现 AppCompatActivity 创建的 Activity 已经实现了 LifecycleOwner 接口，如果想要自定义 LifecycleOwner，同样也需要实现 LifecycleOwner 接口，并且需要通过 LifecycleRegistry 对象来管理多个 LifecycleObserver，LifecycleRegistry 内部通过 Map 来存储 LifecycleObserver 对象。</p>
-<p>自定义 LifecycleOwner 时，需要在相应的方法中显示的声明状态，其中生命周期事件 Event 与状态的对应关系可以参见上图。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">class MyActivity : Activity(), LifecycleOwner &#123;</span><br><span class="line"></span><br><span class="line">    private lateinit var lifecycleRegistry: LifecycleRegistry</span><br><span class="line"></span><br><span class="line">    override fun onCreate(savedInstanceState: Bundle?) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState)</span><br><span class="line"></span><br><span class="line">        lifecycleRegistry = LifecycleRegistry(this)</span><br><span class="line">        // 在该方法中声明对应声明周期的状态</span><br><span class="line">        lifecycleRegistry.markState(Lifecycle.State.CREATED)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public override fun onStart() &#123;</span><br><span class="line">        super.onStart()</span><br><span class="line">        lifecycleRegistry.markState(Lifecycle.State.STARTED)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun getLifecycle(): Lifecycle &#123;</span><br><span class="line">        return lifecycleRegistry</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>从以上代码可以看到，自定义实现 LifecycleOwner 需要定义 LifecycleRegistry 对象，该对象可以在 LifeOwner 的每个 Event 中标记该 Event 的 State，这样 LifeObserver 才可以在不同的 state 下执行相应的操作。</p>
-<h3 id="0x0004-LifecycleObserver"><a href="#0x0004-LifecycleObserver" class="headerlink" title="0x0004 LifecycleObserver"></a>0x0004 LifecycleObserver</h3><p>生命周期的观察者，它的主要作用是监听 LifecycleOwner 对象的生命周期变化，通过注解的方式,将 LifecycleOwner 生命周期的变化映射到自己相应的方法上，并在自己的方法中进行相关业务处理。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class CustomObserver : LifecycleObserver &#123;</span><br><span class="line"></span><br><span class="line">    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)</span><br><span class="line">    fun initObserver()&#123;</span><br><span class="line">        Log.e(&quot;initObserver&quot;,&quot;initObserver&quot;)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)</span><br><span class="line">    fun back()&#123;</span><br><span class="line">        Log.e(&quot;back&quot;,&quot;back&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">class TestLifecycleActivity : AppCompatActivity() &#123;</span><br><span class="line">    override fun onCreate(savedInstanceState: Bundle?) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_test_lifecycle)</span><br><span class="line">        lifecycle.addObserver(CustomObserver())</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="0x0005-Lifecycle-aware-组件最佳实践"><a href="#0x0005-Lifecycle-aware-组件最佳实践" class="headerlink" title="0x0005 Lifecycle-aware 组件最佳实践"></a>0x0005 Lifecycle-aware 组件最佳实践</h3><ol>
-<li>尽可能保证 UI 组件简单，比如不要在 UI 中获取数据，而在 ViewModel 中做这些事情， LiveData 对象会在数据变化后更新 UI。</li>
-<li>尽可能在 ViewModel 中编写逻辑代码，ViewModel 应该是 UI(A/F) 和其他部分的桥梁。 但是这并不是说 ViewModel 的职责是获取数据，而应该调用其他组件来获取数据并返回 UI。</li>
-<li>使用 DataBinding 来维护 UI 和 View 间关系。这使得可以使用更少的代码来更新 UI 。</li>
-<li>如果 UI 十分复杂，可以考虑创建 presenter 来处理 UI 更改工作，虽然这个过程是费精力的，但是这对测试是十分友好的。</li>
-<li>避免在 ViewModel 中引用 View 和 Context，避免造成内存泄漏。</li>
-<li>使用 Kotlin 的协程来管理长时间运行的任务以及可以异步运行的其他操作。</li>
-</ol>
-<h3 id="0x0006-何时使用-lifecycle-awar-组件"><a href="#0x0006-何时使用-lifecycle-awar-组件" class="headerlink" title="0x0006 何时使用 lifecycle-awar 组件"></a>0x0006 何时使用 lifecycle-awar 组件</h3><ol>
-<li>在粗粒度和细粒度的两种状态的地图切换展示。当 UI 在前台时使用细粒度的地图，在后台时切换为粗粒度的地图。</li>
-<li>暂停和恢复动画。UI 在后台暂停动画，在前台恢复动画。</li>
-</ol>
-<h3 id="0x0007-关于-LiveData-的关于感知生命周期的实现"><a href="#0x0007-关于-LiveData-的关于感知生命周期的实现" class="headerlink" title="0x0007 关于 LiveData 的关于感知生命周期的实现"></a>0x0007 关于 LiveData 的关于感知生命周期的实现</h3><p>LiveData 同为 生命中期感知组件，其实它这种功能的实现主要是依托了 Lifecycle 的实现。在 LiveData 的 obsever() 方法中将 LiveData 的 Observer 包装成 LifecycleObserver 并与 LifecycleOwner 相关联，至此 LiveData 实现了生命周期的感知功能。</p>
-<p>LiveData#observe(@NonNull LifecycleOwner owner, @NonNull Observer<t> observer) 源码：</t></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@MainThread</span><br><span class="line">public void observe(@NonNull LifecycleOwner owner, @NonNull Observer&lt;T&gt; observer) &#123;</span><br><span class="line">    if (owner.getLifecycle().getCurrentState() == DESTROYED) &#123;</span><br><span class="line">        // ignore</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    LifecycleBoundObserver wrapper = new LifecycleBoundObserver(owner, observer);</span><br><span class="line">    ObserverWrapper existing = mObservers.putIfAbsent(observer, wrapper);</span><br><span class="line">    if (existing != null &amp;&amp; !existing.isAttachedTo(owner)) &#123;</span><br><span class="line">        throw new IllegalArgumentException(&quot;Cannot add the same observer&quot;</span><br><span class="line">                + &quot; with different lifecycles&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    if (existing != null) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    // LifecycleOwnner 添加 LifecycleObserver</span><br><span class="line">    owner.getLifecycle().addObserver(wrapper);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<h3 id="0x0006-解绑-EventBus"><a href="#0x0006-解绑-EventBus" class="headerlink" title="0x0006 解绑 EventBus"></a>0x0006 解绑 EventBus</h3><p>List&lt;Class&lt;?&gt;&gt; subscribedEvents = typesBySubscriber.get(subscriber);</p>
+<p>以订阅者为 Key，对所有的订阅事件分类：</p>
+<pre><code>Map&lt;订阅者(比如在CustomActivity 中有订阅方法，那么 key 为 CustomActivity),该 Class 中所以的订阅事件类型的集合&gt;。</code></pre><p>解除订阅关系需要。找到该类(订阅者)所有的订阅事件类型，通过事件类型获得所有该类型事件的所有订阅关系集合，根据订阅者类型去 订阅关系集合 中删除对应的订阅关系。</p>
+<h3 id="0x0007-总结"><a href="#0x0007-总结" class="headerlink" title="0x0007 总结"></a>0x0007 总结</h3><p>EventBus 作为事件总线框架，将应用中所有的订阅者与订阅函数统一维护，在 post 事件后，触发所有该事件类型的订阅函数，进行相关逻辑的执行，实现了线程间组件的事件传递。</p>
 <hr>
-<p>以上为个人翻译官方文档</p>
-<p>以下为优秀博客：</p>
-<p><a href="https://www.jianshu.com/p/b1208012b268" target="_blank" rel="noopener">Android官方架构组件Lifecycle:生命周期组件详解&amp;原理分析</a></p>
+<p><strong>你还可以阅读其他知识来源：</strong></p>
+<p><a href="https://github.com/greenrobot/EventBus" target="_blank" rel="noopener">EventBus 源码</a></p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzA5MzI3NjE2MA==&mid=2650242621&idx=1&sn=cc9c31aba5ff33b20fb9fecc3b0404b2&chksm=88638f52bf14064453fc09e6e53798ac5a1299d84df490b15764f9a85292732879eb4a1c0665&scene=38#wechat_redirect" target="_blank" rel="noopener">从源码入手来学习EventBus 3事件总线机制</a></p>
 
       
 
@@ -288,11 +367,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Jetpack</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">EventBus</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Lifecycle</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">源码解析</a>
         		</li>
       		
 		</ul>
@@ -348,7 +427,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http:/2019/05/10/Jetpack之 Lifecycle 组件学习笔记/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http:/2019/11/04/从 EventBus 3.0 源码理解事件总线机制/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -362,18 +441,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/05/10/Java集合之List/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2019/11/04/Shell基础学习一/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          Java集合之List
+          Shell 基础学习(一）
         
       </div>
     </a>
   
   
-    <a href="/2019/05/09/Java-集合之-Set/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Java 集合之 Set 集合 </div>
+    <a href="/2019/11/04/EventBus 粘性事件/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">EventBus 粘性事件</div>
       <i class="icon-circle-right"></i>
     </a>
   
