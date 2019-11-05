@@ -183,43 +183,10 @@
 <p>git submodule add <repository> <path> </path></repository></p>
 </blockquote>
 <p>此命令会生成 .gitmodule 文件以及在 .git/config 文件中添加子模块的相应信息</p>
-<h3 id="2-克隆一个带有子模块的项目"><a href="#2-克隆一个带有子模块的项目" class="headerlink" title="2. 克隆一个带有子模块的项目"></a>2. 克隆一个带有子模块的项目</h3><p><strong>方式一：</strong></p>
-<blockquote>
-<p>git clone xxxx</p>
-</blockquote>
-<p>这是会发现子模块的内容并未被克隆，只有对象模块的文件夹，通过以下命令可以查看子模块的状态：</p>
-<blockquote>
-<p>git submodule status</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-01xxxxx lib/lib_a</span><br><span class="line">-f25xxxx lib/lib_b</span><br></pre></td></tr></table></figure>
-
-<p>最前面的减号的含义是该子模组未被检出。</p>
-<p>如果想要检出子模组的外部库，需要执行以下命令：</p>
-<blockquote>
-<p>git submodule init</p>
-</blockquote>
-<p>此命令会生成 .gitmodule 文件以及在 .git/config 文件中添加子模块的相应信息。</p>
-<p>然后执行以下命令完成子模组的克隆：</p>
-<blockquote>
-<p>git submodule update</p>
-</blockquote>
-<p><strong>方式二：</strong></p>
-<p>可以直接使用如下命令，在克隆项目的同时递归克隆子模块组：</p>
-<blockquote>
-<p>git clone [reps] [path] –recursive</p>
-</blockquote>
-<h3 id="修改子模组以及子模组的更新"><a href="#修改子模组以及子模组的更新" class="headerlink" title="修改子模组以及子模组的更新"></a>修改子模组以及子模组的更新</h3><p><strong>修改子模组</strong></p>
-<p>在子模组版本库的工作区中修改相应内容，之后提交远端库，修改子模组库对主项目库不会有影响。</p>
-<p>此情况下，推荐先推送子模组，在推送父版本库。</p>
-<p><strong>更新子模组库</strong></p>
-<p>在子模组库中拉取子模组远端库最新提交。</p>
-<h3 id="删除子模组"><a href="#删除子模组" class="headerlink" title="删除子模组"></a>删除子模组</h3><blockquote>
-<p>git rm –cached xxx<br>rm -rf xxx<br>rm .gitmodules</p>
-</blockquote>
-<p>移除 .git/config 文件中关于子模组的配置。</p>
-<hr>
-<p><a href="https://git-scm.com/docs/git-config" target="_blank" rel="noopener">Git 中 .git/config 中的属性含义</a></p>
-
+<h3 id="2-克隆一个带有子模块的项目"><a href="#2-克隆一个带有子模块的项目" class="headerlink" title="2. 克隆一个带有子模块的项目"></a>2. 克隆一个带有子模块的项目</h3>
+        
+          <a class="article-more-a" href="/2019/11/05/git-submodule-使用/#more">more >></a>
+        
       
 
       
@@ -371,7 +338,7 @@
 
 
 <a href="/2019/11/04/从 EventBus 3.0 源码理解事件总线机制/" class="archive-article-date">
-  	<time datetime="2019-11-04T09:44:46.974Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-04</time>
+  	<time datetime="2019-11-04T09:44:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-04</time>
 </a>
         
       </header>
@@ -1172,15 +1139,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1189,6 +1148,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">DI</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1204,15 +1175,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1221,6 +1184,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1276,19 +1243,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">WorkManager</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Kotlin 泛型</a>
+                <a href="javascript:void(0)" class="js-tag color2">WorkManager</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
+                <a href="javascript:void(0)" class="js-tag color5">Kotlin 泛型</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1297,6 +1260,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1316,11 +1283,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">VIM</a>
+                <a href="javascript:void(0)" class="js-tag color4">adb</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">adb</a>
+                <a href="javascript:void(0)" class="js-tag color4">VIM</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1380,15 +1347,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">极客时间笔记</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">浮点型精度问题</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1400,15 +1371,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">OOP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1444,15 +1411,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
               </li>
              
               <li class="article-tag-list-item">
