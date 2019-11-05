@@ -41,6 +41,27 @@
   </entry>
   
   <entry>
+    <title>Shell 基础学习(二)：环境变量</title>
+    <link href="/2019/11/04/Shell%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/"/>
+    <id>/2019/11/04/Shell基础学习环境变量/</id>
+    <published>2019-11-04T10:10:36.000Z</published>
+    <updated>2019-11-05T04:37:52.271Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="0x0001-环境变量配置文件"><a href="#0x0001-环境变量配置文件" class="headerlink" title="0x0001 环境变量配置文件"></a>0x0001 环境变量配置文件</h3><p>要想对配置文件的修改想要永久生效，需要写入配置文件。</p><p>那环境变量配置文件的作用是什么？</p><a id="more"></a><p>环境变量配置文件主要是 <strong>定义对系统操作环境生效的系统默认环境变量</strong>，比如 PATH、PSI、HISTSIZE、HOSTNAME 等默认环境变量。</p><h3 id="0x0002-source-命令"><a href="#0x0002-source-命令" class="headerlink" title="0x0002 source 命令"></a>0x0002 source 命令</h3><p>环境变量的配置后需要重新登录才会生效，操作起来比较麻烦，使用 source 命令可以使修改后的配置立即生效。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">source 配置文件 </span><br><span class="line">或 </span><br><span class="line">. 配置文件</span><br></pre></td></tr></table></figure><p>以上两者等效。</p><h3 id="0x0003-系统中的环境变量配置文件"><a href="#0x0003-系统中的环境变量配置文件" class="headerlink" title="0x0003 系统中的环境变量配置文件"></a>0x0003 系统中的环境变量配置文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/etc/profile</span><br><span class="line">/etc/profile.d/*.sh</span><br><span class="line">/etc/bashrc</span><br><span class="line">以上对所有登录用户有效</span><br><span class="line">~/.bash_profile</span><br><span class="line">~/.bashrc</span><br><span class="line">以上两个文件只对当前用户有效</span><br></pre></td></tr></table></figure><h3 id="0x0004-环境变量配置文件的调用顺序"><a href="#0x0004-环境变量配置文件的调用顺序" class="headerlink" title="0x0004 环境变量配置文件的调用顺序"></a>0x0004 环境变量配置文件的调用顺序</h3><p> 登录情况下：</p><p><img src="/../images/2019_09_20_01.png" alt></p><p>按照顺序查看每个配置文件的作用</p><p>/etc/profile 的作用：</p><ul><li><p>USER 变量</p></li><li><p>LOGNAME 变量</p></li><li><p>MAIL 变量</p></li><li><p>PATH 变量</p></li><li><p>HOSTNAME 变量</p></li><li><p>HISTNAME 变量</p></li><li><p>umask</p></li><li><p>调用 /etc/profile.d/*.sh 文件</p><p>~/.bash_profile 的作用：</p></li><li><p>调用了 ~/.bashrc 文件</p></li><li><p>在PATH变量后面加入了“:$HOME/bin” 这个目录</p><p>~/.bashrc 的作用：</p></li><li><p>定义默认别名</p></li><li><p>调用 /etc/bashrc</p></li></ul><p>/etc/bashrc 的作用：</p><ul><li>PS1 变量</li><li>umask</li><li>PATH 变量</li><li>调用 /etc/profile.d/*.sh 文文件</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;0x0001-环境变量配置文件&quot;&gt;&lt;a href=&quot;#0x0001-环境变量配置文件&quot; class=&quot;headerlink&quot; title=&quot;0x0001 环境变量配置文件&quot;&gt;&lt;/a&gt;0x0001 环境变量配置文件&lt;/h3&gt;&lt;p&gt;要想对配置文件的修改想要永久生效，需要写入配置文件。&lt;/p&gt;
+&lt;p&gt;那环境变量配置文件的作用是什么？&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Shell" scheme="/tags/Shell/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Shell 基础学习(一）</title>
     <link href="/2019/11/04/Shell%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0%E4%B8%80/"/>
     <id>/2019/11/04/Shell基础学习一/</id>

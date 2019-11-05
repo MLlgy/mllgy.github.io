@@ -6,15 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href>
-  <title>Tag: Map | GY</title>
+  <title>Shell 基础学习(二)：环境变量 | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="GY">
-<meta property="og:url" content="/tags/Map/index.html">
+  <meta name="description" content="0x0001 环境变量配置文件要想对配置文件的修改想要永久生效，需要写入配置文件。 那环境变量配置文件的作用是什么？">
+<meta name="keywords" content="Shell">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shell 基础学习(二)：环境变量">
+<meta property="og:url" content="/2019/11/04/Shell基础学习环境变量/index.html">
 <meta property="og:site_name" content="GY">
+<meta property="og:description" content="0x0001 环境变量配置文件要想对配置文件的修改想要永久生效，需要写入配置文件。 那环境变量配置文件的作用是什么？">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="/images/2019_09_20_01.png">
+<meta property="og:updated_time" content="2019-11-05T04:37:52.271Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="GY">
+<meta name="twitter:title" content="Shell 基础学习(二)：环境变量">
+<meta name="twitter:description" content="0x0001 环境变量配置文件要想对配置文件的修改想要永久生效，需要写入配置文件。 那环境变量配置文件的作用是什么？">
+<meta name="twitter:image" content="/images/2019_09_20_01.png">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
   
@@ -154,71 +161,242 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Shell基础学习环境变量" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-
-
-<a href="/2019/05/10/Java集合之Map/" class="archive-article-date">
-  	<time datetime="2019-05-10T10:17:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-10</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/10/Java集合之Map/">Java集合之Map</a>
+    <h1 class="article-title" itemprop="name">
+      Shell 基础学习(二)：环境变量
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        
+
+	<!-- 不蒜子统计 -->
+	<span id="busuanzi_container_page_pv" style='display:none' class="archive-article-date">
+		  <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+	</span>
+
+
+<a href="/2019/11/04/Shell基础学习环境变量/" class="archive-article-date">
+  	<time datetime="2019-11-04T10:10:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="0x0001-环境变量配置文件"><a href="#0x0001-环境变量配置文件" class="headerlink" title="0x0001 环境变量配置文件"></a>0x0001 环境变量配置文件</h3><p>要想对配置文件的修改想要永久生效，需要写入配置文件。</p>
+<p>那环境变量配置文件的作用是什么？</p>
+<a id="more"></a>
+<p>环境变量配置文件主要是 <strong>定义对系统操作环境生效的系统默认环境变量</strong>，比如 PATH、PSI、HISTSIZE、HOSTNAME 等默认环境变量。</p>
+<h3 id="0x0002-source-命令"><a href="#0x0002-source-命令" class="headerlink" title="0x0002 source 命令"></a>0x0002 source 命令</h3><p>环境变量的配置后需要重新登录才会生效，操作起来比较麻烦，使用 source 命令可以使修改后的配置立即生效。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">source 配置文件 </span><br><span class="line">或 </span><br><span class="line">. 配置文件</span><br></pre></td></tr></table></figure>
+
+<p>以上两者等效。</p>
+<h3 id="0x0003-系统中的环境变量配置文件"><a href="#0x0003-系统中的环境变量配置文件" class="headerlink" title="0x0003 系统中的环境变量配置文件"></a>0x0003 系统中的环境变量配置文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/etc/profile</span><br><span class="line">/etc/profile.d/*.sh</span><br><span class="line">/etc/bashrc</span><br><span class="line">以上对所有登录用户有效</span><br><span class="line">~/.bash_profile</span><br><span class="line">~/.bashrc</span><br><span class="line">以上两个文件只对当前用户有效</span><br></pre></td></tr></table></figure>
+
+<h3 id="0x0004-环境变量配置文件的调用顺序"><a href="#0x0004-环境变量配置文件的调用顺序" class="headerlink" title="0x0004 环境变量配置文件的调用顺序"></a>0x0004 环境变量配置文件的调用顺序</h3><p> 登录情况下：</p>
+<p><img src="/../images/2019_09_20_01.png" alt></p>
+<p>按照顺序查看每个配置文件的作用</p>
+<p>/etc/profile 的作用：</p>
+<ul>
+<li><p>USER 变量</p>
+</li>
+<li><p>LOGNAME 变量</p>
+</li>
+<li><p>MAIL 变量</p>
+</li>
+<li><p>PATH 变量</p>
+</li>
+<li><p>HOSTNAME 变量</p>
+</li>
+<li><p>HISTNAME 变量</p>
+</li>
+<li><p>umask</p>
+</li>
+<li><p>调用 /etc/profile.d/*.sh 文件</p>
+<p>~/.bash_profile 的作用：</p>
+</li>
+<li><p>调用了 ~/.bashrc 文件</p>
+</li>
+<li><p>在PATH变量后面加入了“:$HOME/bin” 这个目录</p>
+<p>~/.bashrc 的作用：</p>
+</li>
+<li><p>定义默认别名</p>
+</li>
+<li><p>调用 /etc/bashrc</p>
+</li>
+</ul>
+<p>/etc/bashrc 的作用：</p>
+<ul>
+<li>PS1 变量</li>
+<li>umask</li>
+<li>PATH 变量</li>
+<li>调用 /etc/profile.d/*.sh 文文件</li>
+</ul>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/img/alipay.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/img/wxpay.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Java Basic</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Java Collection</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Map</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Shell</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http:/2019/11/04/Shell基础学习环境变量/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2019/11/05/git-submodule-使用/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          git submodule 使用
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/2019/11/04/Shell基础学习一/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Shell 基础学习(一）</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -255,9 +433,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
