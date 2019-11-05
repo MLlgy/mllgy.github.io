@@ -5,12 +5,10 @@ tags:
 
 
 
----
-
-
 **one**
 
-```blic fun CoroutineScope.launch(
+```
+public fun CoroutineScope.launch(
     context: CoroutineContext = EmptyCoroutineContext,
     start: CoroutineStart = CoroutineStart.DEFAULT,
     block: suspend CoroutineScope.() -> Unit// 真正的协程
@@ -44,6 +42,25 @@ launch 并是声明一个协程(或者说不是立刻去启动一个协程)，�
 
 
 
+
+
+挂起的是什么？挂起的是协程，即闭包中的代码，其实可以把协程理解为 Runable 或者 Callable，它们仅是一个执行任务的类，而真正实现线程挂起的操作为其背后的一系列机制，比如最终还是通过 线程池或者其他机制去完成。
+
+
+Dispatchers.Main: Handler，Android 消息机制
+Dispatchers.Default: DefaultScheduler or CommonPool
+Dispatchers.IO: DefaultScheduler or CommonPool
+
+
 ----
 
-[Kotlin 协程原理](https://blog.csdn.net/suyimin2010/article/details/91125803)  -- 写的非常的好
+[Kotlin 协程原理](https://www.jianshu.com/p/d23c688feae7)  -- 写的非常的好
+
+
+https://kaixue.io/kotlin-coroutines-1/
+
+https://kaixue.io/kotlin-coroutines-2/
+
+https://kaixue.io/kotlin-coroutines-3/
+
+https://blog.csdn.net/u010218288/article/details/86773259

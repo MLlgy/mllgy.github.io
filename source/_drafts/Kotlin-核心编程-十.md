@@ -217,98 +217,14 @@ i am parent
 ### 0x0003 标准库中的扩展函数
 
 
-**run**
-
-```
-public inline fun <T, R> T.run(block: T.() -> R): R {
-    contract {
-        callsInPlace(block, InvocationKind.EXACTLY_ONCE)
-    }
-    return block()
-}
-```
+参见[]()
 
 
-具体实现：
+### 0x0004 扩展函数的应用示例
 
 
-```
-class Baby {
-    val name = "aline"
-    fun foo() {
-        println("i am baby")
-        run {
-            println(this.name)
-        }
-    }
-}
-```
-类型接收者对象 this 为 Baby。
+### 0x0005 扩展函数的限制
 
 
-**let**
+1. 静态调用和动态调用
 
-```
-public inline fun <T, R> T.let(block: (T) -> R): R {
-    contract {
-        callsInPlace(block, InvocationKind.EXACTLY_ONCE)
-    }
-    return block(this)
-}
-```
-具体使用：
-
-```
-var name:String? = null
-name?.let {
-    val len = it.length
-    len
-}
-```
-
-
-
-**apply**
-
-```
-public inline fun <T> T.apply(block: T.() -> Unit): T {
-    contract {
-        callsInPlace(block, InvocationKind.EXACTLY_ONCE)
-    }
-    block()
-    return this
-}
-```
-
-具体使用：
-```
-var name:String? = null
-name?.apply {
-    println(it.length)
-}
-```
-
-apply 和 let 使用类似，通过其扩展函数的声明，其不同的是： apply 返回者为本身，而 let 的返回对象为闭包中的返回值。
-
-**also**
-
-```
-public inline fun <T> T.also(block: (T) -> Unit): T {
-    contract {
-        callsInPlace(block, InvocationKind.EXACTLY_ONCE)
-    }
-    block(this)
-    return this
-}
-```
-
-具体实现：
-
-```
-
-```
-
-
-在扩展函数的函数体中，this 代表的是接收者类型的对象，至于扩接收者类型是什么，它就是扩展函数名前的接口和类的名称。
-
-为什么用 it ，Lambda 中的语法糖，当其参数只有一个时，可以使用 it 代替。
