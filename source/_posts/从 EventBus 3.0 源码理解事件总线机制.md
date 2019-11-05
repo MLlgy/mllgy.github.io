@@ -1,15 +1,16 @@
----
-title: 从 EventBus 3.0 源码理解事件总线机制
-tags:[EventBus,源码解析]
-date: 2019-11-04 17:44:46
----
 
+---
+title: 从EventBus 3.0 源码理解事件总线机制
+hddate: 2019-11-04 17:44:46
+tags: [EventBus,源码解析]
+---
 
 ### 0x0001 基本介绍
 
 EventBus 可以将 事件在 **线程之间传递**，使用简单。
 
 ### 0x0002 项目配置 EventBus 以及基本使用
+
 在 app 模块下进行以来配置：
 ```
 dependencies {
