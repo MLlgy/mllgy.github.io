@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href>
   <title>从EventBus 3.0 源码理解事件总线机制 | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x0001 基本介绍EventBus 可以将 事件在 线程之间传递，使用简单。 0x0002 项目配置 EventBus 以及基本使用在 app 模块下进行以来配置： 123dependencies &amp;#123;    implementation &amp;quot;org.greenrobot:eventbus:$versions.eventbus_version&amp;quot;&amp;#125;">
+  <meta name="description" content="0x0001 基本介绍EventBus 可以将事件在 线程之间传递，实现跨进程通信，上手简单。 0x0002 项目配置 EventBus 以及基本使用在 app 模块下进行以来配置： 123dependencies &amp;#123;    implementation &amp;quot;org.greenrobot:eventbus:$versions.eventbus_version&amp;quot;&amp;#125">
 <meta name="keywords" content="EventBus,源码解析">
 <meta property="og:type" content="article">
 <meta property="og:title" content="从EventBus 3.0 源码理解事件总线机制">
 <meta property="og:url" content="/2019/11/04/从EventBus 3.0 源码理解事件总线机制/index.html">
 <meta property="og:site_name" content="GY">
-<meta property="og:description" content="0x0001 基本介绍EventBus 可以将 事件在 线程之间传递，使用简单。 0x0002 项目配置 EventBus 以及基本使用在 app 模块下进行以来配置： 123dependencies &amp;#123;    implementation &amp;quot;org.greenrobot:eventbus:$versions.eventbus_version&amp;quot;&amp;#125;">
+<meta property="og:description" content="0x0001 基本介绍EventBus 可以将事件在 线程之间传递，实现跨进程通信，上手简单。 0x0002 项目配置 EventBus 以及基本使用在 app 模块下进行以来配置： 123dependencies &amp;#123;    implementation &amp;quot;org.greenrobot:eventbus:$versions.eventbus_version&amp;quot;&amp;#125">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-05T04:36:43.968Z">
+<meta property="og:updated_time" content="2019-11-05T06:21:41.644Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从EventBus 3.0 源码理解事件总线机制">
-<meta name="twitter:description" content="0x0001 基本介绍EventBus 可以将 事件在 线程之间传递，使用简单。 0x0002 项目配置 EventBus 以及基本使用在 app 模块下进行以来配置： 123dependencies &amp;#123;    implementation &amp;quot;org.greenrobot:eventbus:$versions.eventbus_version&amp;quot;&amp;#125;">
+<meta name="twitter:description" content="0x0001 基本介绍EventBus 可以将事件在 线程之间传递，实现跨进程通信，上手简单。 0x0002 项目配置 EventBus 以及基本使用在 app 模块下进行以来配置： 123dependencies &amp;#123;    implementation &amp;quot;org.greenrobot:eventbus:$versions.eventbus_version&amp;quot;&amp;#125">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
   
@@ -187,7 +187,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="0x0001-基本介绍"><a href="#0x0001-基本介绍" class="headerlink" title="0x0001 基本介绍"></a>0x0001 基本介绍</h3><p>EventBus 可以将 事件在 <strong>线程之间传递</strong>，使用简单。</p>
+        <h3 id="0x0001-基本介绍"><a href="#0x0001-基本介绍" class="headerlink" title="0x0001 基本介绍"></a>0x0001 基本介绍</h3><p>EventBus 可以将事件在 <strong>线程之间传递</strong>，实现跨进程通信，上手简单。</p>
 <h3 id="0x0002-项目配置-EventBus-以及基本使用"><a href="#0x0002-项目配置-EventBus-以及基本使用" class="headerlink" title="0x0002 项目配置 EventBus 以及基本使用"></a>0x0002 项目配置 EventBus 以及基本使用</h3><p>在 app 模块下进行以来配置：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    implementation &quot;org.greenrobot:eventbus:$versions.eventbus_version&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -196,15 +196,35 @@
 <p>具体使用：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">// 1. 定义事件</span><br><span class="line">public class EventBusEvent &#123;</span><br><span class="line">    private String msg;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 2. 在相应类中注册 EventBus，定义相应事件的方法，并且在销毁时解绑 EventBus</span><br><span class="line"></span><br><span class="line">public class EventBusActivity extends AppCompatActivity &#123;</span><br><span class="line"></span><br><span class="line">    private Button button;</span><br><span class="line">    private TextView textView;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_event_bus);</span><br><span class="line">        button = findViewById(R.id.button);</span><br><span class="line">        textView = findViewById(R.id.text);</span><br><span class="line">        EventBus.getDefault().register(this);</span><br><span class="line">        button.setOnClickListener(new View.OnClickListener() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onClick(View view) &#123;</span><br><span class="line">                EventBusEvent event = new EventBusEvent();</span><br><span class="line">                event.setMsg(&quot;已接收到事件!&quot;);</span><br><span class="line">                // 发布事件</span><br><span class="line">                EventBus.getDefault().post(event);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Subscribe(threadMode = ThreadMode.MAIN)</span><br><span class="line">    public void onTestEvent(EventBusEvent event) &#123;</span><br><span class="line">        textView.setText(event.getMsg());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onDestroy() &#123;</span><br><span class="line">        EventBus.getDefault().unregister(this);</span><br><span class="line">        super.onDestroy();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 3. 在相应类的操作中向 EventBus 发送事件,就如上面 `EventBus.getDefault().post(event)` 的操作。</span><br></pre></td></tr></table></figure>
 
-<h3 id="0x0003-EventBus-源码中的关键类"><a href="#0x0003-EventBus-源码中的关键类" class="headerlink" title="0x0003 EventBus 源码中的关键类"></a>0x0003 EventBus 源码中的关键类</h3><p>EventBusBuilder：</p>
-<pre><code>为 EventBus 设置初始条件的类。</code></pre><p>SubscriberMethodFinder：</p>
-<pre><code>在订阅者的类中寻找订阅方法 ，即标注 @Subscribe 的方法。从 EventBusBuilder 中获取初始对象。</code></pre><p>FindState:</p>
-<pre><code>保存了订阅者是谁、订阅者的订阅方法。EventBus 防止大量创建 FindState，使用享元模式复用 FindState。</code></pre><p>SubscriberInfo：(子类 AbstractSubscriberInfo、最终子类 SimpleSubscriberInfo))</p>
-<pre><code>见字识意，订阅者的信息，保存了父类信息、订阅方法等信息。</code></pre><p>Subscription：</p>
-<pre><code>一个订阅关系。其中包含的信息有：订阅者、订阅方法。</code></pre><p>SubscriberMethod：</p>
-<pre><code>订阅者方法描述类。</code></pre><p>Map&lt;Object, List&lt;Class&lt;?&gt;&gt;&gt; typesBySubscriber:</p>
-<p> 一个订阅者拥有多少个事件类型。</p>
-<p>Map&lt;Class&lt;?&gt;, CopyOnWriteArrayList<subscription>&gt; subscriptionsByEventType:</subscription></p>
+<h3 id="0x0003-EventBus-源码中的关键类"><a href="#0x0003-EventBus-源码中的关键类" class="headerlink" title="0x0003 EventBus 源码中的关键类"></a>0x0003 EventBus 源码中的关键类</h3><ul>
+<li><p>EventBusBuilder：</p>
+<p>  为 EventBus 设置初始条件的类。</p>
+</li>
+<li><p>SubscriberMethodFinder：</p>
+<p>  在订阅者的类中寻找订阅方法 ，即标注 @Subscribe 的方法。从 EventBusBuilder 中获取初始对象。</p>
+</li>
+</ul>
+<ul>
+<li><p>FindState:</p>
+<p>  保存了订阅者是谁、订阅者的订阅方法。EventBus 防止大量创建 FindState，使用享元模式复用 FindState。</p>
+</li>
+<li><p>SubscriberInfo：(子类 AbstractSubscriberInfo、最终子类 SimpleSubscriberInfo))</p>
+<p>  见字识意，订阅者的信息，保存了父类信息、订阅方法等信息。</p>
+</li>
+<li><p>Subscription：</p>
+<p>  一个订阅关系。其中包含的信息有：订阅者、订阅方法。</p>
+</li>
+<li><p>SubscriberMethod：</p>
+<p>  订阅者方法描述类。</p>
+</li>
+</ul>
+<ul>
+<li><p>Map&lt;Object, List&lt;Class&lt;?&gt;&gt;&gt; typesBySubscriber:</p>
+<p>一个订阅者拥有多少个事件类型。</p>
+</li>
+<li><p>Map&lt;Class&lt;?&gt;, CopyOnWriteArrayList<subscription>&gt; subscriptionsByEventType:</subscription></p>
+</li>
+</ul>
 <p>事件类型下的订阅关系。</p>
 <h3 id="0x0004源码解析"><a href="#0x0004源码解析" class="headerlink" title="0x0004源码解析"></a>0x0004源码解析</h3><h4 id="1-在订阅者中定义-EventBus"><a href="#1-在订阅者中定义-EventBus" class="headerlink" title="1. 在订阅者中定义 EventBus"></a>1. 在订阅者中定义 EventBus</h4><p>具体订阅见上面示例中的代码，最终通过以下代码开始注册逻辑：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">EventBus.getDefault().register(this);</span><br><span class="line"></span><br><span class="line">public void register(Object subscriber) &#123;</span><br><span class="line">    Class&lt;?&gt; subscriberClass = subscriber.getClass();</span><br><span class="line">    // 获取订阅事件</span><br><span class="line">    List&lt;SubscriberMethod&gt; subscriberMethods = subscriberMethodFinder.findSubscriberMethods(subscriberClass);</span><br><span class="line">    synchronized (this) &#123;</span><br><span class="line">        for (SubscriberMethod subscriberMethod : subscriberMethods) &#123;</span><br><span class="line">            // 产生订阅关系</span><br><span class="line">            subscribe(subscriber, subscriberMethod);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -592,15 +612,39 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -617,6 +661,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -672,11 +720,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">List</a>
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+                <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -688,11 +736,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
+                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
+                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -716,11 +764,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
+                <a href="javascript:void(0)" class="js-tag color5">Kotlin 协程</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Kotlin 协程</a>
+                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -733,10 +781,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -776,6 +820,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Java 异常</a>
               </li>
              
@@ -785,10 +833,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -820,10 +864,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">JNI</a>
               </li>
              
@@ -832,11 +872,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -844,23 +884,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
+                <a href="javascript:void(0)" class="js-tag color3">动画</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -884,11 +908,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
+                <a href="javascript:void(0)" class="js-tag color2">Kotlin 官方文档</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kotlin 官方文档</a>
+                <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -905,10 +929,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Thread</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">动画</a>
               </li>
              
               <li class="article-tag-list-item">
