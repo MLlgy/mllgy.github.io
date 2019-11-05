@@ -512,27 +512,9 @@
       
         <h3 id="0x0001-普通事件和粘性事件"><a href="#0x0001-普通事件和粘性事件" class="headerlink" title="0x0001 普通事件和粘性事件"></a>0x0001 普通事件和粘性事件</h3><p>通过源码我们看一下两者的差别：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public void postSticky(Object event) &#123;</span><br><span class="line">    synchronized (stickyEvents) &#123;</span><br><span class="line">        stickyEvents.put(event.getClass(), event);</span><br><span class="line">    &#125;</span><br><span class="line">    post(event);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public void post(Object event) &#123;</span><br><span class="line">    ....</span><br><span class="line">    while (!eventQueue.isEmpty()) &#123;</span><br><span class="line">        // 每次发布一个事件，会将该事件从事件序列中移除，也就是说，事件发布后，不管是否有订阅者，</span><br><span class="line">        postSingleEvent(eventQueue.remove(0), postingState);</span><br><span class="line">            &#125;</span><br><span class="line">    &#125; </span><br><span class="line">    ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>可以看到相较于普通事件将事件添加到事件队列中，粘性事件还会被添加到 stickyEvents 中，而 stickyEvents 会在订阅者注册时进行发布。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">private void subscribe(Object subscriber, SubscriberMethod subscriberMethod) &#123;</span><br><span class="line">     ....</span><br><span class="line">     ....</span><br><span class="line"></span><br><span class="line">     if (subscriberMethod.sticky) &#123;</span><br><span class="line">         if (eventInheritance) &#123;</span><br><span class="line">             Set&lt;Map.Entry&lt;Class&lt;?&gt;, Object&gt;&gt; entries = stickyEvents.entrySet();</span><br><span class="line">             for (Map.Entry&lt;Class&lt;?&gt;, Object&gt; entry : entries) &#123;</span><br><span class="line">                 Class&lt;?&gt; candidateEventType = entry.getKey();</span><br><span class="line">                 if (eventType.isAssignableFrom(candidateEventType)) &#123;</span><br><span class="line">                     Object stickyEvent = entry.getValue();</span><br><span class="line">                     checkPostStickyEventToSubscription(newSubscription, stickyEvent);</span><br><span class="line">                 &#125;</span><br><span class="line">             &#125;</span><br><span class="line">         &#125; else &#123;</span><br><span class="line">             Object stickyEvent = stickyEvents.get(eventType);</span><br><span class="line">             checkPostStickyEventToSubscription(newSubscription, stickyEvent);</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-
-<p>可以看到在初始化订阅者时，如果订阅方法的 @Subscribe 中的 sticky 属性为 ture， 那么会从 stickyEvents  获得最新的一个事件，并执行 checkPostStickyEventToSubscription 方法直接发布该事件。</p>
-<h3 id="0x0002-为什么使用-Sticky-Event"><a href="#0x0002-为什么使用-Sticky-Event" class="headerlink" title="0x0002 为什么使用 Sticky Event"></a>0x0002 为什么使用 Sticky Event</h3><p>官方文档对 Sticky Event 有以下描述；</p>
-<blockquote>
-<p>Some events carry information that is of interest after the event is posted. For example, an event signals that some initialization is complete. Or if you have some sensor or location data and you want to hold on the most recent values. Instead of implementing your own caching, you can use sticky events. So EventBus keeps the last sticky event of a certain type in memory. Then the sticky event can be delivered to subscribers or queried explicitly. Thus, you don’t need any special logic to consider already available data。</p>
-</blockquote>
-<blockquote>
-<p>某些事件携带事件发布后有用的信息，比如收到事件表示一些初始化动作完成，或者需要保留有关传感器的最新信息，这时可以使用 Sticky Event，而不用自己去实现缓存。EventBus 会将最后一个 Sticky Event 保留在内存中(实际上是获取 Sticky Event 集合中最新元素))。在注册订阅关系过程中，EventBus 会将该 Sticky Event 发布。</p>
-</blockquote>
-<p>我们可以来看一个 Sticky Event 的使用场景：</p>
-<blockquote>
-<p>在一个 A/F 中的成功执行结果，比如说定位信息， 项目中定位信息在很多页面都需要，此时如果使用 post 发布事件，其中一些没有初始化成功的页面就不会收到该事件，无关获得定位信息，而如果使用 postSticky 来发布事件，那么其他页面在初始化时也是可以获得该事件，也可以获得包含其中的定位信息。</p>
-</blockquote>
-<h3 id="0x0003-手动获取和删除"><a href="#0x0003-手动获取和删除" class="headerlink" title="0x0003 手动获取和删除"></a>0x0003 手动获取和删除</h3><p>手动获得粘性事件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EventBusEvent stickyEvent = EventBus.getDefault().getStickyEvent(EventBusEvent.class);</span><br></pre></td></tr></table></figure>
-
-<p>手动删除粘性事件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 方法一</span><br><span class="line">EventBusEvent stickyEvent = EventBus.getDefault().getStickyEvent(EventBusEvent.class);</span><br><span class="line">if(stickyEvent != null)&#123;</span><br><span class="line">    EventBus.getDefault().removeStickyEvent(stickyEvent);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 方法二 使用此方法：当你传入类时，它将返回先前持有的粘性事件</span><br><span class="line">EventBusEvent stickyEvent = EventBus.getDefault().removeStickyEvent(EventBusEvent.class);</span><br><span class="line">if(stickyEvent != null) &#123;</span><br><span class="line">    //  do something</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+          <a class="article-more-a" href="/2019/11/04/EventBus 粘性事件/#more">more >></a>
+        
       
 
       
@@ -560,6 +542,92 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/11/04/EventBus 粘性事件/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-EventBus 使用 APT 生成索引以及源码分析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/04/EventBus 使用 APT 生成索引以及源码分析/">EventBus 使用 APT 生成索引以及源码分析</a>
+    </h1>
+  
+
+        
+        
+
+
+<a href="/2019/11/04/EventBus 使用 APT 生成索引以及源码分析/" class="archive-article-date">
+  	<time datetime="2019-11-04T09:42:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="0x0001-配置-EventBus-使用-APT-生成索引"><a href="#0x0001-配置-EventBus-使用-APT-生成索引" class="headerlink" title="0x0001 配置 EventBus 使用 APT 生成索引"></a>0x0001 配置 EventBus 使用 APT 生成索引</h3><p><a href="http://greenrobot.org/eventbus/documentation/subscriber-index/" target="_blank" rel="noopener">具体可以参见官方文档</a></p>
+<p>通过文档可以看到可以通过三种方式为 项目配置索引：APT、kapt、android-apt，这只是实现功能的不同方式，本文介绍 APT 生成索引，其他两种原理基本相同.</p>
+<p>使用 APT 生成索引，不可在匿名内部类中定义订阅方法。要想使用 APT 生成索引，需要对项目进行如下配置：</p>
+<p>针对 app 模块下的 <code>build.gradle</code> 文件做以下更改：</p>
+        
+          <a class="article-more-a" href="/2019/11/04/EventBus 使用 APT 生成索引以及源码分析/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">EventBus</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">EventBus APT</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/11/04/EventBus 使用 APT 生成索引以及源码分析/">展开全文 >></a>
         </p>
       
 
@@ -913,98 +981,9 @@
 
 
   
-    <article id="post-关于 Runnable Future Callable FutureTask 的简单理解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/10/20/关于 Runnable Future Callable FutureTask 的简单理解/">关于 Runnable Future Callable FutureTask 的简单理解</a>
-    </h1>
-  
-
-        
-        
-
-
-<a href="/2019/10/20/关于 Runnable Future Callable FutureTask 的简单理解/" class="archive-article-date">
-  	<time datetime="2019-10-20T08:02:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-20</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-Runnable-源代码"><a href="#1-Runnable-源代码" class="headerlink" title="1. Runnable 源代码"></a>1. Runnable 源代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface Runnable &#123;</span><br><span class="line">    public abstract void run();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>但是 Runnable 不允许声明受检异常以及定义返回值。不允许声明受检异常意味着必须手动的捕获并处理受检异常，这是十分麻烦的。</p>
-        
-          <a class="article-more-a" href="/2019/10/20/关于 Runnable Future Callable FutureTask 的简单理解/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">多线程</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Future</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">FutureTask</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/10/20/关于 Runnable Future Callable FutureTask 的简单理解/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 
@@ -1105,39 +1084,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1157,10 +1112,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
@@ -1177,15 +1128,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Java 多线程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Java 多线程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1221,19 +1172,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Jetpack</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
+                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1257,11 +1208,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Kotlin 协程</a>
+                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
+                <a href="javascript:void(0)" class="js-tag color5">Kotlin 协程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1274,6 +1225,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1329,11 +1284,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1357,6 +1312,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">JNI</a>
               </li>
              
@@ -1377,7 +1336,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">动画</a>
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1386,6 +1361,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">EventBus APT</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1401,11 +1380,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kotlin 官方文档</a>
+                <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">LiveData</a>
+                <a href="javascript:void(0)" class="js-tag color2">Kotlin 官方文档</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1422,6 +1401,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Thread</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">动画</a>
               </li>
              
               <li class="article-tag-list-item">
