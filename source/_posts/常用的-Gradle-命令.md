@@ -1,7 +1,7 @@
 ---
 title: 常用的 Gradle 命令
 date: 2019-03-28 16:37:33
-tags:
+tags: [Gradle]
 ---
 
 

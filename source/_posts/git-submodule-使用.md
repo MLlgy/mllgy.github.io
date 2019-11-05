@@ -1,7 +1,6 @@
 ---
 title: git submodule 使用
-tags:
-  - Git
+tags: [Git]
 date: 2019-11-05 12:22:23
 ---
 
@@ -15,6 +14,7 @@ date: 2019-11-05 12:22:23
 
 ### 2. 克隆一个带有子模块的项目
 
+<!-- more -->
 
 **方式一：**
 > git clone xxxx

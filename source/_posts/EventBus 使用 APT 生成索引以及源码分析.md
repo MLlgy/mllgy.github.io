@@ -1,8 +1,7 @@
 ---
 title: EventBus 使用 APT 生成索引以及源码分析
 date: 2019-11-04 17:42:24
-tags:[EventBus,EventBus APT
-]
+tags: [EventBus,EventBus APT]
 ---
 
 

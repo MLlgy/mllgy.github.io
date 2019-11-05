@@ -1,13 +1,13 @@
-
 ---
 title: 从EventBus 3.0 源码理解事件总线机制
-hddate: 2019-11-04 17:44:46
+date: 2019-11-04 17:44:46
 tags: [EventBus,源码解析]
 ---
 
+
 ### 0x0001 基本介绍
 
-EventBus 可以将 事件在 **线程之间传递**，使用简单。
+EventBus 可以将事件在 **线程之间传递**，实现跨进程通信，上手简单。
 
 ### 0x0002 项目配置 EventBus 以及基本使用
 
@@ -70,45 +70,47 @@ public class EventBusActivity extends AppCompatActivity {
 
 
 ### 0x0003 EventBus 源码中的关键类
-EventBusBuilder：
+
+
+* EventBusBuilder：
 
     为 EventBus 设置初始条件的类。
 
-SubscriberMethodFinder：
+* SubscriberMethodFinder：
 
     在订阅者的类中寻找订阅方法 ，即标注 @Subscribe 的方法。从 EventBusBuilder 中获取初始对象。
 
 
-FindState:
+* FindState:
 
     保存了订阅者是谁、订阅者的订阅方法。EventBus 防止大量创建 FindState，使用享元模式复用 FindState。
 
-SubscriberInfo：(子类 AbstractSubscriberInfo、最终子类 SimpleSubscriberInfo))
+* SubscriberInfo：(子类 AbstractSubscriberInfo、最终子类 SimpleSubscriberInfo))
 
     见字识意，订阅者的信息，保存了父类信息、订阅方法等信息。
 
-Subscription：
+* Subscription：
 
     一个订阅关系。其中包含的信息有：订阅者、订阅方法。
 
-SubscriberMethod：
+* SubscriberMethod：
 
     订阅者方法描述类。
 
 
 
-Map<Object, List<Class<?>>> typesBySubscriber:
+* Map<Object, List<Class<?>>> typesBySubscriber:
 
  一个订阅者拥有多少个事件类型。
 
-Map<Class<?>, CopyOnWriteArrayList<Subscription>> subscriptionsByEventType:
+* Map<Class<?>, CopyOnWriteArrayList<Subscription>> subscriptionsByEventType:
 
 事件类型下的订阅关系。
 
 
 ### 0x0004源码解析
 
-#### 1. 在订阅者中定义 EventBus
+#### 1. 在订阅者中注册 EventBus
 
 具体订阅见上面示例中的代码，最终通过以下代码开始注册逻辑：
 
@@ -138,20 +140,19 @@ public void register(Object subscriber) {
 
 根据是否配置 APT 分为两种情况：
 
-1. 没有使用 APT 生成索引
+* 没有使用 APT 生成索引
 
 通过反射识别订阅者中被 @Subscribe 标记的方法。
 
-2. 使用 APT 生成索引
+* 使用 APT 生成索引
 
 通过索引直接获得订阅方法，使用 APT 生成索引不在此处详述。
 
 
-#### 3. 通过反射的方式获取订阅事件
-
 ```
 List<SubscriberMethod> subscriberMethods = subscriberMethodFinder.findSubscriberMethods(subscriberClass);
 ```
+
 继续跟进代码：
 ```
 List<SubscriberMethod> findSubscriberMethods(Class<?> subscriberClass) {
@@ -177,7 +178,8 @@ List<SubscriberMethod> findSubscriberMethods(Class<?> subscriberClass) {
 }
 ```
 
-Eventbus 会通过 findUsingInfo 方法获取订阅者的订阅方法，会在此处根据 findState.subscriberInfo 的具体值产生两个分支：
+Eventbus 会通过 findUsingInfo 方法获取订阅者的订阅方法，会在此处根据 findState.subscriberInfo 的具体返回值，判断项目是否配置 APT 生成索引，具体生成如下两个分支：
+
 1. 通过反射获取订阅事件。
 2. 通过 APT 方式获取订阅事件。
 
@@ -203,6 +205,9 @@ private List<SubscriberMethod> findUsingInfo(Class<?> subscriberClass) {
     return getMethodsAndRelease(findState);
 }
 ```
+在此处仅具体阐述通过反射获取订阅方法的方式，通过 APT 索引的方式见：[EventBus 使用 APT 生成索引以及源码分析](https://leegyplus.github.io/2019/11/04/EventBus%20使用%20APT%20生成索引以及源码分析/)
+
+#### 3. 通过反射的方式获取订阅事件
 
 使用反射获取订阅事件的具体流程，在 findUsingReflectionInSingleClass 方法中操作如下：
 
@@ -251,7 +256,8 @@ private void findUsingReflectionInSingleClass(FindState findState) {
 ```
 subscribe(subscriber, subscriberMethod);
 ```
-subscribe d的关键代码：
+subscribe 的关键代码：
+
 ```
 private void subscribe(Object subscriber, SubscriberMethod subscriberMethod) {
     Class<?> eventType = subscriberMethod.eventType;
@@ -289,30 +295,12 @@ private void subscribe(Object subscriber, SubscriberMethod subscriberMethod) {
 
 #### 5. 两个重要的 Map 对象
 
-**第一个 Map 集合：subscriptionsByEventType**
-
-根据变量名就可知为以 **事件类型为 key**，以 **订阅关系集合为 value** 的 Map
-
-```
-    private final Map<Class<?>, CopyOnWriteArrayList<Subscription>> subscriptionsByEventType;
-```
-
-以订阅的事件类型(eventType)为 Key，将订阅关系集合存储到对应的 Map 中：
+**第一个 Map 集合：typesBySubscriber**
 
 
-```
-// Map<事件类型,List<该事件对应的订阅关系(Subscription 对象)>>
- CopyOnWriteArrayList<Subscription> subscriptions = subscriptionsByEventType.get(eventType);
- ...
-subscriptionsByEventType.put(eventType, subscriptions);
-```
+根据变量名可知，typesBySubscriber 为 **以订阅者为 key**，以 **事件类型为 value** 的 Map 集合。
 
-**第二个 Map 集合：typesBySubscriber**
-
-
-根据变量名可知，typesBySubscriber 为 **以订阅者为 key**，以 **事件类型为 value** 的 Map 集合
-
- Map<订阅者(比如在CustomActivity 中有订阅方法，那么 key 为 CustomActivity),该 Class 中所以的订阅事件类型的集合>。
+> Map<订阅者(比如在CustomActivity 中有订阅方法，那么 key 为 CustomActivity),该 Class 中所以的订阅事件类型的集合>。
 
 ```
 private final Map<Object, List<Class<?>>> typesBySubscriber;
@@ -330,7 +318,25 @@ if (subscribedEvents == null) {
 subscribedEvents.add(eventType);
 ```
 
-通过以上两个 Map 对象，可以获得所有的关系：订阅者 -> 订阅事件 -> 订阅关系。
+**第二个 Map 集合：subscriptionsByEventType**
+
+根据变量名就可知为以 **事件类型为 key**，以 **订阅关系集合为 value** 的 Map
+
+```
+    private final Map<Class<?>, CopyOnWriteArrayList<Subscription>> subscriptionsByEventType;
+```
+
+以订阅的事件类型(eventType)为 Key，将订阅关系集合存储到对应的 Map 中：
+
+
+```
+// Map<事件类型,List<该事件对应的订阅关系(Subscription 对象)>>
+ CopyOnWriteArrayList<Subscription> subscriptions = subscriptionsByEventType.get(eventType);
+ ...
+subscriptionsByEventType.put(eventType, subscriptions);
+```
+
+两个 Map 可以组合成以下关系流：**订阅者 -> 订阅事件 -> 订阅关系**。
 
 #### 6. 这两个 Map 的使用
 
@@ -343,7 +349,7 @@ subscribedEvents.add(eventType);
 4. 移除此订阅者
 
 ```
-// 步骤 1
+// 步骤 1：typesBySubscriber 通过订阅者获得对应的订阅者中的事件集合
 List<Class<?>> subscribedTypes = typesBySubscriber.get(subscriber);
 if (subscribedTypes != null) {
     for (Class<?> eventType : subscribedTypes) {
@@ -355,7 +361,7 @@ if (subscribedTypes != null) {
 }
 
 private void unsubscribeByEventType(Object subscriber, Class<?> eventType) {
-    // 步骤 2
+    // 步骤 2 subscriptionsByEventType 通过指定事件获得对应的订阅关系
     List<Subscription> subscriptions = subscriptionsByEventType.get(eventType);
     if (subscriptions != null) {
         int size = subscriptions.size();
@@ -371,15 +377,15 @@ private void unsubscribeByEventType(Object subscriber, Class<?> eventType) {
         }
     }
 }
-
 ```
+
 同样在事件发布时两个 map 对象也发挥十分重要的作用：通过事件类型获得所有的所有的订阅关系(订阅关系中含有订阅者和订阅方法的信息)，为每一个订阅关系发布事件。
 
 理解这两个 Map 对象的意义，那么可以大致猜想 EventBus 发布事件时的基本流程：会根据事件类型在 subscriptionsByEventType 获得相应的订阅关系，由于订阅关系中含有订阅者和订阅方法的信息，那么就可以执行订阅者的订阅方法来，下面进一步查看事件发布的流程。
 
 ### 0x0005 事件发布：post 事件
 
-post 具体代码：
+通过 post 方法，发布事件，以下为 post 具体代码：
 
 ```
 public void post(Object event) {
@@ -451,7 +457,7 @@ private boolean postSingleEventForEventType(Object event, PostingThreadState pos
 ```
 
 
-postToSubscription 源码
+postToSubscription 源码：
 ```
 private void postToSubscription(Subscription subscription, Object event, boolean isMainThread) {
     switch (subscription.subscriberMethod.threadMode) {

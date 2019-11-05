@@ -4,9 +4,6 @@ tags: [EventBus]
 date: 2019-09-12 11:37:55
 ---
 
-
-
-
 EventBus 可以处理 Android 中的线程切换的问题：事件发布的线程可以与线程处理的线程不同。以下几种模式为事件处理的线程。EventBus 可以帮助使用者子线程与主线程的同步问题。
 
 ### ThreadMode:POSTING (default)

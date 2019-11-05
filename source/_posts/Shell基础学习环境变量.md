@@ -1,6 +1,6 @@
 ---
 title: Shell 基础学习(二)：环境变量
-tags:[Shell]
+tags: [Shell]
 date: 2019-11-04 18:10:36
 ---
 
