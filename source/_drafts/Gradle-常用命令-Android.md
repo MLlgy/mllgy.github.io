@@ -10,3 +10,8 @@ tags:
 ```
 ./gradlew :app:dependencies
 ```
+
+
+---
+
+[官方文档：Gradle 提示与诀窍](https://developer.android.google.cn/studio/build/gradle-tips?hl=zh_cn)

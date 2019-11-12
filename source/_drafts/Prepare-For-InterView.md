@@ -10,6 +10,8 @@ tags: [Android 面试]
 
 图片压缩
 
+[Android进阶——图片优化之质量压缩、尺寸压缩、采样率压缩、LibJpeg压缩](https://blog.csdn.net/qq_30379689/article/details/78884167)
+
 大图片处理
 
 图片缓存
