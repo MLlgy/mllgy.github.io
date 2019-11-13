@@ -115,6 +115,10 @@ LeakCanary 的实践
 ## 简历、面试题
 
 [南尘](http://www.imooc.com/article/280388)
+
+[给扔物线 HenCoder Plus 学员的一次分享文字版](https://blog.csdn.net/nanchen_lsl/article/details/85098705)
+
+[南尘 2019.07 Android 面试真题集锦](https://mp.weixin.qq.com/s/iY1s5ocUubj6OWDiinh8_Q)
 ---
 
 [面试集合](https://www.diycode.cc/wiki/androidinterview)

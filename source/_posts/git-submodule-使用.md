@@ -8,7 +8,7 @@ date: 2019-11-05 12:22:23
 ### 1. 为项目添加子模块
 
 
-> git submodule add <repository> <path> 
+> git submodule add [repository] [path] 
 
 此命令会生成 .gitmodule 文件以及在 .git/config 文件中添加子模块的相应信息
 
