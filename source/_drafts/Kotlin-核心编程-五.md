@@ -498,3 +498,110 @@ public final class Student {
 ```
 
 可以发现最终还是像 JavaBean 中一样实现 getter/setter 方法，重写 hashCode、equal 等方法，但是其中的存在的 copy、componentN 是我们从来没见过的。
+
+
+**copy、copy、componentN 与解构**
+
+通过反编译的代码我们可以知道 copy 方法主要是帮我们从一个已有对象拷贝一个新的数据类对象，其中需要重点关注的是这里的拷贝是 **浅拷贝**，注意其使用场景。
+
+copy 的使用示例：
+```
+fun testMethod(){
+    val student = Student("小明",3)
+    //因为 val 为不可变量，所以不能通过以下方式进行浅拷贝，而 copy 提供了一种简洁的方式进行浅拷贝，
+    //但是通过反编译的代码我们可以其实现原理，所以 copy 是一种语法糖，但在 Kotlin 中有哪些特性不是语法糖呢？
+//    val student3 = student
+//    student3.name = "小明"
+    val student2 = student.copy(name = "小刚",age = 3)
+    val student4 = student.copy(name = "小刚")
+}
+```
+
+
+下面来看一下 componentN 方法，componentN 可以理解为类属性的值，而 N 代表属性的声明顺序，比如上例中 方法，component1 代表 name 的属性值，而 component2 代表 age 的属性值。
+
+示例：
+
+```
+fun testTwo(){
+    val student = Student("小明",3)
+    val name = student.name
+    val age = student.age
+    // 使用 Kotlin 
+    val(name2,age2)= student
+    // 更可以这样使用，一次性实现多个属性赋值
+    val str= "nike,2,10086"
+    val(tag,num,phone) = str.split(",")
+}
+```
+
+以上能够实现原因就是 **解构**，通过编译器的约定实现解构。在数据类中，可以直接使用编译器自动生成的 componentN 方法，也可以自己实现对应属性的 componentN 方法，为上例中的 Student 数据类添加自定义 componentN 方法，该方法需要使用 **operator** 修饰。
+
+```
+data class Student(val name: String, var age: Int) {
+    var phoneNum = 110
+    operator fun component3() = phoneNum
+
+    constructor(name: String, age: Int, phoneNum: Int) : this(name, age) {
+        this.phoneNum = phoneNum
+    }
+}
+
+fun testThree() {
+    val student = Student("mike", 2, 10087)
+    var (name, age, phoneNum) = student
+}
+```
+
+
+除了数据类外，数组也支持解构，不过其默认最多允许赋值 5 个变量，若变量过多，反而适得其反，但是可以通过扩展实现多余 5 的变量的赋值：
+
+```
+operator fun <T> Array<T>.component6(): T {
+    return this[5]
+}
+
+fun main(args: Array<String>) {
+    val array = arrayOf("one", "two", "three")
+    val (a, b, c) = array
+    println("$a $b $c")
+    // 通过扩展方法扩大解构个数
+    val list = arrayOf("one", "two", "three", "four", "five", "six")
+    val (one, two, three, four, five, six) = list
+    println("$one $two $three $four $five $six")
+}
+```
+
+
+**系统定义的其他支持解构的数据类：Pair、Triple**
+
+Pair 为二元组，代表这个数据类有两个属性，
+Triple 为三元组，代表这个数据类有三个属性，
+两者的源码：
+```
+public data class Pair<out A, out B>(
+    public val first: A,
+    public val second: B
+)
+
+public data class Triple<out A, out B, out C>(
+    public val first: A,
+    public val second: B,
+    public val third: C
+) 
+```
+
+使用示例：
+
+
+```
+fun testFive(){
+    val pair = Pair("Name",3)
+    val triple = Triple("one","two","three")
+    val name = pair.first
+    val age = pair.second
+    val(one,two,three) = triple
+}
+```
+
+
