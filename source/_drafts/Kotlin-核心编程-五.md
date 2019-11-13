@@ -278,8 +278,6 @@ public class Bird implements Flyer,Animal {
 ```
 
 但是在 Kotlin 中支持这样的写法：
-
-
 ```
 interface Flyer {
     fun fly()
@@ -319,9 +317,7 @@ class Bird : Flyer, Animal {
 
 嵌套类包括静态内部类和非静态内部类，而非静态内部类被称为内部类，内部类持有外部类的引用。
 
-
 在 Kotlin 中使用 inner 标记一个类为 内部类：
-
 
 ```
 class Outer {
@@ -338,3 +334,167 @@ class Outer2 {
 }
 ```
 反编译代码：
+
+```
+
+public final class Outer {
+   private final int bar = 1;
+   // 没有使用　inner 修饰的类，会被编译成静态内部类
+   public static final class Nested {
+      public final int foo() {
+         return 2;
+      }
+   }
+}
+
+public final class Outer2 {
+   private final int bar = 1;
+   // 使用　inner 修饰的类，会被编译成内部类
+   public final class Inner {
+      public final int foo() {
+         return Outer2.this.bar;
+      }
+   }
+}
+```
+
+同时可以使用　private　修饰内部类，这样其他类就不能访问该内部类，具有很好的封装性。
+
+
+使用内部类实现多继承：
+```
+open class Horse{
+    fun runFast(){
+        println("run fast")
+    }
+
+    fun eat(){
+        println("horse eat")
+    }
+}
+
+open class Donkey{
+    fun doLongTimeThing(){
+        println("do longtime thing")
+    }
+
+    fun eat(){
+        println("donkey eat")
+    }
+}
+
+class Mule{
+    fun runFast(){
+        HorseC().runFast()
+    }de
+
+    fun doLongTimeThing(){
+        DonkeyC().doLongTimeThing()
+    }
+
+    private inner class HorseC:Horse()
+    private inner class DonkeyC:Donkey()
+}
+```
+在　Mule　中定义两个内部类分别继承　Horse 和 Donkey，那么 Mule 可以通过内部类访问 Horse 和 Donkey 的特性，在一定程度上能够达到继承的效果。
+
+
+**使用委托代替多继承**
+
+什么是委托？
+
+委托是一种特殊的类型，用于方法事件de委托，比如你调用 A 类的 methodA 方法，其实背后是 B 类的 methodB 方法，在 Java 中有静态委托和动态委托。
+
+
+在 Kotlin 中可以使用关键字 by 来实现委托的效果，比如 by lazy 为通过委托实现延时初始化。
+
+使用 Kotlin 中的类委托实现多继承的需求：
+
+```
+interface CanFly{
+    fun fly()
+}
+interface CanEat{
+    fun eat()
+}
+
+open class Flyer:CanFly{
+    override fun fly() {
+        println("can fly")
+    }
+}
+
+open class Animal:CanEat{
+    override fun eat() {
+        println("can eat")
+    }
+}
+
+class Bird(flyer: Flyer,animal: Animal):CanEat by animal,CanFly by flyer{
+    fun main(args:Array<String>){
+        val flyer = Flyer()
+        val animal = Animal()
+        val bird = Bird(flyer,animal)
+        bird.fly()
+        bird.eat()
+    }
+}
+```
+
+通过类委托，则委托类(Bird)拥有了和被委托类(Flyer、Animal)一样的状态和属性，在一定程度上实现了多继承的效果。
+
+
+### 数据类
+
+通过 data 关键字实现数据类：
+
+```
+data class Student(val name:String,var age:Int)
+```
+反编译 
+
+```
+public final class Student {
+   @NotNull
+   private final String name;
+   private int age;
+
+   @NotNull
+   public final String getName() {
+      return this.name;
+   }
+
+   public final int getAge() {
+      return this.age;
+   }
+
+   public final void setAge(int var1) {
+      this.age = var1;
+   }
+
+   public Student(@NotNull String name, int age) {
+      Intrinsics.checkParameterIsNotNull(name, "name");
+      super();
+      this.name = name;
+      this.age = age;
+   }
+
+   @NotNull
+   public final String component1() {
+      return this.name;
+   }
+
+   public final int component2() {
+      return this.age;
+   }
+
+   @NotNull
+   public final Student copy(@NotNull String name, int age) {
+      Intrinsics.checkParameterIsNotNull(name, "name");
+      return new Student(name, age);
+   }
+    ...
+}
+```
+
+可以发现最终还是像 JavaBean 中一样实现 getter/setter 方法，重写 hashCode、equal 等方法，但是其中的存在的 copy、componentN 是我们从来没见过的。
