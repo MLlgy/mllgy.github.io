@@ -5,20 +5,20 @@ tags:
 
 
 
-### Kotlin 中的类
+### 0x0001 Kotlin 中的类
 
 Kotlin 中类与 Java 中的几点不同:
 
-* 在 Kotlin 中除非显示声明延时初始化，那么属性需要显示指定默认值。
+* 在 Kotlin 中除非显示声明延时初始化，那么属性需要显式的指定默认值。
 * val 为不可变属性
 * 修饰符的访问权限不同，Kotlin 默认全局可见， Java 默认包可见。
 * 在接口中，不可为属性初始化值( Kotlin 接口中抽象属性，背后通过方法实现)
 
 
-### Koltlin 中的接口
-
+### 0x0002 Koltlin 中的接口
 
 在 Kotlin 中，接口可以拥有属性和默认方法：
+<!-- more -->
 
 ```
 interface IShow{
@@ -47,23 +47,23 @@ public interface IShow {
 }
 ```
 
-由于 Kotlin 是基于 Java6 的，所以是不支持在接口中对属性进行赋值以及默认方法的实现，而 Kotlin 接口中的属性其实是通过方法来实现的，所以在 Kotlin 接口中不可以为属性提供默认值，同时通过以上代码看到 Kotlin 接口中的默认方法也是通过接口内部类实现的，赤裸裸的黑科技啊。
+Kotlin 接口中的属性其实是通过方法来实现的，而方式是基于静态内部类实现的，由于 Kotlin 是基于 Java6 的，而在 Java 6 中接口是不支持默认方法的，所以在 Kotlin 中接口不支持对属性进行赋值以及默认方法的实现，满满的语法糖既视感。
 
 
-### 类的构造方法
+### 0x0003 类的构造方法
 
-**主从构造方法**
+**1. 主从构造方法**
 
 
-在类外部定义的构造方法称为主构造方法，在类内部通过 constructor 定义的方法称为从构造方法。如果主构造方法存在注解或者可见修饰符，那么需要添加 constructor 关键字。
+在类外部定义的构造方法称为 `主构造方法`，在类内部通过 `constructor` 定义的方法称为 `从构造方法`。如果主构造方法存在注解或者可见修饰符，那么需要添加 constructor 关键字。
 
 从构造器由两部分组成：
-1. 对其他构造方法的委托。
+1. 对其他构造方法的委托(必须要有的)。
 2. {} 内部包裹的代码块。
 
-$如果一个类存在主构造方法，那么所有的从构造方法需要直接或间接的委托给它。$
+$如果一个类存在主构造方法，那么所有的从构造方法需要直接或间接的委托给它，执行顺序是为先执行委托的方法，然后执行自身代码块的逻辑。$
 
-执行顺序是为先执行委托的方法，然后执行自身代码块的逻辑。
+
 
 ```
 class Dog(val country: String) {
@@ -78,7 +78,7 @@ fun main() {
     println("dog`s tel num is ${dog.telNum}, country is ${dog.country}")
 }
 ```
-**为构造器参数指定默认值**
+**2. 为构造器参数指定默认值**
 
 在 Kotlin 中可以给构造函数的参数指定默认值:
 
@@ -96,11 +96,11 @@ val  bird = Bird(age = 3,color =  "red")
 val  bird = Bird( "red",3)
 ```
 
-**为构造器参数添加修饰符**
+**3. 为构造器参数添加修饰符**
 
 使用 val 或者 var 声明构造方法的参数，有两个作用：
 * 代表参数的引用可变性，var 可变，val 不可变。
-* 简化构造类中语法
+* 简化构造类中语法。
 
 至于怎样简化，示例如下：
 
@@ -120,15 +120,12 @@ class Bird( color:String = "white",  age : Int = 1){
 ```
 
 
-**init 代码块**
-
-类中可以存在多个 init 代码块，执行顺序按照类中的顺序自上而下，在复杂的业务场景下，可以按照职能对代码进行分离，使代码条理清晰、逻辑分明。
-
+**4. init 代码块**
 
 **当构造方法的参数没有 val 或者 var 时，构造方法的参数可以在 init 语句中使用，除了 init 代码块，此时构造方法中的参数不可以在其他位置使用**。
 
 
-Kotlin 中规定类中的所有非抽象属性成员必须在对象创建时被初始化,val 声明的属性不可二次赋值，但是通过在 init 代码块中进行初始化：
+Kotlin 中规定类中的所有非抽象属性成员必须在对象创建时被初始化,但是可以在声明val 属性时不赋值，但是在 init 代码块中进行初始化：
 
 ```
 class Bird( color:String = "white",  age : Int = 1){
@@ -145,15 +142,14 @@ class Bird( color:String = "white",  age : Int = 1){
 
 
 
-### 延迟初始化
+### 0x0004 属性的延迟初始化
 
 延迟初始化的属性，可以在对象初始化时不必有值。
 
+**1. by lazy**
 
-**by lazy**
 
-
-可以使用 by lazy 修饰 val 声明的变量：
+可以使用 `by lazy` 修饰 val 声明的变量：
 
 ```
 class Dog{
@@ -176,14 +172,13 @@ public inline operator fun <T> Lazy<T>.getValue(thisRef: Any?, property: KProper
 lazy 的背后是接受一个 Lambda 表达式，并且返回一个 Lazy<T> 实例的函数，第一次调用该属性时，会执行 lazy 对应 Lambda 表达式并记录，后续访问该属性会返回记录的结果。
 
 
-默认系统会为 lazy 属性加上同步锁 - LazyThreadSafetyMode.SYNCHRONIZED，同一时刻只有一个线程可以对 lazy 的属性进行初始化，为线程安全的。如果能够确保可以并行执行，可以给 lazy 传递其他线程参数。
+默认系统会为 lazy 属性加上同步锁 - LazyThreadSafetyMode.SYNCHRONIZED，同一时刻只有一个线程可以对 lazy 的属性进行初始化，为线程安全的。同时 lazy 可以指定其他线程参数，以此来满足需求。如果能够确保可以并行执行，可以给 lazy 传递其他线程参数。
 
 
-**lateinit**
+**2. lateinit**
 
 
 lateinit 主要用于声明 var 变量，**不能用于基本数据类型**，如 Int 等，如果需要的话，使用 Interger 等包装类替代。
-
 
 ```
 class Dog {
@@ -195,8 +190,7 @@ class Dog {
 }
 ```
 
-
-### 类的访问修饰符权限
+### 0x0005 类的访问修饰符权限
 
 
 * Kotlin 中类和方法默认修饰符是 final，默认是不被继承或重写的，如果有这样的需求，必须添加 open 修饰符。
@@ -205,21 +199,22 @@ class Dog {
 * Kotlin 独特的修饰符：internal。
 * Kotlin 和 Java 的 protected 的访问权限不同，Java 中是包、子类可访问，而 Kotlin 中只允许子类访问。
 
+internal 修饰符的作用域是模块内可见，那么在 Kotlin 中模块是什么？
+一个模块可以看成是一起编译的 Kotlin 文件组成的集合。
 
-|修饰符|含义|与Java 比较|
+
+|修饰符| Kotlin 中含义|Java 中含义|
 --|--|--
 public|Kotlin 的默认修饰符，全局可见|与Java 中public 效果相同
 protected|受保护的修饰符，类及子类可见|含义一致，但是访问权限为类、子类、包
 private|私有修饰符，类内修饰只有本类可见，类外修饰本文件可见| 私有修饰符，本类可见
 internal|模块可见|无
 
-#### 密闭类
-
-
+### 0x0006 密闭类
 
 Kotlin 中除了使用 final 来限制类的继承外，还可以使用密闭类来限制一个类的继承。
 
-Kotlin 通过 sealed 关键字来修饰一个类为密闭类，若要继承，**则需要在子类定义在同一个文件中**，其他文件无法继承它。
+Kotlin 通过 sealed 关键字来修饰一个类为密闭类，若要继承密闭类，**则子类只能定义在同一个文件中(文件内或者本类内)**，其他文件无法继承它。
 
 ```
 sealed class Animal{
@@ -246,8 +241,10 @@ class Fish: Animal(){
 
 
 
-### Kotlin 中的多继承问题
+### 0x0007 Kotlin 中的多继承问题
 
+
+**1. 多继承中存在的钻石问题**
 
 Java 中的类时不支持多继承的，但是可以通过接口实现多继承，但是此方式存在一个缺陷：当多个类中存在同一个方法时，那么无法完成实现的目的：
 
@@ -277,7 +274,7 @@ public class Bird implements Flyer,Animal {
 }
 ```
 
-但是在 Kotlin 中支持这样的写法：
+但是在 Kotlin 中通过一些写法支持这样的实现：
 ```
 interface Flyer {
     fun fly()
@@ -310,15 +307,12 @@ class Bird : Flyer, Animal {
 ```
 
 
-**内部类解决多继承的问题**
+**2. 内部类解决多继承的问题**
 
 
-嵌套类和内部类：
+>嵌套类和内部类：嵌套类包括静态内部类和非静态内部类，而非静态内部类被称为内部类，内部类持有外部类的引用。
 
-嵌套类包括静态内部类和非静态内部类，而非静态内部类被称为内部类，内部类持有外部类的引用。
-
-在 Kotlin 中使用 inner 标记一个类为 内部类：
-
+在 Kotlin 中使用 `inner` 标记一个类为 **内部类**：
 ```
 class Outer {
     private val bar: Int = 1
@@ -399,14 +393,12 @@ class Mule{
 在　Mule　中定义两个内部类分别继承　Horse 和 Donkey，那么 Mule 可以通过内部类访问 Horse 和 Donkey 的特性，在一定程度上能够达到继承的效果。
 
 
-**使用委托代替多继承**
+**3. 使用委托代替多继承**
 
-什么是委托？
-
-委托是一种特殊的类型，用于方法事件de委托，比如你调用 A 类的 methodA 方法，其实背后是 B 类的 methodB 方法，在 Java 中有静态委托和动态委托。
+> 什么是委托？委托是一种特殊的类型，用于方法事件de委托，比如你调用 A 类的 methodA 方法，其实背后是 B 类的 methodB 方法，在 Java 中有静态委托和动态委托。
 
 
-在 Kotlin 中可以使用关键字 by 来实现委托的效果，比如 by lazy 为通过委托实现延时初始化。
+在 Kotlin 中可以使用关键字 `by` 来实现委托的效果，比如 by lazy 为通过委托实现延时初始化。
 
 使用 Kotlin 中的类委托实现多继承的需求：
 
@@ -441,12 +433,12 @@ class Bird(flyer: Flyer,animal: Animal):CanEat by animal,CanFly by flyer{
 }
 ```
 
-通过类委托，则委托类(Bird)拥有了和被委托类(Flyer、Animal)一样的状态和属性，在一定程度上实现了多继承的效果。
+通过 **类委托**，则委托类(Bird)拥有了和被委托类(Flyer、Animal)一样的状态和属性，在一定程度上实现了多继承的效果。
 
 
-### 数据类
+### 0x0008 数据类
 
-通过 data 关键字实现数据类：
+通过 **data** 关键字实现数据类：
 
 ```
 data class Student(val name:String,var age:Int)
@@ -497,10 +489,17 @@ public final class Student {
 }
 ```
 
+定义数据类的规则：
+
+* 数据类必须有一个构造函数，并且构造函数中至少包括一个参数。
+* 数据类构造函数的参数必须使用 var 或者 val 修饰。
+* data class 不能用 abstract、open、sealed、inner 修饰。
+* 数据类可以实现接口，也可以继承类。
+
 可以发现最终还是像 JavaBean 中一样实现 getter/setter 方法，重写 hashCode、equal 等方法，但是其中的存在的 copy、componentN 是我们从来没见过的。
 
 
-**copy、copy、componentN 与解构**
+**1.copy、componentN 与解构**
 
 通过反编译的代码我们可以知道 copy 方法主要是帮我们从一个已有对象拷贝一个新的数据类对象，其中需要重点关注的是这里的拷贝是 **浅拷贝**，注意其使用场景。
 
@@ -518,7 +517,7 @@ fun testMethod(){
 ```
 
 
-下面来看一下 componentN 方法，componentN 可以理解为类属性的值，而 N 代表属性的声明顺序，比如上例中 方法，component1 代表 name 的属性值，而 component2 代表 age 的属性值。
+下面来看一下 componentN 方法，componentN 可以理解为类属性的值，而 **N 代表属性的声明顺序**，比如上例中 方法，component1 代表 name 的属性值，而 component2 代表 age 的属性值。
 
 示例：
 
@@ -557,6 +556,7 @@ fun testThree() {
 除了数据类外，数组也支持解构，不过其默认最多允许赋值 5 个变量，若变量过多，反而适得其反，但是可以通过扩展实现多余 5 的变量的赋值：
 
 ```
+// 为 Array<T> 扩展解构函数
 operator fun <T> Array<T>.component6(): T {
     return this[5]
 }
@@ -572,11 +572,16 @@ fun main(args: Array<String>) {
 }
 ```
 
+**2. 系统定义的其他支持解构的数据类：Pair、Triple**
 
-**系统定义的其他支持解构的数据类：Pair、Triple**
+* Pair
+ 
+ Pair 为二元组，代表这个数据类有两个属性。
 
-Pair 为二元组，代表这个数据类有两个属性，
-Triple 为三元组，代表这个数据类有三个属性，
+* Triple 
+
+Triple为三元组，代表这个数据类有三个属性。
+
 两者的源码：
 ```
 public data class Pair<out A, out B>(
@@ -593,7 +598,6 @@ public data class Triple<out A, out B, out C>(
 
 使用示例：
 
-
 ```
 fun testFive(){
     val pair = Pair("Name",3)
@@ -605,3 +609,75 @@ fun testFive(){
 ```
 
 
+### 0x0009 Object 关键字
+
+在 Kotlin 中没有 static 关键字，使用全新的 object 关键字，可以替代 static 所有的场景，object 除了替代 static 的关键字之外，还有其他很多功能，比如单例对象、简化匿名表达式。
+
+**1. 伴生对象**
+
+
+针对 Java 中的 static，Kotin 中引入了 companion object 关键字。companion object 意为 伴生对象，所谓 伴生 意为伴随着某个类，伴生对象即为伴随着某个类产生的对象，所以伴生对象属于类，和 Java 中的 static 关键字是一样的。
+
+```
+class Cat{
+    companion object{
+        val MEAL = 1
+        val FEMEAL = 2
+        fun play(){
+            println("i am play")
+        }
+    }
+}
+
+fun main(args: Array<String>) {
+    println(Cat.FEMEAL)
+    Cat.play()
+}
+```
+
+**2. 天生的单例：object**
+
+
+```
+object Config{
+    var host:String = "localhost"
+    var port:Int = 8080 
+}
+```
+单例类可以像普通类一样实现接口和继承类，还可以进行扩展函数。
+
+**3. object 表达式**
+
+在 Java 中的匿名内部类可以使用 object 表达式进行替换，更易理解。
+
+```
+val comparator = object :Comparator<String>{
+    override fun compare(s1: String?, s2: String?): Int {
+        if ( s1 == null){
+            return -1
+        }else if(s2 == null)
+            return 1
+        return s1.compareTo(s2)
+    }
+}
+Collections.sort(list, comparator)
+```
+object 表达式在运行中不像在单例模式中所说的那样，全局只有一个对象，而是每次运行时都会生成一个对象。
+
+但是在一些场合下，匿名内部类和 object 表达式并不适合，而 Lambda 更适合，那么 Lambda 和 object 表达式哪一个更适合替代匿名内部类？
+
+> 当匿名内部类使用的接口只需要实现一个方法时，使用 Lambda 表达式更适合，当匿名内部类内有多个方法时，使用 object 表示式更适合。
+
+所以以上 object 表示式可以使用 Lambda 替代：
+
+
+```
+val comparator = Comparator<String> { s1, s2 ->
+    if (s1 == null) {
+        return@Comparator -1
+    } else if (s2 == null)
+        return@Comparator 1
+    s1.compareTo(s2)
+}
+Collections.sort(list, comparator)
+```
