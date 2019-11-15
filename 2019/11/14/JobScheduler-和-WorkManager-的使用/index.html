@@ -6,20 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href>
-  <title>拖动百度地图出现黑影的解决方法 | GY</title>
+  <title>JobScheduler 和 WorkManager 的基本使用 | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="问题描述及解决方案NestScrollView 嵌套 MapView 在滑动整个布局时，MapView 的上下边界出现黑影。 问题解决： 使用 TextureMapView 替换布局中的 MapView 并开启硬件加速，如果只在当前 Activity 中开启硬件加速，执行在清单文件中该 Activity 注册信息中添加标签：android:hardwareAccelerated=&amp;quot;tru">
-<meta name="keywords" content="百度地图黑影,硬件加速">
+  <meta name="description" content="0x0001 JobScheduler 的使用 对于满足网络、电量、时间等一定预定条件而触发的任务，那么jobScheduler便是绝佳选择。JobScheduler主要用于在未来某个时间下满足一定条件时触发执行某项任务的情况，那么可以创建一个JobService的子类，重写其onStartJob()方法来实现这个功能。  JobScheduler 的使用步骤：">
+<meta name="keywords" content="JobScheduler,WorkManager">
 <meta property="og:type" content="article">
-<meta property="og:title" content="拖动百度地图出现黑影的解决方法">
-<meta property="og:url" content="/2019/03/13/拖动百度地图出现黑影的解决方法/index.html">
+<meta property="og:title" content="JobScheduler 和 WorkManager 的基本使用">
+<meta property="og:url" content="/2019/11/14/JobScheduler-和-WorkManager-的使用/index.html">
 <meta property="og:site_name" content="GY">
-<meta property="og:description" content="问题描述及解决方案NestScrollView 嵌套 MapView 在滑动整个布局时，MapView 的上下边界出现黑影。 问题解决： 使用 TextureMapView 替换布局中的 MapView 并开启硬件加速，如果只在当前 Activity 中开启硬件加速，执行在清单文件中该 Activity 注册信息中添加标签：android:hardwareAccelerated=&amp;quot;tru">
+<meta property="og:description" content="0x0001 JobScheduler 的使用 对于满足网络、电量、时间等一定预定条件而触发的任务，那么jobScheduler便是绝佳选择。JobScheduler主要用于在未来某个时间下满足一定条件时触发执行某项任务的情况，那么可以创建一个JobService的子类，重写其onStartJob()方法来实现这个功能。  JobScheduler 的使用步骤：">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-03-14T02:12:43.283Z">
+<meta property="og:updated_time" content="2019-11-15T09:46:51.720Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="拖动百度地图出现黑影的解决方法">
-<meta name="twitter:description" content="问题描述及解决方案NestScrollView 嵌套 MapView 在滑动整个布局时，MapView 的上下边界出现黑影。 问题解决： 使用 TextureMapView 替换布局中的 MapView 并开启硬件加速，如果只在当前 Activity 中开启硬件加速，执行在清单文件中该 Activity 注册信息中添加标签：android:hardwareAccelerated=&amp;quot;tru">
+<meta name="twitter:title" content="JobScheduler 和 WorkManager 的基本使用">
+<meta name="twitter:description" content="0x0001 JobScheduler 的使用 对于满足网络、电量、时间等一定预定条件而触发的任务，那么jobScheduler便是绝佳选择。JobScheduler主要用于在未来某个时间下满足一定条件时触发执行某项任务的情况，那么可以创建一个JobService的子类，重写其onStartJob()方法来实现这个功能。  JobScheduler 的使用步骤：">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
   
@@ -159,14 +159,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-拖动百度地图出现黑影的解决方法" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-JobScheduler-和-WorkManager-的使用" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      拖动百度地图出现黑影的解决方法
+      JobScheduler 和 WorkManager 的基本使用
     </h1>
   
 
@@ -179,18 +179,122 @@
 	</span>
 
 
-<a href="/2019/03/13/拖动百度地图出现黑影的解决方法/" class="archive-article-date">
-  	<time datetime="2019-03-13T08:29:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-13</time>
+<a href="/2019/11/14/JobScheduler-和-WorkManager-的使用/" class="archive-article-date">
+  	<time datetime="2019-11-14T08:37:39.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-14</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="问题描述及解决方案"><a href="#问题描述及解决方案" class="headerlink" title="问题描述及解决方案"></a>问题描述及解决方案</h3><p><code>NestScrollView</code> 嵌套 <code>MapView</code> 在滑动整个布局时，<code>MapView</code> 的上下边界出现黑影。</p>
-<p>问题解决：</p>
-<p>使用 <code>TextureMapView</code> 替换布局中的 <code>MapView</code> 并开启硬件加速，如果只在当前 Activity 中开启硬件加速，执行在清单文件中该 Activity 注册信息中添加标签：<code>android:hardwareAccelerated=&quot;true&quot;</code> 。</p>
-<h3 id="硬件加速"><a href="#硬件加速" class="headerlink" title="硬件加速"></a>硬件加速</h3>
+        <h3 id="0x0001-JobScheduler-的使用"><a href="#0x0001-JobScheduler-的使用" class="headerlink" title="0x0001 JobScheduler 的使用"></a>0x0001 JobScheduler 的使用</h3><blockquote>
+<p>对于满足网络、电量、时间等一定预定条件而触发的任务，那么jobScheduler便是绝佳选择。JobScheduler主要用于在未来某个时间下满足一定条件时触发执行某项任务的情况，那么可以创建一个JobService的子类，重写其onStartJob()方法来实现这个功能。</p>
+</blockquote>
+<p>JobScheduler 的使用步骤：</p>
+<a id="more"></a>
+
+<ul>
+<li>创建 ComponentName 对象。</li>
+<li>构建 JobInfo 对象。</li>
+<li>构建 JobScheduler 对象。</li>
+<li>调用 JobScheduler 对象 schedule() 调度任务。</li>
+</ul>
+<ol>
+<li>创建 ComponentName 对象</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ComponentName mServiceComponent = new ComponentName(this, MyJobService.class);</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>构建 JobInfo 对象</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 可以使用 setXX 方法，为 JobInfo 设置条件</span><br><span class="line">JobInfo jobInfo = new JobInfo.Builder(123, jobService) //任务Id等于123</span><br><span class="line">        .setMinimumLatency(5000)// 任务最少延迟时间 </span><br><span class="line">        .setOverrideDeadline(60000)// 任务deadline，当到期没达到指定条件也会开始执行 </span><br><span class="line">        .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)// 网络条件，默认值NETWORK_TYPE_NONE</span><br><span class="line">        .setRequiresCharging(true)// 是否充电 </span><br><span class="line">        .setRequiresDeviceIdle(false)// 设备是否空闲</span><br><span class="line">        .setPersisted(true) //设备重启后是否继续执行</span><br><span class="line">        .setBackoffCriteria(3000，JobInfo.BACKOFF_POLICY_LINEAR) //设置退避/重试策略</span><br><span class="line">        .build();</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>构建 JobScheduler 对象</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JobScheduler scheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>调用 JobScheduler 对象 schedule() 调度任务</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scheduler.schedule(jobInfo);</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>Service 中的关键方法</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class MyService extends JobService&#123;</span><br><span class="line">    // 在任务开始执行时，执行该方法</span><br><span class="line">    @Override</span><br><span class="line">    public boolean onStartJob(final JobParameters params) &#123;</span><br><span class="line">        .....</span><br><span class="line">        .....</span><br><span class="line">        // 需要在 Handler 中执行 Job，这一点是十分重要的</span><br><span class="line">        // true 代表执行任务后，定义的 Job 会继续运行，直到调用 jobFinished </span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 调用 jobFinished 后执行</span><br><span class="line">    @Override</span><br><span class="line">    public boolean onStopJob(JobParameters params) &#123;</span><br><span class="line">        </span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>取消 Job</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 取消所有</span><br><span class="line">JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);</span><br><span class="line">jobScheduler.cancelAll();</span><br><span class="line">// 取消指定 Job</span><br><span class="line">int jobId = job.getId();</span><br><span class="line">jobScheduler.cancel(jobId);</span><br></pre></td></tr></table></figure>
+
+<p>具体代码参见文末 DEMO 链接。</p>
+<h3 id="0x0002-WorkManager-使用"><a href="#0x0002-WorkManager-使用" class="headerlink" title="0x0002 WorkManager 使用"></a>0x0002 WorkManager 使用</h3><p>WorkManager 为 JetPack 框架中的一个组件，WorkManager 用来执行那些不需要立刻执行、不需要可靠的执行的任务，甚至在 App 退出或者手机重启时运行任务。</p>
+<p>例如可以执行以下任务：</p>
+<ul>
+<li>上传日志到服务器。</li>
+<li>定期与服务器同步数据。</li>
+</ul>
+<p>使用 WorkManager 相应 API 可以创建任务，当满足任务的执行条件是，把任务发送到 WorkManager 中执行。</p>
+<p>WorkManager 不适用于正在进行中的后台任务，比如：</p>
+<ul>
+<li>应用退出，后台任务取消。</li>
+<li>需要立即执行的任务。</li>
+</ul>
+<p>如果使用到上面的功能，请参见L<a href="https://developer.android.google.cn/guide/background/?hl=en" target="_blank" rel="noopener">后台任务处理指南</a>。</p>
+<ol>
+<li>创建一个后台任务</li>
+</ol>
+<p>在 WorkManager 中通过 Work 来定义一个任务， doWork 方法在 WorkManager 提供的后台线程中执行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">class BackgroundWork(appContext: Context, workParams: WorkerParameters) : Worker(appContext, workParams) &#123;</span><br><span class="line">    override fun doWork(): Result &#123;</span><br><span class="line">        Log.e(&quot;doWork&quot;,&quot;time start&quot;)</span><br><span class="line">        Thread.sleep(3000L)</span><br><span class="line">        Log.e(&quot;doWork&quot;,&quot;time end&quot;)</span><br><span class="line">        return Result.success(workDataOf(&quot;name&quot; to &quot;success&quot;))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>返回的 Result 通知 WorkManager 任务是否成功执行。</p>
+<ol start="2">
+<li>定义任务执行的的条件和时机：WorkRequest </li>
+</ol>
+<p>在 WorkManager 存在两种 WorkRequest ：</p>
+<ul>
+<li><p>OneTimeWorkRequest(一次性)</p>
+</li>
+<li><p>PeriodicWorkRequest(周期式)</p>
+</li>
+</ul>
+<p> 2.1 构建一个 OneTimeWorkRequestBuilder ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">private val backWorkRequest by lazy &#123;</span><br><span class="line">    OneTimeWorkRequestBuilder&lt;BackgroundWork&gt;()</span><br><span class="line">            .build()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>2.2 构建一个 PeriodicWorkRequest:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">val oneTimeRequest = PeriodicWorkRequestBuilder&lt;BackgroundWork&gt;(15, TimeUnit.MINUTES)// 定义周期性间隔</span><br><span class="line">        .build()</span><br></pre></td></tr></table></figure>
+
+<p>不过周期性执行的时间最小为 15 分钟，这一点需要注意，具体可以参见：<a href="https://developer.android.google.cn/topic/libraries/architecture/workmanager/how-to/recurring-work?hl=zh" target="_blank" rel="noopener">Recurring work</a></p>
+<p>2.3 为 WorkRequest 添加约束条件:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">val constraints = Constraints.Builder()</span><br><span class="line">        .setRequiresDeviceIdle(true)</span><br><span class="line">        .setRequiresCharging(true)</span><br><span class="line">        .build()</span><br><span class="line"></span><br><span class="line">val oneTimeRequest = OneTimeWorkRequestBuilder&lt;CompressWorker&gt;()</span><br><span class="line">        .setConstraints(constraints)</span><br><span class="line">        .build()</span><br><span class="line">val oneTimeRequest = PeriodicWorkRequestBuilder&lt;BackgroundWork&gt;(15, TimeUnit.MINUTES)// 定义周期性间隔</span><br><span class="line">        .setConstraints(constraints)</span><br><span class="line">        .build()</span><br></pre></td></tr></table></figure>
+
+<p>定义的 Work 只有在所有的约束条件满足时，才会执行。如果在任务运行时，约束添加变更，不再满足添加的约束条件，WorkManager 将停止执行 Worker，当满足约束条件时，将重试该任务。  </p>
+<p>不过自己在 DEMO 中为 oneTimeRequest 添加约束条件后，在任务执行过程中，手机不满足约束条件时，任务也会继续执行下去。</p>
+<p>再者还需要注意一点的是，系统检测约束条变化需要一定的时间，并不是约束条件变化系统都会马上通知 WorkManager 去执行相应的 Work 的，必须上例中的充电状态的变化后，在经过 20s 左右后， WorkManager 才会通知执行相应的 Work。</p>
+<ol start="3">
+<li>向系统发送任务</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WorkManager.getInstance(myContext).enqueue(uploadWorkRequest)</span><br></pre></td></tr></table></figure>
+
+<h3 id="0x0003-两者的对比"><a href="#0x0003-两者的对比" class="headerlink" title="0x0003 两者的对比"></a>0x0003 两者的对比</h3><p>官方文档给出关于两者的描述：</p>
+<blockquote>
+<p><strong>JobScheduler</strong>: This is an API for scheduling various types of jobs against the framework that will be executed in your application’s own process.</p>
+</blockquote>
+<blockquote>
+<p><strong>WorkManager</strong>: With WorkManager, you can easily set up a task and hand it off to the system to run under the conditions you specify.</p>
+</blockquote>
+<p>其实两者所能实现的功能是相似的：定义任务，交给 Android 系统执行。但是 WorkManager 作为 Jetpack 的一部分，拥有更多的特性，更推荐使用 WorkManager。</p>
+<hr>
+<p><a href="https://github.com/googlearchive/android-JobScheduler" target="_blank" rel="noopener">JobScheduler 官方 DEMO</a></p>
+<p><a href="https://github.com/android/background-tasks-samples" target="_blank" rel="noopener">WorkManager 官方 DEMO</a></p>
+<p><a href="https://developer.android.google.cn/reference/android/app/job/JobScheduler?hl=en" target="_blank" rel="noopener">JobScheduler 官方文档</a></p>
+<p><a href="https://developer.android.google.cn/topic/libraries/architecture/workmanager?hl=zh" target="_blank" rel="noopener">WorkManager 官方文档</a></p>
+<p><a href="http://gityuan.com/2017/03/10/job_scheduler_service/" target="_blank" rel="noopener">理解JobScheduler机制</a></p>
+
       
 
       
@@ -234,11 +338,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">百度地图黑影</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">JobScheduler</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">硬件加速</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">WorkManager</a>
         		</li>
       		
 		</ul>
@@ -294,7 +398,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http:/2019/03/13/拖动百度地图出现黑影的解决方法/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http:/2019/11/14/JobScheduler-和-WorkManager-的使用/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -308,18 +412,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/03/14/requestDisallowInterceptTouchEvent/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          requestDisallowInterceptTouchEvent
-        
-      </div>
-    </a>
   
-  
-    <a href="/2019/03/13/单例的几种写法/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Java 单例的几种写法</div>
+    <a href="/2019/11/14/Kotlin-核心编程三/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Kotlin 核心编程(三)：Kotlin 中的高阶函数和 Lambad 表达式</div>
       <i class="icon-circle-right"></i>
     </a>
   
