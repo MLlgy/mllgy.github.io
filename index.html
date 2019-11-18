@@ -156,6 +156,81 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-使用-CPU-Profiler-检查-CPU-Activity-和函数跟踪" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/18/使用-CPU-Profiler-检查-CPU-Activity-和函数跟踪/">使用 CPU Profiler 检查 CPU Activity 和函数跟踪</a>
+    </h1>
+  
+
+        
+        
+
+
+<a href="/2019/11/18/使用-CPU-Profiler-检查-CPU-Activity-和函数跟踪/" class="archive-article-date">
+  	<time datetime="2019-11-18T08:11:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-18</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="0x0001-使用-Call-Chart-标签检查跟踪"><a href="#0x0001-使用-Call-Chart-标签检查跟踪" class="headerlink" title="0x0001 使用 Call Chart 标签检查跟踪"></a>0x0001 使用 Call Chart 标签检查跟踪</h3><p>Call Chart 标签提供函数跟踪的图形表示形式。</p>
+<p>水平方法表示函数执行的时间段和时间，并 <strong>沿垂直轴显示其被调用者</strong>。
+图形不同颜色表示不同函数级别：</p>
+<ul>
+<li>橙色 – 对系统 API 的调用</li>
+<li>绿色 – 对应自有函数的调用</li>
+<li>蓝色 – 对第三方 API(包括 Java 的 API) 的调用</li>
+</ul>
+        
+          <a class="article-more-a" href="/2019/11/18/使用-CPU-Profiler-检查-CPU-Activity-和函数跟踪/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/11/18/使用-CPU-Profiler-检查-CPU-Activity-和函数跟踪/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-JobScheduler-和-WorkManager-的使用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -911,90 +986,6 @@
 
 
   
-    <article id="post-EventBus 粘性事件" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/04/EventBus 粘性事件/">EventBus 粘性事件</a>
-    </h1>
-  
-
-        
-        
-
-
-<a href="/2019/11/04/EventBus 粘性事件/" class="archive-article-date">
-  	<time datetime="2019-11-04T09:44:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="0x0001-普通事件和粘性事件"><a href="#0x0001-普通事件和粘性事件" class="headerlink" title="0x0001 普通事件和粘性事件"></a>0x0001 普通事件和粘性事件</h3><p>通过源码我们看一下两者的差别：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public void postSticky(Object event) &#123;</span><br><span class="line">    synchronized (stickyEvents) &#123;</span><br><span class="line">        stickyEvents.put(event.getClass(), event);</span><br><span class="line">    &#125;</span><br><span class="line">    post(event);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public void post(Object event) &#123;</span><br><span class="line">    ....</span><br><span class="line">    while (!eventQueue.isEmpty()) &#123;</span><br><span class="line">        // 每次发布一个事件，会将该事件从事件序列中移除，也就是说，事件发布后，不管是否有订阅者，</span><br><span class="line">        postSingleEvent(eventQueue.remove(0), postingState);</span><br><span class="line">            &#125;</span><br><span class="line">    &#125; </span><br><span class="line">    ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-        
-          <a class="article-more-a" href="/2019/11/04/EventBus 粘性事件/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">EventBus</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Sticky Event</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/11/04/EventBus 粘性事件/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1130,11 +1121,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1143,22 +1138,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">DI</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1171,6 +1150,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">工具</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1194,11 +1185,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">对象拷贝</a>
+                <a href="javascript:void(0)" class="js-tag color5">《深入理解 Java 虚拟机》读书笔记</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">《深入理解 Java 虚拟机》读书笔记</a>
+                <a href="javascript:void(0)" class="js-tag color5">对象拷贝</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1226,10 +1217,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
               </li>
              
@@ -1242,7 +1229,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Kotlin 泛型</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1262,19 +1261,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Kotlin 泛型</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Kotlin 协程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1286,15 +1273,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">VIM</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">adb</a>
+                <a href="javascript:void(0)" class="js-tag color4">Git</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Git</a>
+                <a href="javascript:void(0)" class="js-tag color4">adb</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1334,11 +1325,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
+                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
+                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1374,11 +1365,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1422,15 +1413,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
               </li>
              
               <li class="article-tag-list-item">
