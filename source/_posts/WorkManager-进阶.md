@@ -17,7 +17,8 @@ WorkManager 基本流程：
 
 <!-- more -->
 官方 DEMO：
-![](/source/images/2019_11_18_09.png)
+
+![基本使用](/public/images/2019_11_18_09.png)
 
 
 
@@ -33,7 +34,7 @@ WorkManager 数据库是后续一切的基础，WorkManager 的任何信息都�
 * 是否重试 5 次
 * and so on
 
-![](/source/images/2019_11_18_10.png)
+![1](/source/images/2019_11_18_10.png)
 
 * 如果 API >= 23
 
@@ -45,7 +46,7 @@ WorkManager 数据库是后续一切的基础，WorkManager 的任何信息都�
 
 **2. 如何运行 WorkRequest？**
 
-![](/source/images/2019_11_18_11.png)
+![2](/source/images/2019_11_18_11.png)
 
 
 假设在 API 23+ 的设置上，有一个约束条件为网络连接的 Work，当有网络后，JobScheduler 就会唤醒你的应用，进行相关的工作，WorkManager 会运行相关的 Work。
@@ -58,22 +59,21 @@ WorkManager 数据库是后续一切的基础，WorkManager 的任何信息都�
 
 WorkManager 不仅对应用内产生影响，也会对整个 OS 系统产生影响，从上文 WorkManager 的运行机制也可以看出， WorkManager 的信息会被存到数据库中，加入到相应的队列中，然后通过 OS 的其他组件去调用(在这里可以看出 WorkManager 需要应用外的组件进行配合执行)，即使此刻停用 WorkManager，那么之前已经存在的请求(未执行)也会被执行的，当然这是不符合开发者的要求的，所以如果在应用中弃用  WorkManager 的话，需要手动的取消所有的请求。
 
-
 ### 0x0003 what if i don't initialize WorkManager for an experimental population?
 
 #### 1. with auto initialization, it will throw an uninitialization execption.
 
-![](/source/images/2019_11_19_05.png)
+![3](/source/images/2019_11_19_05.png)
 
 抛出一个异常。
 
 #### 2. your old work will still run for on-demand initalization.
-![](/source/images/2019_11_19_04.png)
+![4](/source/images/2019_11_19_04.png)
 
 #### 3. what if i remove WorkManager for an experimental population.
 
 
-![](/source/images/2019_11_19_06.png)
+![4](/source/images/2019_11_19_06.png)
 
 your old work will get ingored,but still use system resources!
 
@@ -98,13 +98,11 @@ Job can be delayed in doze mode to preserve battery.
 
 Background jobs don't run in battery saver mode.
 
-pixel 电量低于 15% 就会默认这一模式。
-
+比如 pixel 设备电量低于 15% 就会默认这一模式。
 
 4. overall system or app workload
 
 OS 或者 App 工作负荷太大。
-
 
 * Android only run a certain number of active jobs at a time.
 JobScheduler 在同一时间下只允许一定数据的活跃工作
@@ -115,19 +113,13 @@ JobScheduler 在同一时间下只允许一定数据的活跃工作
 
 5. Failed or incomplete prerequistites(先决条件).
 
-
 * Are your prerequiste WorkRequests to finished.
 * Have they all Successed
   * A Failed prent job will fail all descendents.
   
 如果有的添加没有满足，导致母工作失败，将会导致一切子工作失败。
 
-
 Be carefull of this with unique work and Existing *WorkPolicy .APPEND，官方会马上提供解决此功能的 API
-
-
-
-
 
 6. Is  your app force-stopped?
 
@@ -138,10 +130,7 @@ Be carefull of this with unique work and Existing *WorkPolicy .APPEND，官方�
 
 
 ### 0x0004 why is my Work running  too ofen(为什么我的 Work 运行的如下次频繁)?
-
-
 我们常常在应用中看到这样的代码：
-
 ```
 class ThirdActivity : AppCompatActivity() {
 
@@ -153,9 +142,7 @@ class ThirdActivity : AppCompatActivity() {
     }
 }
 ```
-
 但是这是错误的，因为每次在 onCreate 的时候都会将 Work 添加到队列中，然后 PeriodicWorkRequestBuilder 会越积越多，正确的做法应该如下：
-
 
 ```
 class ThirdActivity : AppCompatActivity() {
@@ -171,23 +158,15 @@ class ThirdActivity : AppCompatActivity() {
     }
 }
 ```
-
-
 需要把单一的 WorkRequest 加入到队列中，而针对这条周期性 Work 可以指定当同名的 WorkRequest 已经存在时该发生什么事情，在上例中采取的措施为保留旧的 WorkRequest ,如果之前我们已经把它加入到队列，那么就不需要重复创建这个 Work，继续使用它就好，这才是正确的处理方式。
-
-
 ### 0x0005 WorkManager 初始化
-
-
 * 自动初始化
 * 按需初始化
-
-
 **1. 自动初始化**
 
 让 WorkManager 采用默认的配置自动完成初始化，其具体原理为存在一个 名为 WorkManagerInitializer 的 ContentProvider，它可以把 manifest 导入到应用中，ContentProvider 的工作原理是 ContentProvider 首先进行初始化，然后才轮到 Application 的 onCreate() 方法，这一点利用了 ContentProvider 的初始化时机，在 LeakCanary3.x 中也是使用了这一点完成的自动初始化。
 
-![](/source/images/2019_11_19_01.png)
+![45](/source/images/2019_11_19_01.png)
 
 基于此，在应用中调用 `WorkManager.getInstance(this)` 才会获取到一个非空对象。
 
@@ -195,22 +174,17 @@ class ThirdActivity : AppCompatActivity() {
 
 WorkManager 的自动初始化中，应用启动时除了完成自身的初始化，还要对 WorkManager 进行初始化，无疑这使应用初始化变得重起来，不是很好的操作，所以提供了 WorkManager 的按需初始化操作，这样我们可以在需要时初始化 WorkManager。
 
-延迟初始化 WorkManager、
-
+使用场景：延迟初始化 WorkManager。
 
 如何进行按需初始化?
  
-![](/source/images/2019_11_19_02.png)
-
+![64](/source/images/2019_11_19_02.png)
 
 1. 禁用自动初始化
 2. 初始化
 
 **3. 如何发现 WorkManager 所需的配置？**
-
-
-![](/source/images/2019_11_19_03.png)
-
+![2](/source/images/2019_11_19_03.png)
 
 自定义  Application 实现 Configuration.Provider:
 
@@ -221,25 +195,18 @@ class App:Application(), Configuration.Provider {
     }
 }
 ```
-
 按需配置 WorkManager 的利弊：
 
-
 利：
-
 1. 避免 Application 初始化过重，提供应用的性能
 2. 使用按需初始化而不是自动初始化，会避免在一些设备上的问题。
-
 
 弊：
 
 1. 未能正确初始化 WorkManager，导致一些问题。
 2. 重新启动应用，Work 重排会被延迟执行。
-
-
-
+3. 
 ### 0x0006 Test your Workers.
-
 
 在 2.1 版本中，增强了测试功能。
 
@@ -254,3 +221,5 @@ class App:Application(), Configuration.Provider {
 **知识来源：**
 
 [WorkManager 进阶课堂 ](https://www.bilibili.com/video/av74528360)
+
+[Test your works](https://developer.android.google.cn/topic/libraries/architecture/workmanager/how-to/testing?hl=zh)

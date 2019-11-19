@@ -199,7 +199,7 @@ WorkManager.getInstance(myContext).enqueue(uploadWorkRequest)
 ----
 [JobScheduler 官方 DEMO](https://github.com/googlearchive/android-JobScheduler)
 
-[WorkManager 官方 DEMO](https://github.com/android/background-tasks-samples)
+[WorkManager 官方 DEMO](https://github.com/leeGYPlus/background-tasks-samples)
 
 
 [JobScheduler 官方文档](https://developer.android.google.cn/reference/android/app/job/JobScheduler?hl=en)
