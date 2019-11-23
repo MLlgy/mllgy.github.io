@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="GY">
 <meta property="og:description" content="WorkManager 是 Jetpack 的一个可延迟的、基于条件约束的后台进程处理库。  0x0001 WorkManager 如何与 OS 进行交互WorkManager 基本流程： 具体细节可以查看 JobScheduler 和 WorkManager 的基本使用">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="/source/images/2019_11_18_09.png">
+<meta property="og:image" content="/public/images/2019_11_18_09.png">
 <meta property="og:image" content="/source/images/2019_11_18_10.png">
 <meta property="og:image" content="/source/images/2019_11_18_11.png">
 <meta property="og:image" content="/source/images/2019_11_19_05.png">
@@ -25,11 +25,11 @@
 <meta property="og:image" content="/source/images/2019_11_19_01.png">
 <meta property="og:image" content="/source/images/2019_11_19_02.png">
 <meta property="og:image" content="/source/images/2019_11_19_03.png">
-<meta property="og:updated_time" content="2019-11-19T09:26:27.966Z">
+<meta property="og:updated_time" content="2019-11-21T04:44:21.128Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WorkManager 进阶">
 <meta name="twitter:description" content="WorkManager 是 Jetpack 的一个可延迟的、基于条件约束的后台进程处理库。  0x0001 WorkManager 如何与 OS 进行交互WorkManager 基本流程： 具体细节可以查看 JobScheduler 和 WorkManager 的基本使用">
-<meta name="twitter:image" content="/source/images/2019_11_18_09.png">
+<meta name="twitter:image" content="/public/images/2019_11_18_09.png">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
   
@@ -204,7 +204,7 @@
 <p>具体细节可以查看 <a href="https://leegyplus.github.io/2019/11/14/JobScheduler-%E5%92%8C-WorkManager-%E7%9A%84%E4%BD%BF%E7%94%A8/" target="_blank" rel="noopener">JobScheduler 和 WorkManager 的基本使用</a></p>
 <a id="more"></a>
 <p>官方 DEMO：</p>
-<p><img src="/source/images/2019_11_18_09.png" alt="基本使用"></p>
+<p><img src="/public/images/2019_11_18_09.png" alt="基本使用"></p>
 <p><strong>1. 如何持久化请求？</strong></p>
 <ol>
 <li>保存在 WorkManager 数据库中</li>
@@ -231,7 +231,7 @@
 <p>假设在 API 23+ 的设置上，有一个约束条件为网络连接的 Work，当有网络后，JobScheduler 就会唤醒你的应用，进行相关的工作，WorkManager 会运行相关的 Work。</p>
 <p>如上图所示，JobScheduler、GcmNetWorkManager、AlarmManger 都属于应用外的组件，而 GreedyScheduler 存在你的应用进程中，它们的作用是一样的，会追踪部分约束条件，在符合条件后要求 WorkManager 运行相关的 Work。由于 GreedyScheduler 存在于引用进程中，所以他无法唤醒你的应用，这个组件不依赖于 OS 的其他部分，它会适时并且更快的运行定义的 Work。</p>
 <h3 id="0x0002-WorkManager-–-Your-old-work-will-still-work"><a href="#0x0002-WorkManager-–-Your-old-work-will-still-work" class="headerlink" title="0x0002 WorkManager – Your old work will still work!"></a>0x0002 WorkManager – Your old work will still work!</h3><p>WorkManager 不仅对应用内产生影响，也会对整个 OS 系统产生影响，从上文 WorkManager 的运行机制也可以看出， WorkManager 的信息会被存到数据库中，加入到相应的队列中，然后通过 OS 的其他组件去调用(在这里可以看出 WorkManager 需要应用外的组件进行配合执行)，即使此刻停用 WorkManager，那么之前已经存在的请求(未执行)也会被执行的，当然这是不符合开发者的要求的，所以如果在应用中弃用  WorkManager 的话，需要手动的取消所有的请求。</p>
-<h3 id="0x0003-what-if-i-don’t-initialize-WorkManager-for-an-experimental-population"><a href="#0x0003-what-if-i-don’t-initialize-WorkManager-for-an-experimental-population" class="headerlink" title="0x0003 what if i don’t initialize WorkManager for an experimental population?"></a>0x0003 what if i don’t initialize WorkManager for an experimental population?</h3><h4 id="1-with-auto-initialization-it-will-throw-an-uninitialization-execption"><a href="#1-with-auto-initialization-it-will-throw-an-uninitialization-execption" class="headerlink" title="1. with auto initialization, it will throw an uninitialization execption."></a>1. with auto initialization, it will throw an uninitialization execption.</h4><p><img src="/source/images/2019_11_19_05.png" alt="3"></p>
+<h3 id="0x0003-what-if-i-don’t-initialize-WorkManager-for-an-experimental-population"><a href="#0x0003-what-if-i-don’t-initialize-WorkManager-for-an-experimental-population" class="headerlink" title="0x0003 what if i don’t initialize WorkManager for an experimental population?"></a>0x0003 what if i don’t initialize WorkManager for an experimental population?</h3><h4 id="1-with-auto-initialization-it-will-throw-an-uninitialization-execption"><a href="#1-with-auto-initialization-it-will-throw-an-uninitialization-execption" class="headerlink" title="1. with auto initialization, it will throw an uninitialization execption."></a>1. with auto initialization, it will throw an uninitialization execption.</h4><p><img src="/source/images/2019_11_19_05.png" alt="334"></p>
 <p>抛出一个异常。</p>
 <h4 id="2-your-old-work-will-still-run-for-on-demand-initalization"><a href="#2-your-old-work-will-still-run-for-on-demand-initalization" class="headerlink" title="2. your old work will still run for on-demand initalization."></a>2. your old work will still run for on-demand initalization.</h4><p><img src="/source/images/2019_11_19_04.png" alt="4"></p>
 <h4 id="3-what-if-i-remove-WorkManager-for-an-experimental-population"><a href="#3-what-if-i-remove-WorkManager-for-an-experimental-population" class="headerlink" title="3. what if i remove WorkManager for an experimental population."></a>3. what if i remove WorkManager for an experimental population.</h4><p><img src="/source/images/2019_11_19_06.png" alt="4"></p>
@@ -329,6 +329,7 @@
 <p><strong>知识来源：</strong></p>
 <p><a href="https://www.bilibili.com/video/av74528360" target="_blank" rel="noopener">WorkManager 进阶课堂 </a></p>
 <p><a href="https://developer.android.google.cn/topic/libraries/architecture/workmanager/how-to/testing?hl=zh" target="_blank" rel="noopener">Test your works</a></p>
+<p><a href="https://github.com/leeGYPlus/background-tasks-samples" target="_blank" rel="noopener">WorkManager 官方 DEMO</a></p>
 
       
 
@@ -446,6 +447,15 @@
 
   
 <nav id="article-nav">
+  
+    <a href="/2019/11/20/Linux-下的几个函数/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Linux 下的几个函数的基本了解
+        
+      </div>
+    </a>
   
   
     <a href="/2019/11/18/使用-CPU-Profiler-检查-CPU-Activity-和函数跟踪/" id="article-nav-older" class="article-nav-link-wrap">
@@ -609,11 +619,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
+                <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
+                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -629,19 +639,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -677,15 +687,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Java Collection</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">《深入理解 Java 虚拟机》读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -693,11 +695,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+                <a href="javascript:void(0)" class="js-tag color1">Java Collection</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">List</a>
+                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -705,11 +711,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Jetpack</a>
+                <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
+                <a href="javascript:void(0)" class="js-tag color3">Jetpack</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -717,11 +723,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
+                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">WorkManager</a>
+                <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -729,7 +735,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">WorkManager</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Kotlin 泛型</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -738,18 +760,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -769,7 +779,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">VIM</a>
+                <a href="javascript:void(0)" class="js-tag color4">adb</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -777,11 +787,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">adb</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+                <a href="javascript:void(0)" class="js-tag color4">VIM</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -793,15 +799,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Future</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">FutureTask</a>
+                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -817,11 +815,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
+                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
+                <a href="javascript:void(0)" class="js-tag color2">Future</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">FutureTask</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -829,11 +835,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">极客时间笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">浮点型精度问题</a>
+                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -842,6 +844,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">极客时间笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">浮点型精度问题</a>
               </li>
              
               <li class="article-tag-list-item">
