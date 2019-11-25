@@ -8,17 +8,18 @@
   <link rel="dns-prefetch" href>
   <title>Linux 下的几个函数的基本了解 | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="mmap 函数一种内存映射文件的方法。 函数原型： 12void* mmap(void* start,size_t length,int prot,int flags,int fd,off_t offset);int munmap(void* start,size_t length);  具体描述：  mmap 将一个文件或者其他对象映射到内存。  mmap 在用户空间映射调用系统中作用很大。">
+  <meta name="description" content="在对 Android 系统源码的学习过程中，总是会不可避免的查看 Linux 层的实现，那么此时总会碰到关键性的函数操作，而理解这些函数对要分析的功能模块是不可缺少的。本文为 Android 系统中常见的 Linux 函数，主要描述其作用，帮助理解。 mmap 函数一种内存映射文件的方法。">
+<meta name="keywords" content="C">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux 下的几个函数的基本了解">
 <meta property="og:url" content="/2019/11/20/Linux-下的几个函数/index.html">
 <meta property="og:site_name" content="GY">
-<meta property="og:description" content="mmap 函数一种内存映射文件的方法。 函数原型： 12void* mmap(void* start,size_t length,int prot,int flags,int fd,off_t offset);int munmap(void* start,size_t length);  具体描述：  mmap 将一个文件或者其他对象映射到内存。  mmap 在用户空间映射调用系统中作用很大。">
+<meta property="og:description" content="在对 Android 系统源码的学习过程中，总是会不可避免的查看 Linux 层的实现，那么此时总会碰到关键性的函数操作，而理解这些函数对要分析的功能模块是不可缺少的。本文为 Android 系统中常见的 Linux 函数，主要描述其作用，帮助理解。 mmap 函数一种内存映射文件的方法。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-20T07:06:56.010Z">
+<meta property="og:updated_time" content="2019-11-25T10:41:57.423Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux 下的几个函数的基本了解">
-<meta name="twitter:description" content="mmap 函数一种内存映射文件的方法。 函数原型： 12void* mmap(void* start,size_t length,int prot,int flags,int fd,off_t offset);int munmap(void* start,size_t length);  具体描述：  mmap 将一个文件或者其他对象映射到内存。  mmap 在用户空间映射调用系统中作用很大。">
+<meta name="twitter:description" content="在对 Android 系统源码的学习过程中，总是会不可避免的查看 Linux 层的实现，那么此时总会碰到关键性的函数操作，而理解这些函数对要分析的功能模块是不可缺少的。本文为 Android 系统中常见的 Linux 函数，主要描述其作用，帮助理解。 mmap 函数一种内存映射文件的方法。">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
   
@@ -186,7 +187,9 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="mmap-函数"><a href="#mmap-函数" class="headerlink" title="mmap 函数"></a>mmap 函数</h3><p><strong>一种内存映射文件的方法</strong>。</p>
+        <p>在对 Android 系统源码的学习过程中，总是会不可避免的查看 Linux 层的实现，那么此时总会碰到关键性的函数操作，而理解这些函数对要分析的功能模块是不可缺少的。本文为 Android 系统中常见的 Linux 函数，主要描述其作用，帮助理解。</p>
+<h3 id="mmap-函数"><a href="#mmap-函数" class="headerlink" title="mmap 函数"></a>mmap 函数</h3><p><strong>一种内存映射文件的方法</strong>。</p>
+<a id="more"></a>
 <p>函数原型：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">void* mmap(void* start,size_t length,int prot,int flags,int fd,off_t offset);</span><br><span class="line">int munmap(void* start,size_t length);</span><br></pre></td></tr></table></figure>
 
@@ -249,6 +252,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -484,31 +498,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Java 多线程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Jetpack</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Kotlin 协程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">动画</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -517,6 +507,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">DI</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -540,6 +534,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
@@ -560,15 +558,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Java 多线程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Java Basic</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">对象拷贝</a>
+                <a href="javascript:void(0)" class="js-tag color1">Inflection</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Inflection</a>
+                <a href="javascript:void(0)" class="js-tag color5">对象拷贝</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -584,7 +586,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+                <a href="javascript:void(0)" class="js-tag color3">泛型</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -592,11 +594,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">WorkManager</a>
+                <a href="javascript:void(0)" class="js-tag color3">Jetpack</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -612,6 +618,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">WorkManager</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">JobScheduler</a>
               </li>
              
@@ -620,11 +630,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
+                <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
+                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -636,7 +646,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
+                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Kotlin 协程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">C</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -645,10 +667,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Transformer</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -664,6 +682,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">View</a>
               </li>
              
@@ -672,7 +694,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -688,10 +710,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Java 异常</a>
               </li>
              
@@ -704,11 +722,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -728,6 +742,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">JNI</a>
               </li>
              
@@ -740,19 +762,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">OOP</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">AIDL</a>
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+                <a href="javascript:void(0)" class="js-tag color3">动画</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">AIDL</a>
               </li>
              
               <li class="article-tag-list-item">
