@@ -6,12 +6,56 @@ tags:
 
 
 
+
+
 打包流程：
 
 ![](/source/images/2019_11_11_03.png)
 
 
+从图上可知，引入的 Jar 包经过混淆，移除无用的代码，也会被打包到 dex 文件中。
 
+### 包体积与应用性能
+
+
+* 安装时间
+
+文件拷贝、Library 解压、编译 ODEX、签名校验，特别对于 Android 5.0 和 6.0 系统来说（Android 7.0 之后有了混合编译），微信 13 个 Dex 光是编译 ODEX 的时间可能就要 5 分钟。
+
+* 运行内存
+
+Resource 资源、Library 以及 Dex 类加载这些都会占用不少的内存。
+
+* ROM 空间
+
+100MB 的安装包，启动解压之后很有可能就超过 200MB 了。对低端机用户来说，也会有很大的压力。如果闪存空间不足，非常容易出现写入放大的情况。
+
+
+### Dex 分包导致包体积增大
+
+使用 AS 查看 APK 的 dex 文件时，可以看到如下所示的信息：
+
+![](/source/images/2019_11_21_02.png)
+
+
+“define classes and methods”是指真正在这个 Dex 中定义的类以及它们的方法。而“reference methods”指的是 define methods 以及 define methods 引用到的方法。
+
+举一个浅显的例子：如果将 Class A 与 Class B 分别编译到不同的 Dex 中，由于 method a 调用了 method b，所以 classes2.dex 文件中也需要加上 method b 的id，如下图所示：
+
+![](/source/images/2019_11_21_03.png)
+
+如图所示，由于跨 Dex 调用的存在，导致有些 Dex 文件中存在一些冗余信息，比如图中 classes2.dex  中的 method id。此现象的存在对 Dex 的大小的影响：
+
+* method id 爆表
+
+我们都知道每个 Dex 的 method id 需要小于 65536，**因为 method id 的大量冗余导致每个 Dex 真正可以放的 Class 变少**，这是造成最终编译的 Dex 数量增多。
+ 
+* 冗余信息
+
+因为我们 **需要记录跨 Dex 调用的方法的详细信息**，所以在 classes2.dex 我们还需要记录 Class B 以及 method b 的定义，造成 string_ids、type_ids、proto_ids 这几部分信息的冗余。
+
+
+很明显提升 Dex 中 define methods 中的比重，会减少 dex 的体积，那么 APK 的体积也会减少。那么如何提高 Dex 中 define methods 中的比重呢？**将有调用关系的类和方法分配到同一个 Dex，即减少跨 Dex 调用的情况**。但是针对此的优化只能达到局部最优解，因为需要在编译速度和效果之间找一个平衡点。
 
 ### 压缩代码
 
@@ -187,18 +231,33 @@ if (mFoundWebContent) {
 
 
 
-### 移除未使用的语言
+### 移除未使用的语言以及 so 库
 
-如果您希望只保留应用正式支持的语言，可以使用 resConfig 属性指定这些语言。系统会移除未指定语言的所有资源。
+如果您希望只保留应用正式支持的语言，可以使用 `resConfig` 属性指定这些语言。系统会移除未指定语言的所有资源。
 
 ```
 android {
     defaultConfig {
-        ...
-        resConfigs "en", "fr"
+        resConfigs "en", "zh"
+        // 只保留 armeabi 下的 so 库
+        ndk{
+            abiFilters 'armeabi'
+        }
     }
 }
 ```
+关于 Android CPU 架构的基础知识可以查看 [Android CPU 架构](https://leegyplus.github.io/2019/11/12/Android-CPU-%E6%9E%B6%E6%9E%84/)，正如该文所说， armeabi 指令集能够兼容其他大部分 CPU 架构，但是也是有一定代价的，比如文中所说的会生成相应的模拟层，相应的会对性能产生一定的影响。
+
+有些大佬是强烈反对仅仅为了减少 APK 体积而仅仅保留 armeabi 的 so 文件，比如刘皇叔在 [关于Android的.so文件你所需要知道的](https://www.jianshu.com/p/cb05698a1968) 中的观点，但是大部份针对 APK 体积的优化还是都会采取此措施，然后针对性测试，毕竟其优化效果是十分显著的。如果引入的库(手动添加的 so 库 + 三方依赖中的 so 库)较多的话，基本上可以得到 M 级别的优化空间。
+
+
+项目中 so 库的来源：
+
+* 在项目中手动添加的 so 库
+* 三方依赖库中依赖的 so 库
+
+在上面的 apk 打包流程图中也可以看到，此图真实细致入微。 
+
 
 ----
 
@@ -255,7 +314,7 @@ https://juejin.im/post/5d4407baf265da03f04caf59
 
 **对整个安装包做 7zip 极限压缩**
 
-
+---
 原始状态：无混淆
 
 |状态|包大小|lib|res|dex|classes.dex|classes2.dex|assets|resources.arsc|META_INFO|publicxx.gz|AndroidManifest.xml|总结
@@ -275,7 +334,7 @@ https://juejin.im/post/5d4407baf265da03f04caf59
 
 * 图片压缩
 
-对于 APK 来说，大于 5K 的图片就算是大的图片了，所以 95% 的图片应该小于 5K，在 APK 打包过程中，aapt 工具会采用 [crunch](https://github.com/Unity-Technologies/crunch/tree/unity) 对图片做预处理，但是其压缩率并不是最好的，采用 [pnggauntlet](https://pnggauntlet.com/#more) 对非 .9 图片进行压缩，可以得到更好的压缩率。
+对于 APK 来说，大于 5K 的图片就算是大的图片了，所以 95% 的图片应该小于 5K，在 APK 打包过程中，aapt 工具会采用 [crunch](https://github.com/Unity-Technologies/crunch/tree/unity) 对图片做预处理，但是其压缩率并不是最好的，采用 [pnggauntlet](https://pnggauntlet.com/#more) 对非 .9 图片进行压缩，可以得到更好的压缩率，而使用该工具对 .9 图进行压缩的话会有黑边，视觉效果不好。
 
 下面分别采用两种方式对同一个图片进行压缩：
 
@@ -335,7 +394,8 @@ buildTypes {
 | ProGuard 开启资源混淆进行压缩|18.3M(-0.1M)|7.1M|5.1M|3.91M(-0.69M)|3.6M|327.3K|1.3M|667.9K|94.2K|33.2K|5.9K|
 |取消默认的 crunch 预处理过程|20.1M|7.1M|6.8M|3.9M|3.6M|327.3K|1.3M|667.9K|94.2K|33.2K|5.9K|由于取消 crunch 预处理，所以 APK 包增大
 | 使用 pnggaunlet 工具对图片资源进行处理|15.4M|7.1MB|2.1M|3.9M|3.6M|327.3K|1.3M|667.9K|94.2K|33.2K|5.9K|减小了图片的大小，res 文件夹大小当然会减小
-开启 crunch 预处理，apk 大小几乎无变化|不变|不变|不变|不变|不变|不变|不变|不变|不变|不变|不变|由于使用 pnggaunlet 获得更大的压缩率，此时开启 crunch 几乎无压缩效果
+开启 crunch 预处理，apk 大小几乎无变化|15.4M|7.1MB|2.1M|3.9M|3.6M|327.3K|1.3M|667.9K|94.2K|33.2K|5.9K|由于使用 pnggaunlet 获得更大的压缩率，此时开启 crunch 几乎无压缩效果
+|仅保留 armeabi 中的 so 库|10.4M|7.1MB|2.1M|3.9M|3.6M|327.3K|1.3M|667.9K|93.6K|33.2K|5.9K|该优化措施后，进行针对性测试，在自己的测试机上 App 正常运行
 
 * 图片 .9 化
 
@@ -352,3 +412,24 @@ buildTypes {
 
 比如某个布局的 visiable 为 GONE状态，并且项目中没有显示该布局的需求，那么就可以就该布局删除，并且将只在该布局引用的图片资源删除，还有其他类似的情况。
 
+
+
+----
+
+
+
+
+
+----
+
+
+[Shrinking Your Android App Size](https://devblogs.microsoft.com/xamarin/shrinking-android-app-size/)
+
+
+[Shrinking Your App with R8](https://v.youku.com/v_show/id_XNDQxMzE4MTgyOA==.html?spm=a2hzp.8253869.0.0&utm_source=androidweekly.io&utm_medium=website)
+
+
+[APK瘦身记，如何实现高达53%的压缩效果](https://www.cnblogs.com/alisecurity/p/5341218.html)
+
+
+[Android拆分与加载Dex的多种方案对比](https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207151651&idx=1&sn=9eab282711f4eb2b4daf2fbae5a5ca9a&3rd=MzA3MDU4NTYzMw==&scene=6#rd)

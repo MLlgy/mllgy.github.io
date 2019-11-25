@@ -1,8 +1,7 @@
 ---
-title: Rxjava 源码学习(三)
+title: Rxjava 源码学习(五)
 tags:
 ---
-
 
 
 Do 操作符：
@@ -19,11 +18,6 @@ Single - SingleSource - SingleObserver
 Completable - CompletableSource - CompletableObserver
 Maybe - MaybeSource - MaybeObserver
 
-
-
-定义操作符
-
-[Rxjava 操作符分类 中文翻译文档](https://mcxiaoke.gitbooks.io/rxdocs/content/Operators.html)
 
 
 ---

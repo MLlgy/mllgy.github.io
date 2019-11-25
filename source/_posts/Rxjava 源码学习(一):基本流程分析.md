@@ -137,6 +137,8 @@ source.subscribe(parent);
 
 以上代码使 Obervable、Observer 与时间发射器分别产生关联，是事件流得以进行下去的关键。其实 `observer.onSubscribe(parent)` 即为在使用 Rxjava 过程的 Observer 中的 `onSubscribe(Disposable d)`，而 `source.subscribe(parent)` 即为 即为在使用 Rxjava 过程的 Observable 中的 `public void subscribe(ObservableEmitter<String> emitter)`，以上全是在方法 subscribeActual 中调用的，具体 subscribeActual 什么时候调用，查看下面的分析。
 
+综上分析，其实这一步仅仅是创建了 一个 Observerable 对象，其他的事情，比如产生订阅关系、创建事件发生器等都没有做，都会在产生订阅关系时才会进行，通观全局在调用 subscribe 方法前，所有的操作符都只是创建了该操作符下的 Observable 对象，其他什么事都没做，明白了这点就理解了 Rxjava 流程中一条主要的流程线。
+
 ### 3. 产生订阅关系
 
 
@@ -180,6 +182,7 @@ Observable.create(new ObservableOnSubscribe<String>() {
 });
 ```
 
+产生订阅关系是 Rxjava 中的另外一条流程线，也是十分重要的，由于在第一步中只是创建了操作符下的 Observable 对象，执行流程方向为：上游到下游，而此时创建订阅关系是由最后一个 Observable 对象开始的，要想所有的 Observable 对象产生订阅链，那么订阅流程方向为：下游到上游。
 ### 4. 发布事件
 
 既然 Observer、Observable 分别和事件发生器(Emitter) 产生关联，并且通过回调来到事件发射现场，那么具体查看是如何发生事件，以及观察者如何对每个事件是如何调用的。
@@ -305,6 +308,8 @@ public boolean tryOnError(Throwable t) {
     return false;
 }
 ```
+事件发布就是 Rxjava 的第三条流程线了，根据产生的订阅链自上游到下游发布事件。
+
 至此，Rxjava 的基本流程分析结束。
 
 
@@ -463,11 +468,13 @@ public final void subscribe(Observer<? super T> observer) {
 }
 ```
 
-
 多个 Observable 和 Observer 通过两个方法的往复调用，最终构建完整的事件流。
+
+**下游的 Observable 对象持有上游 Observable 对象的引用，上游 Observer 对象持有下游 Observer 对象的引用，那么这就产生了 Obsever 是自下而上的说法，并且 Observerable 和 Observer 订阅关系的建立也是自下而上的，当然事件发布为自上而下的。**
 
 
 如果把第一个构建的 Observable 标记为 A，把自定义的 Observer 标记为 Z，那么各种操作符会构建不同的 Observer 标记为 B、C、D ....,通过 subscribeActual、 subscribe 方法使 A、B、C、D ... 、Z 形成链式关系，最终由 Observable 对象 A 开启事件分发，将事件通过操作符定义的 Observer 对象 B、C、D ... 进行各自处理，最终传递到 Observer 对象 Z 中，这个事件流得以完成，其实这就是平时所说的 Rxjava 中 **Observer 由下向上传递**，其实这也是 observerOn 只能只能指定下游 Observer 的线程的原因。
+
 
 
 

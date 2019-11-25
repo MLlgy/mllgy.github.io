@@ -63,7 +63,7 @@ WorkManager 不仅对应用内产生影响，也会对整个 OS 系统产生影�
 
 #### 1. with auto initialization, it will throw an uninitialization execption.
 
-![3](/source/images/2019_11_19_05.png)
+![334](/source/images/2019_11_19_05.png)
 
 抛出一个异常。
 
@@ -223,3 +223,5 @@ class App:Application(), Configuration.Provider {
 [WorkManager 进阶课堂 ](https://www.bilibili.com/video/av74528360)
 
 [Test your works](https://developer.android.google.cn/topic/libraries/architecture/workmanager/how-to/testing?hl=zh)
+
+[WorkManager 官方 DEMO](https://github.com/leeGYPlus/background-tasks-samples)

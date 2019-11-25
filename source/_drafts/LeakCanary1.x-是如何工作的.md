@@ -179,6 +179,8 @@ private void ensureGoneAsync(final long watchStartNanoTime, final KeyedWeakRefer
 
 在上面代码中可以看到该过程在触发 GC 前后分别执`removeWeaklyReachableReferences()`， 结合 ReferenceQueue(引用队列),确保回收应用内存中监测的对象中可以被正常回收的对象，最终根据 retainedKeys 中的元素是判定被监测的对象是否发生内存泄漏。
 
+> 在此处会出现一个我们常见的面试题：为什么 LeakCanary 要进行两次删除无用引用？答案：第一次的原因就是回收程序中存在的无用引用，而第二次是因为 LeakCanary 进行了一次 GC 操作，那么此时应用中可能会出现新的无用引用，所以要进行第二次移除无用引用的操作。
+
 ```
 private boolean gone(KeyedWeakReference reference) {
     return !retainedKeys.contains(reference.key);
@@ -356,13 +358,6 @@ AbstractAnalysisResultService.sendResultToListener(this, listenerClassName, heap
 
 这一步就是读取应用的内存泄漏分析结果的文件，也就是我们上面保存的
 xxx.hprof.result 文件，从而拿到泄漏信息，至此我们就获取到我们想要显示的数据，将数据保存到  List<AnalyzedHeap> leaks; 中，至于怎么显示，希望自己去一下源码。
-
-
-
-
-
-
-
 
 
 ----

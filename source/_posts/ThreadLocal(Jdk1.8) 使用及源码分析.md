@@ -12,10 +12,12 @@ tags: [Java Basic,Java 多线程]
 
 ### 0x0002 ThreadLocal 中相关类简介
 
-#### 1. ThreadLocalMap
+#### 1.ThreadLocal#ThreadLocalMap
 
 ThreadLocalMap 是 ThreadLocal 中一个自定义的哈希映射，仅适用于维护线程本地值。不会在 ThreadLocal 类之外导出任何操作。该类是包私有的，允许在 Thread 类中声明字段。为了帮助处理非常大且长期使用的用法，哈希表条目使用WeakReferences 作为键。但是，由于未使用引用队列，因此只有在表开始空间不足时才能保证删除过时条目。
 <!-- more -->
+
+虽然从 ThreadLocalMap 类名来看它是一个 Map 类型的数据，但是它并不是一个 Map，它内部维护的是一个初始长度为 16 的数组，而该数组的元素 Entry 更像是一个维护 key-value 的实体类，可以理解为一个 Map。
 
 
 #### 2. ThreadLocalMap 中的 Entry
@@ -82,7 +84,7 @@ ThreadLocal#set
         return t.threadLocals;
     }
 ```
-ThreadLocal#set
+ThreadLocalMap#set
 ```
 private void set(ThreadLocal<?> key, Object value) {
     // We don't use a fast path as with get() because it is at
@@ -113,6 +115,22 @@ private void set(ThreadLocal<?> key, Object value) {
         rehash();
 }
 ```
+将 ThreadLocal 对象 key 经过一系列的算法，获得该对象的对应的 value 在数组中的索引值，然后对数组中该索引值下元素进行操作。
+
+
+数组的操作：
+
+* 更新：如果指定索引的位置存在元素，那么就对该位置元素进行更新。
+* 添加：如果指定索引的位置不存在元素，那么就将 value 添加到该位置。 
+
+**总结一下：**
+
+现在我们可以看到的关系是：一个 Thread 对应一个 ThreadLocalMap， 在 ThreadLocalMap 内部维护 Entry 数组，这个数组的索引由 ThreadLocal 对象经过一系列计算得到：
+
+```
+int i = key.threadLocalHashCode & (len-1);
+```
+在通过 ThreadLocal 对象 set 值时，其实是通过一系列的算法，用来初始化、添加或者更新数组中指定索引的元素。
 
 
 ### 0x0005 ThreadLocal#get 方法
@@ -196,23 +214,23 @@ private Entry getEntryAfterMiss(ThreadLocal<?> key, int i,  Entrye) {
 
 通过 Entry 对象就可以获得具体的变量值。
 
-### 0x0006 多线程与多 同一个 ThreadLocal 对象
+### 0x0006 多线程与同一个 ThreadLocal 对象
 
 对 ThreadLocal 的原理有一定的理解，那么以下两个场景理解就十分容易了。
 
 
 * 情景一：同一个 ThreadLocal 对象，维护不同线程的变量
 
-明白了 ThreadLocal 原理，这个问题就不难理解了，因为每一个线程都维护者自己的 ThreadLocalMap 对象，不同所存储的变量在各自 ThreadLocalMap 对象中，所以即使同一个 ThreadLocal 对象，也是可以实现在各自线程获取属于各自存储的变量。
+明白了 ThreadLocal 原理，这个问题就不难理解了，因为每一个线程都维护者自己的 ThreadLocalMap 对象，不同所存储的变量在各自 ThreadLocalMap 对象中，所以即使同一个 ThreadLocal 对象，在不同线程中会多次存储，所以可以实现在各自线程获取属于各自存储的变量。
 
 
-由于存储元素时，ThreadLocalMap 是以 ThreadLocal 对象的哈希值(一系列操作的 hash)为key，所以在同一个线程中对同一个 ThreadLocal 对象进行多次 set 的调用，那么会对值进行覆盖。
+在存储元素时，ThreadLocalMap 内部维护一个数组，以 ThreadLocal 对象的哈希值(一系列操作的 hash)经过一系列算法后得出的 index 索引，将 value 存储在数组中的索引处，所以在同一个线程中对同一个 ThreadLocal 对象进行多次 set 的调用，那么会对值进行覆盖。
 
 
 * 情景二：同一线程下，使用多个 ThreadLocal 对象进行变量存储
 
 
-由上面的分析值，在同一个线程下只维护 ThreadLocalMap 对象，而存储是以 ThreadLocal 对象的哈希值为 key 进行存储的，所以多个 ThreadLocal 对象获取的变量一定是自己存储的。
+同样根据对象计算的索引值是唯一的，所以多个 ThreadLocal 对象获取的变量一定是自己存储的。
 
 ### 0x0007 使用场景
 

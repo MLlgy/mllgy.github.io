@@ -1,9 +1,8 @@
 ---
 title: IntentFilter匹配规则
 date: 2019-04-02 10:28:45
-tags:
+tags: [Android]
 ---
-
 
 IntentFilter 中的过滤信息包括 action、category、data，为了匹配过滤列表需要同时匹配 action、category、data ，否则匹配失败。
 
@@ -11,6 +10,7 @@ IntentFilter 中的过滤信息包括 action、category、data，为了匹配过
 
 action 是一个字符串，系统定义了一些 action，用户自己也可以定义 action。
 
+<!-- more -->
 action 的匹配规则是：**Intent 中的 action 必须能够和过滤规则中的 action 匹配**，匹配是指两个 action 的字符串完全相同。
 
 一个过滤规则的中可以有多个 action，**只要 Intent 中的任何一个 action 和其中的一个 action 匹配，则可匹配成功**。
