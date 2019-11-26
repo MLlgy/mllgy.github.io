@@ -1,6 +1,6 @@
 ---
 title: Shell 基础学习(一）
-tags: [Shell]
+tags: [Shell,Linux]
 date: 2019-11-04 18:09:45
 ---
 

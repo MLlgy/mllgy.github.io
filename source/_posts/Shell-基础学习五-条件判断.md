@@ -1,8 +1,8 @@
 ---
 title: Shell 基础学习五--条件判断
-tags:
+tags: [Shell,Linux]
+date: 2019-05-25 20:58:50
 ---
-
 
 ### 1. 两种判断格式
 
@@ -13,6 +13,8 @@ tags:
 
 * 方式二
 > [ -e /root/install.log ]
+
+<!-- more -->
 
 在 Shell 中多采用这种方式进行判断。
 
