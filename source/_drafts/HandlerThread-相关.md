@@ -134,7 +134,6 @@ public class HandlerThread extends Thread {
     外部需要通过 Handler 的消息方式来通知 HandlerThread 执行一个具体的任务。
 
 ```
-```
 HandlerThread handlerThread = new HandlerThread("HandlerThread");
 handlerThread.start();
 Handler mHandler = new Handler(handlerThread.getLooper()){
@@ -146,12 +145,97 @@ Handler mHandler = new Handler(handlerThread.getLooper()){
 };
 mHandler.sendEmptyMessage(1);
 ```
+
+同时自己在 Thread 中使用 Handler：
+
 ```
+Handler mHandler;
+new Thread(new Runnable() {
+    @Override
+    public void run() {
+        Looper.prepare();//Looper初始化
+        //Handler初始化 需要注意, Handler初始化传入Looper对象是子线程中缓存的Looper对象
+        mHandler = new Handler(Looper.myLooper());
+        Looper.loop();//死循环
+    }
+}).start();
+```
+当然这种写法不如直接使用 HandlerThread 方便、安全。
 
 ### 使用 HandlerThread 实现 IntentService 相关功能
 
+IntentService 是一个在后台任务执行完毕后自动停止的 Service，由于 IntentService 的优先级比较高，所以可以使用它进行高优先级的后台任务。
+
+```
+public abstract class IntentService extends Service {
+    private volatile Looper mServiceLooper;
+    private volatile ServiceHandler mServiceHandler;
+    private String mName;
+    private boolean mRedelivery;
+
+    private final class ServiceHandler extends Handler {
+        public ServiceHandler(Looper looper) {
+            super(looper);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            onHandleIntent((Intent)msg.obj);
+            stopSelf(msg.arg1);
+        }
+    }
+
+    public IntentService(String name) {
+        super();
+        mName = name;
+    }
+
+    public void setIntentRedelivery(boolean enabled) {
+        mRedelivery = enabled;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        HandlerThread thread = new HandlerThread("IntentService[" + mName + "]");
+        thread.start();
+        mServiceLooper = thread.getLooper();
+        mServiceHandler = new ServiceHandler(mServiceLooper);
+    }
+
+    @Override
+    public void onStart(@Nullable Intent intent, int startId) {
+        Message msg = mServiceHandler.obtainMessage();
+        msg.arg1 = startId;
+        msg.obj = intent;
+        mServiceHandler.sendMessage(msg);
+    }
+
+    
+    @Override
+    public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
+        onStart(intent, startId);
+        return mRedelivery ? START_REDELIVER_INTENT : START_NOT_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        mServiceLooper.quit();
+    }
 
 
+    @Override
+    @Nullable
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @WorkerThread
+    protected abstract void onHandleIntent(@Nullable Intent intent);
+}
+```
+
+可以看到 IntentService 内部封装了 HandlerThread 和 Handler，在 onStartCommand 会调用 onStart，在 onStart 中通过 Handler 对象发送信息，最终
 
 
 ----

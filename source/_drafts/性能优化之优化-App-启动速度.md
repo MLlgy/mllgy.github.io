@@ -262,3 +262,5 @@ https://www.jianshu.com/p/4f10c9a10ac9
 
 
 [冷启动优化--鸿阳公众号 7.11 ](https://mp.weixin.qq.com/s?__biz=MzAxMTI4MTkwNQ==&mid=2650828408&idx=1&sn=72bd7d26de2f6fb579498089ac1d0944&chksm=80b7bae6b7c033f08a16459e20142e9d85a88bb42a8ae9a90c6c2bdc1f7744aa995e3c012cb0&scene=21#wechat_redirect)
+
+[IdleHandler，页面启动优化神器](https://juejin.im/post/5bea9a57e51d4509192b3d96)
