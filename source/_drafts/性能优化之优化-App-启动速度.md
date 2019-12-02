@@ -266,4 +266,4 @@ https://www.jianshu.com/p/4f10c9a10ac9
 [IdleHandler，页面启动优化神器](https://juejin.im/post/5bea9a57e51d4509192b3d96)
 
 
-[面试官：今日头条启动很快，你觉得可能是做了哪些优化？](https://juejin.im/post/5d95f4a4f265da5b8f10714b#heading-4)
+[面试官：今日头条启动很快，你觉得可能是做了哪些优化？](https://juejin.im/post/5d95f4a4f265da5b8f10714b#heading-4s)
