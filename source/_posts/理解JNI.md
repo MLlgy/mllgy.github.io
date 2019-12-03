@@ -1,5 +1,5 @@
 ---
-title: 理解JNI
+title: 理解 JNI
 date: 2019-04-09 16:28:01
 tags: [JNI,深入理解 Android 读书笔记]
 ---

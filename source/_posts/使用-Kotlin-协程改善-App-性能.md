@@ -1,7 +1,6 @@
 ---
 title: 使用 Kotlin 协程改善 App 性能
-tags:
-  - Kotlin 协程
+tags: [Kotlin 协程]
 date: 2019-10-29 11:50:16
 ---
 

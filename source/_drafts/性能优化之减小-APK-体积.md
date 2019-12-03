@@ -387,6 +387,23 @@ buildTypes {
 同时，还存在其他的优秀的图片压缩工具，比如 [Tinypng](https://tinypng.com/) 等，可以根据需求进行相应的选择。
 
 
+* AndResGuard 资源的资源混淆和极限压缩
+
+AndResGuard 的两个功能：资源混淆、资源的极限压缩。
+
+[安装包立减1M--微信Android资源混淆打包工具](https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=208135658&idx=1&sn=ac9bd6b4927e9e82f9fa14e396183a8f#rd)
+
+[如何使用资源混淆工具](https://github.com/shwenzhang/AndResGuard/blob/master/doc/how_to_work.zh-cn.md)
+
+[Android Apk 7z压缩](http://blog.rcant.com/2017/03/19/others/android-andresguard/)
+
+
+
+* Dex 压缩
+
+Redex
+
+* Library 压缩
 
 
 |状态|包大小|lib|res|dex|classes.dex|classes2.dex|assets|resources.arsc|META_INFO|publicxx.gz|AndroidManifest.xml|总结
@@ -395,7 +412,8 @@ buildTypes {
 |取消默认的 crunch 预处理过程|20.1M|7.1M|6.8M|3.9M|3.6M|327.3K|1.3M|667.9K|94.2K|33.2K|5.9K|由于取消 crunch 预处理，所以 APK 包增大
 | 使用 pnggaunlet 工具对图片资源进行处理|15.4M|7.1MB|2.1M|3.9M|3.6M|327.3K|1.3M|667.9K|94.2K|33.2K|5.9K|减小了图片的大小，res 文件夹大小当然会减小
 开启 crunch 预处理，apk 大小几乎无变化|15.4M|7.1MB|2.1M|3.9M|3.6M|327.3K|1.3M|667.9K|94.2K|33.2K|5.9K|由于使用 pnggaunlet 获得更大的压缩率，此时开启 crunch 几乎无压缩效果
-|仅保留 armeabi 中的 so 库|10.4M|7.1MB|2.1M|3.9M|3.6M|327.3K|1.3M|667.9K|93.6K|33.2K|5.9K|该优化措施后，进行针对性测试，在自己的测试机上 App 正常运行
+|仅保留 armeabi 中的 so 库|10.4M|2.2MB|2.1M|3.9M|3.6M|327.3K|1.3M|667.9K|93.6K|33.2K|5.9K|该优化措施后，进行针对性测试，在自己的测试机上 App 正常运行
+使用 AndResGuard 进行资源混淆和资源的极限压缩||||||||||||在经过之前的步骤后，图片结果压缩操作，此操作对资源的极限压缩空间不大， APK 大小几乎不变(大约级别为百K 级别)，在对原始APK 进行此操作，APK 包体积大约减小 1 M|
 
 * 图片 .9 化
 
