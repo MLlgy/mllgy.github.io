@@ -156,6 +156,422 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Java-异常机制浅析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/26/Java-异常机制浅析/">Java 异常机制浅析</a>
+    </h1>
+  
+
+        
+        <!-- 
+ -->
+
+<a href="/2019/01/26/Java-异常机制浅析/" class="archive-article-date">
+  	<time datetime="2019-01-26T10:23:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="处理错误"><a href="#处理错误" class="headerlink" title="处理错误"></a>处理错误</h3><h4 id="异常分类"><a href="#异常分类" class="headerlink" title="异常分类"></a>异常分类</h4><p>所有的异常都是继承于 Throwable</p>
+<p><img src="/images/2019_01_26.jpg" alt="运行时内存区域"></p>
+<p> Error 类层次结构描述了 Java 运行时内部的错误以及资源耗尽错误，应用程序不应该抛出这种类型的对象，而是让程序来处理，一般情况下程序会直接中断，并报出错误以及堆栈信息。</p>
+        
+          <a class="article-more-a" href="/2019/01/26/Java-异常机制浅析/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Java Basic</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Exception</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/01/26/Java-异常机制浅析/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-RxJava 使用 Transformer 进行变换" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/17/RxJava 使用 Transformer 进行变换/">RxJava Transformer</a>
+    </h1>
+  
+
+        
+        <!-- 
+ -->
+
+<a href="/2019/01/17/RxJava 使用 Transformer 进行变换/" class="archive-article-date">
+  	<time datetime="2019-01-17T09:26:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-17</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="0x81-Observable、Observer-线程切换"><a href="#0x81-Observable、Observer-线程切换" class="headerlink" title="0x81 Observable、Observer 线程切换"></a>0x81 Observable、Observer 线程切换</h3><p>在 Retrofit 结合 RxJava 进行开发时，我们可以通过 subscribeOn()、observeOn() 分别设置被订阅者和订阅者的线程。在此场景中，我们要在应用中的所有请求中执行上面操作，这下重复工作就需要 Transformer 来优化。</p>
+<h3 id="0x82-Transformer-实现对调用链的处理"><a href="#0x82-Transformer-实现对调用链的处理" class="headerlink" title="0x82 Transformer 实现对调用链的处理"></a>0x82 Transformer 实现对调用链的处理</h3><p>我们可能有以下实现方式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">abstract class SchedulerTransformer&lt;T&gt; protected constructor(private val subscribeOnScheduler: Scheduler = Schedulers.io(), </span><br><span class="line">                                                      private val observeOnScheduler: Scheduler = AndroidSchedulers.mainThread()) : ObservableTransformer&lt;T, T&gt;,</span><br><span class="line">        SingleTransformer&lt;T, T&gt;,</span><br><span class="line">        MaybeTransformer&lt;T, T&gt;,</span><br><span class="line">        CompletableTransformer,</span><br><span class="line">        FlowableTransformer&lt;T, T&gt; &#123;</span><br><span class="line"></span><br><span class="line">    override fun apply(upstream: Completable): CompletableSource &#123;</span><br><span class="line">        return upstream.subscribeOn(subscribeOnScheduler)</span><br><span class="line">                .observeOn(observeOnScheduler)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun apply(upstream: Flowable&lt;T&gt;): Publisher&lt;T&gt; &#123;</span><br><span class="line">        return upstream.subscribeOn(subscribeOnScheduler)</span><br><span class="line">                .observeOn(observeOnScheduler)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun apply(upstream: Maybe&lt;T&gt;): MaybeSource&lt;T&gt; &#123;</span><br><span class="line">        return upstream.subscribeOn(subscribeOnScheduler)</span><br><span class="line">                .observeOn(observeOnScheduler)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun apply(upstream: Observable&lt;T&gt;): ObservableSource&lt;T&gt; &#123;</span><br><span class="line">        return upstream.subscribeOn(subscribeOnScheduler)</span><br><span class="line">                .observeOn(observeOnScheduler)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun apply(upstream: Single&lt;T&gt;): SingleSource&lt;T&gt; &#123;</span><br><span class="line">        return upstream.subscribeOn(subscribeOnScheduler)</span><br><span class="line">                .observeOn(observeOnScheduler)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+          <a class="article-more-a" href="/2019/01/17/RxJava 使用 Transformer 进行变换/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">RxJava</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Transformer</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/01/17/RxJava 使用 Transformer 进行变换/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Dagger2 前奏篇：依赖注入概念" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/17/Dagger2 前奏篇：依赖注入概念/">Dagger2 前奏篇:依赖注入概念</a>
+    </h1>
+  
+
+        
+        <!-- 
+ -->
+
+<a href="/2019/01/17/Dagger2 前奏篇：依赖注入概念/" class="archive-article-date">
+  	<time datetime="2019-01-17T06:57:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-17</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="一、What-is-Dagger2"><a href="#一、What-is-Dagger2" class="headerlink" title="一、What is Dagger2 ?"></a>一、What is Dagger2 ?</h2><p> <a href="https://github.com/google/dagger" target="_blank" rel="noopener">Dagger2</a> 是一个谷歌开源的依赖注入(<code>Dependency Injection</code>)框架，简称<code>DI</code>。Dagger2 是 Google 出的依赖注入框架。肯定有小伙伴疑问，为什么会有个 <strong>2</strong> 呢。该框架是基于 Square 开发的 Dagger 基础上开发的。<br> 那么 <strong>什么是 <code>依赖注入</code></strong> 呢？</p>
+<h3 id="1-1-何为依赖注入（控制反转-–-IOC（Inversion-of-Control））"><a href="#1-1-何为依赖注入（控制反转-–-IOC（Inversion-of-Control））" class="headerlink" title="1.1 何为依赖注入（控制反转 – IOC（Inversion of Control））"></a>1.1 何为依赖注入（控制反转 – IOC（Inversion of Control））</h3><p>我在网上搜索了相关内容，觉得以下解释相对容易理解（自定义后）：</p>
+        
+          <a class="article-more-a" href="/2019/01/17/Dagger2 前奏篇：依赖注入概念/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Dagger2</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">DI</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/01/17/Dagger2 前奏篇：依赖注入概念/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-OKhttp3 系统拦截器简介" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/17/OKhttp3 系统拦截器简介/">OKhttp3 核心拦截器、应用拦截器、网络拦截器</a>
+    </h1>
+  
+
+        
+        <!-- 
+ -->
+
+<a href="/2019/01/17/OKhttp3 系统拦截器简介/" class="archive-article-date">
+  	<time datetime="2019-01-17T06:31:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-17</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="RetryAndFollowUpInterceptor"><a href="#RetryAndFollowUpInterceptor" class="headerlink" title="RetryAndFollowUpInterceptor"></a>RetryAndFollowUpInterceptor</h3><p>功能：实现重试、跟踪</p>
+<p>实现原理： </p>
+<p>while(true) 死循环的实现。</p>
+<p>检验返回的 Response ，如果没有异常（包括请求失败、重定向等），那么执行 <code>return Response</code>, return 会直接结束循环操作，将结果返回到下一个拦截器中进行处理。</p>
+<p>检验返回的 Response ，如果出现异常情况，那么会根据 Response 新建 Request，并且执行一些必要的检查（是否为同一个 connnetion ，是的话抛出异常，不是的话是否旧的 connection 的资源，并新建一个 connection），进入死循环的下一次循环，那么此时将进行新一轮的拦截器的处理。</p>
+        
+          <a class="article-more-a" href="/2019/01/17/OKhttp3 系统拦截器简介/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Okhttp3</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/01/17/OKhttp3 系统拦截器简介/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Hexo 博客维护" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/17/Hexo 博客维护/">hexo 博客维护</a>
+    </h1>
+  
+
+        
+        <!-- 
+ -->
+
+<a href="/2019/01/17/Hexo 博客维护/" class="archive-article-date">
+  	<time datetime="2019-01-17T02:26:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-17</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="关于-Hexo-博客建站"><a href="#关于-Hexo-博客建站" class="headerlink" title="关于 Hexo 博客建站"></a>关于 Hexo 博客建站</h3><p>自己在 2016 基于 Hexo + GitPage 搭建个人博客，但是看到推到 Github 上的代码是 hexo g 生成的 public 文件夹下文件，那我日后怎么维护。自己看到别人上传的代码却是真正的 source 文件。</p>
+<p>今日自己才知道，需要维护两套代码，一套真正的 source 文件，一套部署到 github 的代码，真是废柴。</p>
+<h3 id="关于-Hexo-主题"><a href="#关于-Hexo-主题" class="headerlink" title="关于 Hexo 主题"></a>关于 Hexo 主题</h3><p>自己在网上搜索了一部分主题，有的页面概念过于繁杂，有的页面过于花哨，自己的主要目的是博客记录，搭建时默认的 Hexo 主题已经满足要求，就不再更换主题(于今日有效，万一哪天遇到称心得主题)。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Hexo</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/01/17/Hexo 博客维护/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Java 内存空间类别" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -362,64 +778,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h4 id="1-通配符概念"><a href="#1-通配符概念" class="headerlink" title="1. 通配符概念"></a>1. 通配符概念</h4><p>因为 List 是泛型类，为了 <strong>表示各种泛型 List 的父类</strong>，可以使用类型通配符，类型通配符使用问号(?)表示，将一个问号当做类型元素传递个 List，可以表示为 List&lt;?&gt;,意思是 <strong>元素类型未知的 List</strong>，不同于 List<t> 其元素类型为 T。这个问号被称为通配符，它的元素类型可以匹配任何类型。</t></p>
-<p>一般的，统配符不会出现在泛型类的声明上，而多用于使用泛型类或泛型方法。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public class GenericTest &#123;</span><br><span class="line">      </span><br><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">    List&lt;String&gt; name = new ArrayList&lt;String&gt;();</span><br><span class="line">    List&lt;Integer&gt; age = new ArrayList&lt;Integer&gt;();</span><br><span class="line">    List&lt;Number&gt; number = new ArrayList&lt;Number&gt;();</span><br><span class="line">    name.add(&quot;icon&quot;);</span><br><span class="line">    age.add(18);</span><br><span class="line">    number.add(314);</span><br><span class="line">    getData(name);</span><br><span class="line">    getData(age);</span><br><span class="line">    getData(number);   </span><br><span class="line">&#125;</span><br><span class="line">// 在此处使用通配符，则可以传入各种类型的 List 泛型，</span><br><span class="line">public static void getData(List&lt;?&gt; data) &#123;</span><br><span class="line">    System.out.println(&quot;Test date :&quot; + data.get(0));</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>打印日志为</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Test data :icon</span><br><span class="line">Test data :18</span><br><span class="line">Test data :314</span><br></pre></td></tr></table></figure>
-
-<p> <strong>通配符的出现，允许类型参数变化。</strong></p>
-<h4 id="2-上界通配符（子类型通配符）"><a href="#2-上界通配符（子类型通配符）" class="headerlink" title="2. 上界通配符（子类型通配符）"></a>2. 上界通配符（子类型通配符）</h4><blockquote>
-<p>&lt;? extends ClassType&gt; 该通配符为 ClassType 的所有子类型。</p>
-</blockquote>
-<p> 表示任何泛型 ClassType 类型，它的类型参数是 ClassType 的子类，但不是 Pair&lt; String&gt;。</p>
-<p>  <strong>上界通配符可以使用返回值，但是不可以为方法提供参数。</strong></p>
-<h5 id="继承关系："><a href="#继承关系：" class="headerlink" title="继承关系："></a>继承关系：</h5><p> <img src="https://img-blog.csdnimg.cn/20190228151529777.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1N0cmFuZ2VfTW9ua2V5,size_16,color_FFFFFF,t_70" alt="上界通配符"></p>
-<p> 可进行如此赋值操作：<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Pair&lt;Manager&gt; manager = new Pair&lt;&gt;();</span><br><span class="line">Pair&lt;? extends Employee&gt; wildCardBuddies = manager;</span><br></pre></td></tr></table></figure></p>
-<p> 我们看一下类型 Pair&lt;? extends Employee&gt;,其方法是这样的：</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">? extends Employee getFirst();</span><br><span class="line">void setFirst(? extends Employee);</span><br></pre></td></tr></table></figure>
-
-
-<p> 这样的代码不可能调用 setFirst 方法，编译器只知道需要某个 Employee 的子类型，但是不知道具体的类型，它拒绝传递任何特定的类型，<strong>毕竟  ？不能用来匹配</strong>。</p>
-<p> 使用 getFirst 就不存在这个问题：将 getFirst 的返回值赋值给 Employee 的引用完全合法。<br>所以有了上文中的 – <strong>上界通配符可以使用返回值，但是不可以为方法提供参数。</strong></p>
-<p>进一步，用自己的语言理解：</p>
-<p> <strong><code>? extends Employee</code> 表示为 Employee 或 Employee 的子类型,可进行 get ，返回值可用 Employee 来接收，而在调用 set 方法时无法确定参数的具体类型(拥有多个子类型，不知道具体哪一个子类型)。</strong></p>
-<p>==由上面通配符可以，任何对象调用 getter 和 setter 方法，其返回值或参数必须有对应的类，不能对应一系列类族。==</p>
-<p><strong>使用上限通配符意味着我们可以进行读取，但是不能写入</strong>。</p>
-<h4 id="3-超类型限定符-上界通配符"><a href="#3-超类型限定符-上界通配符" class="headerlink" title="3. 超类型限定符(上界通配符)"></a>3. 超类型限定符(上界通配符)</h4><blockquote>
-<p>&lt;? super ClassType&gt; 该通配符为 ClassType 的所有超类型。</p>
-</blockquote>
-<p>  表示任何泛型 ClassType 类型，它的类型参数是 ClassType 的超类，但是不是 Pair<string>。</string></p>
-<p> <strong>与下界通配符恰好相反，可以为方法提供参数，但是不能使用返回值。</strong></p>
-<h5 id="继承关系：-1"><a href="#继承关系：-1" class="headerlink" title="继承关系："></a>继承关系：</h5><p><img src="https://img-blog.csdnimg.cn/20190228151628826.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1N0cmFuZ2VfTW9ua2V5,size_16,color_FFFFFF,t_70" alt="下界通配符"></p>
-<p>可进行如此赋值操作：<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Pair&lt;Employee&gt; manager = new Pair&lt;&gt;();</span><br><span class="line">Pair&lt;? extends Manager&gt; wildCardBuddies = manager;</span><br></pre></td></tr></table></figure></p>
-<p> 我们看一下类型 Pair&lt;? super Manager&gt;,其方法是这样的：</p>
-<ul>
-<li>知识链接<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">void setFirst(? super Manager)</span><br><span class="line">? super Manager getFirst()</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<p> 这不是真正的 Java 语法，但是可以看出编译器知道什么。 编译器无法知道 setFirst 方法的具体类型，因此调用这个方法时不能接受类型为 Employee 或 Object 的参数。只能传递 Manager 或其子类型的对象。另外，如果调用 getFirst() 不能保证返回对象的类型，只能把它赋给 Object。</p>
-<p> 进一步，用自己的语言理解：</p>
-<p><strong><code>? super Manager</code> 表示为 Manager 或 Manager 的超类型，可进行 set，对应的 setter 方法的参数可以传进 Manager 或 Manager 的子类型,在调用 getter 方法时返回值为 Manager 或 Manager 的超类，这样是不合法的,但是可以将返回值赋值给 Object 对象。</strong></p>
-<p> <strong>使用上限通配符意味着我们可以写入，不可以读取。</strong></p>
-<h4 id="4-无限定通配符"><a href="#4-无限定通配符" class="headerlink" title="4. 无限定通配符"></a>4. 无限定通配符</h4><blockquote>
-<p>&lt;?&gt; : 该通配符可以匹配任何类型。</p>
-</blockquote>
-<p> Pair&lt;?&gt; 有以下方法：</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">? getData();</span><br><span class="line">void setData(?);</span><br></pre></td></tr></table></figure>
-
-
-<p> <strong>getData() 的返回值只能赋值给 Object，++因为不知道 ？具体代表什么类型++，所以 setData(?) 方法不能被调用。</strong></p>
-<p> Pair&lt;?&gt; 与 Pair 的不同：可以用任意 Object 对象调用原始 Pair 类的 setData() 方法。 — ==存在十分大的疑问==</p>
-<p> 为什么使用这样脆弱的类型？它对于许多简单的操作十分有用：例如下面的例子：判断一个 Pair 对象是否是一个 null 引用，它不需要具体的类型参数：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public static boolean hasNull(Pair&lt;?&gt; pair)&#123;</span><br><span class="line">    return p.getData() == null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>其实通过使用泛型，可以避免使用通配符：</p>
-<p><code>public static &lt;T&gt; boolean hasNull(Pair&lt;T&gt; pair)</code></p>
-<p>但是带有通配符的版本更具可读性。</p>
-
+        
+          <a class="article-more-a" href="/2018/11/25/Java-泛型-深入理解通配符/#more">more >></a>
+        
       
 
       
@@ -660,10 +1021,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
               </li>
              
@@ -684,11 +1041,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -704,6 +1061,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
               </li>
              
@@ -712,7 +1073,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -732,14 +1097,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Java 多线程</a>
               </li>
              
@@ -756,11 +1113,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">《深入理解 Java 虚拟机》读书笔记</a>
+                <a href="javascript:void(0)" class="js-tag color3">泛型</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">泛型</a>
+                <a href="javascript:void(0)" class="js-tag color5">《深入理解 Java 虚拟机》读书笔记</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -768,15 +1125,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Collections</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">List</a>
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+                <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -788,15 +1149,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">WorkManager</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -804,15 +1157,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">WorkManager</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kotlin 核心编程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -824,7 +1177,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
+                <a href="javascript:void(0)" class="js-tag color2">Kotlin 核心编程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -840,6 +1197,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">RxJava</a>
               </li>
              
@@ -848,7 +1213,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
+                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -888,6 +1253,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
@@ -900,23 +1269,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
+                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -928,11 +1285,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+                <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -941,6 +1302,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">深入理解 Android 读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -964,11 +1329,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
+                <a href="javascript:void(0)" class="js-tag color4">内部类</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">内部类</a>
+                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -984,15 +1349,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
               </li>
              
               <li class="article-tag-list-item">

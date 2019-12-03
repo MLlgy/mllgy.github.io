@@ -8,20 +8,20 @@
   <link rel="dns-prefetch" href>
   <title>Java 泛型:深入理解通配符 | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1. 通配符概念因为 List 是泛型类，为了 表示各种泛型 List 的父类，可以使用类型通配符，类型通配符使用问号(?)表示，将一个问号当做类型元素传递个 List，可以表示为 List&amp;lt;?&amp;gt;,意思是 元素类型未知的 List，不同于 List 其元素类型为 T。这个问号被称为通配符，它的元素类型可以匹配任何类型。 一般的，统配符不会出现在泛型类的声明上，而多用于使用泛型类或泛型方">
+  <meta name="description" content="1. 通配符概念因为 List 是泛型类，为了 表示各种泛型 List 的父类，可以使用类型通配符，类型通配符使用问号(?)表示，将一个问号当做类型元素传递个 List，可以表示为 List&amp;lt;?&amp;gt;,意思是 元素类型未知的 List，不同于 List 其元素类型为 T。这个问号被称为通配符，它的元素类型可以匹配任何类型。">
 <meta name="keywords" content="Java,泛型">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java 泛型:深入理解通配符">
 <meta property="og:url" content="/2018/11/25/Java-泛型-深入理解通配符/index.html">
 <meta property="og:site_name" content="GY">
-<meta property="og:description" content="1. 通配符概念因为 List 是泛型类，为了 表示各种泛型 List 的父类，可以使用类型通配符，类型通配符使用问号(?)表示，将一个问号当做类型元素传递个 List，可以表示为 List&amp;lt;?&amp;gt;,意思是 元素类型未知的 List，不同于 List 其元素类型为 T。这个问号被称为通配符，它的元素类型可以匹配任何类型。 一般的，统配符不会出现在泛型类的声明上，而多用于使用泛型类或泛型方">
+<meta property="og:description" content="1. 通配符概念因为 List 是泛型类，为了 表示各种泛型 List 的父类，可以使用类型通配符，类型通配符使用问号(?)表示，将一个问号当做类型元素传递个 List，可以表示为 List&amp;lt;?&amp;gt;,意思是 元素类型未知的 List，不同于 List 其元素类型为 T。这个问号被称为通配符，它的元素类型可以匹配任何类型。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20190228151529777.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1N0cmFuZ2VfTW9ua2V5,size_16,color_FFFFFF,t_70">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20190228151628826.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1N0cmFuZ2VfTW9ua2V5,size_16,color_FFFFFF,t_70">
-<meta property="og:updated_time" content="2019-11-25T10:37:27.990Z">
+<meta property="og:updated_time" content="2019-11-25T12:55:39.991Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java 泛型:深入理解通配符">
-<meta name="twitter:description" content="1. 通配符概念因为 List 是泛型类，为了 表示各种泛型 List 的父类，可以使用类型通配符，类型通配符使用问号(?)表示，将一个问号当做类型元素传递个 List，可以表示为 List&amp;lt;?&amp;gt;,意思是 元素类型未知的 List，不同于 List 其元素类型为 T。这个问号被称为通配符，它的元素类型可以匹配任何类型。 一般的，统配符不会出现在泛型类的声明上，而多用于使用泛型类或泛型方">
+<meta name="twitter:description" content="1. 通配符概念因为 List 是泛型类，为了 表示各种泛型 List 的父类，可以使用类型通配符，类型通配符使用问号(?)表示，将一个问号当做类型元素传递个 List，可以表示为 List&amp;lt;?&amp;gt;,意思是 元素类型未知的 List，不同于 List 其元素类型为 T。这个问号被称为通配符，它的元素类型可以匹配任何类型。">
 <meta name="twitter:image" content="https://img-blog.csdnimg.cn/20190228151529777.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1N0cmFuZ2VfTW9ua2V5,size_16,color_FFFFFF,t_70">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
@@ -186,6 +186,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h4 id="1-通配符概念"><a href="#1-通配符概念" class="headerlink" title="1. 通配符概念"></a>1. 通配符概念</h4><p>因为 List 是泛型类，为了 <strong>表示各种泛型 List 的父类</strong>，可以使用类型通配符，类型通配符使用问号(?)表示，将一个问号当做类型元素传递个 List，可以表示为 List&lt;?&gt;,意思是 <strong>元素类型未知的 List</strong>，不同于 List<t> 其元素类型为 T。这个问号被称为通配符，它的元素类型可以匹配任何类型。</t></p>
+<a id="more"></a>
 <p>一般的，统配符不会出现在泛型类的声明上，而多用于使用泛型类或泛型方法。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public class GenericTest &#123;</span><br><span class="line">      </span><br><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">    List&lt;String&gt; name = new ArrayList&lt;String&gt;();</span><br><span class="line">    List&lt;Integer&gt; age = new ArrayList&lt;Integer&gt;();</span><br><span class="line">    List&lt;Number&gt; number = new ArrayList&lt;Number&gt;();</span><br><span class="line">    name.add(&quot;icon&quot;);</span><br><span class="line">    age.add(18);</span><br><span class="line">    number.add(314);</span><br><span class="line">    getData(name);</span><br><span class="line">    getData(age);</span><br><span class="line">    getData(number);   </span><br><span class="line">&#125;</span><br><span class="line">// 在此处使用通配符，则可以传入各种类型的 List 泛型，</span><br><span class="line">public static void getData(List&lt;?&gt; data) &#123;</span><br><span class="line">    System.out.println(&quot;Test date :&quot; + data.get(0));</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -502,10 +503,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
               </li>
              
@@ -526,11 +523,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -546,6 +543,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
               </li>
              
@@ -554,7 +555,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -574,14 +579,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Java 多线程</a>
               </li>
              
@@ -598,11 +595,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">《深入理解 Java 虚拟机》读书笔记</a>
+                <a href="javascript:void(0)" class="js-tag color3">泛型</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">泛型</a>
+                <a href="javascript:void(0)" class="js-tag color5">《深入理解 Java 虚拟机》读书笔记</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -610,15 +607,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Collections</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">List</a>
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+                <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -630,15 +631,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">WorkManager</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -646,15 +639,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">WorkManager</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kotlin 核心编程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -666,7 +659,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
+                <a href="javascript:void(0)" class="js-tag color2">Kotlin 核心编程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -682,6 +679,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">RxJava</a>
               </li>
              
@@ -690,7 +695,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
+                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -730,6 +735,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
@@ -742,23 +751,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
+                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -770,11 +767,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+                <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -783,6 +784,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">深入理解 Android 读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -806,11 +811,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
+                <a href="javascript:void(0)" class="js-tag color4">内部类</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">内部类</a>
+                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -826,15 +831,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
               </li>
              
               <li class="article-tag-list-item">
