@@ -129,6 +129,12 @@ LeakCanary 的实践
 [Android面试题集 & 答案，助你拿到心仪Offer](https://github.com/Ellen2018/AndroidFaceInterview?utm_source=androidweekly.io&utm_medium=website)
 
 
+[300+道面试题&最全面试资料，你值得拥有！ | Android面试宝典](https://developer.aliyun.com/article/717963?spm=a2c6h.12873581.0.dArticle717963.6ae636789BK3mf&groupCode=interview)
+
+[面小易-面经10】阿里巴巴Android客户端开发实习生面试经验](https://developer.aliyun.com/article/716934?spm=a2c6h.12873581.0.dArticle716934.6ae636789BK3mf&groupCode=interview)
+
+[张涛：面试后的总结](https://kymjs.com/code/2016/03/08/01/s)
+
 
 ## 算法与数据结构
 
