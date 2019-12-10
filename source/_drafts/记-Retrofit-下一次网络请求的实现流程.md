@@ -10,7 +10,7 @@ tags:
 如何查看生成的动态代理类：
 
 
-
+[查看JDK动态代理生成的类的内容](https://blog.csdn.net/zknxx/article/details/77919332)
 
 
 

@@ -139,9 +139,225 @@ Response getResponseWithInterceptorChain() throws IOException {
 针对标题中关注的两点，需要关注的拦截器为 ConnectInterceptor 和 CallServerInterceptor。
 
 
+ConnectInterceptor 中的代码如下：
+
+```
+public final class ConnectInterceptor implements Interceptor {
+    public final OkHttpClient client;
+
+    public ConnectInterceptor(OkHttpClient client) {
+        this.client = client;
+    }
+
+    @Override
+    public Response intercept(Chain chain) throws IOException {
+        RealInterceptorChain realChain = (RealInterceptorChain) chain;
+        Request request = realChain.request();
+        // StreamAllocation 对象在执行拦截器之前为 null，在第一个拦截器中实例化 StreamAllocation 对象，并在接下来的拦截器中传递
+        StreamAllocation streamAllocation = realChain.streamAllocation();
+
+        // We need the network to satisfy this request. Possibly for validating a conditional GET.
+        boolean doExtensiveHealthChecks = !request.method().equals("GET");
+        // 见 2.1
+        HttpCodec httpCodec = streamAllocation.newStream(client, doExtensiveHealthChecks);
+        RealConnection connection = streamAllocation.connection();
+
+        return realChain.proceed(request, streamAllocation, httpCodec, connection);
+    }
+}
+```
+
+
+## 2.1 StreamAllocation#newStream
+
+```
+public HttpCodec newStream(OkHttpClient client, boolean doExtensiveHealthChecks) {
+    int connectTimeout = client.connectTimeoutMillis();
+    int readTimeout = client.readTimeoutMillis();
+    int writeTimeout = client.writeTimeoutMillis();
+    boolean connectionRetryEnabled = client.retryOnConnectionFailure();
+    try {
+        RealConnection resultConnection = findHealthyConnection(connectTimeout, readTimeout,
+                writeTimeout, connectionRetryEnabled, doExtensiveHealthChecks);
+        HttpCodec resultCodec = resultConnection.newCodec(client, this);
+        synchronized (connectionPool) {
+            codec = resultCodec;
+            return resultCodec;
+        }
+    } catch (IOException e) {
+        throw new RouteException(e);
+    }
+}
+```
+
+
+## 2.2 StreamAllocation#findHealthyConnection
+
+
+```
+private RealConnection findHealthyConnection(int connectTimeout, int readTimeout,
+                                             int writeTimeout, boolean connectionRetryEnabled, boolean doExtensiveHealthChecks)
+        throws IOException {
+    // 直到找到健康的连接        
+    while (true) {
+        // 见 2.3 
+        RealConnection candidate = findConnection(connectTimeout, readTimeout, writeTimeout,
+                connectionRetryEnabled);
+        synchronized (connectionPool) {
+            if (candidate.successCount == 0) {
+                return candidate;
+            }
+        }
+        if (!candidate.isHealthy(doExtensiveHealthChecks)) {
+            noNewStreams();
+            continue;
+        }
+        return candidate;
+    }
+}
+```
+该方法会寻找健康的连接并返回，如果没有找到会继续寻找。
+
+
+## 2.3 findConnection
+
+
+```
+private RealConnection findConnection(int connectTimeout, int readTimeout, int writeTimeout,
+                                      boolean connectionRetryEnabled) throws IOException {
+    Route selectedRoute;
+    // 对连接池进行加锁，防止多个线程获得线程池中同一个连接对象。
+    synchronized (connectionPool) {
+        // Attempt to use an already-allocated connection.  尝试拿到已存在的 connection ，直接返回
+        RealConnection allocatedConnection = this.connection;
+        if (allocatedConnection != null && !allocatedConnection.noNewStreams) {
+            return allocatedConnection;
+        }
+        // 从 connectionpool 连接池中拿到 connection 直接返回
+        Internal.instance.get(connectionPool, address, this, null);
+        if (connection != null) {
+            return connection;
+        }
+        selectedRoute = route;
+    }
+    // 如果需要路由选择，那么进行一次路由选择后，再次寻找可用的连接对象。
+    if (selectedRoute == null) {
+        selectedRoute = routeSelector.next();
+    }
+    RealConnection result;
+    synchronized (connectionPool) {
+        if (canceled) throw new IOException("Canceled");
+        // Now that we have an IP address, make another attempt at getting a connection from the pool.
+        // This could match due to connection coalescing.
+        Internal.instance.get(connectionPool, address, this, selectedRoute);
+        if (connection != null) {
+            route = selectedRoute;
+            return connection;
+        }
+        // 如果上面两部操作还是不能找到对应的 Connection ，那么就新建 Connection.
+        // 可以异步打断将要执行的握手动作
+        route = selectedRoute;
+        refusedStreamCount = 0;
+        result = new RealConnection(connectionPool, selectedRoute);
+        acquire(result);
+    }
+    //进行 TCP + TLS 握手，这是阻塞操作
+    result.connect(connectTimeout, readTimeout, writeTimeout, connectionRetryEnabled);
+    routeDatabase().connected(result.route());
+    Socket socket = null;
+    synchronized (connectionPool) {
+        // Pool the connection.
+        Internal.instance.put(connectionPool, result);
+        // 如果另外的一个多路复用的连接，拥有和这个连接通过的 IP，那么关闭这个连接，复用已经存在而连接
+        if (result.isMultiplexed()) {
+            socket = Internal.instance.deduplicate(connectionPool, address, this);
+            result = connection;
+        }
+    }
+    closeQuietly(socket);
+    return result;
+}
+```
+
+
+这个寻找连接的过程是十分复杂的，主要有以下几个步骤：
+
+1. 如果存在可用的连接，则直接则直接复用，否则继续向下执行；
+2. 如果连接池中存在可用的连接，那么则直接复用，否则继续向下执行；
+3. 经过以上两个步骤，依旧没有获得可用连接，那么更换路由，继续寻找可用连接；
+4. 更换路由后，如果连接池中存在可用连接，则使用该连接，否则继续执行；
+5. 新建连接。
+6. 连接执行 TCP + TLS 握手
 
 
 
+OkHttpClient
+```
+static {
+    Internal.instance = new Internal() {
+        @Override
+        public void addLenient(Headers.Builder builder, String line) {
+            builder.addLenient(line);
+        }
+        @Override
+        public void addLenient(Headers.Builder builder, String name, String value) {
+            builder.addLenient(name, value);
+        }
+        @Override
+        public void setCache(Builder builder, InternalCache internalCache) {
+            builder.setInternalCache(internalCache);
+        }
+        @Override
+        public boolean connectionBecameIdle(
+                ConnectionPool pool, RealConnection connection) {
+            return pool.connectionBecameIdle(connection);
+        }
+        @Override
+        public RealConnection get(ConnectionPool pool, Address address,
+                                  StreamAllocation streamAllocation, Route route) {
+            return pool.get(address, streamAllocation, route);
+        }
+        @Override
+        public boolean equalsNonHost(Address a, Address b) {
+            return a.equalsNonHost(b);
+        }
+        @Override
+        public Socket deduplicate(
+                ConnectionPool pool, Address address, StreamAllocation streamAllocation) {
+            return pool.deduplicate(address, streamAllocation);
+        }
+        @Override
+        public void put(ConnectionPool pool, RealConnection connection) {
+            pool.put(connection);
+        }
+        @Override
+        public RouteDatabase routeDatabase(ConnectionPool connectionPool) {
+            return connectionPool.routeDatabase;
+        }
+        @Override
+        public int code(Response.Builder responseBuilder) {
+            return responseBuilder.code;
+        }
+        @Override
+        public void apply(ConnectionSpec tlsConfiguration, SSLSocket sslSocket, boolean isFallback) {
+            tlsConfiguration.apply(sslSocket, isFallback);
+        }
+        @Override
+        public HttpUrl getHttpUrlChecked(String url)
+                throws MalformedURLException, UnknownHostException {
+            return HttpUrl.getChecked(url);
+        }
+        @Override
+        public StreamAllocation streamAllocation(Call call) {
+            return ((RealCall) call).streamAllocation();
+        }
+        @Override
+        public Call newWebSocketCall(OkHttpClient client, Request originalRequest) {
+            return new RealCall(client, originalRequest, true);
+        }
+    };
+}
+```
 
 
 ---
