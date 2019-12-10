@@ -337,9 +337,9 @@
     </summary>
     
     
-      <category term="JobScheduler" scheme="/tags/JobScheduler/"/>
-    
       <category term="WorkManager" scheme="/tags/WorkManager/"/>
+    
+      <category term="JobScheduler" scheme="/tags/JobScheduler/"/>
     
   </entry>
   
