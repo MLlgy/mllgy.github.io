@@ -16,14 +16,14 @@
 <meta property="og:site_name" content="GY">
 <meta property="og:description" content="1. 网络基础 TCP/IP我们使用的网络是在 TCP/IP 协议族的基础上运行的， HTTP 属于它内部的一个子集。 1. TCP/IP 协议族计算机与网络设备之间需要相互通信、不同硬件和不同系统之间的通信，双方就必须基于相同的方法，所有的一切都需要一种规则，我们把这种规则称为协议。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="/source/images/2019_12_09_01.jpg">
+<meta property="og:image" content="/public/images/2019_12_09_01.jpg">
 <meta property="og:image" content="/source/images/2019_12_09_02.jpg">
 <meta property="og:image" content="/source/images/2019_12_09_03.jpg">
-<meta property="og:updated_time" content="2019-12-10T03:13:31.635Z">
+<meta property="og:updated_time" content="2019-12-10T03:18:46.488Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="图解 HTTP 学习笔记(一)：网络基础">
 <meta name="twitter:description" content="1. 网络基础 TCP/IP我们使用的网络是在 TCP/IP 协议族的基础上运行的， HTTP 属于它内部的一个子集。 1. TCP/IP 协议族计算机与网络设备之间需要相互通信、不同硬件和不同系统之间的通信，双方就必须基于相同的方法，所有的一切都需要一种规则，我们把这种规则称为协议。">
-<meta name="twitter:image" content="/source/images/2019_12_09_01.jpg">
+<meta name="twitter:image" content="/public/images/2019_12_09_01.jpg">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
   
@@ -211,7 +211,8 @@
 <h5 id="链路层"><a href="#链路层" class="headerlink" title="链路层"></a>链路层</h5><p>用来处理连接网络的硬件部分。</p>
 <p>控制硬件操作系统、硬件的设备驱动、NIC(网络适配器，即网卡)、光纤等物理可见部分的硬件部分均在链路层的范围之内。</p>
 <h4 id="2-2-TCP-IP-通信传输流"><a href="#2-2-TCP-IP-通信传输流" class="headerlink" title="2.2 TCP/IP 通信传输流"></a>2.2 TCP/IP 通信传输流</h4><p>利用 TCP/IP协议族进行网络通信时，会通过分层顺序与对方通信，发送端从应用层往下走，接收端从链路层往上走。</p>
-<p><img src="/source/images/2019_12_09_01.jpg" alt="dns.jpg"></p>
+<!-- ![dns.jpg](/source/images/2019_12_09_01.jpg) -->
+<p><img src="/public/images/2019_12_09_01.jpg" alt></p>
 <p>发送端在层与层之间传递数据，没经过一层必定被打上一个该层所属的首部信息，反之，接收端在层与层之间传递数据时，每经过一层会把对应的首部信息去掉，具体见上图。</p>
 <p>这种把信息包装起来的做法叫做封装。</p>
 <h2 id="2-与-HTTP-关系密切的协议：IP、TCP-和-DNS"><a href="#2-与-HTTP-关系密切的协议：IP、TCP-和-DNS" class="headerlink" title="2. 与 HTTP 关系密切的协议：IP、TCP 和 DNS"></a>2. 与 HTTP 关系密切的协议：IP、TCP 和 DNS</h2><h3 id="1-负责传输的-IP-协议"><a href="#1-负责传输的-IP-协议" class="headerlink" title="1. 负责传输的 IP 协议"></a>1. 负责传输的 IP 协议</h3><p>IP(Internet Protocol) 协议位于网络层。</p>
@@ -231,8 +232,8 @@
 <h3 id="3-负责域名解析的-DNS-服务"><a href="#3-负责域名解析的-DNS-服务" class="headerlink" title="3. 负责域名解析的 DNS 服务"></a>3. 负责域名解析的 DNS 服务</h3><p>DNS( Domain Name System) 服务位于应用层，提供域名到 IP 地址之间的解析服务。</p>
 <p>人们记忆主机名或域名比较容易，但是对于计算机处理 IP 地址比较容易些。为了解决以上问题，DNS 服务就应运而生。</p>
 <p>DNS 协议通过域名查找 IP 地址，或者通过 IP 地址逆向查找域名的服务。</p>
-<p><img src="/source/images/2019_12_09_02.jpg" alt="dns.jpg"></p>
-<h3 id="4-各种协议与-HTTP-协议的关系"><a href="#4-各种协议与-HTTP-协议的关系" class="headerlink" title="4. 各种协议与 HTTP 协议的关系"></a>4. 各种协议与 HTTP 协议的关系</h3><p><img src="/source/images/2019_12_09_03.jpg" alt="dns.jpg"></p>
+<p><img src="/source/images/2019_12_09_02.jpg" alt></p>
+<h3 id="4-各种协议与-HTTP-协议的关系"><a href="#4-各种协议与-HTTP-协议的关系" class="headerlink" title="4. 各种协议与 HTTP 协议的关系"></a>4. 各种协议与 HTTP 协议的关系</h3><p><img src="/source/images/2019_12_09_03.jpg" alt></p>
 <p>由上面的图中，我们可以看出在 HTTP 协议的通信过程中 TCP、IP 协议和 DNS 发挥的作用。</p>
 <h2 id="URI-和-URL"><a href="#URI-和-URL" class="headerlink" title="URI 和 URL"></a>URI 和 URL</h2><p>URI：Uniform Resource Identifiier,统一资源标识符<br>URL：Uniform Resource Locator,统一资源定位府</p>
 <p>我们平时在 Web 页面输入的网页地址如：<a href="http://www.abc.com" target="_blank" rel="noopener">http://www.abc.com</a> 就是 URL。</p>
@@ -513,11 +514,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
+                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -533,7 +538,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -542,10 +547,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -601,11 +602,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+                <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -613,7 +610,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">List</a>
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -677,10 +678,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">RxJava</a>
               </li>
              
@@ -689,11 +686,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
+                <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">adb</a>
+                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -701,7 +698,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+                <a href="javascript:void(0)" class="js-tag color4">adb</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -717,71 +714,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Java 异常</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">堆栈轨迹</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">图解 HTTP 读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">极客时间笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">浮点型精度问题</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">JNI</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">深入理解 Android 读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -794,6 +735,66 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">FutureTask</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">图解 HTTP 读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">极客时间笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">浮点型精度问题</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">JNI</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">深入理解 Android 读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -829,15 +830,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
               </li>
              
               <li class="article-tag-list-item">
