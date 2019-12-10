@@ -21,7 +21,7 @@
 <meta property="og:image" content="/images/2019_08_06_03.png">
 <meta property="og:image" content="/images/2019_08_08_01.png">
 <meta property="og:image" content="/images/2019_08_08_02.png">
-<meta property="og:updated_time" content="2019-08-09T07:43:42.712Z">
+<meta property="og:updated_time" content="2019-12-10T02:53:36.999Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="AIDL 浅析">
 <meta name="twitter:description" content="AIDL 是理解 Android 系统不可避免的知识点。 0x0001 自定义 AIDL为了更加直观的展示相关内容，我们通过具体示例来展示相关的细节。 自定义一个 aidl 文件，里面定义方法(如：MyAidl.aidl)，AS 会帮我们生产对于的类文件(MyAidl.java)。">
@@ -255,12 +255,12 @@
 <ol start="2">
 <li>在 Proxy 中调用相关的方法，会使用 Pracelable 数据来准备数据，把函数名、函数的参数都写入 _data,使用 _reply 来接收函数的返回值，使用 Binder 的 transact 方法，把数据传给 Binder 的 Server 端。</li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public void addBook(com.mk.aidldemo.Book book) throws android.os.RemoteException &#123;</span><br><span class="line">    android.os.Parcel _data = android.os.Parcel.obtain();</span><br><span class="line">    android.os.Parcel _reply = android.os.Parcel.obtain();</span><br><span class="line">    try &#123;</span><br><span class="line">        _data.writeInterfaceToken(DESCRIPTOR);</span><br><span class="line">        if ((book != null)) &#123;</span><br><span class="line">            _data.writeInt(1);</span><br><span class="line">            book.writeToParcel(_data, 0);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            _data.writeInt(0);</span><br><span class="line">        &#125;</span><br><span class="line">        Log.e(&quot;process proxy add&quot;, ProcessUtils.getCurrentProcessName());</span><br><span class="line">        // mRemote 对象为构建 Proxy 对象时传入</span><br><span class="line">        mRemote.transact(Stub.TRANSACTION_addBook, _data, _reply, 0);</span><br><span class="line">        _reply.readException();</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        _reply.recycle();</span><br><span class="line">        _data.recycle();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public void addBook(com.mk.aidldemo.Book book) throws android.os.RemoteException &#123;</span><br><span class="line">    android.os.Parcel _data = android.os.Parcel.obtain();</span><br><span class="line">    android.os.Parcel _reply = android.os.Parcel.obtain();</span><br><span class="line">    try &#123;</span><br><span class="line">        _data.writeInterfaceToken(DESCRIPTOR);</span><br><span class="line">        if ((book != null)) &#123;</span><br><span class="line">            _data.writeInt(1);</span><br><span class="line">            book.writeToParcel(_data, 0);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            _data.writeInt(0);</span><br><span class="line">        &#125;</span><br><span class="line">        Log.e(&quot;process proxy add&quot;, ProcessUtils.getCurrentProcessName());</span><br><span class="line">        // mRemote 对象为构建 Proxy 对象时传入，最终会调用 onTransact 方法</span><br><span class="line">        mRemote.transact(Stub.TRANSACTION_addBook, _data, _reply, 0);</span><br><span class="line">        _reply.readException();</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        _reply.recycle();</span><br><span class="line">        _data.recycle();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ol start="3">
 <li>Server 端通过 onTransact 方法来接收 Client 传过来的数据(包括函数名称、函数的参数、函数的标识)，找到指定的函数，就相应的数据传入，得到结果并将结果写回。</li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">* 运行在 Binder 线程池</span><br><span class="line">*/</span><br><span class="line">@Override</span><br><span class="line">public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags) throws android.os.RemoteExcepti</span><br><span class="line">    String descriptor = DESCRIPTOR;</span><br><span class="line">    switch (code) &#123;</span><br><span class="line">        case INTERFACE_TRANSACTION: &#123;</span><br><span class="line">            reply.writeString(descriptor);</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        case TRANSACTION_getBookList: &#123;</span><br><span class="line">            data.enforceInterface(descriptor);</span><br><span class="line">            // 此处的 getBookList 为 Server 端中 Binder 对象中的 getBookList</span><br><span class="line">            java.util.List&lt;com.mk.aidldemo.Book&gt; _result = this.getBookList();</span><br><span class="line">            reply.writeNoException();</span><br><span class="line">            Log.e(&quot;process onTransact list&quot;, ProcessUtils.getCurrentProcessName());</span><br><span class="line">            reply.writeTypedList(_result);</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        case TRANSACTION_addBook: &#123;</span><br><span class="line">            data.enforceInterface(descriptor);</span><br><span class="line">            com.mk.aidldemo.Book _arg0;</span><br><span class="line">            if ((0 != data.readInt())) &#123;</span><br><span class="line">                _arg0 = com.mk.aidldemo.Book.CREATOR.createFromParcel(data);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                _arg0 = null;</span><br><span class="line">            &#125;</span><br><span class="line">            // Service 中 onBinder 方法中返回的 Binder 对象值。</span><br><span class="line">            this.addBook(_arg0);</span><br><span class="line">            Log.e(&quot;process onTransact add&quot;, ProcessUtils.getCurrentProcessName());</span><br><span class="line">            reply.writeNoException();</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        default: &#123;</span><br><span class="line">            return super.onTransact(code, data, reply, flags);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">* 运行在 Binder 线程池</span><br><span class="line">*/</span><br><span class="line">@Override</span><br><span class="line">public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags) throws android.os.RemoteExcepti</span><br><span class="line">    String descriptor = DESCRIPTOR;</span><br><span class="line">    switch (code) &#123;</span><br><span class="line">        case INTERFACE_TRANSACTION: &#123;</span><br><span class="line">            reply.writeString(descriptor);</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        case TRANSACTION_getBookList: &#123;</span><br><span class="line">            data.enforceInterface(descriptor);</span><br><span class="line">            // 此处的 getBookList 为 Server 端中 Binder 对象中的 getBookList</span><br><span class="line">            java.util.List&lt;com.mk.aidldemo.Book&gt; _result = this.getBookList();</span><br><span class="line">            reply.writeNoException();</span><br><span class="line">            Log.e(&quot;process onTransact list&quot;, ProcessUtils.getCurrentProcessName());</span><br><span class="line">            // 将结果写入到 reply 中，reply 会回传到另外的进程，读取 reply 中的数据，从而完成跨进程通信</span><br><span class="line">            reply.writeTypedList(_result);</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        case TRANSACTION_addBook: &#123;</span><br><span class="line">            data.enforceInterface(descriptor);</span><br><span class="line">            com.mk.aidldemo.Book _arg0;</span><br><span class="line">            if ((0 != data.readInt())) &#123;</span><br><span class="line">                _arg0 = com.mk.aidldemo.Book.CREATOR.createFromParcel(data);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                _arg0 = null;</span><br><span class="line">            &#125;</span><br><span class="line">            // Service 中 onBinder 方法中返回的 Binder 对象值。</span><br><span class="line">            this.addBook(_arg0);</span><br><span class="line">            Log.e(&quot;process onTransact add&quot;, ProcessUtils.getCurrentProcessName());</span><br><span class="line">            reply.writeNoException();</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        default: &#123;</span><br><span class="line">            return super.onTransact(code, data, reply, flags);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="0x0003-具体分析"><a href="#0x0003-具体分析" class="headerlink" title="0x0003 具体分析"></a>0x0003 具体分析</h3><p>针对 Binder 跨进程通信机制，在每次通信过程中都需要有 Binder Client 端和 Binder Server 端。</p>
 <p>在上面例子中应用程序进程(<code>com.mk.aidldemo</code>)为 Binder Client 端，用来发起请求，而新进程(<code>com.mk.aidldemo:remote</code>)为 Binder Server 端，用以处理请求。</p>
@@ -271,10 +271,23 @@
 <p>可以看到在进程 <code>com.mk.aidldemo:remote</code> 中执行的操作有：onTransact 和 Server 中实例化 Binder 中的方法，即为 Binder Server 端，其他均处于 Binder Client 端。</p>
 <p>这其中的关键方法有 mRemote.transact  和 onTransact。</p>
 <p><strong>onTransact</strong></p>
-<p>这个方法运行在 <strong>服务端中的 Binder线程池</strong> 中，当客户端发起跨进程请求时，远程请求会通过 <code>系统底层封装</code> 后交由此方法来处理。该方法的原型为<code>publicBooleanonTransact(int code,android.os.Parcel data,android.os.Parcel reply,int flags)</code>。服务端通过 code 可以确定客户端所请求的目标方法是什么，接着从 data 中取出目标方法所需的参数（如果目标方法有参数的话），然后执行目标方法。当目标方法执行完毕后，就向 reply 中写入返回值（如果目标方法有返回值的话）。</p>
+<p>这个方法运行在 <strong>服务端中的 Binder线程池</strong> 中，当客户端发起跨进程请求时，远程请求会通过 <code>系统底层封装(主要是经过 binder 驱动)</code> 后交由此方法来处理。该方法的原型为<code>publicBooleanonTransact(int code,android.os.Parcel data,android.os.Parcel reply,int flags)</code>。</p>
+<p>具体流程：</p>
+<ol>
+<li>服务端通过 code 可以确定客户端所请求的目标方法是什么。</li>
+<li>从 data 中取出目标方法所需的参数（如果目标方法有参数的话），然后执行目标方法。</li>
+<li>当目标方法执行完毕后，就向 reply 中写入返回值（如果目标方法有返回值的话）。</li>
+</ol>
 <p>onTransact 方法的执行过程就是这样的。需要注意的是，如果此方法返回 false，那么客户端的请求会失败，因此我们可以利用这个特性来做权限验证，毕竟我们也不希望随便一个进程都能远程调用我们的服务。</p>
 <p><strong>transact</strong></p>
-<p><code>Proxy#getBookList、Proxy#addBook</code> 这个方法运行在 <strong>客户端</strong>，当客户端远程调用此方法时，它的内部实现是这样的：首先创建该方法所需要的输入型 Parcel 对象_data、输出型Parcel对象 _reply 和返回值对象 List；然后把该方法的参数信息写入 _data 中（如果有参数的话）；<strong>接着调用 transact 方法来发起 RPC（远程过程调用）请求，同时当前线程挂起</strong>； 然后 <strong>服务端的onTransact 方法会被调用</strong>，直到 RPC 过程返回后，当前线程继续执行，并从 _reply 中取出 RPC 过程的返回结果；最后返回 _reply 中的数据。</p>
+<p><code>Proxy#getBookList、Proxy#addBook</code> 这个方法运行在 <strong>客户端</strong>，当客户端远程调用此方法时，它的内部实现是这样的：</p>
+<ol>
+<li>首先创建该方法所需要的输入型 Parcel 对象_data、输出型Parcel对象 _reply 和返回值对象 List；</li>
+<li>然后把该方法的参数信息写入 _data 中（如果有参数的话）；</li>
+<li><strong>接着调用 transact 方法来发起 RPC（远程过程调用）请求，同时当前线程挂起</strong>； </li>
+<li><strong>服务端的onTransact 方法会被调用</strong>，直到 RPC 过程返回后，当前线程继续执行，并从 _reply 中取出 RPC 过程的返回结果；最后返回 _reply 中的数据。</li>
+<li>从 _reply 获取数据，从而完成了跨进程通信。</li>
+</ol>
 <p>这两个方法都为 Binder 的方法，至于底层是如何实现 RPC 实现了，需学习相关细节，期待学习，关于其基本原理可以查看：<a href="https://leegyplus.github.io/2019/06/05/Binder%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/#more" target="_blank" rel="noopener">Binder 基本原理</a>。</p>
 <hr>
 <p>知识链接：</p>
@@ -531,11 +544,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
+                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -555,11 +568,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
+                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -571,14 +588,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
               </li>
              
@@ -587,7 +596,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -596,10 +613,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -643,6 +656,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">List</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Queue</a>
               </li>
              
@@ -651,7 +668,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">List</a>
+                <a href="javascript:void(0)" class="js-tag color3">Jetpack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -659,15 +680,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Jetpack</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
+                <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">JobScheduler</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -683,6 +704,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Kotlin 泛型</a>
               </li>
              
@@ -692,18 +717,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">JobScheduler</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -719,15 +732,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">RxJava</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Transformer</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -743,6 +756,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">View</a>
               </li>
              
@@ -751,11 +768,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Git</a>
+                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+                <a href="javascript:void(0)" class="js-tag color3">Java 异常</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">堆栈轨迹</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -771,27 +796,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Java 异常</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">堆栈轨迹</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -800,6 +809,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -827,11 +840,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
+                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -847,11 +860,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">内部类</a>
+                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Java 继承，对象，类初始化</a>
+                <a href="javascript:void(0)" class="js-tag color4">内部类</a>
               </li>
              
               <li class="article-tag-list-item">
