@@ -59,6 +59,12 @@ Binder 基本运行机制如下图：
 ![Binder 通信过程](/../images/2019_06_05_02.png)
 
 
+来自 Gityuan 的一张特别形象的 Binder IPC 流程图：
+
+
+![Binder IPC通信过程](http://gityuan.com/images/android-arch/IPC-Binder.jpg)
+
+
 #### 00x06
 
 在研究系统框架或第三方库时，我们不要陷入细节中，要先熟悉基本的运行机制、运行流程，根据自我需求，选择性的查看实现细节，但是需要注意的还是不能陷入细节，要有的放矢的跳出细节，把控全局。
