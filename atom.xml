@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="/"/>
-  <updated>2019-12-10T03:13:52.002Z</updated>
+  <updated>2019-12-10T03:19:38.176Z</updated>
   <id>/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>图解 HTTP 学习笔记(二)：简单了解 HTTP 协议</title>
+    <title>图解 HTTP 学习笔记(二)：简单了解 HTTP</title>
     <link href="/2019/12/10/%E5%9B%BE%E8%A7%A3-HTTP-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E4%BA%8C/"/>
     <id>/2019/12/10/图解-HTTP-学习笔记-二/</id>
     <published>2019-12-10T03:09:44.000Z</published>
-    <updated>2019-12-10T03:13:52.002Z</updated>
+    <updated>2019-12-10T03:19:38.176Z</updated>
     
     <content type="html"><![CDATA[<h3 id="1-HTTP-协用于客户端和服务端之间的通信"><a href="#1-HTTP-协用于客户端和服务端之间的通信" class="headerlink" title="1. HTTP 协用于客户端和服务端之间的通信"></a>1. HTTP 协用于客户端和服务端之间的通信</h3><p><strong>HTTP 协议能够区分哪一端是客户端，哪一端是服务端。</strong></p><h3 id="2-通过请求和响应的交换达成通信"><a href="#2-通过请求和响应的交换达成通信" class="headerlink" title="2. 通过请求和响应的交换达成通信"></a>2. 通过请求和响应的交换达成通信</h3><p>肯定是客户端开始建立通信，服务端在没有接收到请求之前不会发送响应。</p><h4 id="请求报文"><a href="#请求报文" class="headerlink" title="请求报文"></a>请求报文</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET /index.html HTTP/1.1</span><br><span class="line">Host: abc.jp</span><br></pre></td></tr></table></figure><a id="more"></a><p>这段请求的内容的意思是：请求访问某台 HTTP 服务器上的 /index.html 页面资源。</p><p>请求报文是由请求方法(GET)、请求 URI(上文中的 index.html)、协议版本HTTP/1.1)、可选的请求首部字段和内容实体构成。</p><p><img src="/source/images/2019_12_09_04.jpg" alt="dns.jpg"></p><h4 id="响应报文"><a href="#响应报文" class="headerlink" title="响应报文"></a>响应报文</h4><h3 id="3-HTTP-是不保存状态的协议"><a href="#3-HTTP-是不保存状态的协议" class="headerlink" title="3. HTTP 是不保存状态的协议"></a>3. HTTP 是不保存状态的协议</h3><p>无状态的协议</p><p>HTTP 协自身不对请求和响应之间的通信状态进行保存。<strong>协议本身不保留之前一切的请求或者响应报文的信息</strong>，为的是更快的处理大量事务，确保协议的可伸缩性，这就是为什么把 HTTP 协议设计如此简单的原因。</p><p>为了实现保存状态的功能，引入了 Cookie 技术。</p><h3 id="4-请求-URI-定位资源"><a href="#4-请求-URI-定位资源" class="headerlink" title="4. 请求 URI 定位资源"></a>4. 请求 URI 定位资源</h3><p>Uniform Resource identies</p><p>HTTP 协议通过 URI 定位互联网上的资源，正是因为 URI 的特定功能，所以在互联网上的任意资源都是可以访问的到的。</p><p>当客户端访问网络资源发起请求时，URI 将作为请求报文包含在其中。</p><h3 id="5-持久连接节省通信量"><a href="#5-持久连接节省通信量" class="headerlink" title="5. 持久连接节省通信量"></a>5. 持久连接节省通信量</h3><p>在 HTTP 的初始版本时，每进行一次 HTTP 通信就要经过 TCP 连接、TCP 断开操作，客户端和服务端在频繁的交互过程中，会产生大量无谓的 TCP 连接和断开，增大了通信量。</p><h4 id="持久连接"><a href="#持久连接" class="headerlink" title="持久连接"></a>持久连接</h4><p>在 HTTP1.1 版本中，通过引入持久连接的概念，解决了上述问题，在 HTTP 中表现为 HTTP 首部字段 keep-alive 为 true，并且在 HTTP1.1 版本中，more所有的连接都是持久连接。</p><p>持久连接的特点就是没有明确提出断开连接，则会保持 TCP 连接。</p><p>持久化连接，减少了 TCP 连接的重复建立和断开，减少了额外的开销，减轻了服务器的负载。</p><h4 id="管道化"><a href="#管道化" class="headerlink" title="管道化"></a>管道化</h4><p>HTTP/2 支持管道化，不过自己还没有使用过 HTTP/2，故在此不详述，在使用时再学习。</p><h3 id="6-使用-Cookie-进行状态该管理"><a href="#6-使用-Cookie-进行状态该管理" class="headerlink" title="6. 使用 Cookie 进行状态该管理"></a>6. 使用 Cookie 进行状态该管理</h3><p>HTTP 是无状态协议，即不会对之前发生的请求和响应进行状态管理，所以无法实现根据之前的状态进行本次请求的处理。</p><p>所以就会存在这样一个场景：需要登录验证的页面，需要在每次跳转都需要进行登录，当然这是很不合理的。</p><p>基于 HTTP 的无状态连接，引入了 Cookie 技术，该技术通过在请求和响应报文中写入 Cookie 信息来控制客户端的状态。</p><p>具体流程：</p><ul><li>如果服务端的响应报文中存在 Set-Cookie 的首部字段，那么 Cookie 就会通过客户端保存 cookie。</li><li>如果客户端再向服务端发送请求，那么就会自动在请求报文中添加 Cookie值，然后发送出去。</li><li>服务端发现客户端发送的 Cookie 后，就会查明是哪一个客户端发来的连接请求，然后在服务器中进行对比，<strong>得到之前的状态</strong>。</li></ul><ol><li><p>请求报文（此时的请求报文没有 Cookie 信息）</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET /show/ HTTP/1.1</span><br><span class="line">Host: baidu.com</span><br></pre></td></tr></table></figure></li><li><p>响应报文(服务端生成 Cookie 信息)</p></li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Date:xxx</span><br><span class="line">Server:Ngix</span><br><span class="line">&lt;Set-Cookie: sid=24143434334;path=/;expires=Wed 10-Oct-12 07:12:20 GMT&gt;</span><br><span class="line">Content-Type:text/plain;charset=UTF-8</span><br></pre></td></tr></table></figure><ol start="3"><li>请求报文(自动填充 Cookie 信息)</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GET /getImage/ HTTP1.1</span><br><span class="line">Host:baidu.com</span><br><span class="line">Cookie:sid=24143434334</span><br></pre></td></tr></table></figure>]]></content>
     
@@ -34,9 +34,11 @@
     </summary>
     
     
+      <category term="读书笔记" scheme="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
       <category term="网络协议" scheme="/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/"/>
     
-      <category term="图解 HTTP 读书笔记" scheme="/tags/%E5%9B%BE%E8%A7%A3-HTTP-%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+      <category term="图解 HTTP" scheme="/tags/%E5%9B%BE%E8%A7%A3-HTTP/"/>
     
   </entry>
   
@@ -333,9 +335,9 @@
     </summary>
     
     
-      <category term="JobScheduler" scheme="/tags/JobScheduler/"/>
-    
       <category term="WorkManager" scheme="/tags/WorkManager/"/>
+    
+      <category term="JobScheduler" scheme="/tags/JobScheduler/"/>
     
   </entry>
   
