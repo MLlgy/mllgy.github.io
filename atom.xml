@@ -337,9 +337,9 @@
     </summary>
     
     
-      <category term="WorkManager" scheme="/tags/WorkManager/"/>
-    
       <category term="JobScheduler" scheme="/tags/JobScheduler/"/>
+    
+      <category term="WorkManager" scheme="/tags/WorkManager/"/>
     
   </entry>
   
@@ -777,9 +777,9 @@
     </summary>
     
     
-      <category term="Coroutines(协程)" scheme="/tags/Coroutines-%E5%8D%8F%E7%A8%8B/"/>
-    
       <category term="Kotlin" scheme="/tags/Kotlin/"/>
+    
+      <category term="Coroutines(协程)" scheme="/tags/Coroutines-%E5%8D%8F%E7%A8%8B/"/>
     
   </entry>
   
