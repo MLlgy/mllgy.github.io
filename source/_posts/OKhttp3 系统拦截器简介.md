@@ -14,13 +14,10 @@ tags: [Okhttp3]
 
 while(true) 死循环，如果发生重定向则构建 Request，进入下一次循环，从新发起网络请求，但是最大重定向次数为 20 次。
 
-
-
 * 检验返回的 Response ，如果没有异常（包括请求失败、重定向等），那么执行 `return Response`, return 会直接结束循环操作，将结果返回到下一个拦截器中进行处理。
 
 * 检验返回的 Response ，如果出现异常情况，那么会根据 Response 新建 Request，并且执行一些必要的检查（是否为同一个 connnetion ，是的话抛出异常，不是的话是否旧的 connection 的资源，并新建一个 connection）
 ，在构建重定向请求时，从 Response 中取出 `Location` 字段，构建重定向后的 Request。下一次循环时，将进行新一轮的拦截器的处理。
-
 
 <!--more-->
 
