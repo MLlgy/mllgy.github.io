@@ -757,7 +757,6 @@ private int startActivity(IApplicationThread caller, Intent intent, Intent ephem
     final int launchFlags = intent.getFlags();
     if ((launchFlags & Intent.FLAG_ACTIVITY_FORWARD_RESULT) != 0 && sourceRecord != null) {
         // activity执行结果的返回由源Activity转换到新Activity, 不需要返回结果则不会进入该分支，具体查看源码
-
     }
     if (err == ActivityManager.START_SUCCESS && intent.getComponent() == null) {
         //从Intent中无法找到相应的Component
@@ -767,46 +766,9 @@ private int startActivity(IApplicationThread caller, Intent intent, Intent ephem
         //从Intent中无法找到相应的ActivityInfo
         err = ActivityManager.START_CLASS_NOT_FOUND;
     }
-    if (err == ActivityManager.START_SUCCESS && sourceRecord != null
-            && sourceRecord.getTask().voiceSession != null) {
-        // If this activity is being launched as part of a voice session, we need
-        // to ensure that it is safe to do so.  If the upcoming activity will also
-        // be part of the voice session, we can only launch it if it has explicitly
-        // said it supports the VOICE category, or it is a part of the calling app.
-        // 
-        if ((launchFlags & FLAG_ACTIVITY_NEW_TASK) == 0
-                && sourceRecord.info.applicationInfo.uid != aInfo.applicationInfo.uid) {
-            try {
-                intent.addCategory(Intent.CATEGORY_VOICE);
-                if (!mService.getPackageManager().activitySupportsIntent(
-                        intent.getComponent(), intent, resolvedType)) {
-                    Slog.w(TAG,
-                            "Activity being started in current voice task does not support voice: "
-                                    + intent);
-                    err = ActivityManager.START_NOT_VOICE_COMPATIBLE;
-                }
-            } catch (RemoteException e) {
-                Slog.w(TAG, "Failure checking voice capabilities", e);
-                err = ActivityManager.START_NOT_VOICE_COMPATIBLE;
-            }
-        }
-    }
-    if (err == ActivityManager.START_SUCCESS && voiceSession != null) {
-        // If the caller is starting a new voice session, just make sure the target
-        // is actually allowing it to run this way.
-        try {
-            if (!mService.getPackageManager().activitySupportsIntent(intent.getComponent(),
-                    intent, resolvedType)) {
-                Slog.w(TAG,
-                        "Activity being started in new voice task does not support: "
-                                + intent);
-                err = ActivityManager.START_NOT_VOICE_COMPATIBLE;
-            }
-        } catch (RemoteException e) {
-            Slog.w(TAG, "Failure checking voice capabilities", e);
-            err = ActivityManager.START_NOT_VOICE_COMPATIBLE;
-        }
-    }
+    ...// 关于 Activity 是否支持 voice 进行校验。
+
+    // 执行后 resultStack = null
     final ActivityStack resultStack = resultRecord == null ? null : resultRecord.getStack();
     if (err != START_SUCCESS) {
         if (resultRecord != null) {
@@ -830,15 +792,11 @@ private int startActivity(IApplicationThread caller, Intent intent, Intent ephem
                 .getPendingRemoteAnimationRegistry()
                 .overrideOptionsIfNeeded(callingPackage, checkedOptions);
     }
+    // ActivityController 不为空的情况
     if (mService.mController != null) {
-        try {
-            // The Intent we give to the watcher has the extra data
-            // stripped off, since it can contain private information.
-            Intent watchIntent = intent.cloneFilter();
-            abort |= !mService.mController.activityStarting(watchIntent,
+        Intent watchIntent = intent.cloneFilter();
+        abort |= !mService.mController.activityStarting(watchIntent,
                     aInfo.applicationInfo.packageName);
-        } catch (RemoteException e) {
-            mService.mController = null;
         }
     }
     mInterceptor.setStates(userId, realCallingPid, realCallingUid, startFlags, callingPackage);
@@ -856,56 +814,22 @@ private int startActivity(IApplicationThread caller, Intent intent, Intent ephem
         checkedOptions = mInterceptor.mActivityOptions;
     }
     if (abort) {
-        if (resultRecord != null) {
-            resultStack.sendActivityResultLocked(-1, resultRecord, resultWho, requestCode,
-                    RESULT_CANCELED, null);
-        }
-        // We pretend to the caller that it was really started, but
-        // they will just get a cancel result.
-        ActivityOptions.abort(checkedOptions);
+        ...// 权限检查不满足，进入该分支
         return START_ABORTED;
     }
-    // If permissions need a review before any of the app components can run, we
-    // launch the review activity and pass a pending intent to start the activity
-    // we are to launching now after the review is completed.
+    // 如果在组件开启前需要对权限进行重新检查，那么就启动 Activity 去重新检查权限，
+    // 在权限检查完成以后运行组件
     if (mService.mPermissionReviewRequired && aInfo != null) {
         if (mService.getPackageManagerInternalLocked().isPermissionsReviewRequired(
                 aInfo.packageName, userId)) {
-            IIntentSender target = mService.getIntentSenderLocked(
-                    ActivityManager.INTENT_SENDER_ACTIVITY, callingPackage,
-                    callingUid, userId, null, null, 0, new Intent[]{intent},
-                    new String[]{resolvedType}, PendingIntent.FLAG_CANCEL_CURRENT
-                            | PendingIntent.FLAG_ONE_SHOT, null);
-            final int flags = intent.getFlags();
-            Intent newIntent = new Intent(Intent.ACTION_REVIEW_PERMISSIONS);
-            newIntent.setFlags(flags
-                    | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-            newIntent.putExtra(Intent.EXTRA_PACKAGE_NAME, aInfo.packageName);
-            newIntent.putExtra(Intent.EXTRA_INTENT, new IntentSender(target));
-            if (resultRecord != null) {
-                newIntent.putExtra(Intent.EXTRA_RESULT_NEEDED, true);
-            }
-            intent = newIntent;
-            resolvedType = null;
-            callingUid = realCallingUid;
-            callingPid = realCallingPid;
-            rInfo = mSupervisor.resolveIntent(intent, resolvedType, userId, 0,
-                    computeResolveFilterUid(
-                            callingUid, realCallingUid, mRequest.filterCallingUid));
-            aInfo = mSupervisor.resolveActivity(intent, rInfo, startFlags,
-                    null /*prof..ilerInfo*/);
-            if (DEBUG_PERMISSIONS_REVIEW) {
-                Slog.i(TAG, "START u" + userId + " {" + intent.toShortString(true, true,
-                        true, false) + "} from uid " + callingUid + " on display "
-                        + (mSupervisor.mFocusedStack == null
-                        ? DEFAULT_DISPLAY : mSupervisor.mFocusedStack.mDisplayId));
-            }
+            ...
         }
     }
     // If we have an ephemeral app, abort the process of launching the resolved intent.
     // Instead, launch the ephemeral installer. Once the installer is finished, it
     // starts either the intent we resolved here [on install error] or the ephemeral
     // app [on install success].
+    // 如果有短暂的 app，那么中止正在运行的进程，转而运行短暂的app。
     if (rInfo != null && rInfo.auxiliaryInfo != null) {
         intent = createLaunchIntent(rInfo.auxiliaryInfo, ephemeralIntent,
                 callingPackage, verificationBundle, resolvedType, userId);
@@ -914,6 +838,7 @@ private int startActivity(IApplicationThread caller, Intent intent, Intent ephem
         callingPid = realCallingPid;
         aInfo = mSupervisor.resolveActivity(intent, rInfo, startFlags, null /*profilerInfo*/);
     }
+    // 创建 Activity 记录对象
     ActivityRecord r = new ActivityRecord(mService, callerApp, callingPid, callingUid,
             callingPackage, intent, resolvedType, aInfo, mService.getGlobalConfiguration(),
             resultRecord, resultWho, requestCode, componentSpecified, voiceSession != null,
@@ -922,15 +847,14 @@ private int startActivity(IApplicationThread caller, Intent intent, Intent ephem
         outActivity[0] = r;
     }
     if (r.appTimeTracker == null && sourceRecord != null) {
-        // If the caller didn't specify an explicit time tracker, we want to continue
-        // tracking under any it has.
         r.appTimeTracker = sourceRecord.appTimeTracker;
     }
+    将  mSupervisor.mFocusedStack 赋值给 stack
     final ActivityStack stack = mSupervisor.mFocusedStack;
-    // If we are starting an activity that is not from the same uid as the currently resumed
-    // one, check whether app switches are allowed.
+    // 如果我们启动的活动与当前恢复的活动不是来自同一 uid，请检查是否允许应用切换。
     if (voiceSession == null && (stack.getResumedActivity() == null
             || stack.getResumedActivity().info.applicationInfo.uid != realCallingUid)) {
+        // 前台stack还没有resume状态的Activity时, 则检查app切换是否允许,见下
         if (!mService.checkAppSwitchAllowedLocked(callingPid, callingUid,
                 realCallingPid, realCallingUid, "Activity start")) {
             mController.addPendingActivityLaunch(new PendingActivityLaunch(r,
@@ -940,20 +864,46 @@ private int startActivity(IApplicationThread caller, Intent intent, Intent ephem
         }
     }
     if (mService.mDidAppSwitch) {
-        // This is the second allowed switch since we stopped switches,
-        // so now just generally allow switches.  Use case: user presses
-        // home (switches disabled, switch to home, mDidAppSwitch now true);
-        // user taps a home icon (coming from home so allowed, we hit here
-        // and now allow anyone to switch again).
+        //从上次禁止app切换以来,这是第二次允许app切换,因此将允许切换时间设置为0,则表示可以任意切换app
         mService.mAppSwitchesAllowedTime = 0;
     } else {
         mService.mDidAppSwitch = true;
     }
+    //处理 pendind Activity的启动, 这些Activity是由于app switch禁用从而被hold的等待启动activity 
     mController.doPendingActivityLaunches(false);
     return startActivity(r, sourceRecord, voiceSession, voiceInteractor, startFlags,
             true /* doResume */, checkedOptions, inTask, outActivity);
 }
 ```
+
+## checkAppSwitchAllowedLocked
+
+```
+ boolean checkAppSwitchAllowedLocked(int callingPid, int callingUid, String name) {
+     if (this.mAppSwitchesAllowedTime < SystemClock.uptimeMillis()) {
+         return true;
+     } else {
+         int perm = this.checkComponentPermission("android.permission.STOP_APP_SWITCHES", callingPid, callingUid, -1, true);
+         if (perm == 0) {
+             return true;
+         } else {
+             Slog.w("ActivityManager", name + " request from " + callingUid + " stopped");
+             return false;
+         }
+     }
+ }
+```
+当mAppSwitchesAllowedTime时间小于当前时长,或者具有STOP_APP_SWITCHES的权限,则允许app发生切换操作.
+
+
+其中mAppSwitchesAllowedTime, 在AMS.stopAppSwitches()的过程中会设置为:mAppSwitchesAllowedTime = SystemClock.uptimeMillis() + APP_SWITCH_DELAY_TIME. 禁止app切换的timeout时长为5s(APP_SWITCH_DELAY_TIME = 5s).
+
+当发送5秒超时或者执行AMS.resumeAppSwitches()过程会将mAppSwitchesAllowedTime设置0, 都会开启允许app执行切换的操作.另外,禁止App切换的操作,对于同一个app是不受影响的,有兴趣可以进一步查看checkComponentPermission过程.
+
+
+是否允许 app 发生切换操作。
+
+
 
 
 ```
