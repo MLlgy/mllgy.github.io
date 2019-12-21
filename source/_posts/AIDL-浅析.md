@@ -156,7 +156,7 @@ public void addBook(com.mk.aidldemo.Book book) throws android.os.RemoteException
             _data.writeInt(0);
         }
         Log.e("process proxy add", ProcessUtils.getCurrentProcessName());
-        // mRemote 对象为构建 Proxy 对象时传入
+        // mRemote 对象为构建 Proxy 对象时传入，最终会调用 onTransact 方法
         mRemote.transact(Stub.TRANSACTION_addBook, _data, _reply, 0);
         _reply.readException();
     } finally {
@@ -187,6 +187,7 @@ public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel re
             java.util.List<com.mk.aidldemo.Book> _result = this.getBookList();
             reply.writeNoException();
             Log.e("process onTransact list", ProcessUtils.getCurrentProcessName());
+            // 将结果写入到 reply 中，reply 会回传到另外的进程，读取 reply 中的数据，从而完成跨进程通信
             reply.writeTypedList(_result);
             return true;
         }
@@ -244,13 +245,25 @@ E/process onTransact add: com.mk.aidldemo:remote
 
 **onTransact**
 
-这个方法运行在 **服务端中的 Binder线程池** 中，当客户端发起跨进程请求时，远程请求会通过 `系统底层封装` 后交由此方法来处理。该方法的原型为`publicBooleanonTransact(int code,android.os.Parcel data,android.os.Parcel reply,int flags)`。服务端通过 code 可以确定客户端所请求的目标方法是什么，接着从 data 中取出目标方法所需的参数（如果目标方法有参数的话），然后执行目标方法。当目标方法执行完毕后，就向 reply 中写入返回值（如果目标方法有返回值的话）。
+这个方法运行在 **服务端中的 Binder线程池** 中，当客户端发起跨进程请求时，远程请求会通过 `系统底层封装(主要是经过 binder 驱动)` 后交由此方法来处理。该方法的原型为`publicBooleanonTransact(int code,android.os.Parcel data,android.os.Parcel reply,int flags)`。
+
+具体流程：
+
+1. 服务端通过 code 可以确定客户端所请求的目标方法是什么。
+2. 从 data 中取出目标方法所需的参数（如果目标方法有参数的话），然后执行目标方法。
+3. 当目标方法执行完毕后，就向 reply 中写入返回值（如果目标方法有返回值的话）。
 
 onTransact 方法的执行过程就是这样的。需要注意的是，如果此方法返回 false，那么客户端的请求会失败，因此我们可以利用这个特性来做权限验证，毕竟我们也不希望随便一个进程都能远程调用我们的服务。
 
 **transact**
 
-`Proxy#getBookList、Proxy#addBook` 这个方法运行在 **客户端**，当客户端远程调用此方法时，它的内部实现是这样的：首先创建该方法所需要的输入型 Parcel 对象_data、输出型Parcel对象 _reply 和返回值对象 List；然后把该方法的参数信息写入 _data 中（如果有参数的话）；**接着调用 transact 方法来发起 RPC（远程过程调用）请求，同时当前线程挂起**； 然后 **服务端的onTransact 方法会被调用**，直到 RPC 过程返回后，当前线程继续执行，并从 _reply 中取出 RPC 过程的返回结果；最后返回 _reply 中的数据。
+`Proxy#getBookList、Proxy#addBook` 这个方法运行在 **客户端**，当客户端远程调用此方法时，它的内部实现是这样的：
+
+1. 首先创建该方法所需要的输入型 Parcel 对象_data、输出型Parcel对象 _reply 和返回值对象 List；
+2. 然后把该方法的参数信息写入 _data 中（如果有参数的话）；
+3. **接着调用 transact 方法来发起 RPC（远程过程调用）请求，同时当前线程挂起**； 
+4.  **服务端的onTransact 方法会被调用**，直到 RPC 过程返回后，当前线程继续执行，并从 _reply 中取出 RPC 过程的返回结果；最后返回 _reply 中的数据。
+5.  从 _reply 获取数据，从而完成了跨进程通信。
 
 
 这两个方法都为 Binder 的方法，至于底层是如何实现 RPC 实现了，需学习相关细节，期待学习，关于其基本原理可以查看：[Binder 基本原理](https://leegyplus.github.io/2019/06/05/Binder%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/#more)。

@@ -4,17 +4,20 @@ date: 2019-01-17 14:31:26
 tags: [Okhttp3]
 ---
 
+2019-12-10 更新，见文末。
+
 ### RetryAndFollowUpInterceptor
 
 功能：实现重试、跟踪
 
 实现原理： 
 
-while(true) 死循环的实现。
+while(true) 死循环，如果发生重定向则构建 Request，进入下一次循环，从新发起网络请求，但是最大重定向次数为 20 次。
 
-检验返回的 Response ，如果没有异常（包括请求失败、重定向等），那么执行 `return Response`, return 会直接结束循环操作，将结果返回到下一个拦截器中进行处理。
+* 检验返回的 Response ，如果没有异常（包括请求失败、重定向等），那么执行 `return Response`, return 会直接结束循环操作，将结果返回到下一个拦截器中进行处理。
 
-检验返回的 Response ，如果出现异常情况，那么会根据 Response 新建 Request，并且执行一些必要的检查（是否为同一个 connnetion ，是的话抛出异常，不是的话是否旧的 connection 的资源，并新建一个 connection），进入死循环的下一次循环，那么此时将进行新一轮的拦截器的处理。
+* 检验返回的 Response ，如果出现异常情况，那么会根据 Response 新建 Request，并且执行一些必要的检查（是否为同一个 connnetion ，是的话抛出异常，不是的话是否旧的 connection 的资源，并新建一个 connection）
+，在构建重定向请求时，从 Response 中取出 `Location` 字段，构建重定向后的 Request。下一次循环时，将进行新一轮的拦截器的处理。
 
 <!--more-->
 
@@ -39,6 +42,8 @@ Response networkResponse = chain.proceed(requestBuilder.build());
 
 主要是根据响应是否对 Response 进行 gzip 压缩，具体是使用 Okio 的库对 Response 进行压缩，并返回 Response。
 
+
+具体代码可以查看官方 Github 库，也可以查看自己的源码学习库：[BridgeInterceptor](https://github.com/leeGYPlus/SourceCodeLearn/blob/master/app/src/main/java/okhttp3/internal/http/BridgeInterceptor.java)
 
 ### CacheInterceptor
 
@@ -340,3 +345,18 @@ chain.proceed(originalRequest)
 
 ### 总结
 在对开源库的研读中，我们首先需要做的是对大致流程有个清晰的认识，但是不能深陷细节、具体实现上在后期对相关功能的具体使用时在进行相关研究。而自己在此过程中，就深陷入细节，针对具体的实现真是绞尽脑汁，最后还是 "一败涂地"。此处再次告诫自己和后来人：对开源库的研读不要纠结于细节、不要纠结于细节、不要纠结于细节。
+
+
+
+---
+
+2019-12-10 更新：
+
+Okhttp 的责任链驱动网络请求和响应的进行，和 RxJava 的事件驱动，原本想依照 RxJava 流程图画一下 Okhttp 拦截器的执行流程，但是发现在网络上有针对该流程的，于是引用。
+
+![](/source/images/2019-12-10-02.jpg)
+
+该系列博文也再一次让自己对 Okhttp 有了更深的认识,
+
+[OkHttp 源码解析系列](http://ww4.sinaimg.cn/large/006tNc79gy1g5hvb8euorj30tk0rwn0o.jpg)
+

@@ -168,6 +168,5 @@ public void setContentView(int resId) {
 
 ```
 mWindow.setContentView(subDecor)
-
 ```
 

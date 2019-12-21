@@ -1,7 +1,9 @@
 ---
-title: 图解 HTTP 学习笔记(二)
-tags:
+title: 图解 HTTP 学习笔记(二)：简单了解 HTTP
+date: 2019-12-10 11:09:44
+tags: [网络协议,图解 HTTP,读书笔记]
 ---
+
 
 
 ### 1. HTTP 协用于客户端和服务端之间的通信
@@ -18,7 +20,7 @@ tags:
 GET /index.html HTTP/1.1
 Host: abc.jp
 ```
-
+<!-- more -->
 这段请求的内容的意思是：请求访问某台 HTTP 服务器上的 /index.html 页面资源。
 
 请求报文是由请求方法(GET)、请求 URI(上文中的 index.html)、协议版本HTTP/1.1)、可选的请求首部字段和内容实体构成。

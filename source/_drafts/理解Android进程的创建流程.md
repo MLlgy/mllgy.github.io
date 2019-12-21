@@ -61,6 +61,7 @@ public static final Process.ProcessStartResult start(String processClass, String
 
 ```
     private static Process.ProcessStartResult zygoteSendArgsAndGetResult(ArrayList<String> args) throws ZygoteStartFailedEx {
+        // 建立 Socket 连接
         openZygoteSocketIfNeeded();
 
         try {
@@ -105,7 +106,7 @@ public static final Process.ProcessStartResult start(String processClass, String
 ```
 system_server 进程和 Zygote 进程之间是通过 Socket 通信的，这个方法的主要功能是通过socket通道向Zygote进程发送一个参数列表，然后进入阻塞等待状态，直到远端的socket服务端发送回来新创建的进程pid才返回。
 
-既然system_server进程的zygoteSendArgsAndGetResult()方法通过socket向Zygote进程发送消息，这是便会唤醒Zygote进程，来响应socket客户端的请求（即system_server端），接下来的操作便是在Zygote来创建进程
+既然system_server进程的zygoteSendArgsAndGetResult()方法 **通过socket向Zygote进程发送消息**，**这是便会唤醒Zygote进程**，**来响应socket客户端的请求**（即system_server端），接下来的操作便是在Zygote来创建进程
 
 
 # Zygote创建进程
