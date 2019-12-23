@@ -13,7 +13,7 @@ Android 系统中存在两个截然不同的两个世界：
 在这样的 Android 世界中存在两个比较重要的进程：Zygote 进程 和 system_server 进程：
 
 * Zygote 进程：和 Android 系统中的 Java 世界有重要的关系。
-* system_server 进程：系统重要的服务（Service）都驻留在 Java 世界中。
+* system_server 进程：系统重要的服务（Service）都驻留在 Java 世界中,比如 AMS、PMS 都存在该进程中。
 
 这两个进程是在 Android 系统是 Java 世界的半边天，任何一个进程死亡，都会导致系统崩溃。
 
@@ -30,19 +30,22 @@ zygote 对应的文件为 App_main.cpp，通过源码可以看到重要工作是
 * 通过 JNI 调用 Java 函数，具体为调用 ZygoteInit#main 方法
 
 
-基于以上3点，它们开创了 Android 系统的 Java 世界，至此进入了 Android 系统中的 Java 世界。
+基于以上3点，**它们开创了 Android 系统的 Java 世界，至此进入了 Android 系统中的 Java 世界**。
 
 
 ## Java 世界中 Zygote
 
-ZygoteInit#main 涉及的主要流程：
+`ZygoteInit#main` 涉及的主要流程：
 
 
-1. 建立 IPC 通信服务端——registerZygoteSocket
+1. 建立 IPC 通信服务端——`registerZygoteSocket`
 
-在 Android 系统中主要通过 Binder 进行 IPC 通信，但是 zygoet 与系统中其他程序没有使用 Binder，而是使用了 Socket，而 registerZygoteSocket 函数就是为了建立这个 Socket
+在 Android 系统中主要通过 Binder 进行 IPC 通信，但是 zygoet 与系统中其他程序没有使用 Binder，而是使用了 Socket，而 registerZygoteSocket 函数就是为了建立这个 Socket。
 
-2. 预加载类和资源——preloadClasses、preloadResources
+
+![](http://gityuan.com/images/android-arch/android-booting.jpg)
+
+2. 预加载类和资源——`preloadClasses`、`preloadResources`
 
     * 预加载通用类(`/system/etc/preloaded-classes`)
     * drawable和color资源(`com.android.internal.R.array.preloaded_drawables`、`com.android.internal.R.array.preloaded_color_state_lists`、`com.android.internal.R.array.preloaded_freeform_multi_window_drawables`)
@@ -54,15 +57,15 @@ ZygoteInit#main 涉及的主要流程：
     preloaded-classes 包含的类有很多，所以预加载类执行的时间较长，这是 Android 系统启动比较慢的原因之一。preResources 加载 framework-res.apk 中的资源。
 
 
-3. 启动 system_serve——startSystemServer
+3. 启动 system_serve——`startSystemServer`
 
 
 这样函数会创建在 Java 世界中 **系统 Service** 所 **驻留的进程 system_server**，如果该进程死了，会导致 zygote 自杀或者重启。
 
-在该函数中 zygote 进程会执行 fork 操作——`Zygote.forkSystemServer`，产生一个 sysytem_server 进程。
+在该函数中 zygote 进程会执行 fork 操作——`Zygote.forkSystemServer`，产生一个 `sysytem_server` 进程。
 
 
-4. 有求必应之等待请求——runSelectLoopMode
+4. 有求必应之等待请求——`runSelectLoopMode`
 
 
 在关键点一中，`registerZygoteSocket` 主注册了一个用于 IPC 的 Socket，此 Socket 在runSelectLoopMode发挥作用。
@@ -84,16 +87,17 @@ SystemServer 进程的名字为 system_server，为 Zygote 进程 fork 产生的
 ## zygote 如何完成分裂
 
 
-在上面中可以看到，通过调用 Zygote.forkSystemServer 函数最终 fork 出一个 system_server 进程，运行 Android 系统中的重要的 Service，接下来就通过 runSelectLoopMode 来处理客户的消息，
+在上面中可以看到，通过调用 Zygote.forkSystemServer 函数最终 fork 出一个 system_server 进程，来 **运行 Android 系统中的重要的 Service（比如 AMS、PMS等）**，接下来就通过 runSelectLoopMode 来处理客户的消息，
 那么此处的客户都有谁呢？zygote 又是如何根据客户的请求执行分裂和繁殖呢？
 
 常见的客户有 Activity、Service 等，此处以 Activity 的启动为例，分析 zygote 的无性繁殖。
 
-若启动的 Activity 所在的进程尚未启动，那么就会首先创建进程，然后才会启动相应的 Activity。
+若启动的 Activity 所在的进程尚未启动，那么就会首先创建进程，然后才会启动相应的 Activity。在以下过程中需要注意的是：AMS 是允许在 system_server 进程中的服务，所以 zygote 的分裂是有 system_server 控制的。
 
 
 1. AMS 发送请求
 
+```
 AMS#startProcessLocked——>
 ProcessList#startProcessLocked——>
 Process#startProcess——>
@@ -102,11 +106,16 @@ ZygoteProcess#start——>
 ZygoteProcess#startViaZygote(在该方法中配置要启动进程的参数、调用了 openZygoteSocketIfNeeded 函数)——>
 ZygoteProcess#zygoteSendArgsAndGetResult——>
 attemptZygoteSendArgsAndGetResult
+```
 
-其中调用了 openZygoteSocketIfNeeded 的函数，实现了与 Zygote 进程中的 Socket 连接，并在 attemptZygoteSendArgsAndGetResult 函数中
+其中调用了 openZygoteSocketIfNeeded 的函数，**实现了 systemz_server 进程与 Zygote 进程中的 Socket 连接**，并在 attemptZygoteSendArgsAndGetResult 函数中
 向 zygote 发送请求，请求的参数中有一个字符串，具体值为“android.app.ActivityThread”。
 
-由于 AMS 运行在 SystemServer 中，所以是 SystemServer进程 向 Zygote 进程发送了消息
+这一流程也符合 Gityuan 在 Android 系统启动中给出的流程图：
+
+![Android 系统启动流程](http://gityuan.com/images/android-arch/android-booting.jpg)
+
+由于 AMS 运行在 SystemServer 中，所以 SystemServer进程通过 Socket 向 Zygote 进程发送了消息。
 
 2. zygote 进程响应请求，fork 产生新的进程
 
@@ -152,6 +161,7 @@ public static void main(String argv[]) {
                 parsedArgs.mRuntimeFlags, rlimits, parsedArgs.mMountExternal, parsedArgs.mSeInfo,
                 parsedArgs.mNiceName, fdsToClose, fdsToIgnore, parsedArgs.mStartChildZygote,
                 parsedArgs.mInstructionSet, parsedArgs.mAppDataDir, parsedArgs.mTargetSdkVersion);
+    // pid = 0,以下在新的进程中执行
     if (pid == 0) {
                 zygoteServer.setForkChild();
 
@@ -190,7 +200,7 @@ public static void main(String argv[]) {
                         parsedArgs.mRemainingArgs, null /* classLoader */);
     }
 ```
-* zygoteInit
+* ZygoteInit#zygoteInit
 ```
 public static final Runnable zygoteInit(int targetSdkVersion, long[] disabledCompatChanges,
             String[] argv, ClassLoader classLoader) {
@@ -202,7 +212,7 @@ public static final Runnable zygoteInit(int targetSdkVersion, long[] disabledCom
                 classLoader);
 }
 ```
-* applicationInit
+* RuntimeInit#applicationInit
 ```
    protected static Runnable applicationInit(int targetSdkVersion, long[] disabledCompatChanges,
             String[] argv, ClassLoader classLoader) {
@@ -215,7 +225,7 @@ public static final Runnable zygoteInit(int targetSdkVersion, long[] disabledCom
         return findStaticMain(args.startClass, args.startArgs, classLoader);
     }
 ```
-* findStaticMain
+* RuntimeInit#findStaticMain
 ```
    protected static Runnable findStaticMain(String className, String[] argv,
             ClassLoader classLoader) {
@@ -269,7 +279,7 @@ public void run() {
         Looper.loop();
     }
 ```
-至此完成了从 Zygote fork 产生新进程，并且在新进程中执行 ActivityThread#main 方法，正式开启新进程的工作。
+至此完成了从 Zygote fork 产生新进程，并且在 **新进程** 中执行 `ActivityThread#main` 方法，正式开启新进程的工作。
 
 
 
@@ -279,4 +289,4 @@ public void run() {
 
 深入理解 Android(卷1)
 
-[理解Android进程创建流程](http://gityuan.com/2016/03/26/app-process-create/)
+[理解Android进程创建流程](http://gityuan.com/2016/03/26/app-process-create/4)
