@@ -39,18 +39,18 @@ Window 的 Type 属性表示 Window 的三种类型：
 
 ### Window 的内部机制
 
-Window 是一个抽象的概念，每一个 Window 都对应一个 View 和一个 ViewRootImpl，Window 和 View 之间通过 ViewRootImpl 来建立联系，因此 Window 是不存在的，以 View 的形式存在。 
+Window 是一个抽象的概念，**每一个 Window 都对应一个 View 和一个 ViewRootImpl**，**Window 和 View 之间通过 ViewRootImpl 来建立联系**，因此 **Window 是不存在的，以 View 的形式存在**。 
  
 
 **Window 的添加过程**
 
-WindowManager 只是一个接口，真正的实现为 WindowManagerImpl，而 WindowManagerImpl 的操作通过 WindowManagerGlobal 代理类来完成。
+`WindowManager` 只是一个接口，真正的实现为 `WindowManagerImpl，而` `WindowManagerImpl` 的操作通过 `WindowManagerGlobal` 代理类来完成。
 
-WindowManagerGlobal 中 addView 的重要步骤：
+`WindowManagerGlobal` 中 addView 的重要步骤：
 
 1. 检查参数是否合法，如果是子 Window 那么需要调整一些 **布局参数**
 
-2. 创建 ViewRootImpl 并将 View 添加到列表中。
+2. **创建 ViewRootImpl** 并将 View 添加到列表中。
 
 WindowManagerGlobal 中几个重要的集合：
 
@@ -66,15 +66,15 @@ private final ArrayList<WindowManager.LayoutParams> mParams =
 private final ArraySet<View> mDyingViews = new ArraySet<View>();
 ```
 
-3. 由 ViewRootImpl 来更新界面并完成 Window 的添加过程。
+3. **由 ViewRootImpl 来更新界面**,并完成 Window 的添加过程。
 
-
-WindowManagerGlobal#addView -> ViewRootImpl#setView
+调用过程：
+`WindowManagerGlobal#addView` ->` ViewRootImpl#setView`
 
 ```
 root.setView(view, wparams, panelParentView);
 ```
-ViewRootImpl#setView:
+`ViewRootImpl#setView:`
 
 ```
 public void setView(View view, WindowManager.LayoutParams attrs, View panelParentView) {
@@ -82,7 +82,7 @@ public void setView(View view, WindowManager.LayoutParams attrs, View panelParen
     // 更新界面
     requestLayout();
     ...
-    // WindowSession 完成 Window 的添加过程
+    // WindowSession 完成 Window 的添加过程，这是一个 IPC 过程
     res = mWindowSession.addToDisplay(mWindow, mSeq, mWindowAttributes,
                             getHostVisibility(), mDisplay.getDisplayId(), mWinFrame,
                             mAttachInfo.mContentInsets, mAttachInfo.mStableInsets,
@@ -110,8 +110,10 @@ public int addToDisplay(IWindowwindow,intseq,WindowManager.LayoutParams attrs,in
 }
 ```
 
-至于 WMS 中如何实现 addWindow 同时也会是 IPC 过程，而且牵涉比较广，可以参见源码。
+如此以来，Window 的添加请求就交给 WMS 处理了，在WMS 内部会为每一个应用保留一个 Session 对象，为每一个应用实现添加 Window 的功能。
 
+
+至于 WMS 中如何实现 addWindow 同时也会是 IPC 过程，而且牵涉比较广，可以参见源码。
 
 ### Window 删除过程
 
@@ -147,6 +149,53 @@ WindowManagerGlobal#updateViewLayout
 ![](/source/images/2019_12_03_04.png)
 
 * 第二阶段：Activity 视图是怎么关联到 Window 上的
+
+
+在相应的 Activity 的 oncreate 方法中做如下调用：Activity#setContengView 
+
+```
+public void setContentView(@LayoutRes int layoutResID) {
+    // 获得的 Window 实例为 PhoneWindow
+    getWindow().setContentView(layoutResID);
+    initWindowDecorActionBar();
+}
+```
+PhoneWindow#setContentView
+
+```
+    @Override
+    public void setContentView(int layoutResID) {
+        // Note: FEATURE_CONTENT_TRANSITIONS may be set in the process of installing the window
+        // decor, when theme attributes and the like are crystalized. Do not check the feature
+        // before this happens.
+        if (mContentParent == null) {
+            installDecor();
+        } else if (!hasFeature(FEATURE_CONTENT_TRANSITIONS)) {
+            mContentParent.removeAllViews();
+        }
+
+        if (hasFeature(FEATURE_CONTENT_TRANSITIONS)) {
+            final Scene newScene = Scene.getSceneForLayout(mContentParent, layoutResID,
+                    getContext());
+            transitionTo(newScene);
+        } else {
+            mLayoutInflater.inflate(layoutResID, mContentParent);
+        }
+        mContentParent.requestApplyInsets();
+        final Callback cb = getCallback();
+        if (cb != null && !isDestroyed()) {
+            cb.onContentChanged();
+        }
+        mContentParentExplicitlySet = true;
+    }
+```
+
+
+---
+
+
+
+
 
 在 Activity 中调用 setContentView(int resId) 后的调用关系如下：
 

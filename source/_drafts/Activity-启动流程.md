@@ -8,7 +8,7 @@ Activity启动发起后，通过Binder最终交由system进程中的AMS来完成
 # Activity
 
 
-## startActivity
+## 1. startActivity
 
 ```
 public void startActivity(Intent intent) {
@@ -24,7 +24,7 @@ public void startActivity(Intent intent, Bundle options) {
 ```
 
 
-## startActivityForResult
+## 2. startActivityForResult
 
 ```
     public void startActivityForResult(Intent intent, int requestCode, Bundle options) {
@@ -63,7 +63,7 @@ public ActivityThread.ApplicationThread getApplicationThread() {
 private IBinder mToken;
 ```
 
-## Instrumentation#execStartActivity
+## 3. Instrumentation#execStartActivity
 
 ```
 public Instrumentation.ActivityResult execStartActivity(Context who, IBinder contextThread, IBinder token, Activity target, Intent intent, int requestCode, Bundle options) {
@@ -87,6 +87,7 @@ public Instrumentation.ActivityResult execStartActivity(Context who, IBinder con
     try {
         intent.setAllowFds(false);
         intent.migrateExtraStreamToClipData();
+        //  ActivityManagerNative.getDefault() 实现见步骤 4
         int result = ActivityManagerNative.getDefault().startActivity(whoThread, intent, intent.resolveTypeIfNeeded(who.getContentResolver()), token, target != null ? target.mEmbeddedID : null, requestCode, 0, (String)null, (ParcelFileDescriptor)null, options);
         // 检查 activity 是否启动成功
         checkStartActivityResult(result, intent);
@@ -96,11 +97,8 @@ public Instrumentation.ActivityResult execStartActivity(Context who, IBinder con
 }
 ```
 
-核心代码：
 
-```
-int result = ActivityManagerNative.getDefault().startActivity(whoThread, intent, intent.resolveTypeIfNeeded(who.getContentResolver()), token, target != null ? target.mEmbeddedID : null, requestCode, 0, (String)null, (ParcelFileDescriptor)null, options);
-```
+## 4. ActivityManagerNative.getDefault()
 
 具体 `ActivityManagerNative.getDefault()` 方法如下：
 
@@ -144,7 +142,6 @@ public abstract class Singleton<T> {
             if (this.mInstance == null) {
                 this.mInstance = this.create();
             }
-
             return this.mInstance;
         }
     }
@@ -155,6 +152,7 @@ public abstract class Singleton<T> {
 
 
 > 这里的疑问？ 为什么是 ActivityManagerProxy 而不是 ActivityManagerNative
+> 因为应用的进程与 AMS 所在的 system_server 进程为两个不同的进程，所以为 ActivityManagerProxy。。
 
 
 ## ActivityManagerProxy#startActivity

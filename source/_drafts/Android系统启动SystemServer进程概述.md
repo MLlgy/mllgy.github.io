@@ -42,7 +42,7 @@ if(pid = 0){
 
 
 * 创建各种 SystemContext，比如：ActivityThread、Instrumentation、ContextImpl、LoadedApk、Application
-* 加载 libandroid_server.so 库，通过 SystemServerManager 对象启动各种服务，比如 Installer、AMS、PMS 等服务
+* 加载 libandroid_server.so 库，**通过 SystemServerManager 对象启动各种服务**，比如 Installer、AMS、PMS 等服务
 
 具体代码如下：
 
@@ -182,7 +182,7 @@ private void run() {
 此处遗留的疑问：
 
 
-* SystemServer 运行在 system_server 进程中，那么如何能够调用 Loop.loop(),
+* SystemServer 运行在 system_server 进程中，那么如何能够调用 Looper.loop(),
 
 此时的线程为何物，不是运行在 进程中吗？
 
