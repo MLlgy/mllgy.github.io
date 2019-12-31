@@ -4,7 +4,7 @@ tags:
 ---
 
 
-
+LoadedApk：加载的 APK 的本地状态。
 
 
 
