@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="GY">
 <meta property="og:description" content="在 also、let 的 Lambda 表达式内，it 代表接收者类型对象，而不像 《Kotlin 核心编程》 一书中所说的，this 代表接收者类型对象，而且在 also、let 中同时存在 this，并且通过 this 可以访问到外层变量，自己对此充满疑问，感觉书中对 this 为接收者对象的方法过于武断，查官方文档，十分幸运，正好有一篇关于此内容的文档，不过为英文，自己读了一遍，觉得在翻译此">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-12-03T05:32:28.379Z">
+<meta property="og:updated_time" content="2020-01-03T08:36:15.609Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kotlin 核心编程(十一):作用域函数 let、run、with、apply、also">
 <meta name="twitter:description" content="在 also、let 的 Lambda 表达式内，it 代表接收者类型对象，而不像 《Kotlin 核心编程》 一书中所说的，this 代表接收者类型对象，而且在 also、let 中同时存在 this，并且通过 this 可以访问到外层变量，自己对此充满疑问，感觉书中对 this 为接收者对象的方法过于武断，查官方文档，十分幸运，正好有一篇关于此内容的文档，不过为英文，自己读了一遍，觉得在翻译此">
@@ -63,8 +63,6 @@
 				<li><a href="/">主页</a></li>
 	        
 				<li><a href="/tags/随笔/">随笔</a></li>
-	        
-				<li><a href="/show/">个人简历</a></li>
 	        
 			</ul>
 		</nav>
@@ -122,8 +120,6 @@
 			
 				
 			
-				
-			
 			
 			
 			<nav class="header-nav">
@@ -143,14 +139,12 @@
 			</nav>
 
 			<nav class="header-menu js-header-menu">
-				<ul style="width: 70%">
+				<ul style="width: 50%">
 				
 				
-					<li style="width: 33.333333333333336%"><a href="/">主页</a></li>
+					<li style="width: 50%"><a href="/">主页</a></li>
 		        
-					<li style="width: 33.333333333333336%"><a href="/tags/随笔/">随笔</a></li>
-		        
-					<li style="width: 33.333333333333336%"><a href="/show/">个人简历</a></li>
+					<li style="width: 50%"><a href="/tags/随笔/">随笔</a></li>
 		        
 				</ul>
 			</nav>
@@ -194,25 +188,38 @@
 <p>具体示例如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">data class Student(val age: Int, val name: String, val score: Int)</span><br><span class="line"></span><br><span class="line">class Kot &#123;</span><br><span class="line">    val student: Student = Student(9, &quot;aline&quot;, 3)</span><br><span class="line">    var age = 2</span><br><span class="line">    fun showTest() &#123;</span><br><span class="line">        </span><br><span class="line">        student?.apply &#123;</span><br><span class="line">            println(name)</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        student?.also &#123;</span><br><span class="line">            println(it.name)</span><br><span class="line">            println(it.age)</span><br><span class="line">            println(this.age)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        student.let &#123;</span><br><span class="line">            println(this.age)</span><br><span class="line">            println(it.name)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="作用域函数的作用"><a href="#作用域函数的作用" class="headerlink" title="作用域函数的作用"></a>作用域函数的作用</h3><p>Koltin 标准库中存在这样一类函数，它存在的唯一作用就是在执行传入闭包中的代码。当向这类函数传入 Lambda 表达式时，在该闭包范围内存在作用域对象，可以不通过对象的名字直接访问该对象的成员，这样的函数在 Kotlin 称为作用域函数。在 Kotlin 中有 5 个作用域函数： let、run、with、apply、also。</p>
+<h3 id="作用域函数的作用"><a href="#作用域函数的作用" class="headerlink" title="作用域函数的作用"></a>作用域函数的作用</h3><p>Koltin 标准库中存在这样一类函数，它存在的 <strong>唯一作用就是在执行传入闭包中的代码</strong>。当向这类函数传入 Lambda 表达式时，在该闭包范围内存在作用域对象，<strong>可以不通过对象的名字直接访问该对象的成员</strong>，这样的函数在 Kotlin 称为 <strong>作用域函数</strong>。在 Kotlin 中有 5 个作用域函数： <code>let、run、with、apply、also。</code></p>
 <p>上面提到的 5 个函数的作用基本都一致：在对象作用域内之下代码块，所以在开发中如何根据需求选择合适的函数就变得不那么容易，需要考虑具体需求意图、一致性等因素。基于此，以下内容主要用于陈述以上 5 个作用域函数的区别以及常规用法。</p>
 <h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3><p>不同点主要体现在以下两点：</p>
 <ol>
 <li>闭包内上下文对象的表示方法。</li>
 <li>整个表达式的返回结果。</li>
 </ol>
-<h4 id="上下文对象的表示方法：this-or-it"><a href="#上下文对象的表示方法：this-or-it" class="headerlink" title="上下文对象的表示方法：this or it"></a>上下文对象的表示方法：this or it</h4><p>在作用域函数中，上下文对象可以通过短引用而不是实际名称来使用。在作用域函数中可以通过<br>每个作用域函数上下文对象只能是以下两种方式中的一种方式获得：</p>
+<h4 id="上下文对象的表示方法：this-or-it"><a href="#上下文对象的表示方法：this-or-it" class="headerlink" title="上下文对象的表示方法：this or it"></a>上下文对象的表示方法：this or it</h4><p>在作用域函数中，<strong>上下文对象可以通过短引用(this 或者 it)而不是实际名称来使用</strong>。在作用域函数中可以通过<br>每个作用域函数上下文对象只能是以下两种方式中的一种方式获得：</p>
 <ol>
 <li>作用域函数的接收者类型对象，在闭包中通过 this 进行访问。</li>
 <li>Lambda 表达式的传入参数对象，在闭包中通过 it 进行访问。</li>
 </ol>
 <p><strong>this</strong></p>
-<p>作用域函数 run、with、apply 中的上下文对象为作用域函数的类型接收者对象，在闭包中通过 this 进行指代，通过以下示例具体展示：</p>
+<p>作用域函数 run、with、apply 中的上下文对象为作用域函数的类型接收者对象，在闭包中通过 this 进行指代。</p>
+<p>在这里以 run 函数解释一下作用域函数的 <strong>上下文对象</strong> 和 <strong>类型接收者对象</strong>，run 函数如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public inline fun &lt;T, R&gt; T.run(block: T.() -&gt; R): R &#123;</span><br><span class="line">    contract &#123;</span><br><span class="line">        callsInPlace(block, InvocationKind.EXACTLY_ONCE)</span><br><span class="line">    &#125;</span><br><span class="line">    return block()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>run 的 <strong>上下文对象</strong> 为 <code>T.run</code>  中的 T，而 <strong>类型接收对象</strong> 为 run 函数所属的类，即 <code>block: T.() -&gt; R</code>中的 T，可见 上下文对象 和 类型接收对象 是相同的，所以在 Lambda 中使用 this 来表达上下文对象。</p>
+<p>通过以下示例具体展示：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">data class Student(val age: Int, val name: String, val score: Int)</span><br><span class="line"></span><br><span class="line">fun show()&#123;</span><br><span class="line">    val student: Student = Student(9, &quot;aline&quot;, 3)</span><br><span class="line">    student.run &#123; </span><br><span class="line">        this.age</span><br><span class="line">        this.score</span><br><span class="line">        name</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>可以看到在 Lambd 中 this 即为 run 函数的类型接收者对象 student，可以在闭包中通过 this 访问 student 的成员变量，同时关键字 this 也可以省略。</p>
 <p><strong>it</strong></p>
 <p>let、also 作用域函数的上下文对象为 Lambda 对象中传入的类型对象。如果在 Lambda 中参数名称没有显式声明，那么该对象可以通过 it 隐式访问。</p>
+<p>以 let 作用域函数具体说明：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public inline fun &lt;T, R&gt; T.let(block: (T) -&gt; R): R &#123;</span><br><span class="line">    contract &#123;</span><br><span class="line">        callsInPlace(block, InvocationKind.EXACTLY_ONCE)</span><br><span class="line">    &#125;</span><br><span class="line">    return block(this)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从以上代码可以看到的是：函数的上下文对象为 <code>T.let</code> 中的 T，而在该函数中 T 并不是像 run 函数 中那样作为传入的 Lambda 的类型接收对象，而是为传入 Lambda 表达式的参数类型，所以此时函数的上下对象使用 it 来表示。</p>
+<p>至于为什么是 it，我感觉这是 Kotlin 中针对 Lambda 表达式的语法糖：<strong>单个参数的隐式名称</strong>，当 Lambda 表达式的参数为一个时，可以使用 it 代表所接收的单个参数，就如下面表达式一样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">listOf(1,2,3).forEach&#123;</span><br><span class="line">    it -&gt; sout(it)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>it 的具体使用案例如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">fun show()&#123;</span><br><span class="line">    val student: Student = Student(9, &quot;aline&quot;, 3)</span><br><span class="line"></span><br><span class="line">    student.also &#123; </span><br><span class="line">        it.age</span><br><span class="line">        it.score</span><br><span class="line">    &#125;</span><br><span class="line">    // 指定参数的名称，与上面的效果一样</span><br><span class="line">    student.also &#123;  stu -&gt; </span><br><span class="line">        stu.age</span><br><span class="line">        stu.score</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="返回值"><a href="#返回值" class="headerlink" title="返回值"></a>返回值</h3><p>以上提到的 5 个作用域函数的返回值对象是不同的：</p>
@@ -472,7 +479,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2019 GY
+    		&copy; 2020 GY
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -551,27 +558,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
+                <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -579,11 +566,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -595,27 +578,27 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Hprof</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">内存泄漏</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Dart</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">极客时间专栏</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -631,6 +614,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Hprof</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存泄漏</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
@@ -643,11 +638,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Inflection</a>
+                <a href="javascript:void(0)" class="js-tag color5">对象拷贝</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">对象拷贝</a>
+                <a href="javascript:void(0)" class="js-tag color1">Inflection</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -663,15 +658,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">List</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Map</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Queue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -683,15 +678,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -700,6 +687,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">WorkManager</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -715,15 +710,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kotlin 核心编程</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -739,6 +734,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">RxJava</a>
               </li>
              
@@ -747,19 +746,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Shell</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">VIM</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Git</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -776,6 +767,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">GitPage</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -803,7 +802,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
+                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -811,11 +810,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -824,6 +823,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">计算机基础</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">数据压缩</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -839,6 +846,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">JNI</a>
               </li>
              
@@ -847,19 +858,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">动画</a>
+                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -903,11 +910,39 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Thread</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Dex</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MultiDex</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">源码解析</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">动画</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -961,6 +996,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
     	<section class="tools-section tools-section-friends" q-show="friends">
   		
         <ul class="search-ul">
+          
+            <li class="search-li">
+              <a href="https://cs.android.com/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>AOSP代码搜索工具</a>
+            </li>
           
             <li class="search-li">
               <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>谷歌官方文档</a>
