@@ -135,3 +135,8 @@ BUILD SUCCESSFUL in 0s
 [全面理解Gradle - 执行时序](https://blog.csdn.net/singwhatiwanna/article/details/78797506)
 
 [全面理解Gradle - 定义Task](https://blog.csdn.net/singwhatiwanna/article/details/78898113)
+
+
+---
+
+[Gradle之task的使用](https://blog.csdn.net/weixin_38062353/article/details/82710203)
