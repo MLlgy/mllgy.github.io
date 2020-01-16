@@ -80,3 +80,223 @@ Gradle 提供了开箱即用的插件，称为 **标准插件**，也可以通�
 
 
 标准插件也提供了很多通用功能，大部分能够满足开发者的需求。由社区或这开源组织开发的三方插件，可以用来给构建脚本增强非标准功能。
+
+### 使用对象插件
+
+在项目中同通过 apply 方法来配置项目，从而使用标准插件，该方式是 Project 对象提供的方式，存在一个类型为 Map 的参数 options。
+
+标准插件的便利在于他们是 Gradle 运行时的一部分，用户不需要知道插件所依赖的类库，这些类库的位置为 Gradle 安装目录的 libs/plugins 下。
+
+#### 通过名字使用插件
+
+插件标识符一个简短的名字，通过插件的元信息提供，在项目中使用 Java 插件，直接传入键值对 plugin：’java‘：
+
+```
+apply plugins: 'java'
+```
+
+#### 通过类型使用插件
+
+
+
+如果插件没有暴露名字，或者两个插件的命名冲突，那么可以类型来使用插件。
+
+```
+apply plugin:org.gradle.api.plugins.JavaPlugin
+```
+
+#### 使用外部插件
+
+构建脚本并不知道外部插件的存在，需要将它放到 `classpath` 下。可以通过 buildScript 方法来做这件事，它定义了外部插件的位置、仓库和插件依赖。
+
+
+在配置阶段，Gradle 中构建项目模型，连接插件构建逻辑。一旦插件下载完成，就会放置在本地缓存中，以便后续的运行可以使用到它们。
+
+以下展示如何使用 MavenCentral 中的 tomcat 插件
+
+```
+buildScript{
+    repostories{
+        // 该插件的原始仓库
+        mavenCentral()
+    }
+    dependencies{
+        // 定义插件依赖
+        classpath 'org.gradle.api.plugins:gradle-tomcat-plugin:0.9.7'
+    }
+}
+```
+
+### 解析对象插件
+
+
+以下图片显示了实现一个插件的几种选择：
+
+
+![](/source/images/2020_01_16_01.png)
+
+
+对于实现一个对象插件，有四个元素是十分重要的：
+
+* 放置插件实现的位置
+
+
+Gradle 在这方式十分灵活，代码可以发在构建脚本中，可以放在 buildSrc 目录下，也可以作为一个独立的工程被开发并且以 Jar 包的形式发布。
+
+* 每一个插件都需要提供一个实现类
+
+该实现类代表插件的入口，插件可以用任何 JVM 语言编写并编译成字节码，比如 Java、Kotlin、Groovy 等。
+
+* 插件通过暴露出来的扩展对象进行定制
+
+当用户想要在构建脚本中覆盖插件的默认配置，这是十分重要的实现方式。
+
+* 插件描述符
+
+插件描述符是一个属性文件，它包含类插件的元信息，通常包含插件的简短名字和插件实现类的映射。
+
+
+### 编写对象插件并运用到项目
+
+
+编写一个插件的最低要求是提供 org.gradle.api.Plugin<Project> 接口的一个实现类，该接口仅有一个方法：apply(Project)。
+
+
+#### 通过 buildSrc 的形式编写对象插件
+
+使用 buildSrc 的方式定义对象插件的好处是，在早期开发插件阶段，不需要打包插件代码，可以得到一个快速的反馈，能够让开发者能够专心通过 Gradle Api 实现业务逻辑。
+
+
+
+
+在 buildSrc 工程下的指定包目录中创建一个插件的实现类，
+
+```
+class CustomPlugin implements Plugin<Project>{
+    @Override
+    void apply(Project project){
+        xxx
+    }
+}
+```
+
+
+想要在项目中使用该插件，则在 build.gradle  中使用插件的实现类型：
+
+```
+apply plugin: xxxx.xxx.CustomPlugin
+```
+
+
+### 插件扩展机制
+
+通过 —P 和 ——D 可以在执行 Gradle 命令行时提供参数，为 Task 提供输入，但这种方式不总是可取的。
+
+Gradle 允许通过暴露一个带有唯一命名空间的 DSL 来建立自己的构建语言，下面展示一个名为 cloudBees 的闭包，允许从构建脚本中给 task 所需要的属性设置值。
+
+
+```
+
+cloudBees{
+    apiUrl = 'https://xxx'
+    apiKey = project.apiKey
+}
+```
+
+Gradle 会将语言结构模型化为扩展，扩展是可以被添加到 Gradle 对象中，比如 Project或者Task。
+
+如果一个类实现了 org.gradle.api.plugins.ExtensionAware 接口，就认为它是可扩展的，每种扩展都是一种数据结构，它是扩展的基础。
+
+以下为 CloudBees 插件的扩展模型：
+
+```
+package xxxx.xxx
+class CloudBeesPluginExtension{
+    String apiUrl
+    String apiKey
+}
+```
+
+
+#### 注册和使用扩展
+
+
+
+### 给插件一个有意义的名字
+
+默认情况下，插件的名字从实现了 org.gradle.api.Plugin 接口的全限定类名继承而来。
+
+对于对象插件来说，可以在 META-INF/gradle-plugins 目录下的一个属性文件中配置名字，**该属性文件的名字自动决定了插件的名字**，比如 META-INF/gradle-plugins/nuwa.properties 暴露插件的名字是 nuwa，在 nuwa.properties 中
+需要将类的全限定类名赋值给 implementation-class,如下：
+
+```
+implementation-class=com.xxx.xxx.NuwaPlugin
+```
+
+在构建脚本 build.gradle 中使用这个插件：
+
+
+```
+apply plugin 'nuwa'
+```
+
+
+### 测试对象插件
+
+
+
+## 开发和使用独立的对象插件
+
+如果想要在主构建的脚本中使用插件，那么在 buildSrc 项目中实现一个插件时是十分方便的；但是如果想要在多个模块中的共享插件，那么需要将插件作为独立的项目开发，然后将插件发布到仓库中。
+
+
+### 项目和仓库配置
+
+
+新建一个独立 module，将在 buildSrc 中的所有代码移到该  module 中。每次想要发布新的插件版本时，所产生的 Jar 文件会被发布到名为 repo 的与项目同目录的本地  maven 库中。
+
+书中例子：假设其他项目想要使用该插件，那么在该项目的构建脚本中定义本地仓库，声明插件作为依赖，使用插件中的 Task 与 CloudBees 后端服务交互。
+
+
+![](/source/images/2020_01_16_02.png)
+
+
+其中 plugin 为定义插件的模块。
+
+### 构建插件项目
+
+* 定义依赖
+
+此时不能再访问 buildSrc 基础设施，所以需要定义对 Groovy 和 Gradle API 类库的依赖。
+
+* 发布插件
+
+通过 Maven 插件，可以为插件生成的 POM 文件和将插件发布到 Maven 库中。配置 Maven 部署器将 POM 和 插件上传到本地目录中，为了更好的管理插件的版本，需要为插件指定 group、name\version.
+
+![](/source/images/2020_01_16_03.png)
+
+
+在插件被使用之前，需要先执行 `gradle uploadArchives` 命令，使用 Maven 插件相关 task 帮助下上传该插件。
+
+发布插件后，在根目录下出现名为 repo 的新目录，包含了插件的 POM 文件和 Jar 文件。
+
+* 在项目中使用插件
+
+
+在项目中构建脚本中添加如下配置：
+
+![](/source/images/2020_01_16_04.png)
+
+对本地 Maven 库的声明也可以使用相对路径：
+
+```
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            url uri('./repo')
+        }
+    }
+   ....
+}
+```
