@@ -1,0 +1,163 @@
+---
+title: Gadle实战(二)：自定义 Task 类
+date: 2020-01-16 19:02:23
+tags: [Gradle 基本原理,Gradle in action]
+---
+
+
+在构建脚本中编写 Task 的动作，从而操作相关逻辑的方式是十分简单的，但是当项目增长需要添加更多的逻辑时，维护起来就十分的麻烦。在这是就有了对类和方法中代码的结构化需求，按照日常开发的思维编写代码，而 Gradle 提供了这种支持，开发者可以使用任意 JVM 语言，比如 Java、Groovy、Kotlin，在构建脚本中进行编码。
+
+## 1. 自定义 Task
+
+
+自定义 Task 包含两个组件：
+
+1. 任务类型
+
+自定义的 Task 类，封装了逻辑行为，被称为 任务类型。
+
+2. 真实的 Task 
+
+提供用于配置行为的 Task 类所暴露的属性值。
+
+Gradle 把这些 Task 称为 **增强的 Task**，具体的自定义 Task 可以参见官方文档：[Developing Custom Gradle Task Types](https://docs.gradle.org/current/userguide/custom_tasks.html#header)。
+
+## 2. 编写自定义的 Task 类
+
+
+* 继承 DefaultTask 的类。
+* 通过注解声明 Task 类的输入和输出：@Input、@OutputFile
+
+一个简单的示例：
+
+```
+class ReleaseVersionTask extends DefaultTask{
+    // 通过注解声明 task 的输入和输出
+    @Input Boolean release
+    @OutputFile File destFile
+    // 在构造器中设置 task 的 group 和 description 属性
+    ReleaseVersionTask(){
+        group = 'versioning'
+        description = 'Make project a release version.'
+    }
+    // 通过注解声明被执行的方法，动作方法
+    @TaskAction
+    void start(){
+        project.version.release = true
+        ant.propertyfile(file: destFile) {
+            entry(key: 'release', type: 'string', operation: '=', value: 'true')
+        }
+    }
+}
+```
+## 3. 使用自定义 Task 类
+
+定义一个增强的 ReleaseVersionTask 类型的 Task，通过 type 声明该 Task 派生于 ReleaseVersionTask。
+
+```
+task makeReleaseVerson(type:ReleaseVersionTask){
+    release = 'true'
+    destFile = file('version.properties')
+}
+```
+
+以上实例可以认为在创建一个特定类（ReleaseVersionTask）的新实例，并在构造器中为它的属性值设置值。
+
+## 4. Gradle 的内置 Task
+
+Gradle 中提供了大量的内置 Task， 它们均派生与 DefaultTask，所以可以在脚本中的增强 Task 使用。
+
+Copy 为 Gradle 内置 Task，以下展示将 createDistribution 的输出文件复制到指定目录中。
+
+```
+task copyFile(type:Copy){
+    from createDistribution.outputs.files
+    into "$buildDir/backup"
+}
+```
+
+
+## 5. Task 规则
+
+Gradle 引入了 Task 规则的概念，可以根据 Task 名称模式执行相应的逻辑，该模式是有两部分组成：Task 名称的静态部分和一个占位符，它们联合组成动态的 Task 名称。
+
+根据 Task名称模式执行相关逻辑，并不意味着你可以不做任何工作只通过 Task 名称来执行相关的逻辑，你需要自定义 Tast 规则，至于如何定义 Task 规则，参见 《Gradle in action》一书中第 98 页。 
+
+
+## 6. 在 buildSrc 目录下构建代码
+
+
+在构建脚本中编写的 Groovy 类最适合的位置为项目的 buildSrc 目录下。将 Java 代码放在 src/main/java 目录下，将 Groovy 代码放在 src/main/groovy 目录下，**位于这些目录下的代码会被自动编译，并且会被加入到 Gradle 构建脚本的 classpath 中**，所以说 buildSrc 目录是组织代码的最佳方式。
+
+
+
+## 7. 挂接到构建生命周期过程中
+
+
+在构建阶段执行的 Task 配置逻辑或者在执行阶段执行的 Task 动作，在很多时候是存在局限的，很多时候需要在特定的生命周期事件发生时执行指定的代码，比如在某个构建之间、期间或者之后。对于这种要求 Gradle 提供了两种方式可以编写回调生命周期的事件：在闭包中的或者通过 Gradle API 提供的监听器接口实现。
+
+
+许多生命周期的回调方法被定义在 Project 和 Gradle 的接口中。
+
+Task 执行图是一个有向无环图(DAG)，一个执行过的 Task 永远不会再次执行,以下展示了 Task 执行图的相关接口和方法：
+
+![](/source/images/2020_01_17_02.png)
+
+
+### 7.1 在闭包中调用生命周期钩子
+
+
+以 whenReady 为例，whenReady 方法会在 task 图生成完成后，该函数会立即被执行。
+
+
+```
+// 注册的生命周期钩子函数在 Task 图生成后被调用
+gradle.taskGraph.whenReady{ TaskExecutionGraph taskGraph ->
+    // 查看Task 执行图中是否含有 release Task
+    if(taskGraph.hasTask(release)){
+            // 执行相关的逻辑
+    }
+}
+```
+
+### 7.2 实现 Task 执行图监听器
+
+
+通过监听器挂接到构建生命周期只需要两个步骤：
+
+1. 在构建脚本中编写一个类来实现特定的监听器接口
+
+用于监听 Task 执行图的事件的接口是 TaskExectionGraphListener 接口提供：
+
+2. 注册监听器的实现
+
+```
+// 实现相应的接口
+class ReleaseVersionListener implements TaskExecutionGraphListener {
+
+    final static String releaseTaskGraph = ':release'
+
+    @Override
+    void graphPopulated(TaskExecutionGraph graph) {
+        // release task 在执行图中
+        if (graph.hasTask(releaseTaskGraph)) {
+            List<Task> allTasks = graph.allTasks
+            // 从一系列的执行图中找到 release Task
+            Task releaseTask = allTasks.find{it.path == releaseTaskGraph}
+            // 每个 Task 都知道自己所云的 project
+            Project project = releaseTask.project
+            if (!project.version.release) {
+                println "i am in listener"
+                // 显式的调用getProject
+                project.version.release = true
+                project.ant.propertyfile(file: versionFile) {
+                    entry(key: 'release', type: 'string', operation: '=', value: true)
+                }
+            }
+        }
+    }
+}
+// 注册接口的实现
+def releaseVersionListener = new ReleaseVersionListener()
+gradle.taskGraph.addTaskExecutionGraphListener(releaseVersionListener)
+```
