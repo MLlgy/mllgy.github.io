@@ -156,6 +156,600 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-EventBus 粘性事件" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/04/EventBus 粘性事件/">EventBus 粘性事件</a>
+    </h1>
+  
+
+        
+        <!-- 
+ -->
+
+<a href="/2019/11/04/EventBus 粘性事件/" class="archive-article-date">
+  	<time datetime="2019-11-04T09:44:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="0x0001-普通事件和粘性事件"><a href="#0x0001-普通事件和粘性事件" class="headerlink" title="0x0001 普通事件和粘性事件"></a>0x0001 普通事件和粘性事件</h3><p>通过源码我们看一下两者的差别：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public void postSticky(Object event) &#123;</span><br><span class="line">    synchronized (stickyEvents) &#123;</span><br><span class="line">        stickyEvents.put(event.getClass(), event);</span><br><span class="line">    &#125;</span><br><span class="line">    post(event);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public void post(Object event) &#123;</span><br><span class="line">    ....</span><br><span class="line">    while (!eventQueue.isEmpty()) &#123;</span><br><span class="line">        // 每次发布一个事件，会将该事件从事件序列中移除，也就是说，事件发布后，不管是否有订阅者，</span><br><span class="line">        postSingleEvent(eventQueue.remove(0), postingState);</span><br><span class="line">            &#125;</span><br><span class="line">    &#125; </span><br><span class="line">    ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+          <a class="article-more-a" href="/2019/11/04/EventBus 粘性事件/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">EventBus</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Sticky Event</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/11/04/EventBus 粘性事件/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-EventBus 使用 APT 生成索引以及源码分析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/04/EventBus 使用 APT 生成索引以及源码分析/">EventBus 使用 APT 生成索引以及源码分析</a>
+    </h1>
+  
+
+        
+        <!-- 
+ -->
+
+<a href="/2019/11/04/EventBus 使用 APT 生成索引以及源码分析/" class="archive-article-date">
+  	<time datetime="2019-11-04T09:42:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="0x0001-配置-EventBus-使用-APT-生成索引"><a href="#0x0001-配置-EventBus-使用-APT-生成索引" class="headerlink" title="0x0001 配置 EventBus 使用 APT 生成索引"></a>0x0001 配置 EventBus 使用 APT 生成索引</h3><p><a href="http://greenrobot.org/eventbus/documentation/subscriber-index/" target="_blank" rel="noopener">具体可以参见官方文档</a></p>
+<p>通过文档可以看到可以通过三种方式为 项目配置索引：APT、kapt、android-apt，这只是实现功能的不同方式，本文介绍 APT 生成索引，其他两种原理基本相同.</p>
+<p>使用 APT 生成索引，不可在匿名内部类中定义订阅方法。要想使用 APT 生成索引，需要对项目进行如下配置：</p>
+<p>针对 app 模块下的 <code>build.gradle</code> 文件做以下更改：</p>
+        
+          <a class="article-more-a" href="/2019/11/04/EventBus 使用 APT 生成索引以及源码分析/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">EventBus</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">EventBus APT</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/11/04/EventBus 使用 APT 生成索引以及源码分析/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-利用异常机制获取堆栈轨迹元素" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/31/利用异常机制获取堆栈轨迹元素/">利用异常机制获取堆栈轨迹元素</a>
+    </h1>
+  
+
+        
+        <!-- 
+ -->
+
+<a href="/2019/10/31/利用异常机制获取堆栈轨迹元素/" class="archive-article-date">
+  	<time datetime="2019-10-31T04:37:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-31</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="0x0001-什么是堆栈轨迹？"><a href="#0x0001-什么是堆栈轨迹？" class="headerlink" title="0x0001 什么是堆栈轨迹？"></a>0x0001 什么是堆栈轨迹？</h4><p>堆栈轨迹(stack trace) 是 <strong>一个方法调用过程的列表</strong>，它包含程序在执行过程中调用的特定位置。当 Java 程序正常终止，而没有捕获异常时，就可以通过这个列表显示出来。</p>
+<h4 id="0x0002-获得堆栈轨迹元素"><a href="#0x0002-获得堆栈轨迹元素" class="headerlink" title="0x0002 获得堆栈轨迹元素"></a>0x0002 获得堆栈轨迹元素</h4><p><strong>方法一：</strong></p>
+<p>可以通过调用 Throwable 的 <code>printStackTrace</code> 方法，<strong>访问堆栈轨迹的文本描述信息</strong>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Throwable throwable = new Throwable();</span><br><span class="line">StringWriter out = new StringWriter();</span><br><span class="line">throwable.printStackTrace(new PrintWriter(out));</span><br><span class="line">String desc = out.toString();</span><br></pre></td></tr></table></figure>
+        
+          <a class="article-more-a" href="/2019/10/31/利用异常机制获取堆栈轨迹元素/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Java 异常</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">堆栈轨迹</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/10/31/利用异常机制获取堆栈轨迹元素/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-使用-Kotlin-协程改善-App-性能" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/29/使用-Kotlin-协程改善-App-性能/">使用 Kotlin 协程改善 App 性能</a>
+    </h1>
+  
+
+        
+        <!-- 
+ -->
+
+<a href="/2019/10/29/使用-Kotlin-协程改善-App-性能/" class="archive-article-date">
+  	<time datetime="2019-10-29T03:50:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-29</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="0x0001-概述"><a href="#0x0001-概述" class="headerlink" title="0x0001 概述"></a>0x0001 概述</h3><p>协程是一种并发设计模式，您可以在 Android上 使用它来简化异步执行的代码。协程在 1.3 版中添加到 Kotlin，基于其他语言的既定概念进行设计 Kotlin 中的协程。</p>
+<p>在Android上，协程可帮助解决两个主要问题：</p>
+<ul>
+<li>管理长时间运行的任务，这些任务可能会阻塞主线程并导致您的应用程序冻结。</li>
+<li>提供主安全性，或从主线程安全地调用网络或磁盘操作。</li>
+</ul>
+        
+          <a class="article-more-a" href="/2019/10/29/使用-Kotlin-协程改善-App-性能/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Kotlin 协程</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/10/29/使用-Kotlin-协程改善-App-性能/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Jetpack 之 Android 组件 与 Kotlin 协程共同使用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/29/Jetpack 之 Android 组件 与 Kotlin 协程共同使用/">Jetpack 之 Android 组件 与 Kotlin 协程共同使用</a>
+    </h1>
+  
+
+        
+        <!-- 
+ -->
+
+<a href="/2019/10/29/Jetpack 之 Android 组件 与 Kotlin 协程共同使用/" class="archive-article-date">
+  	<time datetime="2019-10-29T03:39:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-29</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="0x0001-概述"><a href="#0x0001-概述" class="headerlink" title="0x0001 概述"></a>0x0001 概述</h3><p>Kotlin 协程提供了 API 以供开发者写出简单的异步代码。在 Kotlin 协程中，可以定义 CoroutineScope 作用域，它可以帮助开发者何时运行协程，每一个异步操作运行在特定的作用域内。</p>
+<p>本主题说明如何协程如何与系统组件一起有效使用。</p>
+<h3 id="0x0002-添加组件的协程依赖"><a href="#0x0002-添加组件的协程依赖" class="headerlink" title="0x0002 添加组件的协程依赖"></a>0x0002 添加组件的协程依赖</h3><p>通过引入对应的 KTX 扩展包，来使用相应组件的内置 Kotlin 协程作用域，相应依赖如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// ViewModelScope</span><br><span class="line">androidx.lifecycle:lifecycle-viewmodel-ktx:xxx</span><br><span class="line">// LifeCycleScope</span><br><span class="line">use androidx.lifecycle:lifecycle-runtime-ktx:xxx</span><br><span class="line">// LiveData</span><br><span class="line">androidx.lifecycle:lifecycle-livedata-ktx:xxx</span><br></pre></td></tr></table></figure>
+        
+          <a class="article-more-a" href="/2019/10/29/Jetpack 之 Android 组件 与 Kotlin 协程共同使用/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Jetpack</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Kotlin 协程</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/10/29/Jetpack 之 Android 组件 与 Kotlin 协程共同使用/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Rxjava-源码学习-三-线程切换" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/21/Rxjava-源码学习-三-线程切换/">Rxjava 源码学习(三):线程切换</a>
+    </h1>
+  
+
+        
+        <!-- 
+ -->
+
+<a href="/2019/10/21/Rxjava-源码学习-三-线程切换/" class="archive-article-date">
+  	<time datetime="2019-10-21T07:06:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>根据官方文档的翻译：<br>subscribeOn 操作符指定 Observable 将在哪个线程上开始操作，无论该运算符在运算符链中的哪个点被调用。 ObserveOn 操作符影响下游 Observer 的运行线程，因此，可以在 Observable 操作符链中的各个点多次调用 ObserveOn，以更改某些运算符的运行线程。</p>
+        
+          <a class="article-more-a" href="/2019/10/21/Rxjava-源码学习-三-线程切换/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Rxjava 源码分析</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/10/21/Rxjava-源码学习-三-线程切换/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-关于 Runnable Future Callable FutureTask 的简单理解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/20/关于 Runnable Future Callable FutureTask 的简单理解/">关于 Runnable Future Callable FutureTask 的简单理解</a>
+    </h1>
+  
+
+        
+        <!-- 
+ -->
+
+<a href="/2019/10/20/关于 Runnable Future Callable FutureTask 的简单理解/" class="archive-article-date">
+  	<time datetime="2019-10-20T08:02:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-20</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-Runnable-源代码"><a href="#1-Runnable-源代码" class="headerlink" title="1. Runnable 源代码"></a>1. Runnable 源代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface Runnable &#123;</span><br><span class="line">    public abstract void run();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是 Runnable 不允许声明受检异常以及定义返回值。不允许声明受检异常意味着必须手动的捕获并处理受检异常，这是十分麻烦的。</p>
+        
+          <a class="article-more-a" href="/2019/10/20/关于 Runnable Future Callable FutureTask 的简单理解/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">多线程</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Future</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">FutureTask</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/10/20/关于 Runnable Future Callable FutureTask 的简单理解/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Rxjava 源码学习(二):基本流程流程图" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -413,608 +1007,9 @@
 
 
   
-    <article id="post-Kotlin协程学习(三)：协程的非阻塞式挂起是什么" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/10/09/Kotlin协程学习(三)：协程的非阻塞式挂起是什么/">Kotlin协程学习(三)：协程的非阻塞式挂起是什么？</a>
-    </h1>
-  
-
-        
-        <!-- 
- -->
-
-<a href="/2019/10/09/Kotlin协程学习(三)：协程的非阻塞式挂起是什么/" class="archive-article-date">
-  	<time datetime="2019-10-09T07:51:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-09</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="Kotlin-协程的-非阻塞式挂起是什么？"><a href="#Kotlin-协程的-非阻塞式挂起是什么？" class="headerlink" title="Kotlin 协程的 非阻塞式挂起是什么？"></a>Kotlin 协程的 非阻塞式挂起是什么？</h3><p>什么事非阻塞式：不卡当前线程。</p>
-<p>Kotlin 协程的非阻塞原因：</p>
-<pre><code>因为使用挂起函数会切换线程，既然切换了线程，那么肯定就不卡当前线程了。</code></pre><h3 id="其实线程也是非阻塞式的"><a href="#其实线程也是非阻塞式的" class="headerlink" title="其实线程也是非阻塞式的"></a>其实线程也是非阻塞式的</h3><p>线程中的阻塞式是 <code>在单线程</code> 下，在单线程下执行耗时操作是会阻塞线程的，如果在<code>多线程</code>情况下，那么此时的线程也是非阻塞式的。</p>
-        
-          <a class="article-more-a" href="/2019/10/09/Kotlin协程学习(三)：协程的非阻塞式挂起是什么/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Kotlin 协程</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/10/09/Kotlin协程学习(三)：协程的非阻塞式挂起是什么/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Kotlin 协程官方文档学习(二)" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/10/07/Kotlin 协程官方文档学习(二)/">Kotlin 协程官方文档学习(二)</a>
-    </h1>
-  
-
-        
-        <!-- 
- -->
-
-<a href="/2019/10/07/Kotlin 协程官方文档学习(二)/" class="archive-article-date">
-  	<time datetime="2019-10-07T09:12:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-协程上下文和调度器"><a href="#1-协程上下文和调度器" class="headerlink" title="1. 协程上下文和调度器"></a>1. 协程上下文和调度器</h3><p>协程总是要运行在 CoroutineContext 类型为代表的协程上下文中，协程上下文是各种不同元素的集合，其中主元素为 Job，同事我们也会使用他的调度器。</p>
-<h3 id="2-调度器与线程"><a href="#2-调度器与线程" class="headerlink" title="2. 调度器与线程"></a>2. 调度器与线程</h3><p>协程上下文包括了一个协程调度器，它确定了协程执行时使用的一个或多个线程。协程调度器可以指定协程运行在指定线程，也可以调度它运行在线程池中或不受限的运行。</p>
-<p>所有的协程构建器(比如：launch、async) 会接收一个可选的 CoroutineContext 参数，它可以被显示的为一个新的协程或其他上下文元素指定一个调度器。</p>
-        
-          <a class="article-more-a" href="/2019/10/07/Kotlin 协程官方文档学习(二)/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Coroutines(协程)</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Kotlin 官方文档</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/10/07/Kotlin 协程官方文档学习(二)/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Kotlin 协程官方文档学习(一)" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/10/07/Kotlin 协程官方文档学习(一)/">Kotlin 协程官方文档学习(一)</a>
-    </h1>
-  
-
-        
-        <!-- 
- -->
-
-<a href="/2019/10/07/Kotlin 协程官方文档学习(一)/" class="archive-article-date">
-  	<time datetime="2019-10-07T09:11:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-协程的基本介绍"><a href="#1-协程的基本介绍" class="headerlink" title="1. 协程的基本介绍"></a>1. 协程的基本介绍</h3><p>协程，本质上是轻量级的线程。</p>
-<p>它们在某些 <code>CoroutineScope 上下文中</code> 与 <code>launch 协程构建器</code> 一起启动。</p>
-<p>在 GlobalScope 中启动了一个新的协程，这意味着新协程的生命周期只受整个应用程序的生命周期限制。</p>
-<p>delay 是挂起函数不会造成线程阻塞，但是会挂起协程，并且挂起函数只能在协程中使用。</p>
-<h3 id="2-阻塞与非阻塞"><a href="#2-阻塞与非阻塞" class="headerlink" title="2. 阻塞与非阻塞"></a>2. 阻塞与非阻塞</h3><p>阻塞与非阻塞都是针对于是否阻塞主线程来说的。</p>
-        
-          <a class="article-more-a" href="/2019/10/07/Kotlin 协程官方文档学习(一)/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Coroutines(协程)</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Kotlin 官方文档</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/10/07/Kotlin 协程官方文档学习(一)/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Kotlin 泛型简单理解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/10/07/Kotlin 泛型简单理解/">Kotlin 泛型简单理解</a>
-    </h1>
-  
-
-        
-        <!-- 
- -->
-
-<a href="/2019/10/07/Kotlin 泛型简单理解/" class="archive-article-date">
-  	<time datetime="2019-10-07T07:50:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-Java-中的泛型"><a href="#1-Java-中的泛型" class="headerlink" title="1. Java 中的泛型"></a>1. Java 中的泛型</h3><p>协变(covariance)：子类的泛型类型也属于泛型类型的子类。</p>
-<p>由于 Java 中类型擦除的存在，所以 Java 不支持协变，Kotlin 继承了这种限制。在 Java 中可以通过使用通配符(?) 来解除这种限制。</p>
-<p>这样的话有：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 使用了通配符，就可以把子类的泛型类型对象赋值给父类的泛型类型声明了</span><br><span class="line">List&lt;? extends TextView&gt; textViews = new ArrayList&lt;Button&gt;();</span><br></pre></td></tr></table></figure>
-
-<p>虽然这种写法解除了赋值的限制，但是却增加了另外一个限制：在使用这个引用的时候，不能调用它的参数包含类型参数的方法，也不能给它的包含类型参数的字段赋值(除了空值)。</p>
-<p>限制：父类的泛型类型声明的实际值不能是子类的泛型类型对象</p>
-        
-          <a class="article-more-a" href="/2019/10/07/Kotlin 泛型简单理解/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Kotlin 泛型</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/10/07/Kotlin 泛型简单理解/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Kotlin协程学习(二):挂起函数" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/10/07/Kotlin协程学习(二):挂起函数/">Kotlin协程学习(二):挂起函数</a>
-    </h1>
-  
-
-        
-        <!-- 
- -->
-
-<a href="/2019/10/07/Kotlin协程学习(二):挂起函数/" class="archive-article-date">
-  	<time datetime="2019-10-07T07:46:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>本文是对 <a href="https://www.bilibili.com/video/av68241619" target="_blank" rel="noopener">Kotlin 协程的挂起好神奇好难懂？今天我把它的皮给扒了</a> 的文字记录，确实香啊！</p>
-</blockquote>
-<h3 id="1-Kotlin-协程挂起的基本了解"><a href="#1-Kotlin-协程挂起的基本了解" class="headerlink" title="1. Kotlin 协程挂起的基本了解"></a>1. Kotlin 协程挂起的基本了解</h3><blockquote>
-<p>Q:Kotlin 协程中挂起的是什么？ </p>
-</blockquote>
-<p>A:挂起的是协程。</p>
-<blockquote>
-<p>Q:那什么是协程？</p>
-</blockquote>
-<p>A:kotlin 协程为 launch()、async() 等中的代码。</p>
-<p>launch 在创建的一个协程，在执行到某一个 suspend 函数(挂起函数)时，这个协程会被 suspend(被挂起)。</p>
-<blockquote>
-<p>Q:从哪挂起？</p>
-</blockquote>
-<p>A:从当前线程挂起，就是这个协程从正在执行它的线程上脱离了，注意不是协程停下来了，而是协程所在的线程从这行代码开始不再运行这个协程了(意思就是挂起函数将由自己指定的线程运行，挂起可以理解为将协程挂到指定的线程中去执行)，那么分离了的线程和协程会各自发生什么？</p>
-        
-          <a class="article-more-a" href="/2019/10/07/Kotlin协程学习(二):挂起函数/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Kotlin 协程</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/10/07/Kotlin协程学习(二):挂起函数/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Kotlin协程学习(一):协程的基本了解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/10/07/Kotlin协程学习(一):协程的基本了解/">Kotlin协程学习(一):协程的基本了解</a>
-    </h1>
-  
-
-        
-        <!-- 
- -->
-
-<a href="/2019/10/07/Kotlin协程学习(一):协程的基本了解/" class="archive-article-date">
-  	<time datetime="2019-10-07T07:45:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-协程是什么"><a href="#1-协程是什么" class="headerlink" title="1. 协程是什么"></a>1. 协程是什么</h3><ul>
-<li>其实是一套由 Kotlin 官方提供的 <strong>线程 API</strong></li>
-</ul>
-<p>可以理解为一个线程框架，它的好处是方便，最大的好处是 <strong>可以在同一个代码块中进行多次线程切换</strong>。</p>
-<h3 id="2-协程的好处"><a href="#2-协程的好处" class="headerlink" title="2. 协程的好处"></a>2. 协程的好处</h3><p>更方便。</p>
-        
-          <a class="article-more-a" href="/2019/10/07/Kotlin协程学习(一):协程的基本了解/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Kotlin 协程</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/10/07/Kotlin协程学习(一):协程的基本了解/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-ThreadLocal(Jdk1.8) 使用及源码分析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/09/19/ThreadLocal(Jdk1.8) 使用及源码分析/">ThreadLocal(Jdk1.8) 使用及源码分析</a>
-    </h1>
-  
-
-        
-        <!-- 
- -->
-
-<a href="/2019/09/19/ThreadLocal(Jdk1.8) 使用及源码分析/" class="archive-article-date">
-  	<time datetime="2019-09-19T06:30:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-19</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="0x0001-ThreadLocal-简介"><a href="#0x0001-ThreadLocal-简介" class="headerlink" title="0x0001 ThreadLocal 简介"></a>0x0001 ThreadLocal 简介</h3><p>使用 ThreadLocal 对象存储 <strong>线程相关</strong> 的变量，只能有存储动作执行所在线程内才能够获取相应变量。</p>
-<h3 id="0x0002-ThreadLocal-中相关类简介"><a href="#0x0002-ThreadLocal-中相关类简介" class="headerlink" title="0x0002 ThreadLocal 中相关类简介"></a>0x0002 ThreadLocal 中相关类简介</h3><h4 id="1-ThreadLocal-ThreadLocalMap"><a href="#1-ThreadLocal-ThreadLocalMap" class="headerlink" title="1.ThreadLocal#ThreadLocalMap"></a>1.ThreadLocal#ThreadLocalMap</h4><p>ThreadLocalMap 是 ThreadLocal 中一个自定义的哈希映射，仅适用于维护线程本地值。不会在 ThreadLocal 类之外导出任何操作。该类是包私有的，允许在 Thread 类中声明字段。为了帮助处理非常大且长期使用的用法，哈希表条目使用WeakReferences 作为键。但是，由于未使用引用队列，因此只有在表开始空间不足时才能保证删除过时条目。</p>
-        
-          <a class="article-more-a" href="/2019/09/19/ThreadLocal(Jdk1.8) 使用及源码分析/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Java 多线程</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Java Basic</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/09/19/ThreadLocal(Jdk1.8) 使用及源码分析/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
     </nav>
   
 
@@ -1109,11 +1104,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
+                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1125,11 +1120,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
+                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
+                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1145,7 +1140,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Gradle 基本原理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Gradle in action</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1161,6 +1164,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Java 多线程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Hprof</a>
               </li>
              
@@ -1173,23 +1184,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Java 多线程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Java Basic</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">对象拷贝</a>
+                <a href="javascript:void(0)" class="js-tag color1">Inflection</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Inflection</a>
+                <a href="javascript:void(0)" class="js-tag color5">对象拷贝</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1217,15 +1220,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Jetpack</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Lifecycle</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1234,14 +1245,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">WorkManager</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Kindle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1257,15 +1260,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kotlin 核心编程</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1281,15 +1284,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">RxJava</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Transformer</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Rxjava 源码分析</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1321,10 +1324,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">多线程</a>
               </li>
              
@@ -1341,6 +1340,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">图解 HTTP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Java 异常</a>
               </li>
              
@@ -1349,11 +1356,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">图解 HTTP</a>
+                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1373,6 +1376,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">极客时间笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">浮点型精度问题</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">计算机基础</a>
               </li>
              
@@ -1382,14 +1393,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">极客时间笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">浮点型精度问题</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1405,15 +1408,31 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">OOP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Dex</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MultiDex</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1466,22 +1485,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Thread</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Dex</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">MultiDex</a>
               </li>
              
               <li class="article-tag-list-item">
