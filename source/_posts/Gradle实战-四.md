@@ -1,32 +1,115 @@
 ---
-title: Gadle实战(四）：依赖管理
-tags:
+title: Gadle实战(四）：依赖管理、版本冲突、理解缓存
+date: 2020-01-19 15:27:42
+tags: [Gradle 基本原理,Gradle in action]
 ---
 
 
-在为项目配置依赖时通过 dependencies 和 repositories 两个 DSL **配置块**进行配置的，配置块的名称直接映射到 Project 接口的方法。依赖管理器通过运行以上两个配置，从中央仓库下载所需要的库，将它们存储在本地缓存中。
+
+在为项目配置依赖时通过 `dependencies` 和 `repositories` 两个 DSL **配置块**进行配置的，配置块的名称直接映射到 Project 接口的方法。依赖管理器通过运行以上两个配置，从中央仓库下载所需要的库，将它们存储在本地缓存中。
+
+
+配置块中包含配置：
+
+<!-- more -->
+
+```
+//dependencies 为配置块
+dependencies{
+    // compile 为配置
+    compile xxxx
+}
+```
 
 ## 1. 依赖配置
 
 在 Gradle 中，**依赖配置** 是十分重要的概念，插件可以引入配置来 **定义依赖的作用域**。在项目中引入 Java 插件，就可以引入了其各种标准配置，来定义 Java 构建生命周期所应用的依赖。比如通过 compile 来配置添加编译源代码所需要的依赖。
 
 
-## 2. 配置 API
+## 2. 通过 API 认识配置
 
-配置可以在项目的根级别添加和访问，可以使用插件提供的配置，也可以使用自己声明的配置。
+配置可以在项目的 **根级别** 添加和访问，可以使用插件提供的配置，也可以使用自己声明的配置。
 
-每个 Project 都有一个 ConfigurationContainer 类容器来管理自己相应的配置。
+每个 Project 都有一个 `ConfigurationContainer` 类容器来管理自己相应的配置。
 
-配置是很灵活的，可以使用配置控制配置依赖解决方案追溯是否包含传递性依赖、定义解决策略（比如，如何解决版本冲突）等，同时使用配置可以进行
+### 配置的使用场景
+
+1. 配置是很灵活的，可以使用配置控制配置依赖解决方案追溯是否包含传递性依赖、定义解决策略（比如，如何解决版本冲突）等，同时使用配置可以进行。
+2. 使用配置进行逻辑分组
+
+配置分组与 Java 中包的概念十分相似，包针对其包含的类提供唯一的命名空间，同样这也适用于配置，通过逻辑分组把职责相同的配置放在一起。
+
+在 Java 中提供了 6 个现成的配置：compile、runtime、testCompile、testRuntime、archives、default，随着版本的更新配置的数量和种类也在变化。在 Gradle 中，也可以自定义配置，实现自己的逻辑。比如需要引入部署应用的依赖 Cargo 库，但是如果使用 Java 提供的配置中的一个，会将应用程序代码和部署应用的代码相应的环境混淆，导致发布时将不必要的类库添加到发布包中，此时我们可以通过自定义配置来解决这个问题。
 
 
 ## 自定义配置
+
+为了明确 Cargo 所需的依赖，声明一个名为 cargo 的新配置，具体如下：
+
+```
+configurations{
+    cargo{
+        description = 'classpath for cargo ant tasks'
+        visibile = false
+    }
+}
+```
+
+为项目配置容器添加配置后，可以直接通过配置名称进行使用。
+
+
+### 使用配置
+
+
+ 此时就可以在配置块中使用 cargo 配置，并在相应的 Task 中使用配置相应内容，并且自定义的配置也可以使用向排除传递性依赖、动态版本号等特性，具体参见以下代码。
+
+```
+configurations {
+    cargo {
+        description = 'Classpath for Cargo Ant tasks.'
+        visible = false
+    }
+}
+
+task deployToLocalTomcat << {
+    // 以文件树的形式获取 cargo 配置所有的依赖
+    FileTree cargoDependencies = configurations.getByName('cargo').asFileTree
+    ant.taskdef(resource: 'cargo.tasks', classpath: cargoDependencies.asPath)
+    ant.cargo(containerId: 'tomcat7x', action: 'run', output: "$buildDir/output.log") {
+        configuration {
+            deployable(type: 'war', file: 'todo.war')
+        }
+
+        zipUrlInstaller(installUrl: 'http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.50/bin/apache-tomcat-7.0.50.zip')
+    }
+}
+
+ext.cargoGroup = 'org.codehaus.cargo'
+ext.cargoVersion = '1.3.1'
+
+// 在配置块中通过自定义配置声明依赖
+dependencies {
+    cargo group: cargoGroup, name: 'cargo-core-uberjar', version: cargoVersion
+    cargo "$cargoGroup:cargo-ant:$cargoVersion"
+    cargo('org.codehaus.cargo:cargo-ant:1.3.1') {
+        exclude group: 'xml-apis', module: 'xml-apis'
+    }
+    cargo('org.codehaus.cargo:cargo-ant:1.3.1') {
+        transitive = false
+    }
+     cargo 'org.codehaus.cargo:cargo-ant:1.+'
+}
+
+repositories {
+    mavenCentral()
+}
+```
 
 
 
 ## 声明依赖
 
-DSL 配置块 dependencies 通常用来将一个或者多个依赖指派给配置。
+DSL 配置块 dependencies 通常用来将一个或者多个依赖指派给配置，但是外部依赖是依赖的唯一方式。
 
 ### 依赖的方式
 
@@ -69,7 +152,8 @@ DSL 配置块 dependencies 通常用来将一个或者多个依赖指派给配�
 在项目中通过以下形式来声明依赖：
 
 dependencies{
-    configurationName xxxxx,xxxx
+    // 比如 compile com.xx.xx
+    configurationcompile xxx
 }
 
 ### 检查依赖报告
@@ -78,15 +162,15 @@ dependencies{
 
 在依赖树中，标有星号的依赖被排除了，这意味依赖管理器使用的是另外一个版本的类库，因为他被声明另外一个顶层依赖的传递性依赖。
 
-在 dependencies 配置中声明的依赖为顶层依赖，这些顶层依赖所依赖的库称为传递性依赖。
+在 dependencies 配置中声明的依赖为 **顶层依赖**，这些顶层依赖所依赖的库称为 **传递性依赖**。
 
-**针对版本冲突，Gradle 默认的解决策略是获取最新的版本**，在依赖树中这样展示：1.0.0 -> 1.1.0.
+**针对版本冲突，Gradle 默认的解决策略是获取最新的版本**，在依赖树中这样展示：1.0.0 -> 1.1.0，而在依赖报告中，标有星号的依赖被排除了，意味着依赖管理器选择的是相同或者另一个版本的类库。
 
 ### 排除传递性依赖
 
 #### 排除传递性依赖，依赖指定版本的远端库
 
-假如想要显式的指定某个类库的版本，而不是使用顶层依赖所提供的传递性依赖，如下面：
+假如想要显式的指定某个类库的版本，而不使用顶层依赖所提供的传递性依赖，可以通过 exclude 排除指定库，具体操作如下：
 
 ```
 dependencies{
@@ -101,7 +185,7 @@ dependencies{
 
 #### 排除传递性依赖，排除所有的传递性依赖
 
-如果想要排除一个库的所有传递性依赖，Gradle 提供了 transitive 属性来实现这一效果。
+如果想要 **排除一个库的所有传递性依赖**，Gradle 提供了 `transitive` 属性来实现这一效果。
 
 ```
 dependencies{
@@ -112,12 +196,11 @@ dependencies{
 }
 ```
 
-
 ### 动态版本声明
 
 如果不想要指定依赖库的版本号，可以获取最新版本的依赖或者在版本范围内选择最新的依赖。
 
-动态版本声明有特定的语法，如果想要使用最新版本的依赖，则必须使用占位符 `lastest.intergration` 或者声明版本属性，通过使用一个加号（+）标定它来动态改变。
+动态版本声明有特定的语法，如果想要使用 **最新版本的依赖**，则必须使用占位符 `lastest.intergration` 或者声明版本属性，通过使用一个加号（+）标定它来动态改变。
 
 ```
 dependencies{
@@ -127,6 +210,8 @@ dependencies{
 ```
 
 **不要最好不要使用动态版本，因为在项目的开发中，可靠性和可复用是最重要的，但是选择最新版本的类库可能在开发者不知情的情况下引入了不兼容的类库版本和副作用，基于此应该声明明确的类库版本。**
+
+也可以指定版本的范围，具体查看Gradle 在线手册。
 
 
 ### 文件依赖
@@ -155,7 +240,7 @@ dependencies{
 
 ### 仓库 API
 
-在项目中定义仓库的关键是 RespositoryHandler 接口，**该接口提供了添加各种类型仓库的方法**，这些方法可以在 respositories 配置块中被调用。
+在项目中定义仓库的关键是 `RespositoryHandler` 接口，**该接口提供了添加各种类型仓库的方法**，这些方法可以在 respositories 配置块中被调用。
 
 ![](/source/images/2020_01_14_01.png)
 
@@ -191,7 +276,7 @@ repositories{
 ```
 
 
-### 自定义自定义 Maven 仓库
+### 自定义 Maven 仓库
 
 很多情况下，我们需要配置企业级的仓库来完成相应的开发，仓库管理器提供类了一个以 Maven 结构来配置仓库的功能，Gradle API 提供了两个方式来配置自定义仓库：
 
@@ -235,9 +320,7 @@ repositories{
 
 ### 扁平的目录仓库
 
-flat 目录仓库是最简单和最基本的仓库形式，在文件系统中它是一个单独的目录，只包含了 jar 文件，没有元数据。
-
-当声明此种仓库依赖时，只能使用 name 和 version 属性，不能使用 group 属性，因为它会产生不明确的依赖关系。
+flat 目录仓库是最简单和最基本的仓库形式，**在文件系统中它是一个单独的目录**，只包含了 jar 文件，没有元数据。**当声明此种仓库依赖时，只能使用 name 和 version 属性，不能使用 group 属性，因为它会产生不明确的依赖关系**。
 
 以下通过 map 和 快捷方式来声明从 flat 目录仓库中获取 Cargo 依赖。
 
@@ -254,12 +337,12 @@ dependencies{
 }
 ```
 
-需要手动的声明传递性依赖，需单独的声明每个依赖，这种方式耗时耗力。
+**需要手动的声明传递性依赖**，需单独的声明每个依赖，这种方式耗时耗力。
 
 
 ## 理解本地依赖缓存
 
-以上阐述了如何声明各种类型的仓库，在执行的 Task 会自动确定所需要的依赖，在执行时从仓库中下载工件，并将它们存储在本地缓存中。在之后的任何构建都会重用这些工件。
+以上阐述了如何声明各种类型的仓库，在执行的 Task 会自动确定所需要的依赖，**在执行时从仓库中下载工件**，**并将它们存储在本地缓存中**在之后的任何构建都会重用这些工件。
 
 
 此节将深入分析缓存结构，确定缓存在底层是如何工作的，以及如何调整其行为。
@@ -267,7 +350,9 @@ dependencies{
 ### 分析缓存结构
 
 
-执行 Task ，Gradle 下载的 jar 文件被存放在何处？通过以下操作，打印出完整的、指派个 cargo 配置的所有依赖的连接路径。
+执行 Task ，Gradle 下载的 jar 文件被存放在何处？
+
+通过以下操作，打印出完整的、指派个 cargo 配置的所有依赖的连接路径。
 
 ```
 task printDependencies{
@@ -278,25 +363,24 @@ task printDependencies{
     }
 }
 ```
-执行该 Task 会发现所有的 jar 文件都存储在 .gradle/caches/artifacts-15/filestore 目录中，而 artifacts-15 为一个标识符，用来指定Gradle 版本，同时需要注意的是这个文件目录结构在不同的Gradle 中可能不同。
+执行该 Task 会发现所有的 jar 文件都存储在 `.gradle/caches/artifacts-15/filestore` 目录中，而 artifacts-15 为一个标识符，用来指定Gradle 版本，同时需要注意的是这个文件目录结构在不同的Gradle 中可能不同。
 
 
 缓存其实包含两部分：
 
 * filestore 中的文件
 
-该目录中包含了从仓库下载的原始二进制文件。
+该目录中包含了从仓库下载的原始二进制文件,比如 Jar 文件。
 
 * 其他二进制文件
 
-这些文件中存储了已下载工件的元数据。
+这些文件中存储了已下载工件的 **元数据**。
 
 
-[The Directories and Files Gradle Uses](https://docs.gradle.org/current/userguide/directory_layout.html#dir:gradle_user_home)
+具体可参见：[The Directories and Files Gradle Uses](https://docs.gradle.org/current/userguide/directory_layout.html#dir:gradle_user_home)
 
+以下为 .gradle 目录下的 cache 各个文件的含义：
 
-
----
 ```
 ├── caches // (1) 全局缓存目录
 │   ├── 4.8 // 特定版本的缓存，支持增量更新
@@ -319,16 +403,21 @@ task printDependencies{
 └── gradle.properties // 全局层次配置属性
 ```
 
-支持在规定时间删除缓存和版本。同样见上面链接。
+
+### 缓存过期
+
+缓存下来文件并不会永久存在，会在一定时期内有效，如果在规定期限内某版本库不再被使用，那么相应版本库就会被清除，具体可参见[The Directories and Files Gradle Uses](https://docs.gradle.org/current/userguide/directory_layout.html#dir:gradle_user_home)
+
+支持在规定时间删除缓存和版本。
+
+
+同样见上面链接。
 
 
 ## 解决依赖问题
 
 
-如果选择自动解决传递性依赖，那么版本冲突是不可避免的，Gradle 解决版本冲突的默认策略是选择最新的依赖版本。
-
-
-依赖报告是十分有用的工具，它可以帮助我们选择需要的依赖版本。
+如果选择自动解决传递性依赖，那么版本冲突是不可避免的，Gradle 解决版本冲突的默认策略是选择最新的依赖版本。**依赖报告** 是十分有用的工具，它可以帮助我们选择需要的依赖版本。
 
 ### 修改默认的策略
 
@@ -342,7 +431,7 @@ configurations.all{
   }
 }
 ```
-此处为所有的配置重新配置策略，也可以为指定的配置重新配置冲突解决策略，比如上文一直使用的 cargo。
+此处为所有的配置重新配置策略，也可以 **为指定的配置重新配置冲突解决策略** ，比如上文一直使用的 cargo。
 
 
 ```
@@ -356,6 +445,7 @@ configurations.cargo.resolutionStrategy{
 ```
 configuration.all{
   resolutionStrategy{
+      failOnVersionConflict()
       force 'org.slf4j:slf4j-api:1.7.24'
   }
 }
@@ -367,7 +457,6 @@ configuration.cargo.resolutionStrategy{
     force 'org.slf4j:slf4j-api:1.7.24'
 }
 ```
-
 ### 依赖观察报告
 
 依赖观察报告，解释了依赖图中的依赖是如何选择的以及为什么。
