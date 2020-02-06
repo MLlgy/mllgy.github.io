@@ -10,10 +10,10 @@ Android 系统中存在两个截然不同的两个世界：
 * Java 世界： Google 针对这个世界提供 SDK，在这个世界运行的程序为基于 Dalvik 虚拟机的 Java 程序。
 * Native 世界：使用 Native 语言（C或者 C++）开发的程序。
 
-在这样的 Android 世界中存在两个比较重要的进程：Zygote 进程 和 system_server 进程：
+在这样的 Android 世界中存在两个比较重要的进程：**Zygote 进程** 和 **system_server 进程**：
 
 * Zygote 进程：和 Android 系统中的 Java 世界有重要的关系。
-* system_server 进程：系统重要的服务（Service）都驻留在 Java 世界中,比如 AMS、PMS 都存在该进程中。
+* system_server 进程：系统重要的服务（Service）都驻留在 Java 世界中,比如 AMS、PMS 都存在该进程中。 
 
 这两个进程是在 Android 系统是 Java 世界的半边天，任何一个进程死亡，都会导致系统崩溃。
 
@@ -42,7 +42,6 @@ zygote 对应的文件为 App_main.cpp，通过源码可以看到重要工作是
 
 在 Android 系统中主要通过 Binder 进行 IPC 通信，但是 zygoet 与系统中其他程序没有使用 Binder，而是使用了 Socket，而 registerZygoteSocket 函数就是为了建立这个 Socket。
 
-
 ![](http://gityuan.com/images/android-arch/android-booting.jpg)
 
 2. 预加载类和资源——`preloadClasses`、`preloadResources`
@@ -68,7 +67,7 @@ zygote 对应的文件为 App_main.cpp，通过源码可以看到重要工作是
 4. 有求必应之等待请求——`runSelectLoopMode`
 
 
-在关键点一中，`registerZygoteSocket` 主注册了一个用于 IPC 的 Socket，此 Socket 在runSelectLoopMode发挥作用。
+在关键点，`registerZygoteSocket` 注册了一个用于 IPC 的 Socket，此 Socket 在runSelectLoopMode 发挥作用。
 
 
 runSelectLoopMode 的具体工作：
