@@ -18,3 +18,5 @@ tags:
 
 [我的小书屋](http://mebook.cc/)
 
+[IT熊猫](https://www.itpanda.net/book/)
+
