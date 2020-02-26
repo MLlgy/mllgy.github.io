@@ -12,12 +12,20 @@ tags:
 
 [查看JDK动态代理生成的类的内容](https://blog.csdn.net/zknxx/article/details/77919332)
 
+通过 Proxy.newProxyInstance 生成相应的代理对象，当调用代理对象的方法时，就会执行 new InvocationHandler 中的 invoke 方法，执行相应的方法。
+
+Retrofit 使用动态代理的原因：
+
+通过动态代理将开发者从繁琐的实现细节中解放出来，提高代码的抽象程度和复用程度。
+
+就拿 Retrofit 来说，如果不使用动态代理，那么使用 Retrofit 发起的每个请求都要将 Proxy.newProxyInstance 的 invoke 方法实现一遍，带来极大的不方便，而使用了动态代理，则可以将逻辑集中，统一进行相似的处理，方便。
+
+# 2.Retrofit 网络请求流程
 
 
-# 2.Retrofit 动态代理的实现
 
+## 2.1 Retrofit 动态代理的实现
 
-## 2.1
 ```
     public <T> T create(final Class<T> service) {
         Utils.validateServiceInterface(service);
@@ -41,7 +49,7 @@ tags:
                         if (platform.isDefaultMethod(method)) {
                             return platform.invokeDefaultMethod(method, service, proxy, args);
                         }
-                        //根据我们的method将其包装成ServiceMethod
+                        //根据我们的 method 将其包装成ServiceMethod
                         ServiceMethod<Object, Object> serviceMethod =
                                 (ServiceMethod<Object, Object>) loadServiceMethod(method);
 
@@ -80,7 +88,6 @@ ServiceMethod<?, ?> loadServiceMethod(Method method) {
 loadServiceMethod 的主要作用是将 Method 实例对象包装成 ServiceMethod 对象返回。
 
 ## 2.3 ServiceMethod$Builder#builder
-
 
 ```
 /**

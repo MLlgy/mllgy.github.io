@@ -6,7 +6,7 @@ tags: [JobScheduler,WorkManager]
 
 ### 0x0001 JobScheduler 的使用
 
-> 对于满足网络、电量、时间等一定预定条件而触发的任务，那么jobScheduler便是绝佳选择。JobScheduler主要用于在未来某个时间下满足一定条件时触发执行某项任务的情况，那么可以创建一个JobService的子类，重写其onStartJob()方法来实现这个功能。
+> 对于满足网络、电量、时间等一定预定条件而触发的任务，那么 `JobScheduler` 便是绝佳选择。 `JobScheduler` 主要用于在 **未来某个时间** 下满足 **一定条件时**,触发执行某项任务的情况，那么可以创建一个 `JobService` 的子类，重写其 `onStartJob()` 方法来实现这个功能。
 
 JobScheduler 的使用步骤：
 
@@ -90,7 +90,7 @@ jobScheduler.cancel(jobId);
 
 ### 0x0002 WorkManager 使用
 
-WorkManager 为 JetPack 框架中的一个组件，WorkManager 用来执行那些不需要立刻执行、不需要可靠的执行的任务，甚至在 App 退出或者手机重启时运行任务。
+`WorkManager` 为 `JetPack` `框架中的一个组件，WorkManager` 用来执行那些 **不需要立刻执行、不需要可靠的执行的任务**，甚至在 App 退出或者手机重启时运行任务。
 
 
 例如可以执行以下任务：
@@ -98,17 +98,14 @@ WorkManager 为 JetPack 框架中的一个组件，WorkManager 用来执行那�
 * 上传日志到服务器。
 * 定期与服务器同步数据。
 
-使用 WorkManager 相应 API 可以创建任务，当满足任务的执行条件是，把任务发送到 WorkManager 中执行。
+使用 WorkManager 相应 API 可以创建任务，**当满足任务的执行条件是，把任务发送到 WorkManager 中执行**。
 
 WorkManager 不适用于正在进行中的后台任务，比如：
 
 *  应用退出，后台任务取消。
 *  需要立即执行的任务。
 
-如果使用到上面的功能，请参见L[后台任务处理指南](https://developer.android.google.cn/guide/background/?hl=en)。
-
-
-
+如果使用到上面的功能，请参见[后台任务处理指南](https://developer.android.google.cn/guide/background/?hl=en)。
 
 1. 创建一个后台任务
 
@@ -125,7 +122,6 @@ class BackgroundWork(appContext: Context, workParams: WorkerParameters) : Worker
 }
 ```
 返回的 Result 通知 WorkManager 任务是否成功执行。
-
 
 2. 定义任务执行的的条件和时机：WorkRequest 
 
@@ -144,7 +140,6 @@ private val backWorkRequest by lazy {
             .build()
 }
 ```
-
 * 2.2 构建一个 PeriodicWorkRequest:
 
 ```
@@ -169,10 +164,9 @@ val oneTimeRequest = PeriodicWorkRequestBuilder<BackgroundWork>(15, TimeUnit.MIN
         .setConstraints(constraints)
         .build()
 ```
-定义的 Work 只有在所有的约束条件满足时，才会执行。如果在任务运行时，约束添加变更，不再满足添加的约束条件，WorkManager 将停止执行 Worker，当满足约束条件时，将重试该任务。  
+定义的 Work 只有在 **所有的约束条件满足时**，才会执行。如果在任务运行时，约束条件变更，不再满足添加的约束条件，WorkManager 将停止执行 Worker，会在满足约束条件时，将重试该任务。  
 
 不过自己在 DEMO 中为 oneTimeRequest 添加约束条件后，在任务执行过程中，手机不满足约束条件时，任务也会继续执行下去。
-
 
 再者还需要注意一点的是，系统检测约束条变化需要一定的时间，并不是约束条件变化系统都会马上通知 WorkManager 去执行相应的 Work 的，必须上例中的充电状态的变化后，在经过 20s 左右后， WorkManager 才会通知执行相应的 Work。
 
@@ -200,7 +194,6 @@ WorkManager.getInstance(myContext).enqueue(uploadWorkRequest)
 [JobScheduler 官方 DEMO](https://github.com/googlearchive/android-JobScheduler)
 
 [WorkManager 官方 DEMO](https://github.com/leeGYPlus/background-tasks-samples)
-
 
 [JobScheduler 官方文档](https://developer.android.google.cn/reference/android/app/job/JobScheduler?hl=en)
 

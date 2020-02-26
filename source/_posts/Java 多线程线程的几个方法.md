@@ -78,7 +78,7 @@ public class Main {
 
 ### 0x003 join
 
-等待目标线程执行完成后再继续执行，即 **获得插队执行的权利**。
+等待目标线程 **执行完成后**， 再继续执行，即 **获得插队执行的权利**。
 
 阻塞当前调用 join() 方法时 **所在的线程**，直到目标线程(调用 join 方法的线程)执行完毕，阻塞的线程得以继续执行。
 
@@ -94,10 +94,10 @@ public class Main {
         long start = System.currentTimeMillis();
         try {
             System.out.println("启动线程 1");
-            // 调用 worker1 中的 join 函数，主线程会阻塞知道 worker1 执行完成
+            // 调用 worker1 中的 join 函数，主线程会阻塞直到 worker1 执行完成
             worker1.join();
             System.out.println("启动线程 2");
-            // 启动线程2 ，调用 worker2 中的 join 函数，主线程会阻塞知道 worker2 执行完成
+            // 启动线程2 ，调用 worker2 中的 join 函数，主线程会阻塞直到 worker2 执行完成
             worker2.start();
             worker2.join();
         } catch (InterruptedException e) {
@@ -140,11 +140,6 @@ Work in: worker-2
 ```
 
 可以看到在开启线程后(执行 start() 方法)，执行指定线程的 join() 方法，主线程会一直阻塞，直到目标线程执行完毕后，主线程才得以执行执行。
-
-
-
-
-
 
 ### 0x0004 yield
 
@@ -226,8 +221,6 @@ thread-1 优先级为：5 ---> 4
 
 * 调用 join 方法的线程，将成功 **抢夺** 线程执行的权利
 * 调用 yield 方法的线程，将 **让出** 自己线程执行的权利
-
-
 
 ---- 
 

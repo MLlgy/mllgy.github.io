@@ -1,19 +1,21 @@
 ---
-title: Java 线程池
+title: Java 多线程五：线程池
 tags: [Java 多线程]
+date: 2020-02-12 14:56:44
 ---
+
 
 
 ### 为什么使用线程池
 
 有了 Thread，可以凭此开启子线程，执行耗时操作，那么为什么还有 Java 还有线程池这种类存在呢？
 
-这是因为当业务需要我们频繁创建多个线程并进行耗时操作时，每次通过 new Thread 的方式来创建线程的方式是十分不好的。虽然线程是十分轻量的，但是新建和销毁消耗线程成本是系统操作，是十分消耗资源的，同时通过 new Thread 创建的大量线程是难以统一管理的，线程间相互竞争，可能占用过多系统资源而导致死锁。
+这是因为当业务需要我们频繁创建多个线程并进行耗时操作时，每次通过 `new Thread` 的方式来创建线程的方式是十分不好的。虽然线程是十分轻量的，但是新建和销毁消耗线程成本是系统操作，是十分消耗资源的，同时通过 `new Thread` 创建的大量线程是难以统一管理的，线程间相互竞争，可能占用过多系统资源而导致死锁。
 
 
 而线程池可以做到以下几点：
 
-* 重用线程池中存在的线程，减少对象创建、销毁的开销。
+* 重用线程池中存在的线程，减少线程创建、销毁的开销。
 * 有效控制最大并发，提高系统资源利用率，避免资源争夺，避免阻塞。
 * 可以提供定时执行、定期执行、单线程、并发数的控制。
 
@@ -21,7 +23,11 @@ tags: [Java 多线程]
 
 ### Executor UML 图
 
-![](/../images/2019_08_22_01.png)
+<!-- ![](/../images/2019_08_22_01.png) -->
+
+
+{% 2019_08_22_01.png %}
+
 
 ### Executor
 
@@ -34,7 +40,7 @@ instead of explicitly creating threads. For example, rather than
 invoking {@code new Thread(new RunnableTask()).start()} for each
 of a set of tasks, you might use:
 
-Executor 是可以执行提交任务单而对象。它解耦了任务的提交和任务的执行细节。Executor 可以代替创建新建线程，可以用：
+Executor 是可以执行提交任务单一对象，它解耦了任务的提交和任务执行细的节。Executor 可以代替创建新建线程，可以用：
 ```
 Executor executor = anExecutor();
 executor.execute(new RunnableTask1());
@@ -56,7 +62,7 @@ class DirectExecutor implements Executor {
 在 [Main.Java](https://github.com/leeGYPlus/JavaCode/blob/master/src/excutors/Main.java) 中日志说明此处的 Executor 为同步执行。
 
 
-但是更多的是任务在新的线程而不是调用者的线程中执行：
+但是更多的是：任务在新的线程而不是调用者的线程中执行：
 
 ```
 public class ThreadPerTaskExecutor implements Executor {
@@ -74,14 +80,14 @@ Executor 的实现类限制了任务在何时以及怎样执行，同时也可�
 
 #### ExecutorService
 
-ExecutorService 继承了 Executor，是使用更加广泛的接口，提供了管理生命周期的方法以及跟踪一个或多个异步任务并返回 Future 的方法。 
+ExecutorService 继承了 Executor，是使用更加广泛的接口，提供了 **管理生命周期的方法** 以及 **跟踪一个或多个异步任务并返回 Future** 的方法。 
 
 ExecutorService 被关闭后就不会再执行新的任务，ExecutorService 提供了两个关闭 ExecutorService 的方法：
 
 * void shutdown()：拒绝新的任务，但是之前的任务会被执行。
 * List<Runnable> shutdownNow()：停止执行任何任务，返回等待执行的任务。
 
-submit() 方法通过创建并返回可用于取消执行和/或等待完成的 Future来扩展基本方法 Executor#execute（Runnable）。
+`submit()` 方法，通过创建并返回可用于取消执行和/或等待完成的 Future，来扩展基本方法 Executor#execute（Runnable）。
 
 
 #### AbstractExecutorService 
@@ -89,12 +95,9 @@ submit() 方法通过创建并返回可用于取消执行和/或等待完成的 
 AbstractExecutorService 为 ExecutorService  的默认实现类，
 Java 1.5 引入。
 
-
-
-
 ### ThreadPoolExcutor 参数含义
 
-ThreadPoolExcutor 是线程池的真正实现，通过设置相应的参数来构建相应的线程池。ThreadPoolExcutor 构造函数如下：
+ThreadPoolExcutor 是 **线程池的真正实现** ，通过设置相应的参数来构建相应的线程池。ThreadPoolExcutor 构造函数如下：
 
 ```
 public ThreadPoolExecutor(int corePoolSize,
@@ -122,14 +125,12 @@ keepAliveTime：
     闲置的非核心线程在超过这个时长后就会被回收，如果 allowCoreThreadTimeOut 被设置为 true，那么核心线程在超时后也会被回收。
 
 unit：
+
     keepAliveTime 的时间单位。
 
 workQueue：
 
-    线程池的任务队列，通过线程池的 execute 方法提交的 Runnable 对象被添加到这个队列中。
-
-
-   
+    线程池的任务队列，工作队列，通过线程池的 execute 方法提交的 Runnable 对象被添加到这个队列中。
 
 threadFactory：
 

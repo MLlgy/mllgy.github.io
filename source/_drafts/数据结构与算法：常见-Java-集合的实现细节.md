@@ -86,3 +86,43 @@ Map 集合是一个关联数组，它包含两个值：
 
 TreeMap 和 HashMap 可以通过 values 获取 value 集合，但是返回值并不是 List 集合，而是由其内部实现的类（Values extends AbstractCollection） ，可以认为这个集合为  List（Map 的 vaule 允许重复）。
 
+##### Map 和 List 的关系
+
+
+其实 List 在一定意义上也可以看做是 Map：以索引为 Key，以元素为 Vaule 的 Map，但是 List 和 Map 在实现上没有太大的相似之处。
+
+
+#### ArrayList 和 LinkedList
+
+
+List 的实现类中主要的三个：ArrayList、LinkedList、Vector，同时 Vector 存在一个子类 Stack。
+
+Vector 和 Stack 为线程安全的类，每个方法上都添加 synchronize 关键字。
+
+但是在使用 栈 这种数据结构时，不建议使用 Stack，建议使用 Deque，Deque 有一个子类 ArrayDeque，可以用来实现栈这种数据结构，但是不能保证线程安全。
+
+
+##### Vector 和 ArrayList 的区别
+
+
+本质没有区别，都是实现类 List 接口，底层都是基于 Java 数组存储元素。
+
+
+ArrayList 内部使用 transient 修饰 element 数据，用来避免直接序列化数组，通过 readObject 和 writeObject 实现定制序列化，而 Vector 没有实现此关键字，所以从序列化的角度来说，ArrayList 的实现比 Vector 的实现更安全。
+
+但是 Vector 为线程安全的，而 ArrayList 为线程非安全的。
+
+##### ArrayList 和 LinkedList 实现的差异
+
+
+ArrayList 为线性表的数据结构，是顺序存储的线性表，ArrayList 底层采用数组来保存每个集合元素。
+
+LinkedList 则是一种链式存储的线性表，其本质为一个双向链表，不仅实现了 List 接口，也实现了 Deque 接口，所以可以把 LinkedList 当做双向链表使用，也可以当做队列使用，同时还可以使用栈来使用。
+
+
+对于 ArrayList 集合来说，当添加、删除集合元素时，ArrayList 底层需要对数组进行 “整体搬家”，因此性能十分差。但是如果通过索引取出 ArrayList 集合中的元素，性能几乎和数组相同，十分块。
+
+
+LinkedList 本质是一个双向链表，所以添加、删除元素性能较好，但是遍历指定索引元素比较耗费性能。
+
+就基本使用上，ArrayList 的性能总体优于 LinkedList。
