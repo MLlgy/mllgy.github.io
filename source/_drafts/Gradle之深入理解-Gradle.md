@@ -27,6 +27,9 @@ tags:
 
 [使用 Kotlin , Groovy ，Java 开发一个自己的 Gradle 插件](https://cloud.tencent.com/developer/article/1188466)
 
+[如何使用Android Studio开发Gradle插件](https://blog.csdn.net/sbsujjbcy/article/details/50782830)
+
+[在AndroidStudio中自定义Gradle插件](https://www.jianshu.com/p/d53399cd507b)
 
 
 ### 好的博客

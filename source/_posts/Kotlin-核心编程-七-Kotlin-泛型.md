@@ -156,10 +156,11 @@ ArrayList arrayList = new ArrayList<String>(){};
 System.out.println(arrayList.getClass().getGenericSuperclass());
 
 // Kotlin
-val clazz = object :ArrayList<String>(){}
+val clazz = object :ArrayList<String>(){}// Kotlin 的匿名内部类
 println(clazz.javaClass.genericSuperclass)
 ```
-为什么可以通过匿名内部类获得泛型参数的类型呢？这是因为 **泛型的类型擦除并不是完全的将所有信息擦除**，而会 **将类型信息放在所属 class 的常量池中**，这样我们就可以通过相应的方式获得类型信息，而匿名内部类就可以实现这个功能。
+
+为什么可以通过匿名内部类可以在运行期获得泛型参数的类型呢？这是因为 **泛型的类型擦除并不是完全的将所有信息擦除**，而会 **将类型信息放在所属 class 的常量池中**，这样我们就可以通过相应的方式获得类型信息，而匿名内部类就可以实现这个功能。
 
 [Java 将泛型信息存储在何处](https://stackoverflow.com/questions/937933/where-are-generic-types-stored-in-java-class-files/937999#937999)：类信息的签名中。
 
@@ -174,6 +175,7 @@ open class GenericsToken<T>{
 }
 
 fun main(args: Array<String>) {
+    // 创建一个匿名内部类
     val oneKt = object:GenericsToken<Map<String,String>>(){}
     println(oneKt.type)
 }
@@ -183,6 +185,9 @@ fun main(args: Array<String>) {
 ```
 java.util.Map<java.lang.String, ? extends java.lang.String>
 ```
+
+至于如果获得参数化类型，可参见此博客：[ParameterizedType应用，java反射，获取参数化类型的class实例](https://blog.csdn.net/datouniao1/article/details/53788018)
+
 其实正是因为类型擦除的原因，在使用 Gson 反序列化对象的时候除了制定泛型参数，还需要传入一个 class ：
 
 ```
@@ -196,25 +201,35 @@ java.util.Map<java.lang.String, ? extends java.lang.String>
 
 ```
 val  json = "...."
-val rType = object: TypeToken<List<String>>(){}.type
+val rType = object: TypeToken<List<String>>(){}.type// 获得反序列化的数据类型
 val stringList = Gson().fromJson<List<String>>(json,rType)
+```
+
+当然可以直接传输数据类型：
+
+```
+// 存在局限，比如不能传入 List<String> 的数据类型
+val stringList = Gson().fromJson<String::class.java>(json,rType)
 ```
 
 在 Kotlin 中除了使用匿名内部类获得泛型参数外，还可以使用内联函数来获取。
 
 3. **使用内联函数获取泛型的参数类型**
 
-内联函数(inline)在编译时会将具体的函数字节码插入调用的地方，类型插入相应的字节码中，这就意味着泛型参数类型也会被插入到字节码中，那么就可以实现在运行时就可以获得对应的参数类型了。
+内联函数的特征：
 
-使用内联函数获取泛型的参数类型十分的简单，只要加上 **reified** 关键字，意思是：在编译时会将具体的类型插入到相应的字节码中，那么就可以获得对应参数的类型，与 Java 中的泛型在编译器进行类型擦除不同，Kotlin 中使用 **reified**  修饰泛型，该泛型类型信息不回被抹去，所以 Kotiln 中的该泛型为 **真泛型**。
+内联函数(`inline`)在编译时会将具体的函数字节码插入调用的地方，类型插入相应的字节码中，这就意味着泛型参数类型也会被插入到字节码中，那么就可以实现在运行时就可以获得对应的参数类型了。
+
+使用内联函数获取泛型的参数类型十分的简单，只要加上 **`reified`** 关键字，意思是：在编译时会将 **具体的类型** 插入到相应的字节码中，那么就可以获得对应参数的类型，与 Java 中的泛型在编译器进行类型擦除不同，Kotlin 中使用 **reified**  修饰泛型，**该泛型类型信息不会被抹去**，所以 Kotiln 中的该泛型为 **真泛型**。
 
 > **reified** 为 Kotlin 中的一个关键字，还有一个叫做 **inline**，后者可以将函数定义为内联函数，前者可以将内联函数的泛型参数当做真实类型使用.
 
 
-可以借此来对 Gson 进行扩展：
+可以借此来为 Gson 定义一个扩展函数：
 
 ```
-inline fun <reified T> Gson.fromJson(json: String): T{ 
+inline fun <reified T
+: Any> Gson.fromJson(json: String): T{ 
      return fromJson(json, T::class.java) 
  } 
 ```
@@ -225,7 +240,7 @@ inline fun <reified T> Gson.fromJson(json: String): T{
  class Person(var id: Int, var name: String) 
  　 
  fun test(){ 
-     val person: Person = Gson().fromJson("""{"id": 0, "name": "Jack" }""") 
+     val person: Person = Gson().fromJson<User>("""{"id": 0, "name": "Jack" }""") 
  }
 ```
 
@@ -240,7 +255,7 @@ inline fun <reified T> Gson.fromJson(json: String): T{
 ```
 这就是 Kotin 的泛型被称为 **真泛型** 的原因。
 
-但是 refied 存在一个问题：reified 只能修饰方法，而当定义一个泛型类时，reified 是无法通过类似以上的方式获得泛型参数的，但是仍然可以通过其他方式获得泛型类中的泛型参数类型，具体如下：
+但是 refied 存在一个问题：`reified` 只能修饰方法，而当定义一个泛型类时，reified 是无法通过类似以上的方式获得泛型参数的，但是仍然可以通过其他方式获得泛型类中的泛型参数类型，具体如下：
 
 ```
 class View<T>(val clazz:Class<T>){
@@ -262,14 +277,17 @@ fun main(args: Array<String>) {
 
 这种写法特别适合在 android 中的 MVP，不用再在 Activity 中显式的显示 Presenter 的类名。
 
+**实现一个 Android MVP 框架**
+
 Model 层：
+
 ```
 data class User(var id: Int, var name: String)
 ```
 
 Presenter 层：
 ```
-nterface IPresenter {
+interface IPresenter {
     fun doLogin(): User
 }
 ```
@@ -281,25 +299,15 @@ interface IView {
 }
 ```
 
-具体使用：
+
+
+第一种方式：
+
 
 ```
-open class BaseActivity<T>(val clazz: Class<T>) : AppCompatActivity() {
-    val presenter by lazy { clazz.newInstance() }
-
-    companion object {
-        inline operator fun <reified T> invoke() = BaseActivity(T::class.java)
-    }
-}
-
-class MainActivity : AppCompatActivity(), IView by MVPView() {
-
-    inline fun <reified T : IPresenter> getPresenter(): T {
-        return T::class.java.newInstance()
-    }
-
-//class MainActivity : AppCompatActivity(),
-//        IView by MVPView(), IPresenter by EmptyPresenter() {
+// 第一种方式，通过动态代理 by 
+class MainActivity : AppCompatActivity(),
+        IView by MVPView(), IPresenter by EmptyPresenter() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -307,7 +315,8 @@ class MainActivity : AppCompatActivity(), IView by MVPView() {
 
         findViewById<Button>(R.id.button).setOnClickListener {
             getPresenter<EmptyPresenter>().doLogin()
-//            doLogin()
+                // 第一种方法，通过动态代理，可以直接调用 EmptyPresenter 的方法
+               doLogin() 
         }
     }
 }
@@ -323,6 +332,68 @@ class MVPView : IView {
     override fun getLayoutID() = R.layout.activity_main
 }
 ```
+
+第二种：
+
+
+```
+open class BaseActivity<T>(val clazz: Class<T>) : AppCompatActivity() {
+    val presenter by lazy { clazz.newInstance() }
+
+    companion object {
+        inline operator fun <reified T> invoke() = BaseActivity(T::class.java)
+    }
+}
+
+class MainActivity : BaseActivity<EmptyPresenter>(EmptyPresenter::class.java),
+    IView by MVPView() {
+    
+    // 删除  getPresenter 的逻辑
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(getLayoutID())
+
+        findViewById<Button>(R.id.button).setOnClickListener {
+            // 直接获得 present 对象
+            presenter.doLogin()
+        }
+    }
+}
+
+class EmptyPresenter : IPresenter {
+    override fun doLogin(): User {
+        //执行各种逻辑
+        return User(1, "zhangtao")
+    }
+}
+```
+
+
+第三种方式：
+
+如果不想继承 BaseActivity，则可以按照下面的逻辑：
+
+```
+
+class MainActivity : AppCompatActivity(),
+    IView by MVPView() {
+
+    inline fun <reified T : IPresenter> getPresenter(): T {
+        return T::class.java.newInstance()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(getLayoutID())
+
+        findViewById<Button>(R.id.button).setOnClickListener {
+            getPresenter<EmptyPresenter>().doLogin()
+        }
+    }
+}
+```
+
 
 ### 0x0005 Kotlin 型变
 
