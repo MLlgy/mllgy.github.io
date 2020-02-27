@@ -1,7 +1,7 @@
 ---
 title: 使用 CPU Profiler 检查 CPU Activity 和函数跟踪
 date: 2019-11-18 16:11:35
-tags:
+tags: [CPU Profiler，Android 性能优化]
 ---
 
 

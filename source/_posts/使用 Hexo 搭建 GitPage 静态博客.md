@@ -2,7 +2,7 @@
 title: 使用 Hexo 搭建 GitPage 静态博客
 tags: [Hexo,GitPage]
 ---
-## 必要工具的安装(Mac)
+## 必要工具的安装(Mac)
 
 ### nmp
 

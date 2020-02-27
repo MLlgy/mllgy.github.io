@@ -7,17 +7,7 @@ tags:
 [深入理解Android之Gradle](https://blog.csdn.net/innost/article/details/48228651)
 
 
-<<<<<<< HEAD
 
-
-[Andorid DSL 预览](http://google.github.io/android-gradle-dsl/current/)
-
-[【Android 修炼手册】Gradle 篇 -- Gradle 的基本使用](https://zhuanlan.zhihu.com/p/65249493)
-
-关于 implementation、api、compileOnly、runtimeOnly、Android Transform 、插件表现步骤、调试插件。
-
-android gradle plugin 提供了 transform api 用来在 .class to dex 过程中对 class 进行处理，可以理解为一种特殊的 Task，因为 transform 最终也会转化为 Task 去执行。在 transform 中的处理，一般会涉及到 class 文件的修改，操纵字节码的工具一般是 javasist 和 asm 居多。
-=======
 Gradle另外一个特点就是它是一种DSL，即Domain Specific Language，领域相关语言。什么是DSL，说白了它是某个行业中的行话。还是不明白？徐克导演得《智取威虎山》中就有很典型的DSL使用描述.
 
 Gradle中也有类似的行话，比如sourceSets代表源文件的集合等。
@@ -68,8 +58,20 @@ Task 之间存在依赖关系，依赖关系对我们使用gradle有什么意义
 
 
 ### 扩展属性 
+2019_08_22_01就不需要ext前缀了。ext属性支持Project和Gradle对象。即Project和Gradle对象都可以设置ext属性。                                                                                                                         
 
-Gradle提供了一种名为extra property的方法。extra property是额外属性的意思，在第一次定义该属性的时候需要通过ext前缀来标示它是一个额外的属性。定义好之后，后面的存取就不需要ext前缀了。ext属性支持Project和Gradle对象。即Project和Gradle对象都可以设置ext属性。                                                                                                                         
+
+
+
+
+[Andorid DSL 预览](http://google.github.io/android-gradle-dsl/current/)
+
+[【Android 修炼手册】Gradle 篇 -- Gradle 的基本使用](https://zhuanlan.zhihu.com/p/65249493)
+
+关于 implementation、api、compileOnly、runtimeOnly、Android Transform 、插件表现步骤、调试插件。
+
+android gradle plugin 提供了 transform api 用来在 .class to dex 过程中对 class 进行处理，可以理解为一种特殊的 Task，因为 transform 最终也会转化为 Task 去执行。在 transform 中的处理，一般会涉及到 class 文件的修改，操纵字节码的工具一般是 javasist 和 asm 居多。
+
 
 --- 
 
@@ -81,4 +83,3 @@ Gradle提供了一种名为extra property的方法。extra property是额外属�
 [Gradle 用户手册](https://docs.gradle.org/current/userguide/userguide.html)
 
 [Gradle Index](https://docs.gradle.org/current/javadoc/index-all.html)
->>>>>>> edit text

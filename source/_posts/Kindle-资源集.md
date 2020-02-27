@@ -1,8 +1,7 @@
 ---
 title: Kindle 资源网站集
 date: 2019-05-30 10:28:29
-tags:
-- Kindle
+tags:  [Kindle]
 ---
 [kaka](http://www.kaka3.com/)
 

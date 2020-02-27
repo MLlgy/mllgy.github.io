@@ -1,7 +1,7 @@
 ---
 title: Kotlin 中的结构化并发是什么?
 date: 2019-10-11 18:41:20
-tags: [Coroutines(协程),Kotlin]
+tags: [Coroutines,Kotlin]
 ---
 
 
