@@ -6,20 +6,15 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href>
-  <title>线程的 wait、sleep、join、yeild 方法 | GY</title>
+  <title>Archives: 2020/2 | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x0001 wait()首先，需要明确的是 wait() 方法为 Object 类中的方法，所以 Object 对象才可以执行 wait() 方法，但是该方法和线程的各个状态息息相关。 当一个线程执行到 wait() 方法时，它就进入到一个 和该对象相关的等待池 中，同时 该线程失去(释放)对象所持有的锁，使得其他线程可以访问。用户可以使用 notify、notifyAll 或者指定睡眠时间来唤">
-<meta name="keywords" content="Thread">
-<meta property="og:type" content="article">
-<meta property="og:title" content="线程的 wait、sleep、join、yeild 方法">
-<meta property="og:url" content="/2019/09/05/线程的几个方法/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="GY">
+<meta property="og:url" content="/archives/2020/02/index.html">
 <meta property="og:site_name" content="GY">
-<meta property="og:description" content="0x0001 wait()首先，需要明确的是 wait() 方法为 Object 类中的方法，所以 Object 对象才可以执行 wait() 方法，但是该方法和线程的各个状态息息相关。 当一个线程执行到 wait() 方法时，它就进入到一个 和该对象相关的等待池 中，同时 该线程失去(释放)对象所持有的锁，使得其他线程可以访问。用户可以使用 notify、notifyAll 或者指定睡眠时间来唤">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-09-05T07:56:32.426Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="线程的 wait、sleep、join、yeild 方法">
-<meta name="twitter:description" content="0x0001 wait()首先，需要明确的是 wait() 方法为 Object 类中的方法，所以 Object 对象才可以执行 wait() 方法，但是该方法和线程的各个状态息息相关。 当一个线程执行到 wait() 方法时，它就进入到一个 和该对象相关的等待池 中，同时 该线程失去(释放)对象所持有的锁，使得其他线程可以访问。用户可以使用 notify、notifyAll 或者指定睡眠时间来唤">
+<meta name="twitter:title" content="GY">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
   
@@ -159,227 +154,93 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-线程的几个方法" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      线程的 wait、sleep、join、yeild 方法
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2020" class="archive-year">2020</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<!-- 
+ -->
+
+<a href="/2020/02/24/Android-Logcat-基本信息细述/" class="archive-article-date">
+  	<time datetime="2020-02-24T06:51:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-24</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2020/02/24/Android-Logcat-基本信息细述/">Android Logcat 基本信息细述</a>
     </h1>
   
 
-        
-        <!-- 
+        <div class="article-info info-on-right">
+          
+          
+
+        </div>
+        <div class="clearfix"></div>
+    </header>
+  </div>
+</article>
+  
+    
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<!-- 
  -->
 
-<a href="/2019/09/05/线程的几个方法/" class="archive-article-date">
-  	<time datetime="2019-09-05T07:53:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-05</time>
+<a href="/2020/02/12/Java-多线程-五：线程池/" class="archive-article-date">
+  	<time datetime="2020-02-12T06:56:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-12</time>
 </a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="0x0001-wait"><a href="#0x0001-wait" class="headerlink" title="0x0001 wait()"></a>0x0001 wait()</h3><p>首先，需要明确的是 wait() 方法为 Object 类中的方法，所以 Object 对象才可以执行 wait() 方法，但是该方法和线程的各个状态息息相关。</p>
-<p>当一个线程执行到 wait() 方法时，它就进入到一个 <strong>和该对象相关的等待池</strong> 中，同时 <strong>该线程失去(释放)对象所持有的锁</strong>，使得其他线程可以访问。用户可以使用 notify、notifyAll 或者指定睡眠时间来唤醒当前等待池中的线程。</p>
-<p>需要注意的是：wait()、notify()、notifyAll() 必须放在 synchronized block 中，否则会抛出异常。</p>
-<a id="more"></a>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">public class Main &#123;</span><br><span class="line">    </span><br><span class="line">    private static final Object mLockObject = new Object();</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        waitAndNotifyAll();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static void waitAndNotifyAll()&#123;</span><br><span class="line">        System.out.println(&quot;主线程执行&quot;);</span><br><span class="line">        Thread thread = new WaitThread();</span><br><span class="line">        thread.start();</span><br><span class="line">        long startTime = System.currentTimeMillis();</span><br><span class="line">        synchronized (mLockObject)&#123;</span><br><span class="line">            try &#123;</span><br><span class="line">                System.out.println(&quot;主线程等待&quot;);</span><br><span class="line">                mLockObject.wait();</span><br><span class="line">            &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        long timsMs = System.currentTimeMillis() - startTime;</span><br><span class="line">        System.out.println(&quot;主线程继续 -&gt; 等待耗时：&quot;  + timsMs + &quot; ms&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    static class WaitThread extends Thread&#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            super.run();</span><br><span class="line">            synchronized (mLockObject)&#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    System.out.println(&quot;子线程执行,3s 后执行 notifyAll&quot;);</span><br><span class="line">                    Thread.sleep(3000);</span><br><span class="line">                    mLockObject.notifyAll();</span><br><span class="line">                &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>执行日志：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">主线程执行</span><br><span class="line">主线程等待</span><br><span class="line">子线程执行,3s 后执行 notifyAll</span><br><span class="line">主线程继续 -&gt; 等待耗时：3007 ms</span><br></pre></td></tr></table></figure>
-
-<p>可以看到在主线程在执行 mLockObject 的 wait() 方法后就进入到等待状态，在子线程中执行 mLockObject 的 notifyAll() 方法来唤醒等待池中睡眠的主线程，使主线程继续执行。</p>
-<h3 id="0x0002-sleep"><a href="#0x0002-sleep" class="headerlink" title="0x0002 sleep"></a>0x0002 sleep</h3><p>该方法时 Thread 的静态方法，作用是 <strong>使调用线程进入睡眠状态</strong>。因为 sleep 方法时 Thread 的静态方法，因此它 <strong>不能改变对象所持有的锁</strong>，所以当在一个 synchronized 块中调用 sleep 方法时，虽然线程休眠了，但是所持有的对象锁并不会被释放，其他线程也无法访问这个对象(睡着也要霸占锁的主)。</p>
-<h3 id="0x003-join"><a href="#0x003-join" class="headerlink" title="0x003 join"></a>0x003 join</h3><p>等待目标线程执行完成后再继续执行，即 <strong>获得插队执行的权利</strong>。</p>
-<p>阻塞当前调用 join() 方法时 <strong>所在的线程</strong>，直到目标线程(调用 join 方法的线程)执行完毕，阻塞的线程得以继续执行。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">private static void joinTest() &#123;</span><br><span class="line">    // 目标线程 1</span><br><span class="line">    Worker worker1 = new Worker(&quot;worker-1&quot;);</span><br><span class="line">    // 目标线程 2</span><br><span class="line">    Worker worker2 = new Worker(&quot;worker-2&quot;);</span><br><span class="line">    worker1.start();</span><br><span class="line"></span><br><span class="line">    long start = System.currentTimeMillis();</span><br><span class="line">    try &#123;</span><br><span class="line">        System.out.println(&quot;启动线程 1&quot;);</span><br><span class="line">        // 调用 worker1 中的 join 函数，主线程会阻塞知道 worker1 执行完成</span><br><span class="line">        worker1.join();</span><br><span class="line">        System.out.println(&quot;启动线程 2&quot;);</span><br><span class="line">        // 启动线程2 ，调用 worker2 中的 join 函数，主线程会阻塞知道 worker2 执行完成</span><br><span class="line">        worker2.start();</span><br><span class="line">        worker2.join();</span><br><span class="line">    &#125; catch (InterruptedException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    System.out.println(&quot;主线程继续执行&quot;);</span><br><span class="line">    System.out.println(&quot;主线程等待线程 1 和线程 2 的时间为：&quot; + (System.currentTimeMillis() - start) + &quot; ms&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">static class Worker extends Thread &#123;</span><br><span class="line">    public Worker(String name) &#123;</span><br><span class="line">        super(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            Thread.sleep(2000);</span><br><span class="line">        &#125; catch (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;Work in: &quot; + getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>打印日志：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">启动线程 1</span><br><span class="line">Work in: worker-1</span><br><span class="line">启动线程 2</span><br><span class="line">Work in: worker-2</span><br><span class="line">主线程继续执行</span><br><span class="line">主线程等待线程 1 和线程 2 的时间为：4010 ms</span><br></pre></td></tr></table></figure>
-
-<p>可以看到在开启线程后(执行 start() 方法)，执行指定线程的 join() 方法，主线程会一直阻塞，直到目标线程执行完毕后，主线程才得以执行执行。</p>
-<h3 id="0x0004-yield"><a href="#0x0004-yield" class="headerlink" title="0x0004 yield"></a>0x0004 yield</h3><p>线程礼让。</p>
-<p>使调用该函数的线程让出执行时间给其他已经处于就绪状态的线程。</p>
-<p>目标线程有由 <strong>运行状态</strong> 转换为 <strong>就绪状态</strong>，让出执行权限，让其他线程得以优先执行，但是其他线程是否能够优先执行是位置的， 由 CPU 时间分片决定。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">private static void yieldTest()&#123;</span><br><span class="line">    YieldThread yieldThread1 = new YieldThread(&quot;thread-1&quot;);</span><br><span class="line">    YieldThread yieldThread2 = new YieldThread(&quot;thread-2&quot;);</span><br><span class="line">    yieldThread1.start();</span><br><span class="line">    yieldThread2.start();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static class YieldThread extends Thread &#123;</span><br><span class="line">    </span><br><span class="line">    public YieldThread(String name) &#123;</span><br><span class="line">        super(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        super.run();</span><br><span class="line">        for (int i = 0; i &lt; 5; i++) &#123;</span><br><span class="line">            System.out.printf(&quot;%s 优先级为：%d ---&gt; %d\n&quot;, this.getName(), this.getPriority(), i);</span><br><span class="line">            // 当 i = 2 时，调用当前线程执行 yield 函数</span><br><span class="line">            if (i == 2) &#123;</span><br><span class="line">                System.out.printf(&quot;%s 进入到就绪状态 ---&gt; %d %s \n&quot;, this.getName(), i,this.getName());</span><br><span class="line">                Thread.yield();</span><br><span class="line">            &#125;</span><br><span class="line">            if (i == 3) &#123;</span><br><span class="line">                System.out.printf(&quot;%s 重新回到运行状态 ---&gt; %d  %s \n&quot;, this.getName(), i, this.getName());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>打印结果：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">thread-1 优先级为：5 ---&gt; 0</span><br><span class="line">thread-1 优先级为：5 ---&gt; 1</span><br><span class="line">thread-1 优先级为：5 ---&gt; 2</span><br><span class="line">thread-2 优先级为：5 ---&gt; 0</span><br><span class="line">thread-2 优先级为：5 ---&gt; 1</span><br><span class="line">thread-2 优先级为：5 ---&gt; 2</span><br><span class="line">thread-2 进入到就绪状态 ---&gt; 2 thread-2 </span><br><span class="line">thread-1 进入到就绪状态 ---&gt; 2 thread-1 </span><br><span class="line">thread-2 优先级为：5 ---&gt; 3</span><br><span class="line">thread-2 重新回到运行状态 ---&gt; 3  thread-2 </span><br><span class="line">thread-2 优先级为：5 ---&gt; 4</span><br><span class="line">thread-1 优先级为：5 ---&gt; 3</span><br><span class="line">thread-1 重新回到运行状态 ---&gt; 3  thread-1 </span><br><span class="line">thread-1 优先级为：5 ---&gt; 4</span><br></pre></td></tr></table></figure>
-
-<p>以上日志打印情况只是众多情况中的一种，此时所说的众多情况是在 i = 2 之前，因为线程获得 CPU 时间分片是随机的，所以这是众线程的执行顺序可以说是零乱的，但是当一个线程中执行 yield(),那么该线程就处于就绪状态，需要等待其他线程执行完毕后才可以继续执行。</p>
-<p>此例中，<br>当 thread-2 执行到 i = 2 时：<br>    thread-2 处于就绪状态，thread-1 进入运行状态<br>当 thread-1 执行到 i = 2 时：<br>    thread-1 处于就绪状态，thread-2 进入运行状态，此时 thread-2 的状态不会再改变，会一直执行，直到结束。<br>当 thread-2 执行完毕时：<br>    thread-1 继续执行，直到结束。</p>
-<p>当一个线程中执行 yield)() 方法，同时存在处于 yield  就绪状态的线程和正常就绪状态的线程，那么正常状态的线程会得到优先执行权利，直到所有的线程均处于 yield 就绪状态，那么 yield 状态的线程会按照进入此状态的顺序恢复正常状态，好绕啊，具体验证可以查看 <a href="https://github.com/leeGYPlus/JavaCode/blob/master/src/thread/methods/Main.java" target="_blank" rel="noopener">GitHub 代码</a> 中 yieldTest 方法以及注释。</p>
-<p>可以看到 join 方法和 yield 方法的作用完全相反：</p>
-<ul>
-<li>调用 join 方法的线程，将成功 <strong>抢夺</strong> 线程执行的权利</li>
-<li>调用 yield 方法的线程，将 <strong>让出</strong> 自己线程执行的权利</li>
-</ul>
-<hr>
-<p><strong>知识链接</strong></p>
-<p><a href="https://book.douban.com/subject/26744163/" target="_blank" rel="noopener">Android 开发进阶:从小工到专家</a></p>
-
-      
-
-      
-        <div class="page-reward">
-          <a href="javascript:;" class="page-reward-btn tooltip-top">
-            <div class="tooltip tooltip-east">
-            <span class="tooltip-item">
-              赏
-            </span>
-            <span class="tooltip-content">
-              <span class="tooltip-text">
-                <span class="tooltip-inner">
-                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
-                  <div class="reward-box">
-                    
-                    <div class="reward-box-item">
-                      <img class="reward-img" src="/img/alipay.jpg">
-                      <span class="reward-type">支付宝</span>
-                    </div>
-                    
-                    
-                    <div class="reward-box-item">
-                      <img class="reward-img" src="/img/wxpay.jpg">
-                      <span class="reward-type">微信</span>
-                    </div>
-                    
-                  </div>
-                </span>
-              </span>
-            </span>
-          </div>
-          </a>
         </div>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2020/02/12/Java-多线程-五：线程池/">Java 多线程五：线程池</a>
+    </h1>
+  
+
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Thread</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Java 多线程</a>
         		</li>
       		
 		</ul>
 	</div>
 
-      
+          
 
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
         </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http:/2019/09/05/线程的几个方法/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2019/09/12/EventBus-线程模式/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          EventBus 线程模式
-        
-      </div>
-    </a>
   
   
-    <a href="/2019/08/19/从缓存文件的角度帮你理解-Okhttp3-缓存原理/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">从缓存文件的角度帮你理解 Okhttp3 缓存原理</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-  
-  
+    </div></section>
   
 
-  
-
-  
-
-  
+    
 
 
           </div>
@@ -406,8 +267,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
-		isArchive: false,
+		isPost: false,
+		isArchive: true,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
@@ -468,11 +329,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
+                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
+                <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -488,6 +349,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
@@ -497,10 +366,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Gradle in action</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -516,19 +381,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -548,6 +401,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Java 多线程</a>
               </li>
              
@@ -564,11 +425,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">泛型</a>
+                <a href="javascript:void(0)" class="js-tag color5">《深入理解 Java 虚拟机》读书笔记</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">《深入理解 Java 虚拟机》读书笔记</a>
+                <a href="javascript:void(0)" class="js-tag color3">泛型</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -588,15 +449,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Jetpack</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -616,6 +477,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Kotlin 泛型</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
               </li>
              
@@ -624,19 +489,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Kotlin 泛型</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kotlin 核心编程</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -676,10 +537,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Git</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">View</a>
               </li>
              
@@ -692,7 +549,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
+                <a href="javascript:void(0)" class="js-tag color4">Git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -705,6 +566,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">FutureTask</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -724,10 +589,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
               </li>
              
@@ -740,7 +601,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -752,11 +613,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">JNI</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">深入理解 Android 读书笔记</a>
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -768,11 +625,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
+                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
+                <a href="javascript:void(0)" class="js-tag color4">JNI</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">深入理解 Android 读书笔记</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -784,11 +645,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -797,10 +662,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">MultiDex</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -817,6 +678,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">EventBus APT</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Thread</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -849,10 +714,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Thread</a>
               </li>
              
               <li class="article-tag-list-item">

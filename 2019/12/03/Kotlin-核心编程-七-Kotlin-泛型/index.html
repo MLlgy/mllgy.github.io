@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="GY">
 <meta property="og:description" content="0x0001 为什么引入泛型？ 泛型让类型更安全。  有了泛型后，不仅可以在编译期进行类型检查，在运行时还会自动转型。 使用泛型时是否可以主动的指定类型？ 在 Java 中这样是可以的：">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-12-03T05:28:29.114Z">
+<meta property="og:updated_time" content="2020-02-26T07:43:21.982Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content=" Kotlin 核心编程(七):Kotlin 泛型，让类型更加安全">
 <meta name="twitter:description" content="0x0001 为什么引入泛型？ 泛型让类型更安全。  有了泛型后，不仅可以在编译期进行类型检查，在运行时还会自动转型。 使用泛型时是否可以主动的指定类型？ 在 Java 中这样是可以的：">
@@ -232,57 +232,70 @@
 <li><strong>通过匿名内部类获得泛型参数类型</strong></li>
 </ol>
 <p>具体示例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// Java </span><br><span class="line">ArrayList arrayList = new ArrayList&lt;String&gt;()&#123;&#125;;</span><br><span class="line">System.out.println(arrayList.getClass().getGenericSuperclass());</span><br><span class="line"></span><br><span class="line">// Kotlin</span><br><span class="line">val clazz = object :ArrayList&lt;String&gt;()&#123;&#125;</span><br><span class="line">println(clazz.javaClass.genericSuperclass)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// Java </span><br><span class="line">ArrayList arrayList = new ArrayList&lt;String&gt;()&#123;&#125;;</span><br><span class="line">System.out.println(arrayList.getClass().getGenericSuperclass());</span><br><span class="line"></span><br><span class="line">// Kotlin</span><br><span class="line">val clazz = object :ArrayList&lt;String&gt;()&#123;&#125;// Kotlin 的匿名内部类</span><br><span class="line">println(clazz.javaClass.genericSuperclass)</span><br></pre></td></tr></table></figure>
 
-<p>为什么可以通过匿名内部类获得泛型参数的类型呢？这是因为 <strong>泛型的类型擦除并不是完全的将所有信息擦除</strong>，而会 <strong>将类型信息放在所属 class 的常量池中</strong>，这样我们就可以通过相应的方式获得类型信息，而匿名内部类就可以实现这个功能。</p>
+<p>为什么可以通过匿名内部类可以在运行期获得泛型参数的类型呢？这是因为 <strong>泛型的类型擦除并不是完全的将所有信息擦除</strong>，而会 <strong>将类型信息放在所属 class 的常量池中</strong>，这样我们就可以通过相应的方式获得类型信息，而匿名内部类就可以实现这个功能。</p>
 <p><a href="https://stackoverflow.com/questions/937933/where-are-generic-types-stored-in-java-class-files/937999#937999" target="_blank" rel="noopener">Java 将泛型信息存储在何处</a>：类信息的签名中。</p>
 <p><strong>匿名内部类在初始化的时候就会绑定父类或者父接口的信息，这样就能通过获取父类或父接口的泛型类型信息，来实现我们的需求</strong>，可以通过利用此来设计一个获得所有类型信息的泛型类：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">open class GenericsToken&lt;T&gt;&#123;</span><br><span class="line">    var type : Type = Any::class.java</span><br><span class="line">    init &#123;</span><br><span class="line">        val superClass = this.javaClass.genericSuperclass</span><br><span class="line">        type = (superClass as ParameterizedType).actualTypeArguments[0]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fun main(args: Array&lt;String&gt;) &#123;</span><br><span class="line">    val oneKt = object:GenericsToken&lt;Map&lt;String,String&gt;&gt;()&#123;&#125;</span><br><span class="line">    println(oneKt.type)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">open class GenericsToken&lt;T&gt;&#123;</span><br><span class="line">    var type : Type = Any::class.java</span><br><span class="line">    init &#123;</span><br><span class="line">        val superClass = this.javaClass.genericSuperclass</span><br><span class="line">        type = (superClass as ParameterizedType).actualTypeArguments[0]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fun main(args: Array&lt;String&gt;) &#123;</span><br><span class="line">    // 创建一个匿名内部类</span><br><span class="line">    val oneKt = object:GenericsToken&lt;Map&lt;String,String&gt;&gt;()&#123;&#125;</span><br><span class="line">    println(oneKt.type)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>打印日志：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.util.Map&lt;java.lang.String, ? extends java.lang.String&gt;</span><br></pre></td></tr></table></figure>
 
+<p>至于如果获得参数化类型，可参见此博客：<a href="https://blog.csdn.net/datouniao1/article/details/53788018" target="_blank" rel="noopener">ParameterizedType应用，java反射，获取参数化类型的class实例</a></p>
 <p>其实正是因为类型擦除的原因，在使用 Gson 反序列化对象的时候除了制定泛型参数，还需要传入一个 class ：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public &lt;T&gt; T fromJson(String json, Class&lt;T&gt; classOfT) throws JsonSyntaxException &#123; </span><br><span class="line">   ... </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>因为 Gson 没有办法根据 T 直接去反序列化，所以 Gson 也是使用了相同的设计，通过匿名内部类获得相应的类型参数，然后传到 fromJson 中进行反序列化。</p>
 <p>看一下在 Kotlin 中我们使用 Gson 来进行泛型类的反序列化：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">val  json = &quot;....&quot;</span><br><span class="line">val rType = object: TypeToken&lt;List&lt;String&gt;&gt;()&#123;&#125;.type</span><br><span class="line">val stringList = Gson().fromJson&lt;List&lt;String&gt;&gt;(json,rType)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">val  json = &quot;....&quot;</span><br><span class="line">val rType = object: TypeToken&lt;List&lt;String&gt;&gt;()&#123;&#125;.type// 获得反序列化的数据类型</span><br><span class="line">val stringList = Gson().fromJson&lt;List&lt;String&gt;&gt;(json,rType)</span><br></pre></td></tr></table></figure>
+
+<p>当然可以直接传输数据类型：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 存在局限，比如不能传入 List&lt;String&gt; 的数据类型</span><br><span class="line">val stringList = Gson().fromJson&lt;String::class.java&gt;(json,rType)</span><br></pre></td></tr></table></figure>
 
 <p>在 Kotlin 中除了使用匿名内部类获得泛型参数外，还可以使用内联函数来获取。</p>
 <ol start="3">
 <li><strong>使用内联函数获取泛型的参数类型</strong></li>
 </ol>
-<p>内联函数(inline)在编译时会将具体的函数字节码插入调用的地方，类型插入相应的字节码中，这就意味着泛型参数类型也会被插入到字节码中，那么就可以实现在运行时就可以获得对应的参数类型了。</p>
-<p>使用内联函数获取泛型的参数类型十分的简单，只要加上 <strong>reified</strong> 关键字，意思是：在编译时会将具体的类型插入到相应的字节码中，那么就可以获得对应参数的类型，与 Java 中的泛型在编译器进行类型擦除不同，Kotlin 中使用 <strong>reified</strong>  修饰泛型，该泛型类型信息不回被抹去，所以 Kotiln 中的该泛型为 <strong>真泛型</strong>。</p>
+<p>内联函数的特征：</p>
+<p>内联函数(<code>inline</code>)在编译时会将具体的函数字节码插入调用的地方，类型插入相应的字节码中，这就意味着泛型参数类型也会被插入到字节码中，那么就可以实现在运行时就可以获得对应的参数类型了。</p>
+<p>使用内联函数获取泛型的参数类型十分的简单，只要加上 <strong><code>reified</code></strong> 关键字，意思是：在编译时会将 <strong>具体的类型</strong> 插入到相应的字节码中，那么就可以获得对应参数的类型，与 Java 中的泛型在编译器进行类型擦除不同，Kotlin 中使用 <strong>reified</strong>  修饰泛型，<strong>该泛型类型信息不会被抹去</strong>，所以 Kotiln 中的该泛型为 <strong>真泛型</strong>。</p>
 <blockquote>
 <p><strong>reified</strong> 为 Kotlin 中的一个关键字，还有一个叫做 <strong>inline</strong>，后者可以将函数定义为内联函数，前者可以将内联函数的泛型参数当做真实类型使用.</p>
 </blockquote>
-<p>可以借此来对 Gson 进行扩展：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">inline fun &lt;reified T&gt; Gson.fromJson(json: String): T&#123; </span><br><span class="line">     return fromJson(json, T::class.java) </span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>可以借此来为 Gson 定义一个扩展函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">inline fun &lt;reified T</span><br><span class="line">: Any&gt; Gson.fromJson(json: String): T&#123; </span><br><span class="line">     return fromJson(json, T::class.java) </span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
 
 <p>有了此扩展方法，就无须在 Kotlin 当中显式的传入一个 class 对象就可以直接反序列化 json 了：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class Person(var id: Int, var name: String) </span><br><span class="line">　 </span><br><span class="line">fun test()&#123; </span><br><span class="line">    val person: Person = Gson().fromJson(&quot;&quot;&quot;&#123;&quot;id&quot;: 0, &quot;name&quot;: &quot;Jack&quot; &#125;&quot;&quot;&quot;) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class Person(var id: Int, var name: String) </span><br><span class="line">　 </span><br><span class="line">fun test()&#123; </span><br><span class="line">    val person: Person = Gson().fromJson&lt;User&gt;(&quot;&quot;&quot;&#123;&quot;id&quot;: 0, &quot;name&quot;: &quot;Jack&quot; &#125;&quot;&quot;&quot;) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>由于 <code>Gson.fromJson</code> 是内联函数，方法调用时插入调用位置，T 的类型在编译时就可以确定了，反编译之后的代码：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public static final void test() &#123; </span><br><span class="line">  Gson $receiver$iv = new Gson(); </span><br><span class="line">  String json$iv = &quot;&#123;\&quot;id\&quot;: 0, \&quot;name\&quot;: \&quot;Jack\&quot; &#125;&quot;; </span><br><span class="line">  Person person = (Person)$receiver$iv.fromJson(json$iv, Person.class); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这就是 Kotin 的泛型被称为 <strong>真泛型</strong> 的原因。</p>
-<p>但是 refied 存在一个问题：reified 只能修饰方法，而当定义一个泛型类时，reified 是无法通过类似以上的方式获得泛型参数的，但是仍然可以通过其他方式获得泛型类中的泛型参数类型，具体如下：</p>
+<p>但是 refied 存在一个问题：<code>reified</code> 只能修饰方法，而当定义一个泛型类时，reified 是无法通过类似以上的方式获得泛型参数的，但是仍然可以通过其他方式获得泛型类中的泛型参数类型，具体如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class View&lt;T&gt;(val clazz:Class&lt;T&gt;)&#123;</span><br><span class="line">    val presenter by lazy &#123; clazz.newInstance() &#125;</span><br><span class="line">    companion object&#123;</span><br><span class="line">        // 在构造函数执行之前，执行了此处，真泛型的重载函数。</span><br><span class="line">        inline operator fun &lt;reified T&gt; invoke() = View(T::class.java)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Presenter</span><br><span class="line"></span><br><span class="line">fun main(args: Array&lt;String&gt;) &#123;</span><br><span class="line">    // 两者等效，具体实现如下</span><br><span class="line">    val p = View&lt;Presenter&gt;().presenter</span><br><span class="line">    val a  = View.Companion.invoke&lt;Presenter&gt;().presenter</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这种写法特别适合在 android 中的 MVP，不用再在 Activity 中显式的显示 Presenter 的类名。</p>
+<p><strong>实现一个 Android MVP 框架</strong></p>
 <p>Model 层：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data class User(var id: Int, var name: String)</span><br></pre></td></tr></table></figure>
 
 <p>Presenter 层：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nterface IPresenter &#123;</span><br><span class="line">    fun doLogin(): User</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">interface IPresenter &#123;</span><br><span class="line">    fun doLogin(): User</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>View 层：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">interface IView &#123;</span><br><span class="line">    fun getLayoutID(): Int</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>具体使用：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">open class BaseActivity&lt;T&gt;(val clazz: Class&lt;T&gt;) : AppCompatActivity() &#123;</span><br><span class="line">    val presenter by lazy &#123; clazz.newInstance() &#125;</span><br><span class="line"></span><br><span class="line">    companion object &#123;</span><br><span class="line">        inline operator fun &lt;reified T&gt; invoke() = BaseActivity(T::class.java)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class MainActivity : AppCompatActivity(), IView by MVPView() &#123;</span><br><span class="line"></span><br><span class="line">    inline fun &lt;reified T : IPresenter&gt; getPresenter(): T &#123;</span><br><span class="line">        return T::class.java.newInstance()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">//class MainActivity : AppCompatActivity(),</span><br><span class="line">//        IView by MVPView(), IPresenter by EmptyPresenter() &#123;</span><br><span class="line"></span><br><span class="line">    override fun onCreate(savedInstanceState: Bundle?) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(getLayoutID())</span><br><span class="line"></span><br><span class="line">        findViewById&lt;Button&gt;(R.id.button).setOnClickListener &#123;</span><br><span class="line">            getPresenter&lt;EmptyPresenter&gt;().doLogin()</span><br><span class="line">//            doLogin()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class EmptyPresenter : IPresenter &#123;</span><br><span class="line">    override fun doLogin(): User &#123;</span><br><span class="line">        //执行各种逻辑</span><br><span class="line">        return User(1, &quot;zhangtao&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class MVPView : IView &#123;</span><br><span class="line">    override fun getLayoutID() = R.layout.activity_main</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第一种方式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">// 第一种方式，通过动态代理 by </span><br><span class="line">class MainActivity : AppCompatActivity(),</span><br><span class="line">        IView by MVPView(), IPresenter by EmptyPresenter() &#123;</span><br><span class="line"></span><br><span class="line">    override fun onCreate(savedInstanceState: Bundle?) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(getLayoutID())</span><br><span class="line"></span><br><span class="line">        findViewById&lt;Button&gt;(R.id.button).setOnClickListener &#123;</span><br><span class="line">            getPresenter&lt;EmptyPresenter&gt;().doLogin()</span><br><span class="line">                // 第一种方法，通过动态代理，可以直接调用 EmptyPresenter 的方法</span><br><span class="line">               doLogin() </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class EmptyPresenter : IPresenter &#123;</span><br><span class="line">    override fun doLogin(): User &#123;</span><br><span class="line">        //执行各种逻辑</span><br><span class="line">        return User(1, &quot;zhangtao&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class MVPView : IView &#123;</span><br><span class="line">    override fun getLayoutID() = R.layout.activity_main</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第二种：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">open class BaseActivity&lt;T&gt;(val clazz: Class&lt;T&gt;) : AppCompatActivity() &#123;</span><br><span class="line">    val presenter by lazy &#123; clazz.newInstance() &#125;</span><br><span class="line"></span><br><span class="line">    companion object &#123;</span><br><span class="line">        inline operator fun &lt;reified T&gt; invoke() = BaseActivity(T::class.java)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class MainActivity : BaseActivity&lt;EmptyPresenter&gt;(EmptyPresenter::class.java),</span><br><span class="line">    IView by MVPView() &#123;</span><br><span class="line">    </span><br><span class="line">    // 删除  getPresenter 的逻辑</span><br><span class="line"></span><br><span class="line">    override fun onCreate(savedInstanceState: Bundle?) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(getLayoutID())</span><br><span class="line"></span><br><span class="line">        findViewById&lt;Button&gt;(R.id.button).setOnClickListener &#123;</span><br><span class="line">            // 直接获得 present 对象</span><br><span class="line">            presenter.doLogin()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class EmptyPresenter : IPresenter &#123;</span><br><span class="line">    override fun doLogin(): User &#123;</span><br><span class="line">        //执行各种逻辑</span><br><span class="line">        return User(1, &quot;zhangtao&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第三种方式：</p>
+<p>如果不想继承 BaseActivity，则可以按照下面的逻辑：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class MainActivity : AppCompatActivity(),</span><br><span class="line">    IView by MVPView() &#123;</span><br><span class="line"></span><br><span class="line">    inline fun &lt;reified T : IPresenter&gt; getPresenter(): T &#123;</span><br><span class="line">        return T::class.java.newInstance()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun onCreate(savedInstanceState: Bundle?) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(getLayoutID())</span><br><span class="line"></span><br><span class="line">        findViewById&lt;Button&gt;(R.id.button).setOnClickListener &#123;</span><br><span class="line">            getPresenter&lt;EmptyPresenter&gt;().doLogin()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="0x0005-Kotlin-型变"><a href="#0x0005-Kotlin-型变" class="headerlink" title="0x0005 Kotlin 型变"></a>0x0005 Kotlin 型变</h3><h4 id="Java-中的型变"><a href="#Java-中的型变" class="headerlink" title="Java 中的型变"></a>Java 中的型变</h4><p><code>? extends E</code>其实就是使用 <strong>点协变</strong>，允许传入的参数可以是 <strong>E及其子类</strong> 的任意类型。</p>
 <p><code>? super E</code>使用 <strong>点逆变</strong>，这表示元素类型 <strong>为 E 及其父类</strong>，这个通常也叫作逆变。</p>
@@ -601,11 +614,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
+                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
+                <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -621,6 +634,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Binder</a>
               </li>
              
@@ -630,10 +651,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Gradle in action</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -649,19 +666,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -681,6 +686,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Java 多线程</a>
               </li>
              
@@ -697,11 +710,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">泛型</a>
+                <a href="javascript:void(0)" class="js-tag color5">《深入理解 Java 虚拟机》读书笔记</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">《深入理解 Java 虚拟机》读书笔记</a>
+                <a href="javascript:void(0)" class="js-tag color3">泛型</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -721,15 +734,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Jetpack</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -749,6 +762,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Kotlin 泛型</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
               </li>
              
@@ -757,19 +774,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Kotlin 泛型</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kotlin 核心编程</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -809,10 +822,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Git</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">View</a>
               </li>
              
@@ -825,7 +834,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
+                <a href="javascript:void(0)" class="js-tag color4">Git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -838,6 +851,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">FutureTask</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -857,10 +874,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
               </li>
              
@@ -873,7 +886,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -885,11 +898,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">JNI</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">深入理解 Android 读书笔记</a>
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -901,11 +910,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
+                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
+                <a href="javascript:void(0)" class="js-tag color4">JNI</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">深入理解 Android 读书笔记</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -917,11 +930,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
+                <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -930,10 +947,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">MultiDex</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -950,6 +963,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">EventBus APT</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Thread</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -982,10 +999,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Thread</a>
               </li>
              
               <li class="article-tag-list-item">
