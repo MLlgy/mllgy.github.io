@@ -1,7 +1,7 @@
 ---
 title: Android Logcat 基本信息细述
 date: 2020-02-24 14:51:48
-tags:
+tags: [Android,Logcat 日志格式]
 ---
 
 
@@ -15,12 +15,13 @@ tags:
 
 > 12-10 13:02:50.071 1901-4229/com.google.android.gms V/AuthZen: Handling delegate intent.
 
+<!-- more -->
+
 PID 代表进程标识符，TID 则为线程标识符；如果仅有一个线程，两者可以相同。
 
 ## 读取垃圾回收消息
 
-### Dalvik 日志消息-
-
+### Dalvik 日志消息
 
 在 Dalvik（而不是 ART）中，每个 GC 都会将以下信息输出到 logcat：
 
@@ -30,9 +31,7 @@ PID 代表进程标识符，TID 则为线程标识符；如果仅有一个线程
 
 > D/dalvikvm( 9050): GC_CONCURRENT freed 2049K, 65% free 3571K/9991K, external 4703K/5261K, paused 2ms+2ms
 
-
 常见的 GC 原因：
-
 
 * GC_CONCURRENT
   
@@ -72,6 +71,10 @@ ART 不会为未明确请求的 GC 记录消息。只有在系统认为 GC 速�
 
 >  I/art: GC_Reason GC_Name Objects_freed(Size_freed) AllocSpace Objects,
         Large_objects_freed(Large_object_size_freed) Heap_stats LOS objects, Pause_time(s)
-    
+
 GC 原因查看官方链接
+
 [使用 Logcat 写入和查看日志](https://developer.android.google.cn/studio/debug/am-logcat?hl=zh_cn#format)
+
+---
+

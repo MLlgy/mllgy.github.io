@@ -23,14 +23,9 @@ date: 2020-02-12 14:56:44
 
 ### Executor UML 图
 
-<!-- ![](/../images/2019_08_22_01.png) -->
-
-
-{% 2019_08_22_01.png %}
-
+![](./Java-多线程-五：线程池/2019_08_22_01.png)
 
 ### Executor
-
 
 > An object that executes submitted {@link Runnable} tasks. This
 interface provides a way of decoupling task submission from the
