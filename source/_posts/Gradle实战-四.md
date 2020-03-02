@@ -4,33 +4,36 @@ date: 2020-01-19 15:27:42
 tags: [Gradle 基本原理,Gradle in action]
 ---
 
+在为项目配置依赖时，可以通过 `dependencies` 和 `repositories` 两个 **DSL 配置块** 进行配置。配置块的名称直接映射到 Project 接口的方法，具体可以参见 [Project]()。
 
-
-在为项目配置依赖时通过 `dependencies` 和 `repositories` 两个 DSL **配置块**进行配置的，配置块的名称直接映射到 Project 接口的方法。依赖管理器通过运行以上两个配置，从中央仓库下载所需要的库，将它们存储在本地缓存中。
-
-
-配置块中包含配置：
+其中 `dependencies` 闭包用来定义项目构建所依赖的类库，而  `repositories` 闭包则告诉构建从哪里获得这些依赖。
 
 <!-- more -->
 
-```
-//dependencies 为配置块
-dependencies{
-    // compile 为配置
-    compile xxxx
-}
-```
+依赖管理器通过运行以上两个配置，从中央仓库下载项目中所需要的库，并将它们存储在本地缓存中,具体可以参见以下示意图：从 Maven 远端仓库下载构建依赖。
+
+![](/source/images/2020_02_28_01.png)
 
 ## 1. 依赖配置
 
-在 Gradle 中，**依赖配置** 是十分重要的概念，插件可以引入配置来 **定义依赖的作用域**。在项目中引入 Java 插件，就可以引入了其各种标准配置，来定义 Java 构建生命周期所应用的依赖。比如通过 compile 来配置添加编译源代码所需要的依赖。
+在 Gradle 中 配置 译为 Configuration。
+
+在 Gradle 中，**依赖配置** 是十分重要的概念，插件可以引入配置，来 **定义依赖的作用域**。
+
+在项目中引入 Java 插件，就可以引入了其各种标准配置，来定义 Java 构建生命周期所应用的依赖。比如通过 compile 来配置添加编译源代码所需要的依赖。
 
 
-## 2. 通过 API 认识配置
+## 2. 通过 API 认识配置(Configuration)
 
-配置可以在项目的 **根级别** 添加和访问，可以使用插件提供的配置，也可以使用自己声明的配置。
+配置 (`Configuration`) 可以 在项目(Project)的 **根级别** 添加和访问，j具体可以参见 API：[Project#	getConfigurations()](https://docs.gradle.org/current/javadoc/org/gradle/api/Project.html),可以使用插件提供的配置，也可以使用自己声明的配置。
 
 每个 Project 都有一个 `ConfigurationContainer` 类容器来管理自己相应的配置。
+
+具体 API 具体如下：
+
+![](/source/images/2020_03_02_01.png)
+
+可以看到配置对象 (Configuration) 含有一些属性，比如 name、description 等。
 
 ### 配置的使用场景
 
@@ -39,12 +42,16 @@ dependencies{
 
 配置分组与 Java 中包的概念十分相似，包针对其包含的类提供唯一的命名空间，同样这也适用于配置，通过逻辑分组把职责相同的配置放在一起。
 
-在 Java 中提供了 6 个现成的配置：compile、runtime、testCompile、testRuntime、archives、default，随着版本的更新配置的数量和种类也在变化。在 Gradle 中，也可以自定义配置，实现自己的逻辑。比如需要引入部署应用的依赖 Cargo 库，但是如果使用 Java 提供的配置中的一个，会将应用程序代码和部署应用的代码相应的环境混淆，导致发布时将不必要的类库添加到发布包中，此时我们可以通过自定义配置来解决这个问题。
+在 Java 中提供了 6 个现成的配置：api、implementation、compileOnly、runtimeOnly 等，随着版本的更新配置的数量和种类也在变化,具体可以参见 [The Java Library Plugin](https://docs.gradle.org/current/userguide/java_library_plugin.html#example_making_the_difference_between_api_and_implementation)。
+
+在 Gradle 中，也可以自定义配置，实现自己的逻辑。比如需要引入部署应用的依赖 Cargo 库，但是如果使用 Java 提供的配置中的一个，会将应用程序代码和部署应用的代码相应的环境混淆，导致发布时将不必要的类库添加到发布包中，此时我们可以通过自定义配置来解决这个问题。
 
 
-## 自定义配置
+## 3. 自定义、使用配置
 
-为了明确 Cargo 所需的依赖，声明一个名为 cargo 的新配置，具体如下：
+### 自定义配置
+
+为了明确 Cargo 所需的依赖，在 `configurations` 中声明一个名为 `cargo` 的新配置，具体如下：
 
 ```
 configurations{
@@ -60,17 +67,11 @@ configurations{
 
 ### 使用配置
 
+此时就可以在配置块中使用 cargo 配置，并在相应的 Task 中使用配置相应内容，并且自定义的配置也可以使用向排除传递性依赖、动态版本号等特性，具体参见以下代码。
 
- 此时就可以在配置块中使用 cargo 配置，并在相应的 Task 中使用配置相应内容，并且自定义的配置也可以使用向排除传递性依赖、动态版本号等特性，具体参见以下代码。
+使用 Ant 的相关特性使用自定义配置，具体如下：
 
 ```
-configurations {
-    cargo {
-        description = 'Classpath for Cargo Ant tasks.'
-        visible = false
-    }
-}
-
 task deployToLocalTomcat << {
     // 以文件树的形式获取 cargo 配置所有的依赖
     FileTree cargoDependencies = configurations.getByName('cargo').asFileTree
@@ -105,37 +106,43 @@ repositories {
 }
 ```
 
-
-
 ## 声明依赖
 
-DSL 配置块 dependencies 通常用来将一个或者多个依赖指派给配置，但是外部依赖是依赖的唯一方式。
+DSL 配置块 `dependencies` 通常用来将一个或者多个依赖指派给配置，但是外部依赖并不是依赖的唯一方式。
 
 ### 依赖的方式
 
-外部模块依赖（dependencies）、项目依赖（settiong）、文件依赖（dependencies 中 fileTree）、Gradle 运行时依赖、客户端模块依赖（不常见）
+* 外部模块依赖（dependencies）
+* 项目依赖（setting）
+* 文件依赖（dependencies 中 fileTree）
+* Gradle 运行时依赖
+* 客户端模块依赖（不常见）。
 
 ### 依赖相关 API
 
-每个 Gradle 项目都有依赖处理器实例，由 DependencyHandler 接口来实现。
+每个 Gradle 项目都有 **依赖处理器实例**，由 `DependencyHandler` 接口来实现。
 
-每个依赖项都是 Dependency 类型的一个实例，group、name、version、classifier 属性明确标识了一个依赖。
+每个依赖项都是 `Dependency` 类型的一个实例，通过 `group、name、version、classifier` 属性，明确 **标识了一个依赖**。
 
+具体 API 关系如下：
+
+![](/source/images/2020_03_02_02.png)
 
 ### 外部模块依赖
 
-在 Gradle 中，外部类库通常以 Jar 文件的形式存在，被称为 **外部模块依赖**。
+在 Gradle 中，外部类库通常以 `Jar` 文件的形式存在，被称为 **外部模块依赖**，此类型的依赖可以通过依赖属性唯一标识，比如：
 
 `androidx.appcompat:appcompat:1.1.0`
 
-依赖属性：
+**依赖属性**：
 
 * group
-这个属性用来标识一个组织、公司或者项目，比如 androidx.appcompat
+  
+这个属性用来标识一个组织、公司或者项目，比如 androidx.appcompat。
 
 * name
 
-一个库的名称唯一描述了依赖，比如 appcompat
+标识一个库的名称，唯一描述了依赖，比如 appcompat。
 
 * version
 
@@ -151,30 +158,42 @@ DSL 配置块 dependencies 通常用来将一个或者多个依赖指派给配�
 
 在项目中通过以下形式来声明依赖：
 
+```
 dependencies{
-    // 比如 compile com.xx.xx
-    configurationcompile xxx
+    // 比如 api com.xx.xx
+    // 首先是配置名称，比如 api、runtimeOnly，以及上文自定义的 cargo
+    // 然后是依赖标记，比如 androidx.appcompat:appcompat:1.1.0
+    configurationName dependency
 }
+```
 
 ### 检查依赖报告
 
-运行 `gradle dependencies` 会显示完整的 **依赖树**。
+在 `dependencies` 配置中声明的依赖为 **顶层依赖**，这些顶层依赖所依赖的库称为 **传递性依赖**。
 
-在依赖树中，标有星号的依赖被排除了，这意味依赖管理器使用的是另外一个版本的类库，因为他被声明另外一个顶层依赖的传递性依赖。
+运行 `gradle dependencies` 会显示完整的 **依赖树**。**依赖树显示了在构建脚本中声明的顶层依赖，以及它们的传递性依赖。**
 
-在 dependencies 配置中声明的依赖为 **顶层依赖**，这些顶层依赖所依赖的库称为 **传递性依赖**。
+但是在自己实测过程中，需要指定 moudle 来展示依赖树，即在项目根目录下需要运行：
+
+`./gralew app:dependencies` 或者 `gradle app:dependencies`。
+
+
+![](/source/images/2020_03_02_03.png)
+
+在依赖树中，**标有星号的依赖被排除了**，这意味依赖管理器使用的是 **另外一个版本** 的类库，因为他被声明 *另外一个顶层依赖* 的传递性依赖。
+
 
 **针对版本冲突，Gradle 默认的解决策略是获取最新的版本**，在依赖树中这样展示：1.0.0 -> 1.1.0，而在依赖报告中，标有星号的依赖被排除了，意味着依赖管理器选择的是相同或者另一个版本的类库。
 
-### 排除传递性依赖
+### **排除传递性依赖**
 
-#### 排除传递性依赖，依赖指定版本的远端库
+#### **排除传递性依赖:依赖指定版本的远端库**
 
-假如想要显式的指定某个类库的版本，而不使用顶层依赖所提供的传递性依赖，可以通过 exclude 排除指定库，具体操作如下：
+假如想要显式的指定某个类库的版本，而不使用顶层依赖所提供的传递性依赖，可以通过 **exclude** 排除指定库，具体操作如下：
 
 ```
 dependencies{
-    // 通过 exclude 来声明排除依赖
+    // 通过 exclude 来声明排除某项依赖的指定传递性依赖
     cargo('org.codehaus.cargo:cargo-ant:1.3.1'){
         exclude group:'xml-apis',module:'xml-apis'
     }
@@ -183,7 +202,7 @@ dependencies{
 }
 ```
 
-#### 排除传递性依赖，排除所有的传递性依赖
+#### **排除传递性依赖:排除所有的传递性依赖**
 
 如果想要 **排除一个库的所有传递性依赖**，Gradle 提供了 `transitive` 属性来实现这一效果。
 
@@ -196,7 +215,7 @@ dependencies{
 }
 ```
 
-### 动态版本声明
+### **动态版本声明**
 
 如果不想要指定依赖库的版本号，可以获取最新版本的依赖或者在版本范围内选择最新的依赖。
 
@@ -214,9 +233,9 @@ dependencies{
 也可以指定版本的范围，具体查看Gradle 在线手册。
 
 
-### 文件依赖
+### **文件依赖**
 
-以上为外部模块依赖，也可以依赖本地的文件。
+Gradle 依赖也可以依赖本地的文件。
 
 这样一个场景：定义一个 Task，用于将从 Maven Central 获取的依赖拷贝到 home 目录下的 libs/cargo 子目录中。
 
@@ -226,7 +245,7 @@ task copyDependenciesToLocalDir(type:Copy){
     into "${System.properties['user.home']}/libs/cargo"
 }
 ```
-在 dependencies 配置块中声明 Cargo 类库，以下展示如何把 Jar 文件指派给 cargo 配置作为文件依赖。
+在 dependencies 配置块中声明 Cargo 类库，以下展示通过 `fileTree` 属性把 Jar 文件指派给 cargo 配置作为文件依赖。
 
 ```
 dependencies{
@@ -288,6 +307,11 @@ repositories{
         name 'custom maven repository'
         url 'http://xxx/xxx/release/'
     }
+    // 也可以自定义引用本地的库
+    maven{
+        name 'custom maven repository'
+        url '../repo'
+    }
 }
 ```
 
@@ -320,7 +344,9 @@ repositories{
 
 ### 扁平的目录仓库
 
-flat 目录仓库是最简单和最基本的仓库形式，**在文件系统中它是一个单独的目录**，只包含了 jar 文件，没有元数据。**当声明此种仓库依赖时，只能使用 name 和 version 属性，不能使用 group 属性，因为它会产生不明确的依赖关系**。
+flat 目录仓库是最简单和最基本的仓库形式，**在文件系统中它是一个单独的目录**，**只包含了 jar 文件，没有元数据**。
+
+**当声明此种仓库中的依赖时，只能使用 name 和 version 属性，不能使用 group 属性，因为它会产生不明确的依赖关系**。
 
 以下通过 map 和 快捷方式来声明从 flat 目录仓库中获取 Cargo 依赖。
 
@@ -330,7 +356,7 @@ repositories{
     flatDir (dir:"${System.properties['user.home']}/libs/cargo",name :'Local lins directory')
 }
 dependencies{
-    // 以 map 的形式声明依赖
+    // 以 map 的形式声明依赖，只可以使用 name 和 version 属性
     cargo name:'activation',version:'1.1.0'
     // 以快捷方式获取依赖
     cargo ':jaxb-api:2.1.1' 
@@ -342,7 +368,7 @@ dependencies{
 
 ## 理解本地依赖缓存
 
-以上阐述了如何声明各种类型的仓库，在执行的 Task 会自动确定所需要的依赖，**在执行时从仓库中下载工件**，**并将它们存储在本地缓存中**在之后的任何构建都会重用这些工件。
+以上阐述了如何声明各种类型的仓库，在执行的 Task 会自动确定所需要的依赖，**在执行时从仓库中下载工件**，**并将它们存储在本地缓存中** ，在之后的任何构建都会重用这些工件。
 
 
 此节将深入分析缓存结构，确定缓存在底层是如何工作的，以及如何调整其行为。
@@ -408,14 +434,9 @@ task printDependencies{
 
 缓存下来文件并不会永久存在，会在一定时期内有效，如果在规定期限内某版本库不再被使用，那么相应版本库就会被清除，具体可参见[The Directories and Files Gradle Uses](https://docs.gradle.org/current/userguide/directory_layout.html#dir:gradle_user_home)
 
-支持在规定时间删除缓存和版本。
-
-
-同样见上面链接。
-
+支持在规定时间删除缓存和版本，同样见上面链接。
 
 ## 解决依赖问题
-
 
 如果选择自动解决传递性依赖，那么版本冲突是不可避免的，Gradle 解决版本冲突的默认策略是选择最新的依赖版本。**依赖报告** 是十分有用的工具，它可以帮助我们选择需要的依赖版本。
 
@@ -467,9 +488,15 @@ configuration.cargo.resolutionStrategy{
 
 dependencyInsight:显示原因
 
+* 与 gradle dependencies 的不同
 
-使用 `gradle dependencies` 生成的依赖报告，是从顶层依赖开始的，而此处的依赖观察报告则与之相反，是从低层到顶层的。
+使用 `gradle dependencies` 生成的依赖报告，是从顶层依赖开始的，而此处的依赖观察报告则与之相反，是从 **低层到顶层的**。
 
+
+![](/source/images/2020_03_02_04.png)
+
+
+图片显示了需要和选择的 xml-apis:xml-apis 的版本以及原有
 
 [Gradle 命令行选项含义](https://docs.gradle.org/current/userguide/command_line_interface.html#common_tasks)
 
@@ -477,7 +504,7 @@ dependencyInsight:显示原因
 ### 刷新缓存
 
 
-针对依赖的 SNAPSHOT 版本和使用动态版本的模式声明依赖，Gradle 一旦获取了依赖，它们会缓存 24 小时，在缓存时间到后，会再次检查仓库，如果依赖库发生版本变化，Gradle 会下载最新的依赖库。
+针对依赖的 SNAPSHOT 版本和使用动态版本的模式声明依赖，Gradle 一旦获取了依赖，它们会 **缓存 24 小时**，在缓存时间到后，会再次检查仓库，如果依赖库发生版本变化，Gradle 会下载最新的依赖库。
 
 
 可以使用命令行选项 --refresh-dependencies 手动刷新缓存中的依赖，这个标志会强制检查配置仓库中所依赖的库版本是否发生了版本变化，如果变化则再次下载，取代缓存中的副本。

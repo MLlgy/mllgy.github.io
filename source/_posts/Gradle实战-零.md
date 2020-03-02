@@ -20,9 +20,7 @@ Gradle 通过引入特定领域的约定和 Task 来扩展项目。而 Java 插�
 apply plugin:'java'
 ```
 
-项目中配置类该插件，就可以构建编写的 Java 代码。Java 插件引入很多之一，其中之一是项目的源代码位置，默认情况下 Java 插件回到 src/main/java 目录下查找 Java 类。
-
-
+项目中配置类该插件，就可以构建编写的 Java 代码。Java 插件引入很多之一，其中之一是项目的源代码位置，默认情况下 Java 插件会到 `src/main/java` 目录下查找 Java 类。
 
 ## 2. 构建 Java 项目
 

@@ -1,5 +1,5 @@
 ---
-title: Gradle实战(二)：声明 Task
+title: Gadle实战(二)：声明 Task
 date: 2020-01-16 19:02:23
 tags: [Gradle 基本原理,Gradle in action]
 ---
@@ -27,7 +27,6 @@ task helle{
     }
 }
 ```
-
 ### 2.2 为已有的 task 添加动作
 
 为已有的 task 添加动作，可以实现对不是自己编写的 Task 填加自定义的逻辑，这在项目开发中是十分重要的。
