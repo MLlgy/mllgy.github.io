@@ -6,6 +6,9 @@ tags:
 
 ## 基本了解
 
+
+synchronized 是 Java 内建同步机制，它提供了互斥的语义和可见性，**当一个线程已经获得当前锁时，其他视图获取锁的线程只能等待或者阻塞在那里**。
+
 * synchronized 基本实现
 synchronized 代码块是由一对儿 monitorenter/monitorexit 指令实现的，Monitor 对象是同步的基本实现单元。
 
@@ -35,9 +38,7 @@ Java 并发编程艺术 -- 2.2.2 锁的升级与对比
 
 ## Java 核心类库中其他一些特别的锁类型
 
-
-
-* ReentrantReadWriteLock(读写锁)
+* Reentrant#ReadWriteLock(读写锁)
 
 ReentrantLock 和 synchronized 简单实用，但是行为上有一定局限性，通俗点说就是“太霸道”，要么不占，要么独占。实际应用场景中，有的时候不需要大量竞争的写操作，而是以并发读取为主。
 

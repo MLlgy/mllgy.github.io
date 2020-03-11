@@ -10,6 +10,8 @@ tags:
 
 # 2. ConnectInterceptor 实现细节
 
+以下为 ConnectInterceptor 的相关源代码：
+
 ```
 public final class ConnectInterceptor implements Interceptor {
     public final OkHttpClient client;
@@ -31,7 +33,6 @@ public final class ConnectInterceptor implements Interceptor {
         HttpCodec httpCodec = streamAllocation.newStream(client, doExtensiveHealthChecks);
         // 获得已经建立的连接
         RealConnection connection = streamAllocation.connection();
-
         return realChain.proceed(request, streamAllocation, httpCodec, connection);
     }
 }
@@ -102,7 +103,7 @@ private RealConnection findConnection(int connectTimeout, int readTimeout, int w
         if (allocatedConnection != null && !allocatedConnection.noNewStreams) {
             return allocatedConnection;
         }
-        // 从 connectionpool 连接池中拿到 connection 直接返回，见2.4
+        // 从 connectionpool 连接池中拿到 connection 直接返回，见 2.4
         Internal.instance.get(connectionPool, address, this, null);
         if (connection != null) {
             return connection;
@@ -114,6 +115,7 @@ private RealConnection findConnection(int connectTimeout, int readTimeout, int w
         selectedRoute = routeSelector.next();
     }
     RealConnection result;
+    // 获取 connectionPool  同步锁
     synchronized (connectionPool) {
         if (canceled) throw new IOException("Canceled");
         Internal.instance.get(connectionPool, address, this, selectedRoute);
@@ -153,7 +155,7 @@ private RealConnection findConnection(int connectTimeout, int readTimeout, int w
 1. 如果存在可用的连接，则直接则直接复用，否则继续向下执行；
 2. 如果连接池中存在可用的连接，那么则直接复用，否则继续向下执行；
 3. 经过以上两个步骤，依旧没有获得可用连接，那么更换路由，继续寻找可用连接；
-4. 更换路由后，如果连接池中存在可用连接，则使用该连接，否则继续执行；
+4. 更换路由后，如果连接池中存在可用连接，则使用该连接，否则继续向下执行；
 5. 新建连接。
 6. 连接执行 TCP + TLS 握手
 
@@ -234,6 +236,7 @@ public void connect(
 RouteException routeException = null;
     List<ConnectionSpec> connectionSpecs = route.address().connectionSpecs();
     ConnectionSpecSelector connectionSpecSelector = new ConnectionSpecSelector(connectionSpecs);
+    // sslSocketFactory 是否为 null
     if (route.address().sslSocketFactory() == null) {
         if (!connectionSpecs.contains(ConnectionSpec.CLEARTEXT)) {
             throw new RouteException(new UnknownServiceException(
@@ -285,7 +288,7 @@ RouteException routeException = null;
     }
 }
 ```
-
+判断网络请求是否为 Https:
 ```
 // 是否是 HTTPS 请求
 public boolean requiresTunnel() {
@@ -410,7 +413,7 @@ private void connectSocket(int connectTimeout, int readTimeout) throws IOExcepti
             : new Socket(proxy);
     rawSocket.setSoTimeout(readTimeout);
     try {
-        // 建立 Socket 连接
+        // 建立 Socket 连接，见 2.10
         Platform.get().connectSocket(rawSocket, route.socketAddress(), connectTimeout);
     } catch (ConnectException e) {
         ConnectException ce = new ConnectException("Failed to connect to " + route.socketAddress());
@@ -567,3 +570,13 @@ private SSLSocketFactory systemDefaultSslSocketFactory(X509TrustManager trustMan
 ```
 
 当然，Okhttp 也可以配置自己的证书，具体可以查看 [Android Https相关完全解析 当OkHttp遇到Https](https://blog.csdn.net/lmj623565791/article/details/48129405)
+
+
+## 总结
+
+
+此次 Okhttp 建立网络请求的一步步操作算是明了了，但是这只是牵涉到具体流程，具体细节还需要根据需要仔细研究。
+
+可以看到的是最终网络连接的建立还是需要 Socket ，这是网络连接的基础。
+
+
