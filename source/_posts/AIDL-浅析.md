@@ -19,6 +19,9 @@ AIDL 是理解 Android 系统不可避免的知识点。
 
 <img src="/../images/2019_08_06_01.png" width="50%" height = "50%">
 
+
+![](/public/images/2019_08_06_01.png)
+
 1. 自定义 Aidl 文件
 
 建立与 java 目录相同的包层级结构。
@@ -53,6 +56,8 @@ interface IBookManager {
 
 <img src="/../images/2019_08_06_02.png" width="50%" height = "50%">
 
+![](/public/images/2019_08_06_02.png)
+
 3. AS build 目录下生成对应的 Java 文件
 
 此处不会生成 Book.aidl 的 Java 文件，因为已经有 Book 类。
@@ -60,6 +65,7 @@ interface IBookManager {
 
 <img src="/../images/2019_08_06_03.png" width="50%" height = "50%">
 
+![](/public/images/2019_08_06_03.png)
 
 将 build 文件中的 IBookManager.java 拷贝出来,新建 IBookManager2.java，源码如下:[IBookManager.java](https://github.com/leeGYPlus/AidlDemo/blob/master/app/src/main/java/com/mk/aidldemo/server/IBookManager2.java)
 
@@ -89,6 +95,7 @@ IBookManager 的成员方法如下：
 
 <img src="/../images/2019_08_08_01.png" width="50%" height = "50%">
 
+![](/public/images/2019_08_08_01.png)
 
 ### 0X0002 流程分析
 
@@ -101,9 +108,9 @@ IBookManager 的成员方法如下：
 
 <img src="/../images/2019_08_08_02.png" width="80%" height = "80%">
 
+![](/public/images/2019_08_08_02.png)
+
 1. 对于 Client 端，作为 AIDL 的使用端，调用相关方法：
-
-
 
 ```
 IBookManager.asInterface(IBinder 对象).addBook(Book(countId, "Book $countId"))
@@ -167,7 +174,7 @@ public void addBook(com.mk.aidldemo.Book book) throws android.os.RemoteException
 ```
 
 
-3. Server 端通过 onTransact 方法来接收 Client 传过来的数据(包括函数名称、函数的参数、函数的标识)，找到指定的函数，就相应的数据传入，得到结果并将结果写回。
+3. Server 端通过 `onTransact` 方法来接收 Client 传过来的数据(包括函数名称、函数的参数、函数的标识)，找到指定的函数，就相应的数据传入，得到结果并将结果写回。
 
 ```
 /*
@@ -240,12 +247,16 @@ E/process onTransact add: com.mk.aidldemo:remote
 可以看到在进程 `com.mk.aidldemo:remote` 中执行的操作有：onTransact 和 Server 中实例化 Binder 中的方法，即为 Binder Server 端，其他均处于 Binder Client 端。
 
 
-这其中的关键方法有 mRemote.transact  和 onTransact。
+### 关键方法
+
+这其中的关键方法有 `mRemote.transact`  和 `onTransact`。
 
 
 **onTransact**
 
-这个方法运行在 **服务端中的 Binder线程池** 中，当客户端发起跨进程请求时，远程请求会通过 `系统底层封装(主要是经过 binder 驱动)` 后交由此方法来处理。该方法的原型为`publicBooleanonTransact(int code,android.os.Parcel data,android.os.Parcel reply,int flags)`。
+这个方法运行在 **服务端中的 Binder 线程池** 中，当客户端发起跨进程请求时，远程请求会通过 `系统底层封装(主要是经过 binder 驱动)` 后交由此方法来处理。
+
+该方法的原型为`publicBooleanonTransact(int code,android.os.Parcel data,android.os.Parcel reply,int flags)`。
 
 具体流程：
 
@@ -253,7 +264,7 @@ E/process onTransact add: com.mk.aidldemo:remote
 2. 从 data 中取出目标方法所需的参数（如果目标方法有参数的话），然后执行目标方法。
 3. 当目标方法执行完毕后，就向 reply 中写入返回值（如果目标方法有返回值的话）。
 
-onTransact 方法的执行过程就是这样的。需要注意的是，如果此方法返回 false，那么客户端的请求会失败，因此我们可以利用这个特性来做权限验证，毕竟我们也不希望随便一个进程都能远程调用我们的服务。
+`onTransact` 方法的执行过程就是这样的,需要注意的是，如果此方法返回 false，那么客户端的请求会失败，因此我们可以利用这个特性来做权限验证，毕竟我们也不希望随便一个进程都能远程调用我们的服务。
 
 **transact**
 
