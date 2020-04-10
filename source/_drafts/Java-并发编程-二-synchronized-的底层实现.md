@@ -6,11 +6,11 @@ tags:
 
 ## 基本了解
 
-
-synchronized 是 Java 内建同步机制，它提供了互斥的语义和可见性，**当一个线程已经获得当前锁时，其他视图获取锁的线程只能等待或者阻塞在那里**。
+synchronized 是 Java 内建同步机制，它提供了互斥的语义和可见性，**当一个线程已经获得当前锁时，其他试图获取锁的线程，只能等待或者阻塞在那里**。
 
 * synchronized 基本实现
-synchronized 代码块是由一对儿 monitorenter/monitorexit 指令实现的，Monitor 对象是同步的基本实现单元。
+
+synchronized 代码块是由一对儿 monitorenter/monitorexit 指令实现的，`Monitor` 对象是 **同步的基本实现单元**。
 
 
 在 JDK 6 之前， Monitor 完全有操作系统内部的互斥锁，因为需要进行用户态到内核态的切换，所以同步操作是一个无差别的重量级操作。

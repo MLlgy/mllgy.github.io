@@ -32,3 +32,14 @@ https://blog.csdn.net/javazejian/article/details/71860633
 
 
 https://www.wanandroid.com/article/query?k=apt
+
+
+[安卓AOP三剑客:APT,AspectJ,Javassist](https://www.jianshu.com/p/dca3e2c8608a)
+
+
+---
+
+AspectJ
+
+
+[Android AOP 面向切面编程 - AspectJ](https://blog.csdn.net/xingxtao/article/details/88091814)

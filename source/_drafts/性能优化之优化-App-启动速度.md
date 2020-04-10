@@ -267,3 +267,6 @@ https://www.jianshu.com/p/4f10c9a10ac9
 
 
 [面试官：今日头条启动很快，你觉得可能是做了哪些优化？](https://juejin.im/post/5d95f4a4f265da5b8f10714b#heading-4s)
+
+
+ [抖音BoostMultiDex优化实践：Android低版本上APP首次启动时间减少80%（一）](https://mp.weixin.qq.com/s/jINCbTJ5qMaD6NdeGBHEwQ?utm_source=androidweekly.io&utm_medium=website)

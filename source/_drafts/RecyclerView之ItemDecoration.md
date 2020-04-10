@@ -30,7 +30,8 @@ void onDrawOver (Canvas c,
 
 在 Item 所在的 View 绘制后进行绘制，所以出现在 View 的上面，示意图如下：
 
-![](/../images/2019_08_09_01.png)
+
+![](/public/images/2019_08_09_01.png)
 
 **onDraw**
 ```
@@ -43,7 +44,7 @@ void onDraw (Canvas c,
 
 对 Canvas 的任何绘制动作都会应用到 Recyclerview 上，但是由于此方法在 Item 的 View 的之前绘制，所以在 Item 的 View 的下方，示意图如下：
 
-![](/../images/2019_08_13_01.png)
+![](/public/images/2019_08_13_01.png)
 
 
 

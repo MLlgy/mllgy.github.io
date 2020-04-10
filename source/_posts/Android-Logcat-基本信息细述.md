@@ -15,6 +15,8 @@ tags: [Android,Logcat 日志格式]
 
 > 12-10 13:02:50.071 1901-4229/com.google.android.gms V/AuthZen: Handling delegate intent.
 
+通过以上记录的有效信息如下：
+
 <!-- more -->
 
 PID 代表进程标识符，TID 则为线程标识符；如果仅有一个线程，两者可以相同。

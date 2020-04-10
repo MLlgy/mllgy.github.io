@@ -27,9 +27,11 @@ public class Main {
         Thread thread = new WaitThread();
         thread.start();
         long startTime = System.currentTimeMillis();
+        // 锁对象为 mLockObject
         synchronized (mLockObject){
             try {
                 System.out.println("主线程等待");
+                // 调用 mLockObject 对象的 wait 方法，使当前线程失去该对象的锁。
                 mLockObject.wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -44,10 +46,12 @@ public class Main {
         @Override
         public void run() {
             super.run();
+            // 锁对象为 mLockObject，主线程和子线程持有的锁对象为同一个，达到同步效果。
             synchronized (mLockObject){
                 try {
                     System.out.println("子线程执行,3s 后执行 notifyAll");
                     Thread.sleep(3000);
+                    // 显式的调用 notifyXX 方法，
                     mLockObject.notifyAll();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
