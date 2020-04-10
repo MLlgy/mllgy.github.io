@@ -8,19 +8,19 @@
   <link rel="dns-prefetch" href>
   <title>Gadle实战(二)：声明 Task | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1. Gradle API 中的 Task在默认情况下，每个创建的 Task 为 org.gradle.api.DefaultTask 类型的，为 org.gradle.api.Task 的实现类。 2. 声明 Task 的动作动作（action）就是 在 task 中合适的地方放置构建逻辑，Task 提供了两个相关的方法来声明动作：doFirst、doLast，当 Task 被执行时，动作逻辑被">
+  <meta name="description" content="1. Gradle API 中的 Task在默认情况下，每个创建的 Task 为 org.gradle.api.DefaultTask 类型的，为 org.gradle.api.Task 的实现类。 2. 声明 Task 的动作动作（action）就是 在 task 中合适的地方放置构建逻辑。 Task 提供了两个相关的方法来声明动作：doFirst(Closure)、doLast(Closure">
 <meta name="keywords" content="Gradle 基本原理,Gradle in action">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Gadle实战(二)：声明 Task">
 <meta property="og:url" content="/2020/01/16/Gradle实战-二/index.html">
 <meta property="og:site_name" content="GY">
-<meta property="og:description" content="1. Gradle API 中的 Task在默认情况下，每个创建的 Task 为 org.gradle.api.DefaultTask 类型的，为 org.gradle.api.Task 的实现类。 2. 声明 Task 的动作动作（action）就是 在 task 中合适的地方放置构建逻辑，Task 提供了两个相关的方法来声明动作：doFirst、doLast，当 Task 被执行时，动作逻辑被">
+<meta property="og:description" content="1. Gradle API 中的 Task在默认情况下，每个创建的 Task 为 org.gradle.api.DefaultTask 类型的，为 org.gradle.api.Task 的实现类。 2. 声明 Task 的动作动作（action）就是 在 task 中合适的地方放置构建逻辑。 Task 提供了两个相关的方法来声明动作：doFirst(Closure)、doLast(Closure">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/source/images/2020_01_17_01.png">
-<meta property="og:updated_time" content="2020-01-17T10:44:50.825Z">
+<meta property="og:updated_time" content="2020-03-16T11:14:05.214Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Gadle实战(二)：声明 Task">
-<meta name="twitter:description" content="1. Gradle API 中的 Task在默认情况下，每个创建的 Task 为 org.gradle.api.DefaultTask 类型的，为 org.gradle.api.Task 的实现类。 2. 声明 Task 的动作动作（action）就是 在 task 中合适的地方放置构建逻辑，Task 提供了两个相关的方法来声明动作：doFirst、doLast，当 Task 被执行时，动作逻辑被">
+<meta name="twitter:description" content="1. Gradle API 中的 Task在默认情况下，每个创建的 Task 为 org.gradle.api.DefaultTask 类型的，为 org.gradle.api.Task 的实现类。 2. 声明 Task 的动作动作（action）就是 在 task 中合适的地方放置构建逻辑。 Task 提供了两个相关的方法来声明动作：doFirst(Closure)、doLast(Closure">
 <meta name="twitter:image" content="/source/images/2020_01_17_01.png">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
@@ -185,41 +185,63 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="1-Gradle-API-中的-Task"><a href="#1-Gradle-API-中的-Task" class="headerlink" title="1. Gradle API 中的 Task"></a>1. Gradle API 中的 Task</h2><p>在默认情况下，每个创建的 Task 为 <code>org.gradle.api.DefaultTask</code> 类型的，为 <code>org.gradle.api.Task</code> 的实现类。</p>
-<h2 id="2-声明-Task-的动作"><a href="#2-声明-Task-的动作" class="headerlink" title="2. 声明 Task 的动作"></a>2. 声明 Task 的动作</h2><p>动作（action）就是 <strong>在 task 中合适的地方放置构建逻辑</strong>，Task 提供了两个相关的方法来声明动作：<code>doFirst</code>、<code>doLast</code>，当 Task 被执行<br>时，动作逻辑被定义为的闭包参数被依次执行。</p>
+<h2 id="2-声明-Task-的动作"><a href="#2-声明-Task-的动作" class="headerlink" title="2. 声明 Task 的动作"></a>2. 声明 Task 的动作</h2><p>动作（action）就是 <strong>在 task 中合适的地方放置构建逻辑</strong>。</p>
+<p>Task 提供了两个相关的方法来声明动作：<code>doFirst(Closure)</code>、<code>doLast(Closure)</code>，当 Task 被执行<br>时，动作逻辑被定义为的闭包参数，被依次执行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">task helle&#123;</span><br><span class="line">    // 具体动作被封装在闭包中</span><br><span class="line">    doLast&#123;</span><br><span class="line">        println &apos;last&apos;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <a id="more"></a>
+
 <p>以下展示如何声明 Task 动作。</p>
 <h3 id="2-1-声明-task-动作"><a href="#2-1-声明-task-动作" class="headerlink" title="2.1 声明 task 动作"></a>2.1 声明 task 动作</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">task helle&#123;</span><br><span class="line">    doLast&#123;</span><br><span class="line">        println &apos;last&apos;</span><br><span class="line">    &#125;</span><br><span class="line">    doFirst&#123;</span><br><span class="line">        println &apos;First&apos;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="2-2-为已有的-task-添加动作"><a href="#2-2-为已有的-task-添加动作" class="headerlink" title="2.2 为已有的 task 添加动作"></a>2.2 为已有的 task 添加动作</h3><p>为已有的 task 添加动作，可以实现对不是自己编写的 Task 填加自定义的逻辑，这在项目开发中是十分重要的。</p>
-<p>为 Java 插件的 compileJava 添加一个 doFirst 动作：</p>
+<h3 id="2-2-为已有的-task-添加动作"><a href="#2-2-为已有的-task-添加动作" class="headerlink" title="2.2 为已有的 task 添加动作"></a>2.2 为已有的 task 添加动作</h3><p>为已有的 task 添加动作，可以实现对不是自己编写的 Task <strong>填加自己的逻辑</strong>，这在项目开发中是十分重要的。</p>
+<p>为 Java 插件的 <code>compileJava</code> 添加一个 doFirst 动作：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">compileJava.doFirst&#123;</span><br><span class="line">    println &quot;add action&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="3-访问-DefaultTask-属性"><a href="#3-访问-DefaultTask-属性" class="headerlink" title="3. 访问 DefaultTask 属性"></a>3. 访问 DefaultTask 属性</h2><p>Task 有两个属性：group(定义 Task 的逻辑分组) 和 description（描述Task 的作用)，在定义 Task 时可以指定这两个属性：</p>
+<p>compileJava 为 Java 插件实现的一个 Task，可以为该 Task 添加自己的动作，执行相应的逻辑。</p>
+<h2 id="3-访问-DefaultTask-属性"><a href="#3-访问-DefaultTask-属性" class="headerlink" title="3. 访问 DefaultTask 属性"></a>3. 访问 DefaultTask 属性</h2><p>Task 有两个属性：</p>
+<ul>
+<li>group(定义 Task 的逻辑分组) </li>
+<li>description（描述Task 的作用)</li>
+</ul>
+<p>在定义 Task 时可以指定这两个属性，为 Task 提供相应标识。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">task printVersion(group:&apos;version&apos;,description:&apos;print project version&apos;)&#123;</span><br><span class="line">    // 两者等效，因为可以对 project 对象进行隐式调用</span><br><span class="line">    logger.quiet &quot;Verison is $version&quot;</span><br><span class="line">    logger.quiet &quot;Verison is $&#123;project.version&#125;&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>也可以通过 setter 方式对两者设置值：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">task printVersion)&#123;</span><br><span class="line"></span><br><span class="line">    group = &apos;version&apos;</span><br><span class="line">    description = &apos;print project version&apos;</span><br><span class="line">    // 两者等效，因为可以对 project 对象进行隐式调用</span><br><span class="line">    logger.quiet &quot;Verison is $version&quot;</span><br><span class="line">    logger.quiet &quot;Verison is $&#123;project.version&#125;&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">task</span> printVersion&#123;</span><br><span class="line">    <span class="keyword">group</span> = <span class="string">'version'</span></span><br><span class="line">    <span class="keyword">description</span> = <span class="string">'print project version'</span></span><br><span class="line">    <span class="comment">// 两者等效，因为可以对 project 对象进行隐式调用</span></span><br><span class="line">    logger.quiet <span class="string">"Verison is $version"</span></span><br><span class="line">    logger.quiet <span class="string">"Verison is $&#123;project.version&#125;"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>当运行 gradle tasks 时，可以看到该 task 的分组和描述。</p>
 <h2 id="4-Task-依赖关系的建立"><a href="#4-Task-依赖关系的建立" class="headerlink" title="4. Task 依赖关系的建立"></a>4. Task 依赖关系的建立</h2><p>Task 的依赖关系通过两者方式建立：</p>
 <ol>
-<li>通过 dependensOn 方法,声明依赖一个或多个 task</li>
+<li>通过 <code>dependensOn</code> 方法,声明依赖一个或多个 task</li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">task one &lt;&lt; &#123;</span><br><span class="line">    println &quot;one&quot;</span><br><span class="line">&#125;</span><br><span class="line">task two &lt;&lt; &#123;</span><br><span class="line">    println &quot;two&quot;</span><br><span class="line">&#125;</span><br><span class="line">task three(dependsOn:[two,one]) &#123;</span><br><span class="line">    println &quot;three&quot;</span><br><span class="line">&#125;</span><br><span class="line">task four &#123;</span><br><span class="line">    println &quot;three&quot;</span><br><span class="line">&#125;</span><br><span class="line">four.dependsOn(&apos;three&apos;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">task one &lt;&lt; &#123;</span><br><span class="line">    println &quot;one&quot;</span><br><span class="line">&#125;</span><br><span class="line">task two &lt;&lt; &#123;</span><br><span class="line">    println &quot;two&quot;</span><br><span class="line">&#125;</span><br><span class="line">// 声明多个依赖</span><br><span class="line">task three(dependsOn:[two,one]) &#123;</span><br><span class="line">    println &quot;three&quot;</span><br><span class="line">&#125;</span><br><span class="line">task four &#123;</span><br><span class="line">    println &quot;three&quot;</span><br><span class="line">&#125;</span><br><span class="line">four.dependsOn(&apos;three&apos;)</span><br></pre></td></tr></table></figure>
 
 <ol start="2">
 <li>在 Task 调用其他 Task 相关内容</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">task test&#123;</span><br><span class="line">    dest = one.output.file</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>则依赖关系为： test 依赖 one。</p>
 <p>task 依赖的执行顺序：<strong>被依赖项先于依赖项先执行</strong>。</p>
 <h2 id="5-Task-终结器"><a href="#5-Task-终结器" class="headerlink" title="5. Task 终结器"></a>5. Task 终结器</h2><p>有时候需要在 Task或者依赖的 Task 执行完毕后，需要清理资源，Gradle 提供了 终结器 Task。</p>
-<p>Task 终结器即使在</p>
-<h2 id="6-在-Gradle-构建脚本中添加-Groovy-代码"><a href="#6-在-Gradle-构建脚本中添加-Groovy-代码" class="headerlink" title="6. 在 Gradle 构建脚本中添加 Groovy 代码"></a>6. 在 Gradle 构建脚本中添加 Groovy 代码</h2><h2 id="7-Task-配置块"><a href="#7-Task-配置块" class="headerlink" title="7. Task 配置块"></a>7. Task 配置块</h2><p>当定义的 Task 不存在动作（action）时，则称为 Task 配置。</p>
+<p>Task 终结器即使在终接器失败了，Task 也会按照预期执行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">task first&#123;</span><br><span class="line">    doFirst&#123;</span><br><span class="line">        sout &apos;first&apos;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">task second&#123;</span><br><span class="line">     doFirst&#123;</span><br><span class="line">         sout &apos;second&apos;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br><span class="line">first.finalizedBy second</span><br></pre></td></tr></table></figure>
+
+<p>执行 first 会自动触发 second：</p>
+<blockquote>
+<p>./gradlew first</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">first</span><br><span class="line">second</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-可以在-Gradle-构建脚本中添加-Groovy-代码"><a href="#6-可以在-Gradle-构建脚本中添加-Groovy-代码" class="headerlink" title="6. 可以在 Gradle 构建脚本中添加 Groovy 代码"></a>6. 可以在 Gradle 构建脚本中添加 Groovy 代码</h2><p>build.gradle 文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">version = new ProjectVersion(0,1)</span><br><span class="line">class ProjectVersion&#123;</span><br><span class="line">    Integer major</span><br><span class="line">    Integer manor</span><br><span class="line"></span><br><span class="line">    ProjectVersion(Integer major,Integer manor)&#123;</span><br><span class="line">        this.major = major</span><br><span class="line">        this.minor = minor</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-Task-配置块"><a href="#7-Task-配置块" class="headerlink" title="7. Task 配置块"></a>7. Task 配置块</h2><p>当定义的 Task 不存在动作（action）时，则称为 <strong>Task 配置</strong>，比如：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">task test&#123;</span><br><span class="line">    println &apos;test&apos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>但是需要注意的一点是：<strong>Task 配置永远在 Task 动作执行之前执行</strong>。</p>
-<h2 id="8-Gradle-构建生命周期阶段"><a href="#8-Gradle-构建生命周期阶段" class="headerlink" title="8. Gradle 构建生命周期阶段"></a>8. Gradle 构建生命周期阶段</h2><p>无论何时执行 Gradle 构建，都会运作三个不同的生命周期阶段：初始化、配置、执行，其其执行顺序如下：</p>
+<p>但是需要注意的一点是：<strong>Task 配置永远在 Task 动作执行之前执行</strong>,这牵涉到 Gradle 的生命周期阶段：初始化、配置、执行阶段，具体见下文。</p>
+<h2 id="8-Gradle-构建生命周期阶段"><a href="#8-Gradle-构建生命周期阶段" class="headerlink" title="8. Gradle 构建生命周期阶段"></a>8. Gradle 构建生命周期阶段</h2><p>无论何时执行 Gradle 构建，都会运作三个不同的生命周期阶段：<strong>初始化、配置、执行</strong>，其其执行顺序如下：</p>
 <p><img src="/source/images/2020_01_17_01.png" alt></p>
 <ul>
 <li>初始化阶段</li>
@@ -228,13 +250,15 @@
 <ul>
 <li>配置阶段</li>
 </ul>
-<p>Gradle 构造一个模型来表示任务，并且参加到构建中。采用了增量式构建特性，决定了模型中的 Task 是否会被执行。</p>
+<p>Gradle 构造一个模型来表示任务(Task)，并且参加到项目构建过程中。Gradle 采用了 <strong>增量式构建</strong> 特性，决定了模型中的 Task 是否会被执行，不会被执行的 Task 被标记为 UP-TO-DATE 。</p>
+<p><strong>项目每一次构建时，任何 Task 配置块都可以被执行，即使只执行 gradle tasks。</strong></p>
 <ul>
 <li>执行阶段</li>
 </ul>
-<p>执行 Gradle 命令执行，这一阶段 Task 会按照声明的顺序执行。</p>
-<h2 id="9-通过声明-Task-的-inputs-和-outputs-属性的方式，引入增量式构建特性"><a href="#9-通过声明-Task-的-inputs-和-outputs-属性的方式，引入增量式构建特性" class="headerlink" title="9. 通过声明 Task 的 inputs 和 outputs 属性的方式，引入增量式构建特性"></a>9. 通过声明 Task 的 inputs 和 outputs 属性的方式，引入增量式构建特性</h2><p>Gradle 通过比较两个构建的 Task 的 inputs 和 outputs 是否变化，来判断这个 Task 是否是最新的。如果自最后一个 Task 执行以来，如果 inputs 和 outputs 没有发生变化，那么认为该 Task 为最新的，则不会执行；反之则该 Task 会执行。</p>
-<p>inputs 可以为一个目录、一个或者多个文件、一个或者多个属性，一个 Task 的输出可以是一个目录或者任意个文件，对应于 Gradle API，inputs 和 outputs 被定义 DefaultTask 的属性，其对应类分别为 TaskInputs、TaskOutputs。</p>
+<p>执行 Gradle 命令执行，这一阶段 Task 会按照正确的顺序执行，其顺序有 Task 之间的依赖关系决定的， taskA 依赖与 taskB，那么执行顺序为 taskB -&gt; taskA 。</p>
+<h2 id="9-通过声明-Task-的-inputs-和-outputs-属性的方式，引入增量式构建特性"><a href="#9-通过声明-Task-的-inputs-和-outputs-属性的方式，引入增量式构建特性" class="headerlink" title="9. 通过声明 Task 的 inputs 和 outputs 属性的方式，引入增量式构建特性"></a>9. 通过声明 Task 的 inputs 和 outputs 属性的方式，引入增量式构建特性</h2><p>增量式更新在 Gradle 中十分重要，该特性充分提高构建性能。</p>
+<p>Gradle 通过比较两个构建的 Task 的 <code>inputs</code> 和 <code>outputs</code> 是否变化，来判断这个 Task 是否是最新的。如果自最后一个 Task 执行以来，如果 <code>inputs</code> 和 <code>outputs</code> 没有发生变化，那么认为该 Task 为最新的，则不会执行；反之则该 Task 会执行。</p>
+<p>inputs 可以为一个目录、一个或者多个文件、一个或者多个属性，一个 Task 的 output 可以是一个目录或者任意个文件，对应于 Gradle API，inputs 和 outputs 被定义 DefaultTask 的属性，其对应类分别为 TaskInputs、TaskOutputs。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">task printVersion&#123;</span><br><span class="line">    inputs.property(&apos;release&apos;,version.release)</span><br><span class="line">    outputs.file versionFile</span><br><span class="line"></span><br><span class="line">    doLast&#123;</span><br><span class="line">        version.release = true</span><br><span class="line">        // 通过 ant 修改文件属性值</span><br><span class="line">        ant.propertyfile(file:versionFile)&#123;</span><br><span class="line">            entry(key:&apos;release&apos;,type:&apos;string&apos;,operation:&apos;=&apos;,value:&apos;true&apos;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>在一系列 Task 执行过程中，如果 printVersion 任务的 inputs、outputs 对应的属性没有发生变化，那么在任意 Task 执行链中就不会执行该 Task，不被执行的 Task 会在输出日志中被标记 <code>UP-TO-DATE</code> 的标记。</p>
@@ -368,7 +392,7 @@
   
   
     <a href="/2020/01/16/Gradle实战-一/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Gadle实战(一)：Project、Task、Property 的基本了解</div>
+      <div class="article-nav-title">Gradle实战(一)：Project、Task、Property 的基本了解</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -490,11 +514,47 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
+                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Dex</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MultiDex</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Logcat 日志格式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -510,11 +570,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
+                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -522,11 +578,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle 基本原理</a>
+                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle in action</a>
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -542,23 +598,31 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">动画</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">AIDL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">EventBus APT</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Gradle 基本原理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Gradle in action</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Hprof</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">内存泄漏</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -571,6 +635,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Java 多线程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Hprof</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存泄漏</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -598,6 +674,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
@@ -606,7 +686,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -615,10 +695,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -642,11 +718,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
+                <a href="javascript:void(0)" class="js-tag color1">Coroutines</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -655,10 +735,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -698,6 +774,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">View</a>
               </li>
              
@@ -710,11 +790,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Git</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
+                <a href="javascript:void(0)" class="js-tag color1">CPU Profiler，Android 性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -730,18 +806,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">图解 HTTP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Java 异常</a>
               </li>
              
@@ -750,19 +814,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
+                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color3">图解 HTTP</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -774,7 +834,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -786,7 +846,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
+                <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">三方库</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -802,43 +874,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Dex</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">MultiDex</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">AIDL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">EventBus APT</a>
+                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -866,11 +906,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
+                <a href="javascript:void(0)" class="js-tag color3">Coroutines协程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -878,7 +914,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">动画</a>
+                <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
               </li>
              
               <li class="article-tag-list-item">

@@ -6,22 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href>
-  <title>Gadle实战(一)：Project、Task、Property 的基本了解 | GY</title>
+  <title>Gradle实战(一)：Project、Task、Property 的基本了解 | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="最基础的Gradle构建块-project和task，以及它们是如何映射到 Gradle 的 API 上面的。  声明简单的 task 编写自定义的 task 类 如何获取 task 属性 定义显示和隐式的 task 依赖 添加增量式构建支持 使用 Gradle 的内置 task 类型 Gradle 的构建生命周期 编写使用闭包和监听器 实现的生命周期钩子   1. 构建块Gradle 构建包括">
+  <meta name="description" content="最基础的 Gradle构建块(project、task、property)，以及它们是如何映射到 Gradle 的 API 上面的。  本篇涉及到的内容：  声明简单的 task 编写自定义的 task 类 如何获取 task 属性 定义显示和隐式的 task 依赖 添加增量式构建支持 使用 Gradle 的内置 task 类型 Gradle 的构建生命周期 编写使用闭包和监听器 实现的生命周期">
 <meta name="keywords" content="Gradle 基本原理,Gradle in action">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Gadle实战(一)：Project、Task、Property 的基本了解">
+<meta property="og:title" content="Gradle实战(一)：Project、Task、Property 的基本了解">
 <meta property="og:url" content="/2020/01/16/Gradle实战-一/index.html">
 <meta property="og:site_name" content="GY">
-<meta property="og:description" content="最基础的Gradle构建块-project和task，以及它们是如何映射到 Gradle 的 API 上面的。  声明简单的 task 编写自定义的 task 类 如何获取 task 属性 定义显示和隐式的 task 依赖 添加增量式构建支持 使用 Gradle 的内置 task 类型 Gradle 的构建生命周期 编写使用闭包和监听器 实现的生命周期钩子   1. 构建块Gradle 构建包括">
+<meta property="og:description" content="最基础的 Gradle构建块(project、task、property)，以及它们是如何映射到 Gradle 的 API 上面的。  本篇涉及到的内容：  声明简单的 task 编写自定义的 task 类 如何获取 task 属性 定义显示和隐式的 task 依赖 添加增量式构建支持 使用 Gradle 的内置 task 类型 Gradle 的构建生命周期 编写使用闭包和监听器 实现的生命周期">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/source/images/2020_01_16_07.png">
 <meta property="og:image" content="/source/images/2020_01_16_08.png">
-<meta property="og:updated_time" content="2020-01-17T10:44:50.824Z">
+<meta property="og:updated_time" content="2020-03-16T11:14:05.211Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Gadle实战(一)：Project、Task、Property 的基本了解">
-<meta name="twitter:description" content="最基础的Gradle构建块-project和task，以及它们是如何映射到 Gradle 的 API 上面的。  声明简单的 task 编写自定义的 task 类 如何获取 task 属性 定义显示和隐式的 task 依赖 添加增量式构建支持 使用 Gradle 的内置 task 类型 Gradle 的构建生命周期 编写使用闭包和监听器 实现的生命周期钩子   1. 构建块Gradle 构建包括">
+<meta name="twitter:title" content="Gradle实战(一)：Project、Task、Property 的基本了解">
+<meta name="twitter:description" content="最基础的 Gradle构建块(project、task、property)，以及它们是如何映射到 Gradle 的 API 上面的。  本篇涉及到的内容：  声明简单的 task 编写自定义的 task 类 如何获取 task 属性 定义显示和隐式的 task 依赖 添加增量式构建支持 使用 Gradle 的内置 task 类型 Gradle 的构建生命周期 编写使用闭包和监听器 实现的生命周期">
 <meta name="twitter:image" content="/source/images/2020_01_16_07.png">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
@@ -169,7 +169,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Gadle实战(一)：Project、Task、Property 的基本了解
+      Gradle实战(一)：Project、Task、Property 的基本了解
     </h1>
   
 
@@ -186,7 +186,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         <blockquote>
-<p>最基础的Gradle构建块-project和task，以及它们是如何映射到 Gradle 的 API 上面的。</p>
+<p>最基础的 Gradle构建块(project、task、property)，以及它们是如何映射到 Gradle 的 API 上面的。</p>
+</blockquote>
+<p>本篇涉及到的内容：</p>
 <ol>
 <li>声明简单的 task</li>
 <li>编写自定义的 task 类</li>
@@ -197,27 +199,31 @@
 <li>Gradle 的构建生命周期</li>
 <li>编写使用闭包和监听器 实现的生命周期钩子</li>
 </ol>
-</blockquote>
-<h2 id="1-构建块"><a href="#1-构建块" class="headerlink" title="1. 构建块"></a>1. 构建块</h2><p>Gradle 构建包括三个基本的构建: <code>project</code>、<code>task</code>、<code>property</code>。每个构建中至少包含一个 project，进而又包含一个或者多个task。project 和 task 暴露的属性可以控制构建。</p>
+<h2 id="1-构建块"><a href="#1-构建块" class="headerlink" title="1. 构建块"></a>1. 构建块</h2><p>Gradle 构建包括三个基本的构建: <code>project</code>、<code>task</code>、<code>property</code>。</p>
+<p>每个构建中至少包含一个 <code>project</code>，进而又包含一个或者多个 <code>task</code> 。<code>project</code> 和 <code>task</code> 暴露的属性可以控制构建过程。</p>
 <a id="more"></a>
 
-<p>Gradle 使用领域驱动设计（DDD）的原理为自己的领域构建软件模型，因此 Gradle API 中有相应的类来表示 project和task。</p>
+<p>Gradle 使用领域驱动设计（DDD）的原理为自己的领域构建软件模型，因此 Gradle API 中有相应的类来表示 project 和 task。</p>
 <h3 id="1-1-project"><a href="#1-1-project" class="headerlink" title="1.1 project"></a>1.1 project</h3><p>在 Gradle 中，<strong>一个 project 代表一个正在构建的组件，或者一个想要完成的目标</strong>,比如需要部署的应用程序。</p>
-<p>每个 Gradle 构建脚本至少定义 Project。</p>
+<p>每个 Gradle 构建脚本至少定义一个 Project。</p>
 <p>当构建进程启动后，Gradle 基于 <code>build.gradle</code> 中的配置,实例化 <code>org.gradle.api.Project</code> 类，并且能够通过 <code>project</code> 变量使其隐式使用，可以通过查看 Project 类查看其中可用的方法.</p>
 <p><img src="/source/images/2020_01_16_07.png" alt></p>
-<h3 id="1-2-Task"><a href="#1-2-Task" class="headerlink" title="1.2 Task"></a>1.2 Task</h3><p>任务的一些重要功能：<strong>任务动作</strong> 和 <strong>任务依赖</strong>，任务动作定义了一个任务执行时 <strong>最小的工作单位</strong>。</p>
+<p>具体可以查看 Project 的 API：<a href="https://docs.gradle.org/current/javadoc/org/gradle/api/package-summary.html" target="_blank" rel="noopener">Package org.gradle.api</a> 和 <a href="https://docs.gradle.org/current/javadoc/org/gradle/api/Project.html" target="_blank" rel="noopener">Project</a>。</p>
+<h3 id="1-2-Task"><a href="#1-2-Task" class="headerlink" title="1.2 Task"></a>1.2 Task</h3><p>任务的一些重要功能：<strong>任务动作</strong> 和 <strong>任务依赖</strong>。</p>
+<p>任务动作（<code>Action</code>）定义了一个任务执行时 <strong>最小的工作单位</strong>。</p>
 <p>task 对应的 Gradle API：org.gradle.api.Task 接口：<br><img src="/source/images/2020_01_16_08.png" alt></p>
+<p>具体可查看 Task 的 API 描述: <a href="https://docs.gradle.org/current/javadoc/org/gradle/api/Task.html" target="_blank" rel="noopener">Interface Task</a> 。</p>
 <h3 id="1-3-属性"><a href="#1-3-属性" class="headerlink" title="1.3 属性"></a><strong>1.3 属性</strong></h3><p>每个 Project 和 Task 实例都提供了很多可以通过 setter 和 getter 方法访问的属性，一个属性可能是一个任务的描述或者是项目的版本。</p>
-<p>在项目开发中，可以自定义属性，进行读写操作。自定义属性的操作，可以通过 <strong>扩展属性</strong> 和 <strong>在gradle.properties 中定义</strong>的方式实现。</p>
+<p>在项目开发中，可以自定义属性，进行读写操作。</p>
+<p>自定义属性的操作，可以通过 <strong>扩展属性</strong> 和 <strong>在gradle.properties 中定义</strong> 的方式实现。</p>
 <ol>
-<li>扩展属性</li>
+<li><strong>扩展属性</strong></li>
 </ol>
 <p>使用命名空间 ext 自定义属性</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 定义只读属性</span><br><span class="line">project.ext.name = &apos;name&apos;</span><br><span class="line">// 定义可读写属性</span><br><span class="line">ext&#123;</span><br><span class="line">    age = 1</span><br><span class="line">&#125;</span><br><span class="line">ext.one = 2</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 定义只读属性</span><br><span class="line">project.ext.name = &apos;name&apos;</span><br><span class="line">// 定义可、读写属性</span><br><span class="line">ext&#123;</span><br><span class="line">    age = 1</span><br><span class="line">&#125;</span><br><span class="line">ext.one = 2</span><br></pre></td></tr></table></figure>
 
 <ol start="2">
-<li>在 gradle.properties 中定义</li>
+<li><strong>在 gradle.properties 中定义</strong></li>
 </ol>
 <p>可以在 <code>gradle.properties</code> 文件中可以添加 Gradle 属性。</p>
 <ul>
@@ -231,15 +237,19 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">task test&#123;</span><br><span class="line">    println project.name</span><br><span class="line">    println age</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ol start="3">
-<li><p>声明属性的其他方式</p>
-<ol>
-<li><p>在命令行模式下通过 —P 命令选项提供项目属性</p>
-<pre><code>gradle -Pname = &apos;tom&apos;</code></pre></li>
-<li><p>在命令行模式下通过 -D 命令选项提供系统属性</p>
-<pre><code>gradle -Pname = &apos;tom&apos;</code></pre></li>
+<li>声明属性的其他方式</li>
 </ol>
-</li>
-</ol>
+<pre><code>1. 在命令行模式下通过 `-P` 命令选项提供项目属性
+
+        gradle -Pname = &apos;tom&apos;
+
+2. 在命令行模式下通过 `-D` 命令选项提供系统属性
+
+        gradle -Dname = &apos;tom&apos;</code></pre><p>使用这种方式我们可以执行 test，具体如下：</p>
+<blockquote>
+<p>./gradlew -Pname=Mike test</p>
+</blockquote>
+<p>那么该 Task 则打印新的 name 值 – Mike。</p>
 
       
 
@@ -369,7 +379,7 @@
   
   
     <a href="/2020/01/16/Gradle实战-零/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Gadle实战(零)：Gradle 的基本使用</div>
+      <div class="article-nav-title">Gradle实战(零)：Gradle 的基本使用</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -491,11 +501,47 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
+                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Dex</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MultiDex</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Logcat 日志格式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -511,11 +557,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
+                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -523,11 +565,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle 基本原理</a>
+                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle in action</a>
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -543,23 +585,31 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">动画</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">AIDL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">EventBus APT</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Gradle 基本原理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Gradle in action</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Hprof</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">内存泄漏</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -572,6 +622,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Java 多线程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Hprof</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存泄漏</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -599,6 +661,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
@@ -607,7 +673,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -616,10 +682,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -643,11 +705,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
+                <a href="javascript:void(0)" class="js-tag color1">Coroutines</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -656,10 +722,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -699,6 +761,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">View</a>
               </li>
              
@@ -711,11 +777,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Git</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
+                <a href="javascript:void(0)" class="js-tag color1">CPU Profiler，Android 性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -731,18 +793,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">图解 HTTP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Java 异常</a>
               </li>
              
@@ -751,19 +801,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
+                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color3">图解 HTTP</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -775,7 +821,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -787,7 +833,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
+                <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">三方库</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -803,43 +861,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Dex</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">MultiDex</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">AIDL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">EventBus APT</a>
+                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -867,11 +893,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
+                <a href="javascript:void(0)" class="js-tag color3">Coroutines协程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -879,7 +901,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">动画</a>
+                <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
               </li>
              
               <li class="article-tag-list-item">

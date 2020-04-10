@@ -8,21 +8,26 @@
   <link rel="dns-prefetch" href>
   <title>Gadle实战(四）：依赖管理、版本冲突、理解缓存 | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="在为项目配置依赖时通过 dependencies 和 repositories 两个 DSL 配置块进行配置的，配置块的名称直接映射到 Project 接口的方法。依赖管理器通过运行以上两个配置，从中央仓库下载所需要的库，将它们存储在本地缓存中。 配置块中包含配置：">
+  <meta name="description" content="在为项目配置依赖时，可以通过 dependencies 和 repositories 两个 DSL 配置块 进行配置。配置块的名称直接映射到 Project 接口的方法，具体可以参见 Project。 其中 dependencies 闭包用来定义项目构建所依赖的类库，而  repositories 闭包则告诉构建从哪里获得这些依赖。">
 <meta name="keywords" content="Gradle 基本原理,Gradle in action">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Gadle实战(四）：依赖管理、版本冲突、理解缓存">
 <meta property="og:url" content="/2020/01/19/Gradle实战-四/index.html">
 <meta property="og:site_name" content="GY">
-<meta property="og:description" content="在为项目配置依赖时通过 dependencies 和 repositories 两个 DSL 配置块进行配置的，配置块的名称直接映射到 Project 接口的方法。依赖管理器通过运行以上两个配置，从中央仓库下载所需要的库，将它们存储在本地缓存中。 配置块中包含配置：">
+<meta property="og:description" content="在为项目配置依赖时，可以通过 dependencies 和 repositories 两个 DSL 配置块 进行配置。配置块的名称直接映射到 Project 接口的方法，具体可以参见 Project。 其中 dependencies 闭包用来定义项目构建所依赖的类库，而  repositories 闭包则告诉构建从哪里获得这些依赖。">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="/source/images/2020_02_28_01.png">
+<meta property="og:image" content="/source/images/2020_03_02_01.png">
+<meta property="og:image" content="/source/images/2020_03_02_02.png">
+<meta property="og:image" content="/source/images/2020_03_02_03.png">
 <meta property="og:image" content="/source/images/2020_01_14_01.png">
 <meta property="og:image" content="/source/images/2020_01_14_02.png">
-<meta property="og:updated_time" content="2020-01-19T07:28:32.508Z">
+<meta property="og:image" content="/source/images/2020_03_02_04.png">
+<meta property="og:updated_time" content="2020-03-02T07:32:27.996Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Gadle实战(四）：依赖管理、版本冲突、理解缓存">
-<meta name="twitter:description" content="在为项目配置依赖时通过 dependencies 和 repositories 两个 DSL 配置块进行配置的，配置块的名称直接映射到 Project 接口的方法。依赖管理器通过运行以上两个配置，从中央仓库下载所需要的库，将它们存储在本地缓存中。 配置块中包含配置：">
-<meta name="twitter:image" content="/source/images/2020_01_14_01.png">
+<meta name="twitter:description" content="在为项目配置依赖时，可以通过 dependencies 和 repositories 两个 DSL 配置块 进行配置。配置块的名称直接映射到 Project 接口的方法，具体可以参见 Project。 其中 dependencies 闭包用来定义项目构建所依赖的类库，而  repositories 闭包则告诉构建从哪里获得这些依赖。">
+<meta name="twitter:image" content="/source/images/2020_02_28_01.png">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
   
@@ -185,42 +190,58 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>在为项目配置依赖时通过 <code>dependencies</code> 和 <code>repositories</code> 两个 DSL <strong>配置块</strong>进行配置的，配置块的名称直接映射到 Project 接口的方法。依赖管理器通过运行以上两个配置，从中央仓库下载所需要的库，将它们存储在本地缓存中。</p>
-<p>配置块中包含配置：</p>
+        <p>在为项目配置依赖时，可以通过 <code>dependencies</code> 和 <code>repositories</code> 两个 <strong>DSL 配置块</strong> 进行配置。配置块的名称直接映射到 Project 接口的方法，具体可以参见 <a href>Project</a>。</p>
+<p>其中 <code>dependencies</code> 闭包用来定义项目构建所依赖的类库，而  <code>repositories</code> 闭包则告诉构建从哪里获得这些依赖。</p>
 <a id="more"></a>
 
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//dependencies 为配置块</span><br><span class="line">dependencies&#123;</span><br><span class="line">    // compile 为配置</span><br><span class="line">    compile xxxx</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="1-依赖配置"><a href="#1-依赖配置" class="headerlink" title="1. 依赖配置"></a>1. 依赖配置</h2><p>在 Gradle 中，<strong>依赖配置</strong> 是十分重要的概念，插件可以引入配置来 <strong>定义依赖的作用域</strong>。在项目中引入 Java 插件，就可以引入了其各种标准配置，来定义 Java 构建生命周期所应用的依赖。比如通过 compile 来配置添加编译源代码所需要的依赖。</p>
-<h2 id="2-通过-API-认识配置"><a href="#2-通过-API-认识配置" class="headerlink" title="2. 通过 API 认识配置"></a>2. 通过 API 认识配置</h2><p>配置可以在项目的 <strong>根级别</strong> 添加和访问，可以使用插件提供的配置，也可以使用自己声明的配置。</p>
+<p>依赖管理器通过运行以上两个配置，从中央仓库下载项目中所需要的库，并将它们存储在本地缓存中,具体可以参见以下示意图：从 Maven 远端仓库下载构建依赖。</p>
+<p><img src="/source/images/2020_02_28_01.png" alt></p>
+<h2 id="1-依赖配置"><a href="#1-依赖配置" class="headerlink" title="1. 依赖配置"></a>1. 依赖配置</h2><p>在 Gradle 中 配置 译为 Configuration。</p>
+<p>在 Gradle 中，<strong>依赖配置</strong> 是十分重要的概念，插件可以引入配置，来 <strong>定义依赖的作用域</strong>。</p>
+<p>在项目中引入 Java 插件，就可以引入了其各种标准配置，来定义 Java 构建生命周期所应用的依赖。比如通过 compile 来配置添加编译源代码所需要的依赖。</p>
+<h2 id="2-通过-API-认识配置-Configuration"><a href="#2-通过-API-认识配置-Configuration" class="headerlink" title="2. 通过 API 认识配置(Configuration)"></a>2. 通过 API 认识配置(Configuration)</h2><p>配置 (<code>Configuration</code>) 可以 在项目(Project)的 <strong>根级别</strong> 添加和访问，j具体可以参见 API：<a href="https://docs.gradle.org/current/javadoc/org/gradle/api/Project.html" target="_blank" rel="noopener">Project#    getConfigurations()</a>,可以使用插件提供的配置，也可以使用自己声明的配置。</p>
 <p>每个 Project 都有一个 <code>ConfigurationContainer</code> 类容器来管理自己相应的配置。</p>
+<p>具体 API 具体如下：</p>
+<p><img src="/source/images/2020_03_02_01.png" alt></p>
+<p>可以看到配置对象 (Configuration) 含有一些属性，比如 name、description 等。</p>
 <h3 id="配置的使用场景"><a href="#配置的使用场景" class="headerlink" title="配置的使用场景"></a>配置的使用场景</h3><ol>
 <li>配置是很灵活的，可以使用配置控制配置依赖解决方案追溯是否包含传递性依赖、定义解决策略（比如，如何解决版本冲突）等，同时使用配置可以进行。</li>
 <li>使用配置进行逻辑分组</li>
 </ol>
 <p>配置分组与 Java 中包的概念十分相似，包针对其包含的类提供唯一的命名空间，同样这也适用于配置，通过逻辑分组把职责相同的配置放在一起。</p>
-<p>在 Java 中提供了 6 个现成的配置：compile、runtime、testCompile、testRuntime、archives、default，随着版本的更新配置的数量和种类也在变化。在 Gradle 中，也可以自定义配置，实现自己的逻辑。比如需要引入部署应用的依赖 Cargo 库，但是如果使用 Java 提供的配置中的一个，会将应用程序代码和部署应用的代码相应的环境混淆，导致发布时将不必要的类库添加到发布包中，此时我们可以通过自定义配置来解决这个问题。</p>
-<h2 id="自定义配置"><a href="#自定义配置" class="headerlink" title="自定义配置"></a>自定义配置</h2><p>为了明确 Cargo 所需的依赖，声明一个名为 cargo 的新配置，具体如下：</p>
+<p>在 Java 中提供了 6 个现成的配置：api、implementation、compileOnly、runtimeOnly 等，随着版本的更新配置的数量和种类也在变化,具体可以参见 <a href="https://docs.gradle.org/current/userguide/java_library_plugin.html#example_making_the_difference_between_api_and_implementation" target="_blank" rel="noopener">The Java Library Plugin</a>。</p>
+<p>在 Gradle 中，也可以自定义配置，实现自己的逻辑。比如需要引入部署应用的依赖 Cargo 库，但是如果使用 Java 提供的配置中的一个，会将应用程序代码和部署应用的代码相应的环境混淆，导致发布时将不必要的类库添加到发布包中，此时我们可以通过自定义配置来解决这个问题。</p>
+<h2 id="3-自定义、使用配置"><a href="#3-自定义、使用配置" class="headerlink" title="3. 自定义、使用配置"></a>3. 自定义、使用配置</h2><h3 id="自定义配置"><a href="#自定义配置" class="headerlink" title="自定义配置"></a>自定义配置</h3><p>为了明确 Cargo 所需的依赖，在 <code>configurations</code> 中声明一个名为 <code>cargo</code> 的新配置，具体如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">configurations&#123;</span><br><span class="line">    cargo&#123;</span><br><span class="line">        description = &apos;classpath for cargo ant tasks&apos;</span><br><span class="line">        visibile = false</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>为项目配置容器添加配置后，可以直接通过配置名称进行使用。</p>
-<h3 id="使用配置"><a href="#使用配置" class="headerlink" title="使用配置"></a>使用配置</h3><p> 此时就可以在配置块中使用 cargo 配置，并在相应的 Task 中使用配置相应内容，并且自定义的配置也可以使用向排除传递性依赖、动态版本号等特性，具体参见以下代码。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">configurations &#123;</span><br><span class="line">    cargo &#123;</span><br><span class="line">        description = &apos;Classpath for Cargo Ant tasks.&apos;</span><br><span class="line">        visible = false</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">task deployToLocalTomcat &lt;&lt; &#123;</span><br><span class="line">    // 以文件树的形式获取 cargo 配置所有的依赖</span><br><span class="line">    FileTree cargoDependencies = configurations.getByName(&apos;cargo&apos;).asFileTree</span><br><span class="line">    ant.taskdef(resource: &apos;cargo.tasks&apos;, classpath: cargoDependencies.asPath)</span><br><span class="line">    ant.cargo(containerId: &apos;tomcat7x&apos;, action: &apos;run&apos;, output: &quot;$buildDir/output.log&quot;) &#123;</span><br><span class="line">        configuration &#123;</span><br><span class="line">            deployable(type: &apos;war&apos;, file: &apos;todo.war&apos;)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        zipUrlInstaller(installUrl: &apos;http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.50/bin/apache-tomcat-7.0.50.zip&apos;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ext.cargoGroup = &apos;org.codehaus.cargo&apos;</span><br><span class="line">ext.cargoVersion = &apos;1.3.1&apos;</span><br><span class="line"></span><br><span class="line">// 在配置块中通过自定义配置声明依赖</span><br><span class="line">dependencies &#123;</span><br><span class="line">    cargo group: cargoGroup, name: &apos;cargo-core-uberjar&apos;, version: cargoVersion</span><br><span class="line">    cargo &quot;$cargoGroup:cargo-ant:$cargoVersion&quot;</span><br><span class="line">    cargo(&apos;org.codehaus.cargo:cargo-ant:1.3.1&apos;) &#123;</span><br><span class="line">        exclude group: &apos;xml-apis&apos;, module: &apos;xml-apis&apos;</span><br><span class="line">    &#125;</span><br><span class="line">    cargo(&apos;org.codehaus.cargo:cargo-ant:1.3.1&apos;) &#123;</span><br><span class="line">        transitive = false</span><br><span class="line">    &#125;</span><br><span class="line">     cargo &apos;org.codehaus.cargo:cargo-ant:1.+&apos;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">repositories &#123;</span><br><span class="line">    mavenCentral()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="使用配置"><a href="#使用配置" class="headerlink" title="使用配置"></a>使用配置</h3><p>此时就可以在配置块中使用 cargo 配置，并在相应的 Task 中使用配置相应内容，并且自定义的配置也可以使用向排除传递性依赖、动态版本号等特性，具体参见以下代码。</p>
+<p>使用 Ant 的相关特性使用自定义配置，具体如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">task deployToLocalTomcat &lt;&lt; &#123;</span><br><span class="line">    // 以文件树的形式获取 cargo 配置所有的依赖</span><br><span class="line">    FileTree cargoDependencies = configurations.getByName(&apos;cargo&apos;).asFileTree</span><br><span class="line">    ant.taskdef(resource: &apos;cargo.tasks&apos;, classpath: cargoDependencies.asPath)</span><br><span class="line">    ant.cargo(containerId: &apos;tomcat7x&apos;, action: &apos;run&apos;, output: &quot;$buildDir/output.log&quot;) &#123;</span><br><span class="line">        configuration &#123;</span><br><span class="line">            deployable(type: &apos;war&apos;, file: &apos;todo.war&apos;)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        zipUrlInstaller(installUrl: &apos;http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.50/bin/apache-tomcat-7.0.50.zip&apos;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ext.cargoGroup = &apos;org.codehaus.cargo&apos;</span><br><span class="line">ext.cargoVersion = &apos;1.3.1&apos;</span><br><span class="line"></span><br><span class="line">// 在配置块中通过自定义配置声明依赖</span><br><span class="line">dependencies &#123;</span><br><span class="line">    cargo group: cargoGroup, name: &apos;cargo-core-uberjar&apos;, version: cargoVersion</span><br><span class="line">    cargo &quot;$cargoGroup:cargo-ant:$cargoVersion&quot;</span><br><span class="line">    cargo(&apos;org.codehaus.cargo:cargo-ant:1.3.1&apos;) &#123;</span><br><span class="line">        exclude group: &apos;xml-apis&apos;, module: &apos;xml-apis&apos;</span><br><span class="line">    &#125;</span><br><span class="line">    cargo(&apos;org.codehaus.cargo:cargo-ant:1.3.1&apos;) &#123;</span><br><span class="line">        transitive = false</span><br><span class="line">    &#125;</span><br><span class="line">     cargo &apos;org.codehaus.cargo:cargo-ant:1.+&apos;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">repositories &#123;</span><br><span class="line">    mavenCentral()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="声明依赖"><a href="#声明依赖" class="headerlink" title="声明依赖"></a>声明依赖</h2><p>DSL 配置块 dependencies 通常用来将一个或者多个依赖指派给配置，但是外部依赖是依赖的唯一方式。</p>
-<h3 id="依赖的方式"><a href="#依赖的方式" class="headerlink" title="依赖的方式"></a>依赖的方式</h3><p>外部模块依赖（dependencies）、项目依赖（settiong）、文件依赖（dependencies 中 fileTree）、Gradle 运行时依赖、客户端模块依赖（不常见）</p>
-<h3 id="依赖相关-API"><a href="#依赖相关-API" class="headerlink" title="依赖相关 API"></a>依赖相关 API</h3><p>每个 Gradle 项目都有依赖处理器实例，由 DependencyHandler 接口来实现。</p>
-<p>每个依赖项都是 Dependency 类型的一个实例，group、name、version、classifier 属性明确标识了一个依赖。</p>
-<h3 id="外部模块依赖"><a href="#外部模块依赖" class="headerlink" title="外部模块依赖"></a>外部模块依赖</h3><p>在 Gradle 中，外部类库通常以 Jar 文件的形式存在，被称为 <strong>外部模块依赖</strong>。</p>
-<p><code>androidx.appcompat:appcompat:1.1.0</code></p>
-<p>依赖属性：</p>
-<ul>
-<li><p>group<br>这个属性用来标识一个组织、公司或者项目，比如 androidx.appcompat</p>
-</li>
-<li><p>name</p>
-</li>
+<h2 id="声明依赖"><a href="#声明依赖" class="headerlink" title="声明依赖"></a>声明依赖</h2><p>DSL 配置块 <code>dependencies</code> 通常用来将一个或者多个依赖指派给配置，但是外部依赖并不是依赖的唯一方式。</p>
+<h3 id="依赖的方式"><a href="#依赖的方式" class="headerlink" title="依赖的方式"></a>依赖的方式</h3><ul>
+<li>外部模块依赖（dependencies）</li>
+<li>项目依赖（setting）</li>
+<li>文件依赖（dependencies 中 fileTree）</li>
+<li>Gradle 运行时依赖</li>
+<li>客户端模块依赖（不常见）。</li>
 </ul>
-<p>一个库的名称唯一描述了依赖，比如 appcompat</p>
+<h3 id="依赖相关-API"><a href="#依赖相关-API" class="headerlink" title="依赖相关 API"></a>依赖相关 API</h3><p>每个 Gradle 项目都有 <strong>依赖处理器实例</strong>，由 <code>DependencyHandler</code> 接口来实现。</p>
+<p>每个依赖项都是 <code>Dependency</code> 类型的一个实例，通过 <code>group、name、version、classifier</code> 属性，明确 <strong>标识了一个依赖</strong>。</p>
+<p>具体 API 关系如下：</p>
+<p><img src="/source/images/2020_03_02_02.png" alt></p>
+<h3 id="外部模块依赖"><a href="#外部模块依赖" class="headerlink" title="外部模块依赖"></a>外部模块依赖</h3><p>在 Gradle 中，外部类库通常以 <code>Jar</code> 文件的形式存在，被称为 <strong>外部模块依赖</strong>，此类型的依赖可以通过依赖属性唯一标识，比如：</p>
+<p><code>androidx.appcompat:appcompat:1.1.0</code></p>
+<p><strong>依赖属性</strong>：</p>
+<ul>
+<li>group</li>
+</ul>
+<p>这个属性用来标识一个组织、公司或者项目，比如 androidx.appcompat。</p>
+<ul>
+<li>name</li>
+</ul>
+<p>标识一个库的名称，唯一描述了依赖，比如 appcompat。</p>
 <ul>
 <li>version</li>
 </ul>
@@ -230,28 +251,32 @@
 </ul>
 <p>可以定义另一个属性，但是以上并没有定义该属性。</p>
 <h3 id="依赖标记"><a href="#依赖标记" class="headerlink" title="依赖标记"></a>依赖标记</h3><p>在项目中通过以下形式来声明依赖：</p>
-<p>dependencies{<br>    // 比如 compile com.xx.xx<br>    configurationcompile xxx<br>}</p>
-<h3 id="检查依赖报告"><a href="#检查依赖报告" class="headerlink" title="检查依赖报告"></a>检查依赖报告</h3><p>运行 <code>gradle dependencies</code> 会显示完整的 <strong>依赖树</strong>。</p>
-<p>在依赖树中，标有星号的依赖被排除了，这意味依赖管理器使用的是另外一个版本的类库，因为他被声明另外一个顶层依赖的传递性依赖。</p>
-<p>在 dependencies 配置中声明的依赖为 <strong>顶层依赖</strong>，这些顶层依赖所依赖的库称为 <strong>传递性依赖</strong>。</p>
-<p><strong>针对版本冲突，Gradle 默认的解决策略是获取最新的版本</strong>，在依赖树中这样展示：1.0.0 -&gt; 1.1.0，而在依赖报告中，标有星号的依赖被排除了，意味着依赖管理器选择的是相同或者另一个版本的类库。</p>
-<h3 id="排除传递性依赖"><a href="#排除传递性依赖" class="headerlink" title="排除传递性依赖"></a>排除传递性依赖</h3><h4 id="排除传递性依赖，依赖指定版本的远端库"><a href="#排除传递性依赖，依赖指定版本的远端库" class="headerlink" title="排除传递性依赖，依赖指定版本的远端库"></a>排除传递性依赖，依赖指定版本的远端库</h4><p>假如想要显式的指定某个类库的版本，而不使用顶层依赖所提供的传递性依赖，可以通过 exclude 排除指定库，具体操作如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">dependencies&#123;</span><br><span class="line">    // 通过 exclude 来声明排除依赖</span><br><span class="line">    cargo(&apos;org.codehaus.cargo:cargo-ant:1.3.1&apos;)&#123;</span><br><span class="line">        exclude group:&apos;xml-apis&apos;,module:&apos;xml-apis&apos;</span><br><span class="line">    &#125;</span><br><span class="line">    // 依赖指定版本的库</span><br><span class="line">    cargo &apos;xml-apis:xml-apis:2.0.2&apos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dependencies&#123;</span><br><span class="line">    // 比如 api com.xx.xx</span><br><span class="line">    // 首先是配置名称，比如 api、runtimeOnly，以及上文自定义的 cargo</span><br><span class="line">    // 然后是依赖标记，比如 androidx.appcompat:appcompat:1.1.0</span><br><span class="line">    configurationName dependency</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="排除传递性依赖，排除所有的传递性依赖"><a href="#排除传递性依赖，排除所有的传递性依赖" class="headerlink" title="排除传递性依赖，排除所有的传递性依赖"></a>排除传递性依赖，排除所有的传递性依赖</h4><p>如果想要 <strong>排除一个库的所有传递性依赖</strong>，Gradle 提供了 <code>transitive</code> 属性来实现这一效果。</p>
+<h3 id="检查依赖报告"><a href="#检查依赖报告" class="headerlink" title="检查依赖报告"></a>检查依赖报告</h3><p>在 <code>dependencies</code> 配置中声明的依赖为 <strong>顶层依赖</strong>，这些顶层依赖所依赖的库称为 <strong>传递性依赖</strong>。</p>
+<p>运行 <code>gradle dependencies</code> 会显示完整的 <strong>依赖树</strong>。<strong>依赖树显示了在构建脚本中声明的顶层依赖，以及它们的传递性依赖。</strong></p>
+<p>但是在自己实测过程中，需要指定 moudle 来展示依赖树，即在项目根目录下需要运行：</p>
+<p><code>./gralew app:dependencies</code> 或者 <code>gradle app:dependencies</code>。</p>
+<p><img src="/source/images/2020_03_02_03.png" alt></p>
+<p>在依赖树中，<strong>标有星号的依赖被排除了</strong>，这意味依赖管理器使用的是 <strong>另外一个版本</strong> 的类库，因为他被声明 <em>另外一个顶层依赖</em> 的传递性依赖。</p>
+<p><strong>针对版本冲突，Gradle 默认的解决策略是获取最新的版本</strong>，在依赖树中这样展示：1.0.0 -&gt; 1.1.0，而在依赖报告中，标有星号的依赖被排除了，意味着依赖管理器选择的是相同或者另一个版本的类库。</p>
+<h3 id="排除传递性依赖"><a href="#排除传递性依赖" class="headerlink" title="排除传递性依赖"></a><strong>排除传递性依赖</strong></h3><h4 id="排除传递性依赖-依赖指定版本的远端库"><a href="#排除传递性依赖-依赖指定版本的远端库" class="headerlink" title="排除传递性依赖:依赖指定版本的远端库"></a><strong>排除传递性依赖:依赖指定版本的远端库</strong></h4><p>假如想要显式的指定某个类库的版本，而不使用顶层依赖所提供的传递性依赖，可以通过 <strong>exclude</strong> 排除指定库，具体操作如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">dependencies&#123;</span><br><span class="line">    // 通过 exclude 来声明排除某项依赖的指定传递性依赖</span><br><span class="line">    cargo(&apos;org.codehaus.cargo:cargo-ant:1.3.1&apos;)&#123;</span><br><span class="line">        exclude group:&apos;xml-apis&apos;,module:&apos;xml-apis&apos;</span><br><span class="line">    &#125;</span><br><span class="line">    // 依赖指定版本的库</span><br><span class="line">    cargo &apos;xml-apis:xml-apis:2.0.2&apos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="排除传递性依赖-排除所有的传递性依赖"><a href="#排除传递性依赖-排除所有的传递性依赖" class="headerlink" title="排除传递性依赖:排除所有的传递性依赖"></a><strong>排除传递性依赖:排除所有的传递性依赖</strong></h4><p>如果想要 <strong>排除一个库的所有传递性依赖</strong>，Gradle 提供了 <code>transitive</code> 属性来实现这一效果。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dependencies&#123;</span><br><span class="line">    // 通过 exclude 来声明排除依赖</span><br><span class="line">    cargo(&apos;org.codehaus.cargo:cargo-ant:1.3.1&apos;)&#123;</span><br><span class="line">        transitive = false</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="动态版本声明"><a href="#动态版本声明" class="headerlink" title="动态版本声明"></a>动态版本声明</h3><p>如果不想要指定依赖库的版本号，可以获取最新版本的依赖或者在版本范围内选择最新的依赖。</p>
+<h3 id="动态版本声明"><a href="#动态版本声明" class="headerlink" title="动态版本声明"></a><strong>动态版本声明</strong></h3><p>如果不想要指定依赖库的版本号，可以获取最新版本的依赖或者在版本范围内选择最新的依赖。</p>
 <p>动态版本声明有特定的语法，如果想要使用 <strong>最新版本的依赖</strong>，则必须使用占位符 <code>lastest.intergration</code> 或者声明版本属性，通过使用一个加号（+）标定它来动态改变。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dependencies&#123;</span><br><span class="line">    cargo &apos;xml-apis:xml-apis:lastest.intergration&apos;</span><br><span class="line">    cargo &apos;xml-apis:xml-apis:2.0.+&apos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><strong>不要最好不要使用动态版本，因为在项目的开发中，可靠性和可复用是最重要的，但是选择最新版本的类库可能在开发者不知情的情况下引入了不兼容的类库版本和副作用，基于此应该声明明确的类库版本。</strong></p>
 <p>也可以指定版本的范围，具体查看Gradle 在线手册。</p>
-<h3 id="文件依赖"><a href="#文件依赖" class="headerlink" title="文件依赖"></a>文件依赖</h3><p>以上为外部模块依赖，也可以依赖本地的文件。</p>
+<h3 id="文件依赖"><a href="#文件依赖" class="headerlink" title="文件依赖"></a><strong>文件依赖</strong></h3><p>Gradle 依赖也可以依赖本地的文件。</p>
 <p>这样一个场景：定义一个 Task，用于将从 Maven Central 获取的依赖拷贝到 home 目录下的 libs/cargo 子目录中。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">task copyDependenciesToLocalDir(type:Copy)&#123;</span><br><span class="line">    from confingurations.cargo.asFileTree</span><br><span class="line">    into &quot;$&#123;System.properties[&apos;user.home&apos;]&#125;/libs/cargo&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>在 dependencies 配置块中声明 Cargo 类库，以下展示如何把 Jar 文件指派给 cargo 配置作为文件依赖。</p>
+<p>在 dependencies 配置块中声明 Cargo 类库，以下展示通过 <code>fileTree</code> 属性把 Jar 文件指派给 cargo 配置作为文件依赖。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dependencies&#123;</span><br><span class="line">    cargo fileTree (dir:&quot;$&#123;System.properties[&apos;user.home&apos;]&#125;/libs/cargo&quot;,include &apos;*.jar&apos;)</span><br><span class="line">    // 平时我们在 Android 如下使用，进行文件依赖</span><br><span class="line">    implementation fileTree(dir: &apos;libs&apos;, include: [&apos;*.jar&apos;])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="使用和配置仓库"><a href="#使用和配置仓库" class="headerlink" title="使用和配置仓库"></a>使用和配置仓库</h2><h3 id="仓库-API"><a href="#仓库-API" class="headerlink" title="仓库 API"></a>仓库 API</h3><p>在项目中定义仓库的关键是 <code>RespositoryHandler</code> 接口，<strong>该接口提供了添加各种类型仓库的方法</strong>，这些方法可以在 respositories 配置块中被调用。</p>
@@ -277,7 +302,7 @@
 <ul>
 <li>maven()</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">repositories&#123;</span><br><span class="line">    maven&#123;</span><br><span class="line">        name &apos;custom maven repository&apos;</span><br><span class="line">        url &apos;http://xxx/xxx/release/&apos;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">repositories&#123;</span><br><span class="line">    maven&#123;</span><br><span class="line">        name &apos;custom maven repository&apos;</span><br><span class="line">        url &apos;http://xxx/xxx/release/&apos;</span><br><span class="line">    &#125;</span><br><span class="line">    // 也可以自定义引用本地的库</span><br><span class="line">    maven&#123;</span><br><span class="line">        name &apos;custom maven repository&apos;</span><br><span class="line">        url &apos;../repo&apos;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>mavenRepo()</li>
@@ -287,12 +312,13 @@
 <p>声明 ivy 仓库</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">repositories&#123;</span><br><span class="line">    ivy&#123;</span><br><span class="line">        // Ivy 仓库的基础 URL</span><br><span class="line">        url &apos;http://xxx/xxx/release/&apos;</span><br><span class="line">        layout &apos;pattern&apos;,&#123;</span><br><span class="line">            // 工件模式</span><br><span class="line">            artifact &apos;[xx]/[xxx]/[version].[ext]&apos;</span><br><span class="line">            // 元数据模式</span><br><span class="line">            ivy &apos;[xx]/[xxx]/[version]/ivy-[revision].xml&apos;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="扁平的目录仓库"><a href="#扁平的目录仓库" class="headerlink" title="扁平的目录仓库"></a>扁平的目录仓库</h3><p>flat 目录仓库是最简单和最基本的仓库形式，<strong>在文件系统中它是一个单独的目录</strong>，只包含了 jar 文件，没有元数据。<strong>当声明此种仓库依赖时，只能使用 name 和 version 属性，不能使用 group 属性，因为它会产生不明确的依赖关系</strong>。</p>
+<h3 id="扁平的目录仓库"><a href="#扁平的目录仓库" class="headerlink" title="扁平的目录仓库"></a>扁平的目录仓库</h3><p>flat 目录仓库是最简单和最基本的仓库形式，<strong>在文件系统中它是一个单独的目录</strong>，<strong>只包含了 jar 文件，没有元数据</strong>。</p>
+<p><strong>当声明此种仓库中的依赖时，只能使用 name 和 version 属性，不能使用 group 属性，因为它会产生不明确的依赖关系</strong>。</p>
 <p>以下通过 map 和 快捷方式来声明从 flat 目录仓库中获取 Cargo 依赖。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 声明扁平的目录仓库</span><br><span class="line">repositories&#123;</span><br><span class="line">    flatDir (dir:&quot;$&#123;System.properties[&apos;user.home&apos;]&#125;/libs/cargo&quot;,name :&apos;Local lins directory&apos;)</span><br><span class="line">&#125;</span><br><span class="line">dependencies&#123;</span><br><span class="line">    // 以 map 的形式声明依赖</span><br><span class="line">    cargo name:&apos;activation&apos;,version:&apos;1.1.0&apos;</span><br><span class="line">    // 以快捷方式获取依赖</span><br><span class="line">    cargo &apos;:jaxb-api:2.1.1&apos; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 声明扁平的目录仓库</span><br><span class="line">repositories&#123;</span><br><span class="line">    flatDir (dir:&quot;$&#123;System.properties[&apos;user.home&apos;]&#125;/libs/cargo&quot;,name :&apos;Local lins directory&apos;)</span><br><span class="line">&#125;</span><br><span class="line">dependencies&#123;</span><br><span class="line">    // 以 map 的形式声明依赖，只可以使用 name 和 version 属性</span><br><span class="line">    cargo name:&apos;activation&apos;,version:&apos;1.1.0&apos;</span><br><span class="line">    // 以快捷方式获取依赖</span><br><span class="line">    cargo &apos;:jaxb-api:2.1.1&apos; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><strong>需要手动的声明传递性依赖</strong>，需单独的声明每个依赖，这种方式耗时耗力。</p>
-<h2 id="理解本地依赖缓存"><a href="#理解本地依赖缓存" class="headerlink" title="理解本地依赖缓存"></a>理解本地依赖缓存</h2><p>以上阐述了如何声明各种类型的仓库，在执行的 Task 会自动确定所需要的依赖，<strong>在执行时从仓库中下载工件</strong>，<strong>并将它们存储在本地缓存中</strong>在之后的任何构建都会重用这些工件。</p>
+<h2 id="理解本地依赖缓存"><a href="#理解本地依赖缓存" class="headerlink" title="理解本地依赖缓存"></a>理解本地依赖缓存</h2><p>以上阐述了如何声明各种类型的仓库，在执行的 Task 会自动确定所需要的依赖，<strong>在执行时从仓库中下载工件</strong>，<strong>并将它们存储在本地缓存中</strong> ，在之后的任何构建都会重用这些工件。</p>
 <p>此节将深入分析缓存结构，确定缓存在底层是如何工作的，以及如何调整其行为。</p>
 <h3 id="分析缓存结构"><a href="#分析缓存结构" class="headerlink" title="分析缓存结构"></a>分析缓存结构</h3><p>执行 Task ，Gradle 下载的 jar 文件被存放在何处？</p>
 <p>通过以下操作，打印出完整的、指派个 cargo 配置的所有依赖的连接路径。</p>
@@ -313,8 +339,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">├── caches // (1) 全局缓存目录</span><br><span class="line">│   ├── 4.8 // 特定版本的缓存，支持增量更新</span><br><span class="line">│   ├── 4.9 // (2)</span><br><span class="line">│   ├── ⋮</span><br><span class="line">│   ├── jars-3 // 共享缓存，例如对于依赖项的工件</span><br><span class="line">│   └── modules-2 // (3)</span><br><span class="line">├── daemon // (4)Gradle 守护进程的注册表和日志</span><br><span class="line">│   ├── ⋮</span><br><span class="line">│   ├── 4.8</span><br><span class="line">│   └── 4.9</span><br><span class="line">├── init.d // 全局初始化脚本</span><br><span class="line">│   └── my-setup.gradle</span><br><span class="line">├── wrapper</span><br><span class="line">│   └── dists // 由Gradle包装器下载的发行版</span><br><span class="line">│       ├── ⋮</span><br><span class="line">│       ├── gradle-4.8-bin</span><br><span class="line">│       ├── gradle-4.9-all</span><br><span class="line">│       └── gradle-4.9-bin</span><br><span class="line">└── gradle.properties // 全局层次配置属性</span><br></pre></td></tr></table></figure>
 
 <h3 id="缓存过期"><a href="#缓存过期" class="headerlink" title="缓存过期"></a>缓存过期</h3><p>缓存下来文件并不会永久存在，会在一定时期内有效，如果在规定期限内某版本库不再被使用，那么相应版本库就会被清除，具体可参见<a href="https://docs.gradle.org/current/userguide/directory_layout.html#dir:gradle_user_home" target="_blank" rel="noopener">The Directories and Files Gradle Uses</a></p>
-<p>支持在规定时间删除缓存和版本。</p>
-<p>同样见上面链接。</p>
+<p>支持在规定时间删除缓存和版本，同样见上面链接。</p>
 <h2 id="解决依赖问题"><a href="#解决依赖问题" class="headerlink" title="解决依赖问题"></a>解决依赖问题</h2><p>如果选择自动解决传递性依赖，那么版本冲突是不可避免的，Gradle 解决版本冲突的默认策略是选择最新的依赖版本。<strong>依赖报告</strong> 是十分有用的工具，它可以帮助我们选择需要的依赖版本。</p>
 <h3 id="修改默认的策略"><a href="#修改默认的策略" class="headerlink" title="修改默认的策略"></a>修改默认的策略</h3><p>做如下修改，当遇到版本冲突时，会让构建失败,此时在打印台上你可以很清楚的指导那些传递依赖库发生了版本冲突。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">configurations.all&#123;</span><br><span class="line">  resolutionStrategy&#123;</span><br><span class="line">      // 修改gradle不处理版本冲突</span><br><span class="line">      failOnVersionConflict()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -333,9 +358,14 @@
 <p>gradle -q dependencyInsight –configuration cargo –dependency xml-apis:xml-apis</p>
 </blockquote>
 <p>dependencyInsight:显示原因</p>
-<p>使用 <code>gradle dependencies</code> 生成的依赖报告，是从顶层依赖开始的，而此处的依赖观察报告则与之相反，是从低层到顶层的。</p>
+<ul>
+<li>与 gradle dependencies 的不同</li>
+</ul>
+<p>使用 <code>gradle dependencies</code> 生成的依赖报告，是从顶层依赖开始的，而此处的依赖观察报告则与之相反，是从 <strong>低层到顶层的</strong>。</p>
+<p><img src="/source/images/2020_03_02_04.png" alt></p>
+<p>图片显示了需要和选择的 xml-apis:xml-apis 的版本以及原有</p>
 <p><a href="https://docs.gradle.org/current/userguide/command_line_interface.html#common_tasks" target="_blank" rel="noopener">Gradle 命令行选项含义</a></p>
-<h3 id="刷新缓存"><a href="#刷新缓存" class="headerlink" title="刷新缓存"></a>刷新缓存</h3><p>针对依赖的 SNAPSHOT 版本和使用动态版本的模式声明依赖，Gradle 一旦获取了依赖，它们会缓存 24 小时，在缓存时间到后，会再次检查仓库，如果依赖库发生版本变化，Gradle 会下载最新的依赖库。</p>
+<h3 id="刷新缓存"><a href="#刷新缓存" class="headerlink" title="刷新缓存"></a>刷新缓存</h3><p>针对依赖的 SNAPSHOT 版本和使用动态版本的模式声明依赖，Gradle 一旦获取了依赖，它们会 <strong>缓存 24 小时</strong>，在缓存时间到后，会再次检查仓库，如果依赖库发生版本变化，Gradle 会下载最新的依赖库。</p>
 <p>可以使用命令行选项 –refresh-dependencies 手动刷新缓存中的依赖，这个标志会强制检查配置仓库中所依赖的库版本是否发生了版本变化，如果变化则再次下载，取代缓存中的副本。</p>
 <p>同时 Gradle 也支持配置缓存的默认行为，</p>
 <ul>
@@ -599,11 +629,47 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
+                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Dex</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MultiDex</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Logcat 日志格式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -619,11 +685,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
+                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -631,11 +693,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle 基本原理</a>
+                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle in action</a>
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -651,23 +713,31 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">动画</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">AIDL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">EventBus APT</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Gradle 基本原理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Gradle in action</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Hprof</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">内存泄漏</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -680,6 +750,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Java 多线程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Hprof</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存泄漏</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -707,6 +789,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
@@ -715,7 +801,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -724,10 +810,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -751,11 +833,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
+                <a href="javascript:void(0)" class="js-tag color1">Coroutines</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -764,10 +850,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -807,6 +889,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">View</a>
               </li>
              
@@ -819,11 +905,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Git</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
+                <a href="javascript:void(0)" class="js-tag color1">CPU Profiler，Android 性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -839,18 +921,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">图解 HTTP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Java 异常</a>
               </li>
              
@@ -859,19 +929,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
+                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color3">图解 HTTP</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -883,7 +949,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -895,7 +961,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
+                <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">三方库</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -911,43 +989,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Dex</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">MultiDex</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">AIDL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">EventBus APT</a>
+                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -975,11 +1021,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
+                <a href="javascript:void(0)" class="js-tag color3">Coroutines协程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -987,7 +1029,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">动画</a>
+                <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
               </li>
              
               <li class="article-tag-list-item">

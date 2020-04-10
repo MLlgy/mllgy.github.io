@@ -17,11 +17,16 @@
 <meta property="og:description" content="AIDL 是理解 Android 系统不可避免的知识点。 0x0001 自定义 AIDL为了更加直观的展示相关内容，我们通过具体示例来展示相关的细节。 自定义一个 aidl 文件，里面定义方法(如：MyAidl.aidl)，AS 会帮我们生产对于的类文件(MyAidl.java)。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/images/2019_08_06_01.png">
+<meta property="og:image" content="/public/images/2019_08_06_01.png">
 <meta property="og:image" content="/images/2019_08_06_02.png">
+<meta property="og:image" content="/public/images/2019_08_06_02.png">
 <meta property="og:image" content="/images/2019_08_06_03.png">
+<meta property="og:image" content="/public/images/2019_08_06_03.png">
 <meta property="og:image" content="/images/2019_08_08_01.png">
+<meta property="og:image" content="/public/images/2019_08_08_01.png">
 <meta property="og:image" content="/images/2019_08_08_02.png">
-<meta property="og:updated_time" content="2019-12-10T02:53:36.999Z">
+<meta property="og:image" content="/public/images/2019_08_08_02.png">
+<meta property="og:updated_time" content="2020-03-16T11:14:05.344Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="AIDL 浅析">
 <meta name="twitter:description" content="AIDL 是理解 Android 系统不可避免的知识点。 0x0001 自定义 AIDL为了更加直观的展示相关内容，我们通过具体示例来展示相关的细节。 自定义一个 aidl 文件，里面定义方法(如：MyAidl.aidl)，AS 会帮我们生产对于的类文件(MyAidl.java)。">
@@ -198,6 +203,8 @@
 </ol>
 <img src="/../images/2019_08_06_01.png" width="50%" height="50%">
 
+
+<p><img src="/public/images/2019_08_06_01.png" alt></p>
 <ol>
 <li>自定义 Aidl 文件</li>
 </ol>
@@ -214,13 +221,14 @@
 <p>此时 aidl 的文件目录如下：</p>
 <img src="/../images/2019_08_06_02.png" width="50%" height="50%">
 
+<p><img src="/public/images/2019_08_06_02.png" alt></p>
 <ol start="3">
 <li>AS build 目录下生成对应的 Java 文件</li>
 </ol>
 <p>此处不会生成 Book.aidl 的 Java 文件，因为已经有 Book 类。</p>
 <img src="/../images/2019_08_06_03.png" width="50%" height="50%">
 
-
+<p><img src="/public/images/2019_08_06_03.png" alt></p>
 <p>将 build 文件中的 IBookManager.java 拷贝出来,新建 IBookManager2.java，源码如下:<a href="https://github.com/leeGYPlus/AidlDemo/blob/master/app/src/main/java/com/mk/aidldemo/server/IBookManager2.java" target="_blank" rel="noopener">IBookManager.java</a></p>
 <p>IBookManager 的内部层级结构：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public interface IBookManager extends android.os.IInterface &#123;</span><br><span class="line"></span><br><span class="line">    ......</span><br><span class="line">    ......</span><br><span class="line"></span><br><span class="line">    public static abstract class Stub extends android.os.Binder implements com.mk.aidldemo.IBookManager &#123;</span><br><span class="line">        </span><br><span class="line">        ......</span><br><span class="line">        ......</span><br><span class="line"></span><br><span class="line">        private static class Proxy implements com.mk.aidldemo.IBookManager &#123;</span><br><span class="line">            ......</span><br><span class="line">            ......</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -228,12 +236,13 @@
 <p>IBookManager 的成员方法如下：</p>
 <img src="/../images/2019_08_08_01.png" width="50%" height="50%">
 
-
+<p><img src="/public/images/2019_08_08_01.png" alt></p>
 <h3 id="0X0002-流程分析"><a href="#0X0002-流程分析" class="headerlink" title="0X0002 流程分析"></a>0X0002 流程分析</h3><p>为什么不生成 3 个文件(一个接口、两个类)，而是放在了一个文件中，这是因为当多个 AIDL 类时， Stub 和  Proxy 就会重名或者多个类会显得比较繁杂，而把它们放在各自的 AIDL 类中，就会比较容易区分。</p>
 <p>下面分析如何进行跨进程通信。</p>
 <p>起决定性作用的是 Stub 的 asInterface 方法和 onTranscact 方法，首先通过一个示意图大致了解其过程。</p>
 <img src="/../images/2019_08_08_02.png" width="80%" height="80%">
 
+<p><img src="/public/images/2019_08_08_02.png" alt></p>
 <ol>
 <li>对于 Client 端，作为 AIDL 的使用端，调用相关方法：</li>
 </ol>
@@ -258,7 +267,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public void addBook(com.mk.aidldemo.Book book) throws android.os.RemoteException &#123;</span><br><span class="line">    android.os.Parcel _data = android.os.Parcel.obtain();</span><br><span class="line">    android.os.Parcel _reply = android.os.Parcel.obtain();</span><br><span class="line">    try &#123;</span><br><span class="line">        _data.writeInterfaceToken(DESCRIPTOR);</span><br><span class="line">        if ((book != null)) &#123;</span><br><span class="line">            _data.writeInt(1);</span><br><span class="line">            book.writeToParcel(_data, 0);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            _data.writeInt(0);</span><br><span class="line">        &#125;</span><br><span class="line">        Log.e(&quot;process proxy add&quot;, ProcessUtils.getCurrentProcessName());</span><br><span class="line">        // mRemote 对象为构建 Proxy 对象时传入，最终会调用 onTransact 方法</span><br><span class="line">        mRemote.transact(Stub.TRANSACTION_addBook, _data, _reply, 0);</span><br><span class="line">        _reply.readException();</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        _reply.recycle();</span><br><span class="line">        _data.recycle();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ol start="3">
-<li>Server 端通过 onTransact 方法来接收 Client 传过来的数据(包括函数名称、函数的参数、函数的标识)，找到指定的函数，就相应的数据传入，得到结果并将结果写回。</li>
+<li>Server 端通过 <code>onTransact</code> 方法来接收 Client 传过来的数据(包括函数名称、函数的参数、函数的标识)，找到指定的函数，就相应的数据传入，得到结果并将结果写回。</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">* 运行在 Binder 线程池</span><br><span class="line">*/</span><br><span class="line">@Override</span><br><span class="line">public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags) throws android.os.RemoteExcepti</span><br><span class="line">    String descriptor = DESCRIPTOR;</span><br><span class="line">    switch (code) &#123;</span><br><span class="line">        case INTERFACE_TRANSACTION: &#123;</span><br><span class="line">            reply.writeString(descriptor);</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        case TRANSACTION_getBookList: &#123;</span><br><span class="line">            data.enforceInterface(descriptor);</span><br><span class="line">            // 此处的 getBookList 为 Server 端中 Binder 对象中的 getBookList</span><br><span class="line">            java.util.List&lt;com.mk.aidldemo.Book&gt; _result = this.getBookList();</span><br><span class="line">            reply.writeNoException();</span><br><span class="line">            Log.e(&quot;process onTransact list&quot;, ProcessUtils.getCurrentProcessName());</span><br><span class="line">            // 将结果写入到 reply 中，reply 会回传到另外的进程，读取 reply 中的数据，从而完成跨进程通信</span><br><span class="line">            reply.writeTypedList(_result);</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        case TRANSACTION_addBook: &#123;</span><br><span class="line">            data.enforceInterface(descriptor);</span><br><span class="line">            com.mk.aidldemo.Book _arg0;</span><br><span class="line">            if ((0 != data.readInt())) &#123;</span><br><span class="line">                _arg0 = com.mk.aidldemo.Book.CREATOR.createFromParcel(data);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                _arg0 = null;</span><br><span class="line">            &#125;</span><br><span class="line">            // Service 中 onBinder 方法中返回的 Binder 对象值。</span><br><span class="line">            this.addBook(_arg0);</span><br><span class="line">            Log.e(&quot;process onTransact add&quot;, ProcessUtils.getCurrentProcessName());</span><br><span class="line">            reply.writeNoException();</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        default: &#123;</span><br><span class="line">            return super.onTransact(code, data, reply, flags);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -269,16 +278,17 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">E/process binderService: com.mk.aidldemo</span><br><span class="line">E/process add: com.mk.aidldemo</span><br><span class="line">E/process proxy add: com.mk.aidldemo</span><br><span class="line">E/process add: com.mk.aidldemo</span><br><span class="line">E/process proxy add: com.mk.aidldemo</span><br><span class="line"></span><br><span class="line">E/process service addBook: com.mk.aidldemo:remote</span><br><span class="line">E/process onTransact add: com.mk.aidldemo:remote</span><br></pre></td></tr></table></figure>
 
 <p>可以看到在进程 <code>com.mk.aidldemo:remote</code> 中执行的操作有：onTransact 和 Server 中实例化 Binder 中的方法，即为 Binder Server 端，其他均处于 Binder Client 端。</p>
-<p>这其中的关键方法有 mRemote.transact  和 onTransact。</p>
+<h3 id="关键方法"><a href="#关键方法" class="headerlink" title="关键方法"></a>关键方法</h3><p>这其中的关键方法有 <code>mRemote.transact</code>  和 <code>onTransact</code>。</p>
 <p><strong>onTransact</strong></p>
-<p>这个方法运行在 <strong>服务端中的 Binder线程池</strong> 中，当客户端发起跨进程请求时，远程请求会通过 <code>系统底层封装(主要是经过 binder 驱动)</code> 后交由此方法来处理。该方法的原型为<code>publicBooleanonTransact(int code,android.os.Parcel data,android.os.Parcel reply,int flags)</code>。</p>
+<p>这个方法运行在 <strong>服务端中的 Binder 线程池</strong> 中，当客户端发起跨进程请求时，远程请求会通过 <code>系统底层封装(主要是经过 binder 驱动)</code> 后交由此方法来处理。</p>
+<p>该方法的原型为<code>publicBooleanonTransact(int code,android.os.Parcel data,android.os.Parcel reply,int flags)</code>。</p>
 <p>具体流程：</p>
 <ol>
 <li>服务端通过 code 可以确定客户端所请求的目标方法是什么。</li>
 <li>从 data 中取出目标方法所需的参数（如果目标方法有参数的话），然后执行目标方法。</li>
 <li>当目标方法执行完毕后，就向 reply 中写入返回值（如果目标方法有返回值的话）。</li>
 </ol>
-<p>onTransact 方法的执行过程就是这样的。需要注意的是，如果此方法返回 false，那么客户端的请求会失败，因此我们可以利用这个特性来做权限验证，毕竟我们也不希望随便一个进程都能远程调用我们的服务。</p>
+<p><code>onTransact</code> 方法的执行过程就是这样的,需要注意的是，如果此方法返回 false，那么客户端的请求会失败，因此我们可以利用这个特性来做权限验证，毕竟我们也不希望随便一个进程都能远程调用我们的服务。</p>
 <p><strong>transact</strong></p>
 <p><code>Proxy#getBookList、Proxy#addBook</code> 这个方法运行在 <strong>客户端</strong>，当客户端远程调用此方法时，它的内部实现是这样的：</p>
 <ol>
@@ -544,11 +554,47 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
+                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Dex</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MultiDex</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Logcat 日志格式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -564,11 +610,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
+                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -576,11 +618,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle 基本原理</a>
+                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle in action</a>
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -596,23 +638,31 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">动画</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">AIDL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">EventBus APT</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Gradle 基本原理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Gradle in action</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Hprof</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">内存泄漏</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -625,6 +675,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Java 多线程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Hprof</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存泄漏</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -652,6 +714,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
@@ -660,7 +726,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -669,10 +735,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -696,11 +758,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
+                <a href="javascript:void(0)" class="js-tag color1">Coroutines</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -709,10 +775,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -752,6 +814,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">View</a>
               </li>
              
@@ -764,11 +830,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Git</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
+                <a href="javascript:void(0)" class="js-tag color1">CPU Profiler，Android 性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -784,18 +846,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">图解 HTTP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Java 异常</a>
               </li>
              
@@ -804,19 +854,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
+                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color3">图解 HTTP</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -828,7 +874,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -840,7 +886,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
+                <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">三方库</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -856,43 +914,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Dex</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">MultiDex</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">AIDL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">EventBus APT</a>
+                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -920,11 +946,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
+                <a href="javascript:void(0)" class="js-tag color3">Coroutines协程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -932,7 +954,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">动画</a>
+                <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
               </li>
              
               <li class="article-tag-list-item">

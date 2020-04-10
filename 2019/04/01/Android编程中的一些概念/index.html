@@ -8,19 +8,19 @@
   <link rel="dns-prefetch" href>
   <title>Android编程中的一些概念(Wiki) | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="编译器编译器(compiler) ,是一种 应用程序，它会将某种编程语言写成的源代码(原始语言)，转换为另外一种编程语言(目标语言)。 它的主要目的是将人编写、维护的高级计算机语言所写出的 源代码程序，翻译为计算机能解读、运行的低价 机器语言 的程序，也就是 可执行文件。 常见的编译器：  GCC(GUN Compiler Collection)  GNU编译器套装（英语：GNU Compiler">
+  <meta name="description" content="1. 编译器编译器(compiler) ,是一种 应用程序，它会将某种编程语言写成的源代码(原始语言)，转换为另外一种编程语言(目标语言),比如将 C 文件编程称为二进制文件。 它的主要目的是将人编写、维护的高级计算机语言所写出的 源代码程序，翻译为计算机能解读、运行的低价 机器语言 的程序，也就是 可执行文件。">
 <meta name="keywords" content="编译技术">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android编程中的一些概念(Wiki)">
 <meta property="og:url" content="/2019/04/01/Android编程中的一些概念/index.html">
 <meta property="og:site_name" content="GY">
-<meta property="og:description" content="编译器编译器(compiler) ,是一种 应用程序，它会将某种编程语言写成的源代码(原始语言)，转换为另外一种编程语言(目标语言)。 它的主要目的是将人编写、维护的高级计算机语言所写出的 源代码程序，翻译为计算机能解读、运行的低价 机器语言 的程序，也就是 可执行文件。 常见的编译器：  GCC(GUN Compiler Collection)  GNU编译器套装（英语：GNU Compiler">
+<meta property="og:description" content="1. 编译器编译器(compiler) ,是一种 应用程序，它会将某种编程语言写成的源代码(原始语言)，转换为另外一种编程语言(目标语言),比如将 C 文件编程称为二进制文件。 它的主要目的是将人编写、维护的高级计算机语言所写出的 源代码程序，翻译为计算机能解读、运行的低价 机器语言 的程序，也就是 可执行文件。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/images/2019_04_02_2.jpg">
-<meta property="og:updated_time" content="2019-04-09T03:33:34.882Z">
+<meta property="og:updated_time" content="2020-03-18T10:11:00.583Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android编程中的一些概念(Wiki)">
-<meta name="twitter:description" content="编译器编译器(compiler) ,是一种 应用程序，它会将某种编程语言写成的源代码(原始语言)，转换为另外一种编程语言(目标语言)。 它的主要目的是将人编写、维护的高级计算机语言所写出的 源代码程序，翻译为计算机能解读、运行的低价 机器语言 的程序，也就是 可执行文件。 常见的编译器：  GCC(GUN Compiler Collection)  GNU编译器套装（英语：GNU Compiler">
+<meta name="twitter:description" content="1. 编译器编译器(compiler) ,是一种 应用程序，它会将某种编程语言写成的源代码(原始语言)，转换为另外一种编程语言(目标语言),比如将 C 文件编程称为二进制文件。 它的主要目的是将人编写、维护的高级计算机语言所写出的 源代码程序，翻译为计算机能解读、运行的低价 机器语言 的程序，也就是 可执行文件。">
 <meta name="twitter:image" content="/images/2019_04_02_2.jpg">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
@@ -184,8 +184,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="编译器"><a href="#编译器" class="headerlink" title="编译器"></a>编译器</h3><p>编译器(compiler) ,是一种 <strong>应用程序</strong>，它会将某种编程语言写成的源代码(原始语言)，转换为另外一种编程语言(目标语言)。</p>
+        <h2 id="1-编译器"><a href="#1-编译器" class="headerlink" title="1. 编译器"></a>1. 编译器</h2><p>编译器(compiler) ,是一种 <strong>应用程序</strong>，它会将某种编程语言写成的源代码(原始语言)，转换为另外一种编程语言(目标语言),比如将 C 文件编程称为二进制文件。</p>
 <p>它的主要目的是将人编写、维护的高级计算机语言所写出的 <strong>源代码程序</strong>，翻译为计算机能解读、运行的低价 <strong>机器语言</strong> 的程序，也就是 <strong>可执行文件</strong>。</p>
+<a id="more"></a>
+
 <p>常见的编译器：</p>
 <ol>
 <li>GCC(GUN Compiler Collection)</li>
@@ -195,18 +197,23 @@
 <li>LLVM</li>
 </ol>
 <p>LLVM是一个自由软件项目，它是一种编译器基础设施，以C++写成，包含一系列模块化的编译器组件和工具链，用来开发编译器前端和后端。它是为了任意一种编程语言而写成的程序，利用虚拟技术创造出编译时期、链接时期、运行时期以及“闲置时期”的最优化。</p>
-<a id="more"></a>
-
-<h3 id="编译策略"><a href="#编译策略" class="headerlink" title="编译策略"></a>编译策略</h3><ol>
-<li>即时编译(JIT,Just In Time)</li>
+<h2 id="2-编译策略"><a href="#2-编译策略" class="headerlink" title="2. 编译策略"></a>2. 编译策略</h2><h3 id="2-1-即时编译-JIT-Just-In-Time"><a href="#2-1-即时编译-JIT-Just-In-Time" class="headerlink" title="2.1 即时编译(JIT,Just In Time)"></a>2.1 即时编译(JIT,Just In Time)</h3><ul>
+<li>JIT 产生的背景</li>
+</ul>
+<p>在最早的时候，Java 是由解释器将每个 Java 指令转译成对等的微处理器指令，并根据转译后的指令依次执行，一个 Java 指令可能对应多个对等的微处理器指令，运行的时候还要解释，执行速度较慢。</p>
+<p>这是 JIT 技术产生了，当 Java 执行 runtime 环境下，没遇到一个 class， JIT 就对这个 Class 进行编译，生成二进制码，花费少量时间换去后续解释的时间。</p>
+<p>但是这也没有很大程序改善程序，因为有些 Java 文件很少得到执行，吧，编译这些 Java 文件的时间远远大于执行该文件对应指令的时间。基于此 JIT 产生了动态编译技术，动态的yu’fa</p>
+<p>JIT 的缺陷：</p>
+<p>每次启动应用都需要重新编译，运行时耗电量大。</p>
+<p>动态编译的一种形式，提高程序运行效率的方法。程序运行有两种方式：</p>
+<ol>
+<li>静态编译。执行程序前程序全部被翻译为机器码。</li>
+<li>动态解释。解释执行则是边执行边翻译。</li>
 </ol>
-<p>动态编译的一种形式，提高程序运行效率的方法。程序运行有两种方式：<br>    1. 静态编译。执行程序前程序全部被翻译为机器码。<br>    2. 动态解释。解释执行则是边执行边翻译。<br>即时编译器则混合了这二者，一句一句编译源代码，但是会将翻译过的代码缓存起来以降低性能损耗。</p>
+<p>即时编译器则混合了这二者，一句一句编译源代码，但是会将翻译过的代码缓存起来以降低性能损耗。</p>
 <p>即时编译器有两种类型：</p>
 <pre><code>1. 字节码翻译。
-2. 动态编译翻译。</code></pre><ol start="2">
-<li>提前编译(AOT,Ahead Of Time)</li>
-</ol>
-<h3 id="运行时系统"><a href="#运行时系统" class="headerlink" title="运行时系统"></a>运行时系统</h3><p>运行环境有称运行时系统，是指把半编译的运行码在目标机器上运行的环境，如 Java<br> 的 JRE。</p>
+2. 动态编译翻译。</code></pre><h3 id="2-2-提前编译-AOT-Ahead-Of-Time"><a href="#2-2-提前编译-AOT-Ahead-Of-Time" class="headerlink" title="2.2 提前编译(AOT,Ahead Of Time)"></a>2.2 提前编译(AOT,Ahead Of Time)</h3><h3 id="运行时系统"><a href="#运行时系统" class="headerlink" title="运行时系统"></a>运行时系统</h3><p>运行环境有称运行时系统，是指把半编译的运行码在目标机器上运行的环境，如 Java<br> 的 JRE。</p>
 <h3 id="可执行文件"><a href="#可执行文件" class="headerlink" title="可执行文件"></a>可执行文件</h3><p> 可执行文件，是指 <strong>内容可被计算机解释为程序</strong> 的文件，通常可执行文件内含有二进制编码的微处理器指令，所以可执行文件也可被称为 二进制文件。<br> <strong>扩展名：</strong></p>
 <ul>
 <li><p>.exe</p>
@@ -485,11 +492,47 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
+                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Dex</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MultiDex</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Logcat 日志格式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -505,11 +548,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
+                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -517,11 +556,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle 基本原理</a>
+                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle in action</a>
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -537,23 +576,31 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">动画</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">AIDL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">EventBus APT</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Gradle 基本原理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Gradle in action</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Hprof</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">内存泄漏</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -566,6 +613,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Java 多线程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Hprof</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存泄漏</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -593,6 +652,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
@@ -601,7 +664,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -610,10 +673,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -637,11 +696,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
+                <a href="javascript:void(0)" class="js-tag color1">Coroutines</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -650,10 +713,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -693,6 +752,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">View</a>
               </li>
              
@@ -705,11 +768,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Git</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
+                <a href="javascript:void(0)" class="js-tag color1">CPU Profiler，Android 性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -725,18 +784,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">图解 HTTP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Java 异常</a>
               </li>
              
@@ -745,19 +792,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
+                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color3">图解 HTTP</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -769,7 +812,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -781,7 +824,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
+                <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">三方库</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -797,43 +852,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Dex</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">MultiDex</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">AIDL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">EventBus APT</a>
+                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -861,11 +884,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
+                <a href="javascript:void(0)" class="js-tag color3">Coroutines协程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -873,7 +892,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">动画</a>
+                <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
               </li>
              
               <li class="article-tag-list-item">

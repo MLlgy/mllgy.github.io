@@ -156,6 +156,97 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-使用 Hexo 搭建 GitPage 静态博客" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/16/使用 Hexo 搭建 GitPage 静态博客/">使用 Hexo 搭建 GitPage 静态博客</a>
+    </h1>
+  
+
+        
+        <!-- 
+ -->
+
+<a href="/2020/03/16/使用 Hexo 搭建 GitPage 静态博客/" class="archive-article-date">
+  	<time datetime="2020-03-16T11:14:05.231Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-16</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="必要工具的安装-Mac"><a href="#必要工具的安装-Mac" class="headerlink" title="必要工具的安装(Mac)"></a>必要工具的安装(Mac)</h2><h3 id="nmp"><a href="#nmp" class="headerlink" title="nmp"></a>nmp</h3><p><a href="https://nodejs.org/en/" target="_blank" rel="noopener">node 官方网站</a>下载 pkg 包，进行安装 node.js 环境，安装完毕 npm 也被安装完成。</p>
+<p>或使用相关命令行进行安装，具体步骤自行搜索。</p>
+<h3 id="hexo"><a href="#hexo" class="headerlink" title="hexo"></a>hexo</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+
+<p>具体参见 <a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">Hexo 官方文档</a></p>
+<h2 id="Hexo-建站"><a href="#Hexo-建站" class="headerlink" title="Hexo 建站"></a>Hexo 建站</h2><p>执行以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ hexo init &lt;folder&gt;</span><br><span class="line">$ cd &lt;folder&gt;</span><br><span class="line">$ npm install</span><br></pre></td></tr></table></figure>
+
+<p>编辑 <code>_config.yml</code> 文件，进行相关配置。</p>
+        
+          <a class="article-more-a" href="/2020/03/16/使用 Hexo 搭建 GitPage 静态博客/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Hexo</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">GitPage</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/03/16/使用 Hexo 搭建 GitPage 静态博客/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Android-Logcat-基本信息细述" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -186,45 +277,10 @@
 <blockquote>
 <p>12-10 13:02:50.071 1901-4229/com.google.android.gms V/AuthZen: Handling delegate intent.</p>
 </blockquote>
-<p>PID 代表进程标识符，TID 则为线程标识符；如果仅有一个线程，两者可以相同。</p>
-<h2 id="读取垃圾回收消息"><a href="#读取垃圾回收消息" class="headerlink" title="读取垃圾回收消息"></a>读取垃圾回收消息</h2><h3 id="Dalvik-日志消息"><a href="#Dalvik-日志消息" class="headerlink" title="Dalvik 日志消息-"></a>Dalvik 日志消息-</h3><p>在 Dalvik（而不是 ART）中，每个 GC 都会将以下信息输出到 logcat：</p>
-<blockquote>
-<p>D/dalvikvm(PID): GC_Reason(GC 原因) Amount_freed(释放内存量), Heap_stats(堆统计数据), External_memory_stats(外部内存统计数据), Pause_time(暂停时间)</p>
-</blockquote>
-<p>实例：</p>
-<blockquote>
-<p>D/dalvikvm( 9050): GC_CONCURRENT freed 2049K, 65% free 3571K/9991K, external 4703K/5261K, paused 2ms+2ms</p>
-</blockquote>
-<p>常见的 GC 原因：</p>
-<ul>
-<li>GC_CONCURRENT</li>
-</ul>
-<p>在堆 <strong>开始占用内存时</strong> 释放内存的并发 GC。</p>
-<ul>
-<li>GC_FOR_MALLOC</li>
-</ul>
-<p>您的 <strong>堆已满</strong> 而系统不得不停止您的应用并回收内存时，应用 <strong>尝试分配内存</strong> 而引起的 GC。</p>
-<ul>
-<li>GC_HPROF_DUMP_HEAP</li>
-</ul>
-<p><strong>请求创建 HPROF 文件</strong>，来分析堆时发生的 GC。</p>
-<ul>
-<li>GC_EXPLICIT</li>
-</ul>
-<p><strong>显式 GC</strong>，例如当您调用 gc() 时（您应避免调用它，而应信任 GC 会根据需要运行）。</p>
-<ul>
-<li>GC_EXTERNAL_ALLOC</li>
-</ul>
-<p>这仅适用于 API 级别 10 及更低级别（更新的版本会在 Dalvik 堆中分配任何内存）。外部分配内存的 GC（例如存储在原生内存或 NIO 字节缓冲区中的像素数据）。</p>
-<h4 id="暂停时间"><a href="#暂停时间" class="headerlink" title="暂停时间"></a>暂停时间</h4><p>堆越大，暂停时间越长。并发暂停时间显示两个暂停：一个出现在 <strong>回收开始时</strong>，另一个出现在 <strong>回收快要完成时</strong>。</p>
-<p>在此类日志消息积聚时，请注意 <strong>堆统计数据</strong>（上面示例中的 3571K/9991K 值）的增大情况。如果此值继续增大，可能会出现内存泄露。</p>
-<h3 id="ART-日志消息"><a href="#ART-日志消息" class="headerlink" title="ART 日志消息"></a>ART 日志消息</h3><p>ART 不会为未明确请求的 GC 记录消息。只有在系统认为 GC 速度较慢时才会输出 GC 消息。更确切地说，仅在 <strong>GC 暂停时间超过 5 毫秒</strong> 或 <strong>GC 持续时间超过 100 毫秒时</strong>，才会输出 GC 记录日志。</p>
-<p>输出格式：</p>
-<blockquote>
-<p> I/art: GC_Reason GC_Name Objects_freed(Size_freed) AllocSpace Objects,<br>        Large_objects_freed(Large_object_size_freed) Heap_stats LOS objects, Pause_time(s)</p>
-</blockquote>
-<p>GC 原因查看官方链接<br><a href="https://developer.android.google.cn/studio/debug/am-logcat?hl=zh_cn#format" target="_blank" rel="noopener">使用 Logcat 写入和查看日志</a></p>
-
+<p>通过以上记录的有效信息如下：</p>
+        
+          <a class="article-more-a" href="/2020/02/24/Android-Logcat-基本信息细述/#more">more >></a>
+        
       
 
       
@@ -232,6 +288,21 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Logcat 日志格式</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -291,97 +362,9 @@
       
         <h3 id="为什么使用线程池"><a href="#为什么使用线程池" class="headerlink" title="为什么使用线程池"></a>为什么使用线程池</h3><p>有了 Thread，可以凭此开启子线程，执行耗时操作，那么为什么还有 Java 还有线程池这种类存在呢？</p>
 <p>这是因为当业务需要我们频繁创建多个线程并进行耗时操作时，每次通过 <code>new Thread</code> 的方式来创建线程的方式是十分不好的。虽然线程是十分轻量的，但是新建和销毁消耗线程成本是系统操作，是十分消耗资源的，同时通过 <code>new Thread</code> 创建的大量线程是难以统一管理的，线程间相互竞争，可能占用过多系统资源而导致死锁。</p>
-<p>而线程池可以做到以下几点：</p>
-<ul>
-<li>重用线程池中存在的线程，减少线程创建、销毁的开销。</li>
-<li>有效控制最大并发，提高系统资源利用率，避免资源争夺，避免阻塞。</li>
-<li>可以提供定时执行、定期执行、单线程、并发数的控制。</li>
-</ul>
-<h3 id="Executor-UML-图"><a href="#Executor-UML-图" class="headerlink" title="Executor UML 图"></a>Executor UML 图</h3><p><img src="./Java-%E5%A4%9A%E7%BA%BF%E7%A8%8B-%E4%BA%94%EF%BC%9A%E7%BA%BF%E7%A8%8B%E6%B1%A0/2019_08_22_01.png" alt></p>
-<h3 id="Executor"><a href="#Executor" class="headerlink" title="Executor"></a>Executor</h3><blockquote>
-<p>An object that executes submitted {@link Runnable} tasks. This<br>interface provides a way of decoupling task submission from the<br>mechanics of how each task will be run, including details of thread<br>use, scheduling, etc.  An {@code Executor} is normally used<br>instead of explicitly creating threads. For example, rather than<br>invoking {@code new Thread(new RunnableTask()).start()} for each<br>of a set of tasks, you might use:</p>
-</blockquote>
-<p>Executor 是可以执行提交任务单一对象，它解耦了任务的提交和任务执行细的节。Executor 可以代替创建新建线程，可以用：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Executor executor = anExecutor();</span><br><span class="line">executor.execute(new RunnableTask1());</span><br><span class="line">executor.execute(new RunnableTask2());</span><br></pre></td></tr></table></figure>
-
-<p>来代替 <code>new Thread(runnable).start();</code>。</p>
-<p>但是 Executor 并不能保证任务能够异步执行，如下代码展示了任务在调用者的线程中执行的：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class DirectExecutor implements Executor &#123;</span><br><span class="line">  public void execute(Runnable r) &#123;</span><br><span class="line">    r.run();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在 <a href="https://github.com/leeGYPlus/JavaCode/blob/master/src/excutors/Main.java" target="_blank" rel="noopener">Main.Java</a> 中日志说明此处的 Executor 为同步执行。</p>
-<p>但是更多的是：任务在新的线程而不是调用者的线程中执行：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public class ThreadPerTaskExecutor implements Executor &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void execute(Runnable runnable) &#123;</span><br><span class="line">        new Thread(runnable).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Executor 的实现类限制了任务在何时以及怎样执行，同时也可以将一个线程池中的任务交给另外一个线程执行，比如 AsyncTask 中将串行线程池中任务交给并行线程池去执行。</p>
-<h4 id="ExecutorService"><a href="#ExecutorService" class="headerlink" title="ExecutorService"></a>ExecutorService</h4><p>ExecutorService 继承了 Executor，是使用更加广泛的接口，提供了 <strong>管理生命周期的方法</strong> 以及 <strong>跟踪一个或多个异步任务并返回 Future</strong> 的方法。 </p>
-<p>ExecutorService 被关闭后就不会再执行新的任务，ExecutorService 提供了两个关闭 ExecutorService 的方法：</p>
-<ul>
-<li>void shutdown()：拒绝新的任务，但是之前的任务会被执行。</li>
-<li>List<runnable> shutdownNow()：停止执行任何任务，返回等待执行的任务。</runnable></li>
-</ul>
-<p><code>submit()</code> 方法，通过创建并返回可用于取消执行和/或等待完成的 Future，来扩展基本方法 Executor#execute（Runnable）。</p>
-<h4 id="AbstractExecutorService"><a href="#AbstractExecutorService" class="headerlink" title="AbstractExecutorService"></a>AbstractExecutorService</h4><p>AbstractExecutorService 为 ExecutorService  的默认实现类，<br>Java 1.5 引入。</p>
-<h3 id="ThreadPoolExcutor-参数含义"><a href="#ThreadPoolExcutor-参数含义" class="headerlink" title="ThreadPoolExcutor 参数含义"></a>ThreadPoolExcutor 参数含义</h3><p>ThreadPoolExcutor 是 <strong>线程池的真正实现</strong> ，通过设置相应的参数来构建相应的线程池。ThreadPoolExcutor 构造函数如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public ThreadPoolExecutor(int corePoolSize,</span><br><span class="line">                              int maximumPoolSize,</span><br><span class="line">                              long keepAliveTime,</span><br><span class="line">                              TimeUnit unit,</span><br><span class="line">                              BlockingQueue&lt;Runnable&gt; workQueue,</span><br><span class="line">                              ThreadFactory threadFactory,RejectedExecutionHandler handler) &#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>corePoolSize:</p>
-<pre><code>线程池的核心线程数，默认情形下核心先线程会一直存活，即使核心线程处于闲置状态，也会一直存活。
-
-如果设置 ThreadPoolExecutor 的属性  allowCoreThreadTimeOut 为 true，那么闲置的核心线程会在等待新任务到来前执行超时策略，而对于超时的时间由 keepAliveTime 决定。</code></pre><p>maximumPoolSize：</p>
-<pre><code>最大线程数，可允许创建的线程数，线程池中如果有这么多存活的线程，那么新到的任务会发生阻塞。</code></pre><p>keepAliveTime：</p>
-<pre><code>闲置的非核心线程在超过这个时长后就会被回收，如果 allowCoreThreadTimeOut 被设置为 true，那么核心线程在超时后也会被回收。</code></pre><p>unit：</p>
-<pre><code>keepAliveTime 的时间单位。</code></pre><p>workQueue：</p>
-<pre><code>线程池的任务队列，工作队列，通过线程池的 execute 方法提交的 Runnable 对象被添加到这个队列中。</code></pre><p>threadFactory：</p>
-<pre><code>线程工厂，为线程池实现创建新的线程的功能，ThreadFactory 为一个接口，只有 newThread(Runnable runnable) 方法。</code></pre><p>handler:</p>
-<pre><code>定义处理被拒绝任务的策略，默认使用ThreadPoolExecutor.AbortPolicy,任务被拒绝时将抛出RejectExecutorException。</code></pre><p><strong>workQueue 的几个常见实现：</strong></p>
-<ol>
-<li><p>ArrayBlockingQueue</p>
-<p> 基于数组结构的有界队列，按照 FIFO 的规则对任务进行排序。若队列满了，执行拒绝策略。</p>
-</li>
-<li><p>LinkedBlockingQueue</p>
-<p> 基于链表结构的无界队列，按照 FIFO 的规则对任务进行排序。因为是无界队列，所以不存在队列满的情况，所以使用此队列的线程池忽略拒绝策略参数，同时还将忽略最大线程数 maximumPoolsize 等参数。</p>
-</li>
-<li><p>Synch</p>
-</li>
-</ol>
-<h3 id="ThreadPoolExecutor-执行步骤"><a href="#ThreadPoolExecutor-执行步骤" class="headerlink" title="ThreadPoolExecutor 执行步骤"></a>ThreadPoolExecutor 执行步骤</h3><p>ThreadPoolExecutor 执行任务时大致遵循如下规则：</p>
-<pre><code>1. 线程池中的线程数量没有超过核心线程数，那么直接启动一个核心线程来执行任务。
-
-2. 如果线程池中的线程数量大于或等于核心线程数，那么将任务插入到任务队列中，排队等待被执行。
-
-3. 如果在步骤 2 中任务无法正常加入任务队列，绝大部分原因是因为任务队列已满，如果此时线程数量没有达到设置的线程池的最大数量，就会启动非核心线程来执行任务。
-
-4. 如果步骤 3 中线程数量已经达到线程池规定的最大值，那么就拒绝执行此任务，ThreadPoolExecutor 会调用 RejectedExecutionHandler 的 rejectedExecution 方法来通知调用者。</code></pre><h3 id="Executors"><a href="#Executors" class="headerlink" title="Executors"></a>Executors</h3><p>Executors 提供了方便获得 ExecutorService 的工厂方法，如 FixedThreadPool、CachedThreadPool、ScheduledThreadPool、SingleThreadPool 等。</p>
-<h3 id="常见的四种线程池的创建"><a href="#常见的四种线程池的创建" class="headerlink" title="常见的四种线程池的创建"></a>常见的四种线程池的创建</h3><p>根据不同场景，为 ThreadPoolExecutor 配置不同参数来创建不同特性的线程池，常见的四种线程池有：FixedThreadPool、CachedThreadPool、ScheduledThreadPool、SingleThreadPool。</p>
-<p><strong>FixedThreadPool</strong>(固定数量的线程池)：</p>
-<p>构建方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public static ExecutorService newFixedThreadPool(int nThreads) &#123;</span><br><span class="line">        return new ThreadPoolExecutor(nThreads, nThreads,</span><br><span class="line">                                      0L, TimeUnit.MILLISECONDS,</span><br><span class="line">                                      new LinkedBlockingQueue&lt;Runnable&gt;());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<pre><code>通过 Executors 的 newFixedThreadPool方法来创建，通过类名我们也可以得知 FixedThreadPool 为线程数量固定的线程池，除非关闭线程池，否则即使线程池中的线程处于闲置状态时，这些线程也不会被回收。
-
-由构建方法可知，FixedThreadPool 只有核心线程，所以这些线程不会被回收，所以执行效率更高。当有新任务时，如果线程池中的线程尚未达到最大线程数，直接创建新的线程；如果所有的线程均处于活动状态，那么新任务将处于等待状态，直到线程池中有空闲线程为止，需要明确的是任务队列没有大小限制。</code></pre><p><strong>CachedThreadPool</strong>：</p>
-<p>构建方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public static ExecutorService newCachedThreadPool() &#123;</span><br><span class="line">        return new ThreadPoolExecutor(0, Integer.MAX_VALUE,</span><br><span class="line">                                      60L, TimeUnit.SECONDS,</span><br><span class="line">                                      new SynchronousQueue&lt;Runnable&gt;());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<pre><code>由构建函数知 CachedThreadPool 没有核心线程，线程的数量的最大值为 Integer.MAX_VALUE。当新的任务来临时，如果线程池中存在处于空闲状态下的线程，那么会复用该线程来处理任务，否则会创建新的线程。线程池中的空闲线程如果超过 60s 会被回收。SynchronousQueue 为不可添加任务的队列，这就意味着任何新的任务都会被立即执行。</code></pre><p>为了保证最大的吞吐量，如果线程池中没有空闲线程，该线程池会创建新的线程。</p>
-<p><strong>ScheduledThreadPool</strong>：</p>
-<p>构建方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public static ScheduledExecutorService newScheduledThreadPool(int corePoolSize) &#123;</span><br><span class="line">        return new ScheduledThreadPoolExecutor(corePoolSize);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">public ScheduledThreadPoolExecutor(int corePoolSize) &#123;</span><br><span class="line">        super(corePoolSize, Integer.MAX_VALUE,</span><br><span class="line">              DEFAULT_KEEPALIVE_MILLIS, MILLISECONDS,</span><br><span class="line">              new DelayedWorkQueue());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<pre><code>限定核心线程数，不限制非核心线程数，空闲线程在  DEFAULT_KEEPALIVE_MILLIS 后被回收。ScheduledThreadPool这类线程池主要用于执行定时任务和具有固定周期的重复任务。</code></pre><p>使用：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(4);</span><br><span class="line">//2000ms后执行command</span><br><span class="line">scheduledThreadPool.schedule(command,2000,TimeUnit.MILLISECONDS);</span><br><span class="line">//延迟10ms后，每隔1000ms执行一次command</span><br><span class="line">scheduledThreadPool.scheduleAtFixedRate(command,10,1000,TimeUnit.MILLISECONDS);</span><br></pre></td></tr></table></figure>
-
-<p><strong>SingleThreadPool</strong>:</p>
-<p>构建方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public static ExecutorService newSingleThreadExecutor() &#123;</span><br><span class="line">        return new FinalizableDelegatedExecutorService</span><br><span class="line">            (new ThreadPoolExecutor(1, 1,</span><br><span class="line">                                    0L, TimeUnit.MILLISECONDS,</span><br><span class="line">                                    new LinkedBlockingQueue&lt;Runnable&gt;()));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<pre><code>由构建方法可知，SingleThreadPool 中只有一个核心线程，这意味着所有的任务都会被顺序执行。
-
-SingleThreadExecutor的意义在于统一所有的外界任务到一个线程中，这使得在这些任务之间不需要处理线程同步的问题。</code></pre><hr>
-<p><strong>知识链接</strong></p>
-<p><a href="https://www.cnblogs.com/MOBIN/p/5436482.html" target="_blank" rel="noopener">java并发编程–Executor框架
-</a></p>
-
+        
+          <a class="article-more-a" href="/2020/02/12/Java-多线程-五：线程池/#more">more >></a>
+        
       
 
       
@@ -405,71 +388,6 @@ SingleThreadExecutor的意义在于统一所有的外界任务到一个线程中
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2020/02/12/Java-多线程-五：线程池/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="drafts-Linux-多用户管理" class="article article-type-drafts  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/01/27/Linux-多用户管理/">Linux 多用户管理</a>
-    </h1>
-  
-
-        
-        <!-- 
- -->
-
-<a href="/2020/01/27/Linux-多用户管理/" class="archive-article-date">
-  	<time datetime="2020-01-27T03:44:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-01-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/01/27/Linux-多用户管理/">展开全文 >></a>
         </p>
       
 
@@ -595,8 +513,8 @@ SingleThreadExecutor的意义在于统一所有的外界任务到一个线程中
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>在为项目配置依赖时通过 <code>dependencies</code> 和 <code>repositories</code> 两个 DSL <strong>配置块</strong>进行配置的，配置块的名称直接映射到 Project 接口的方法。依赖管理器通过运行以上两个配置，从中央仓库下载所需要的库，将它们存储在本地缓存中。</p>
-<p>配置块中包含配置：</p>
+        <p>在为项目配置依赖时，可以通过 <code>dependencies</code> 和 <code>repositories</code> 两个 <strong>DSL 配置块</strong> 进行配置。配置块的名称直接映射到 Project 接口的方法，具体可以参见 <a href>Project</a>。</p>
+<p>其中 <code>dependencies</code> 闭包用来定义项目构建所依赖的类库，而  <code>repositories</code> 闭包则告诉构建从哪里获得这些依赖。</p>
         
           <a class="article-more-a" href="/2020/01/19/Gradle实战-四/#more">more >></a>
         
@@ -679,7 +597,7 @@ SingleThreadExecutor的意义在于统一所有的外界任务到一个线程中
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>在构建脚本中编写 Task 的动作，从而操作相关逻辑的方式是十分简单的，但是当项目增长需要添加更多的逻辑时，维护起来就十分的麻烦。在这是就有了对类和方法中代码的结构化需求，按照日常开发的思维编写代码，而 Gradle 提供了这种支持，开发者可以使用任意 JVM 语言，比如 Java、Groovy、Kotlin，在构建脚本中进行编码。</p>
+        <p>在构建脚本中可以编写 Task 的动作（Action），从而操作相关逻辑，这在 Gradle 中是十分简单的。但是当项目增长需要添加更多的逻辑时，维护起来就十分的麻烦，如果可以编程式结构实现对逻辑的编写，类似对类和方法编写，按照日常开发的思维编写代码，这对于程序开发是十分友好的，而 Gradle 提供了这种支持，开发者可以使用任意 JVM 语言，比如 Java、Groovy、Kotlin，在构建脚本中进行编码。</p>
 <h2 id="1-自定义-Task"><a href="#1-自定义-Task" class="headerlink" title="1. 自定义 Task"></a>1. 自定义 Task</h2><p>自定义 Task 包含两个组件：</p>
         
           <a class="article-more-a" href="/2020/01/16/Gradle实战-三/#more">more >></a>
@@ -764,7 +682,9 @@ SingleThreadExecutor的意义在于统一所有的外界任务到一个线程中
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="1-Gradle-API-中的-Task"><a href="#1-Gradle-API-中的-Task" class="headerlink" title="1. Gradle API 中的 Task"></a>1. Gradle API 中的 Task</h2><p>在默认情况下，每个创建的 Task 为 <code>org.gradle.api.DefaultTask</code> 类型的，为 <code>org.gradle.api.Task</code> 的实现类。</p>
-<h2 id="2-声明-Task-的动作"><a href="#2-声明-Task-的动作" class="headerlink" title="2. 声明 Task 的动作"></a>2. 声明 Task 的动作</h2><p>动作（action）就是 <strong>在 task 中合适的地方放置构建逻辑</strong>，Task 提供了两个相关的方法来声明动作：<code>doFirst</code>、<code>doLast</code>，当 Task 被执行<br>时，动作逻辑被定义为的闭包参数被依次执行。</p>
+<h2 id="2-声明-Task-的动作"><a href="#2-声明-Task-的动作" class="headerlink" title="2. 声明 Task 的动作"></a>2. 声明 Task 的动作</h2><p>动作（action）就是 <strong>在 task 中合适的地方放置构建逻辑</strong>。</p>
+<p>Task 提供了两个相关的方法来声明动作：<code>doFirst(Closure)</code>、<code>doLast(Closure)</code>，当 Task 被执行<br>时，动作逻辑被定义为的闭包参数，被依次执行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">task helle&#123;</span><br><span class="line">    // 具体动作被封装在闭包中</span><br><span class="line">    doLast&#123;</span><br><span class="line">        println &apos;last&apos;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
         
           <a class="article-more-a" href="/2020/01/16/Gradle实战-二/#more">more >></a>
         
@@ -831,7 +751,7 @@ SingleThreadExecutor的意义在于统一所有的外界任务到一个线程中
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/01/16/Gradle实战-一/">Gadle实战(一)：Project、Task、Property 的基本了解</a>
+      <a class="article-title" href="/2020/01/16/Gradle实战-一/">Gradle实战(一)：Project、Task、Property 的基本了解</a>
     </h1>
   
 
@@ -848,7 +768,9 @@ SingleThreadExecutor的意义在于统一所有的外界任务到一个线程中
     <div class="article-entry" itemprop="articleBody">
       
         <blockquote>
-<p>最基础的Gradle构建块-project和task，以及它们是如何映射到 Gradle 的 API 上面的。</p>
+<p>最基础的 Gradle构建块(project、task、property)，以及它们是如何映射到 Gradle 的 API 上面的。</p>
+</blockquote>
+<p>本篇涉及到的内容：</p>
 <ol>
 <li>声明简单的 task</li>
 <li>编写自定义的 task 类</li>
@@ -859,8 +781,8 @@ SingleThreadExecutor的意义在于统一所有的外界任务到一个线程中
 <li>Gradle 的构建生命周期</li>
 <li>编写使用闭包和监听器 实现的生命周期钩子</li>
 </ol>
-</blockquote>
-<h2 id="1-构建块"><a href="#1-构建块" class="headerlink" title="1. 构建块"></a>1. 构建块</h2><p>Gradle 构建包括三个基本的构建: <code>project</code>、<code>task</code>、<code>property</code>。每个构建中至少包含一个 project，进而又包含一个或者多个task。project 和 task 暴露的属性可以控制构建。</p>
+<h2 id="1-构建块"><a href="#1-构建块" class="headerlink" title="1. 构建块"></a>1. 构建块</h2><p>Gradle 构建包括三个基本的构建: <code>project</code>、<code>task</code>、<code>property</code>。</p>
+<p>每个构建中至少包含一个 <code>project</code>，进而又包含一个或者多个 <code>task</code> 。<code>project</code> 和 <code>task</code> 暴露的属性可以控制构建过程。</p>
         
           <a class="article-more-a" href="/2020/01/16/Gradle实战-一/#more">more >></a>
         
@@ -927,7 +849,7 @@ SingleThreadExecutor的意义在于统一所有的外界任务到一个线程中
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/01/16/Gradle实战-零/">Gadle实战(零)：Gradle 的基本使用</a>
+      <a class="article-title" href="/2020/01/16/Gradle实战-零/">Gradle实战(零)：Gradle 的基本使用</a>
     </h1>
   
 
@@ -1170,11 +1092,47 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
+                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Dex</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MultiDex</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Logcat 日志格式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1190,11 +1148,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
+                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1202,11 +1156,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle 基本原理</a>
+                <a href="javascript:void(0)" class="js-tag color4">EventBus</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle in action</a>
+                <a href="javascript:void(0)" class="js-tag color3">Sticky Event</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1222,23 +1176,31 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">动画</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">AIDL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">EventBus APT</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Gradle 基本原理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Gradle in action</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Hprof</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">内存泄漏</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1251,6 +1213,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Java 多线程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Hprof</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存泄漏</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">工具</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1278,6 +1252,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
@@ -1286,7 +1264,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1295,10 +1273,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">ViewModle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Collections</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1322,11 +1296,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Coroutines(协程)</a>
+                <a href="javascript:void(0)" class="js-tag color1">Coroutines</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kotlin</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1335,10 +1313,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1378,6 +1352,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">View</a>
               </li>
              
@@ -1390,11 +1368,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Git</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
+                <a href="javascript:void(0)" class="js-tag color1">CPU Profiler，Android 性能优化</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1410,18 +1384,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">图解 HTTP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Java 异常</a>
               </li>
              
@@ -1430,19 +1392,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
+                <a href="javascript:void(0)" class="js-tag color1">Android 刷机</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+                <a href="javascript:void(0)" class="js-tag color3">图解 HTTP</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1454,7 +1412,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1466,7 +1424,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
+                <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">IO 流</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">三方库</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1482,43 +1452,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Dex</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">MultiDex</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">AIDL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">EventBus APT</a>
+                <a href="javascript:void(0)" class="js-tag color4">OOP</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1546,11 +1484,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
+                <a href="javascript:void(0)" class="js-tag color3">Coroutines协程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1558,7 +1492,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">动画</a>
+                <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
               </li>
              
               <li class="article-tag-list-item">
