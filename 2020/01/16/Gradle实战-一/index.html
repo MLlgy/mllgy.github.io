@@ -18,7 +18,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/source/images/2020_01_16_07.png">
 <meta property="og:image" content="/source/images/2020_01_16_08.png">
-<meta property="og:updated_time" content="2020-03-16T11:14:05.211Z">
+<meta property="og:updated_time" content="2020-04-10T09:38:29.203Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Gradle实战(一)：Project、Task、Property 的基本了解">
 <meta name="twitter:description" content="最基础的 Gradle构建块(project、task、property)，以及它们是如何映射到 Gradle 的 API 上面的。  本篇涉及到的内容：  声明简单的 task 编写自定义的 task 类 如何获取 task 属性 定义显示和隐式的 task 依赖 添加增量式构建支持 使用 Gradle 的内置 task 类型 Gradle 的构建生命周期 编写使用闭包和监听器 实现的生命周期">
@@ -199,28 +199,24 @@
 <li>Gradle 的构建生命周期</li>
 <li>编写使用闭包和监听器 实现的生命周期钩子</li>
 </ol>
-<h2 id="1-构建块"><a href="#1-构建块" class="headerlink" title="1. 构建块"></a>1. 构建块</h2><p>Gradle 构建包括三个基本的构建: <code>project</code>、<code>task</code>、<code>property</code>。</p>
-<p>每个构建中至少包含一个 <code>project</code>，进而又包含一个或者多个 <code>task</code> 。<code>project</code> 和 <code>task</code> 暴露的属性可以控制构建过程。</p>
+<h2 id="1-构建块"><a href="#1-构建块" class="headerlink" title="1. 构建块"></a>1. 构建块</h2><p>Gradle 构建包括三个基本的构建块: <code>project</code>、<code>task</code>、<code>property</code>。每个构建中至少包含一个 <code>project</code>，进而又包含一个或者多个 <code>task</code> 。<code>project</code> 和 <code>task</code> 暴露的属性可以控制构建过程。</p>
 <a id="more"></a>
 
-<p>Gradle 使用领域驱动设计（DDD）的原理为自己的领域构建软件模型，因此 Gradle API 中有相应的类来表示 project 和 task。</p>
-<h3 id="1-1-project"><a href="#1-1-project" class="headerlink" title="1.1 project"></a>1.1 project</h3><p>在 Gradle 中，<strong>一个 project 代表一个正在构建的组件，或者一个想要完成的目标</strong>,比如需要部署的应用程序。</p>
-<p>每个 Gradle 构建脚本至少定义一个 Project。</p>
-<p>当构建进程启动后，Gradle 基于 <code>build.gradle</code> 中的配置,实例化 <code>org.gradle.api.Project</code> 类，并且能够通过 <code>project</code> 变量使其隐式使用，可以通过查看 Project 类查看其中可用的方法.</p>
+<p>Gradle 使用领域驱动设计（DDD）的原理为自己的领域构建软件模型，因此 Gradle API 中有  <strong>相应的类</strong> 来表示 project 和 task。</p>
+<h3 id="1-1-project"><a href="#1-1-project" class="headerlink" title="1.1 project"></a>1.1 project</h3><p>在 Gradle 中，<strong>一个 project 代表一个正在构建的组件，或者一个想要完成的目标</strong>,比如需要部署的应用程序。每个 Gradle 构建脚本至少定义一个 Project。<br>当构建进程启动后，Gradle 基于 <code>build.gradle</code> 中的配置,实例化 <code>org.gradle.api.Project</code> 类，并且能够通过 <code>project</code> 变量使其隐式使用，可以通过查看 Project 类查看其中可用的方法.</p>
 <p><img src="/source/images/2020_01_16_07.png" alt></p>
 <p>具体可以查看 Project 的 API：<a href="https://docs.gradle.org/current/javadoc/org/gradle/api/package-summary.html" target="_blank" rel="noopener">Package org.gradle.api</a> 和 <a href="https://docs.gradle.org/current/javadoc/org/gradle/api/Project.html" target="_blank" rel="noopener">Project</a>。</p>
-<h3 id="1-2-Task"><a href="#1-2-Task" class="headerlink" title="1.2 Task"></a>1.2 Task</h3><p>任务的一些重要功能：<strong>任务动作</strong> 和 <strong>任务依赖</strong>。</p>
-<p>任务动作（<code>Action</code>）定义了一个任务执行时 <strong>最小的工作单位</strong>。</p>
-<p>task 对应的 Gradle API：org.gradle.api.Task 接口：<br><img src="/source/images/2020_01_16_08.png" alt></p>
+<h3 id="1-2-Task"><a href="#1-2-Task" class="headerlink" title="1.2 Task"></a>1.2 Task</h3><p>任务有两个重要功能：<strong>任务动作</strong> 和 <strong>任务依赖</strong>。任务动作（<code>Action</code>）定义了一个任务执行时 <strong>最小的工作单位</strong>。</p>
+<p>task 对应的 Gradle API：org.gradle.api.Task 接口：</p>
+<p><img src="/source/images/2020_01_16_08.png" alt></p>
 <p>具体可查看 Task 的 API 描述: <a href="https://docs.gradle.org/current/javadoc/org/gradle/api/Task.html" target="_blank" rel="noopener">Interface Task</a> 。</p>
 <h3 id="1-3-属性"><a href="#1-3-属性" class="headerlink" title="1.3 属性"></a><strong>1.3 属性</strong></h3><p>每个 Project 和 Task 实例都提供了很多可以通过 setter 和 getter 方法访问的属性，一个属性可能是一个任务的描述或者是项目的版本。</p>
-<p>在项目开发中，可以自定义属性，进行读写操作。</p>
-<p>自定义属性的操作，可以通过 <strong>扩展属性</strong> 和 <strong>在gradle.properties 中定义</strong> 的方式实现。</p>
+<p>在项目开发中，可以自定义属性，并可以对该属性进行读写操作。自定义属性的操作，可以通过 <strong>扩展属性</strong> 和 <strong>在gradle.properties 中定义</strong> 的方式实现。</p>
 <ol>
 <li><strong>扩展属性</strong></li>
 </ol>
-<p>使用命名空间 ext 自定义属性</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 定义只读属性</span><br><span class="line">project.ext.name = &apos;name&apos;</span><br><span class="line">// 定义可、读写属性</span><br><span class="line">ext&#123;</span><br><span class="line">    age = 1</span><br><span class="line">&#125;</span><br><span class="line">ext.one = 2</span><br></pre></td></tr></table></figure>
+<p>使用命名空间 <code>ext</code> 自定义属性，具体如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 定义只读属性</span><br><span class="line">project.ext.name = &apos;name&apos;</span><br><span class="line">// 定义可、读写属性</span><br><span class="line">ext&#123;</span><br><span class="line">    age = 1</span><br><span class="line">&#125;</span><br><span class="line">// 对扩展属性的修改</span><br><span class="line">ext.age = 2</span><br></pre></td></tr></table></figure>
 
 <ol start="2">
 <li><strong>在 gradle.properties 中定义</strong></li>
@@ -228,7 +224,7 @@
 <p>可以在 <code>gradle.properties</code> 文件中可以添加 Gradle 属性。</p>
 <ul>
 <li>在 <code>&lt;USER_HOME&gt;/.gradle</code> 文件下的 <code>gradle.properties</code> 中添加的 Gradle 属性，所有的项目都可以使用。</li>
-<li>在项目下的 <code>gradle.properties</code> 中添加的 Gradle 属性，可以在项目中所以的模块中使用。</li>
+<li>在项目下的 <code>gradle.properties</code> 中添加的 Gradle 属性，可以在项目中所有的模块中使用。</li>
 </ul>
 <p>在 gradle.properties 中声明属性：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">name = &apos;tom&apos;</span><br><span class="line">age = 1</span><br></pre></td></tr></table></figure>
@@ -250,6 +246,20 @@
 <p>./gradlew -Pname=Mike test</p>
 </blockquote>
 <p>那么该 Task 则打印新的 name 值 – Mike。</p>
+<ol start="4">
+<li>在 gradle 脚本中定义属性</li>
+</ol>
+<p>也可以在 Gradle 脚本中定义变量，通过 apply 的方式引入</p>
+<p>比如在 version.gradle 中定义了一些变量以及方法，大致如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ext.name = &quot;Mike&quot;</span><br><span class="line">def addRepos(RepositoryHandler handler) &#123;</span><br><span class="line">    handler.google()</span><br><span class="line">    handler.jcenter()</span><br><span class="line">    handler.mavenCentral()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ext.addRepos = this.&amp;addRepos</span><br></pre></td></tr></table></figure>
+
+<p>那么在项目目录的 build.gradle 中通过 apply from 的方式引入该文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">buildscript &#123;</span><br><span class="line">    apply from: &quot;version.gradle&quot;</span><br><span class="line">    // 调用自定义方法</span><br><span class="line">    addRepos(repositories)</span><br><span class="line">    dependencies &#123;</span><br><span class="line">        // 调用自定义变量</span><br><span class="line">        classpath deps.android_gradle_plugin</span><br><span class="line">        classpath deps.kotlin.plugin</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以了解一下 API 中对 <code>apply from</code> 的描述：</p>
+<blockquote>
+<p>Applies a plugin or script, using the given options provided as a map. Does nothing if the plugin has already been applied.</p>
+</blockquote>
 
       
 
@@ -501,55 +511,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Dex</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">MultiDex</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Logcat 日志格式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -561,7 +523,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
+                <a href="javascript:void(0)" class="js-tag color5">编译技术</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Logcat 日志格式</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -573,11 +543,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Binder</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Gradle 基本原理</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Gradle in action</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -645,11 +623,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+                <a href="javascript:void(0)" class="js-tag color5">List</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">List</a>
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -673,11 +651,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">JobScheduler</a>
+                <a href="javascript:void(0)" class="js-tag color2">WorkManager</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">WorkManager</a>
+                <a href="javascript:void(0)" class="js-tag color3">JobScheduler</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -697,15 +675,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kotlin 核心编程</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -793,6 +771,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">网络协议</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">图解 HTTP</a>
               </li>
              
@@ -805,19 +787,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">计算机基础</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">数据压缩</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">百度地图黑影</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">硬件加速</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">计算机基础</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">数据压缩</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -830,6 +812,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">浮点型精度问题</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">深入浅出计算机组成原理(徐文浩)</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -857,7 +843,27 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">动画</a>
+                <a href="javascript:void(0)" class="js-tag color1">Android 面试</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Dex</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MultiDex</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">TCP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">趣谈网络协议(刘超)</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -906,6 +912,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">动画</a>
               </li>
              
               <li class="article-tag-list-item">
