@@ -8,21 +8,21 @@
   <link rel="dns-prefetch" href>
   <title>Gradle实战(零)：Gradle 的基本使用 | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1. Java 项目引入 Gradle 插件当我们不通过 IDE 的方式构建 Java 项目，那么在编写完成后，运行项目就需要使用 javac 、jar 等这样的工具来帮我们运行项目，无疑在开发过程中这是十分痛苦的。 而 Gradle 插件具体自动化执行编译、运行等过程。 Gradle 通过引入特定领域的约定和 Task 来扩展项目。而 Java 插件是 Gradle 自身装载的一个插件，可以实现">
+  <meta name="description" content="1. Java 项目引入 Gradle 插件当我们不通过 IDE 的方式构建 Java 项目，那么在编写完成后，运行项目就需要使用 javac 、jar 等这样的工具来帮我们运行项目，无疑在开发过程中这是十分痛苦的。而 Gradle 插件具体自动化执行编译、运行等过程。Gradle 通过引入特定领域的约定和 Task 来扩展项目。而 Java 插件是 Gradle 自身装载的一个插件，可以实现很多">
 <meta name="keywords" content="Gradle 基本原理,Gradle in action">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Gradle实战(零)：Gradle 的基本使用">
 <meta property="og:url" content="/2020/01/16/Gradle实战-零/index.html">
 <meta property="og:site_name" content="GY">
-<meta property="og:description" content="1. Java 项目引入 Gradle 插件当我们不通过 IDE 的方式构建 Java 项目，那么在编写完成后，运行项目就需要使用 javac 、jar 等这样的工具来帮我们运行项目，无疑在开发过程中这是十分痛苦的。 而 Gradle 插件具体自动化执行编译、运行等过程。 Gradle 通过引入特定领域的约定和 Task 来扩展项目。而 Java 插件是 Gradle 自身装载的一个插件，可以实现">
+<meta property="og:description" content="1. Java 项目引入 Gradle 插件当我们不通过 IDE 的方式构建 Java 项目，那么在编写完成后，运行项目就需要使用 javac 、jar 等这样的工具来帮我们运行项目，无疑在开发过程中这是十分痛苦的。而 Gradle 插件具体自动化执行编译、运行等过程。Gradle 通过引入特定领域的约定和 Task 来扩展项目。而 Java 插件是 Gradle 自身装载的一个插件，可以实现很多">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="/2020/01/16/Gradle实战-零/Gradle%E5%AE%9E%E6%88%98-%E9%9B%B6/2020_01_16_05.png">
-<meta property="og:image" content="/2020/01/16/Gradle实战-零/Gradle%E5%AE%9E%E6%88%98-%E9%9B%B6/2020_01_16_06.png">
-<meta property="og:updated_time" content="2020-03-16T11:14:05.216Z">
+<meta property="og:image" content="/public/2020/01/16/Gradle%E5%AE%9E%E6%88%98-%E9%9B%B6/2020_01_16_05.png">
+<meta property="og:image" content="/public/2020/01/16/Gradle%E5%AE%9E%E6%88%98-%E9%9B%B6/2020_01_16_06.png">
+<meta property="og:updated_time" content="2020-04-10T09:09:37.255Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Gradle实战(零)：Gradle 的基本使用">
-<meta name="twitter:description" content="1. Java 项目引入 Gradle 插件当我们不通过 IDE 的方式构建 Java 项目，那么在编写完成后，运行项目就需要使用 javac 、jar 等这样的工具来帮我们运行项目，无疑在开发过程中这是十分痛苦的。 而 Gradle 插件具体自动化执行编译、运行等过程。 Gradle 通过引入特定领域的约定和 Task 来扩展项目。而 Java 插件是 Gradle 自身装载的一个插件，可以实现">
-<meta name="twitter:image" content="/2020/01/16/Gradle实战-零/Gradle%E5%AE%9E%E6%88%98-%E9%9B%B6/2020_01_16_05.png">
+<meta name="twitter:description" content="1. Java 项目引入 Gradle 插件当我们不通过 IDE 的方式构建 Java 项目，那么在编写完成后，运行项目就需要使用 javac 、jar 等这样的工具来帮我们运行项目，无疑在开发过程中这是十分痛苦的。而 Gradle 插件具体自动化执行编译、运行等过程。Gradle 通过引入特定领域的约定和 Task 来扩展项目。而 Java 插件是 Gradle 自身装载的一个插件，可以实现很多">
+<meta name="twitter:image" content="/public/2020/01/16/Gradle%E5%AE%9E%E6%88%98-%E9%9B%B6/2020_01_16_05.png">
   
     <link rel="alternative" href="/atom.xml" title="GY" type="application/atom+xml">
   
@@ -185,46 +185,24 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="1-Java-项目引入-Gradle-插件"><a href="#1-Java-项目引入-Gradle-插件" class="headerlink" title="1. Java 项目引入 Gradle 插件"></a>1. Java 项目引入 Gradle 插件</h2><p>当我们不通过 IDE 的方式构建 Java 项目，那么在编写完成后，运行项目就需要使用 javac 、jar 等这样的工具来帮我们运行项目，无疑在开发过程中这是十分痛苦的。</p>
-<p>而 Gradle 插件具体自动化执行编译、运行等过程。</p>
-<p>Gradle 通过引入特定领域的约定和 Task 来扩展项目。而 Java 插件是 Gradle 自身装载的一个插件，可以实现很多的功能，比如定义标准的项目布局、有顺序的执行任务。</p>
+        <h2 id="1-Java-项目引入-Gradle-插件"><a href="#1-Java-项目引入-Gradle-插件" class="headerlink" title="1. Java 项目引入 Gradle 插件"></a>1. Java 项目引入 Gradle 插件</h2><p>当我们不通过 IDE 的方式构建 Java 项目，那么在编写完成后，运行项目就需要使用 javac 、jar 等这样的工具来帮我们运行项目，无疑在开发过程中这是十分痛苦的。而 Gradle 插件具体自动化执行编译、运行等过程。Gradle 通过引入特定领域的约定和 Task 来扩展项目。而 Java 插件是 Gradle 自身装载的一个插件，可以实现很多的功能，比如定义标准的项目布局、有顺序的执行任务。</p>
 <a id="more"></a>
 
-<p>如果想要使用 Java 插件，则在 build.gradle 中添加如下代码：</p>
+<p>如果想要使用 Java 插件，构建编写的 Java 代码，则在需要在 build.gradle 中添加如下代码：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apply plugin:&apos;java&apos;</span><br></pre></td></tr></table></figure>
 
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
-<h1 id="项目中配置类该插件，就可以构建编写的-Java-代码。Java-插件引入很多之一，其中之一是项目的源代码位置，默认情况下-Java-插件会到-src-main-java-目录下查找-Java-类。"><a href="#项目中配置类该插件，就可以构建编写的-Java-代码。Java-插件引入很多之一，其中之一是项目的源代码位置，默认情况下-Java-插件会到-src-main-java-目录下查找-Java-类。" class="headerlink" title="项目中配置类该插件，就可以构建编写的 Java 代码。Java 插件引入很多之一，其中之一是项目的源代码位置，默认情况下 Java 插件会到 src/main/java 目录下查找 Java 类。"></a>项目中配置类该插件，就可以构建编写的 Java 代码。Java 插件引入很多之一，其中之一是项目的源代码位置，默认情况下 Java 插件会到 <code>src/main/java</code> 目录下查找 Java 类。</h1><p>项目中配置类该插件，就可以构建编写的 Java 代码。Java 插件引入很多约定，其中之一是项目的源代码位置，默认情况下 Java 插件回到 <code>src/main/java</code> 目录下查找 Java 类。</p>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>edit gradle</p>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-<h2 id="2-构建-Java-项目"><a href="#2-构建-Java-项目" class="headerlink" title="2. 构建 Java 项目"></a>2. 构建 Java 项目</h2><p>在上文的基础上，构建创建的项目。</p>
-<p>Java 插件中的存在一个 <code>build</code> 的任务，该任务以正确的顺序编译项目源代码，运行测试、组装 Jar 文件等操作。</p>
-<p>执行 <code>gradle build</code> 会得到相应的输出，每一行输出为 Java 插件提供的一个可执行任务，有些任务被标记了 <code>UP-TO-DATE</code>，这意味着 <strong>这个任务被跳过了</strong>，因为 Gradle 支持增量式构建，不会运行不需要运行的任务，以下会介绍该概念。</p>
+<p>Java 插件引入很多规则，其中之一是项目的源代码位置，默认情况下 Java 插件会到 <code>src/main/java</code> 目录下查找 Java 类。</p>
+<h2 id="2-构建-Java-项目"><a href="#2-构建-Java-项目" class="headerlink" title="2. 构建 Java 项目"></a>2. 构建 Java 项目</h2><p>引入了 Java 插件后，就可以进行构建项目。Java 插件中的存在名为 <code>build</code> 的任务，该任务可以正确的顺序编译项目源代码，运行测试、组装 Jar 文件等操作。</p>
+<p>创建 Java 项目后，执行 <code>gradle build</code> 会得到相应的输出，每一行输出为 Java 插件提供的一个可执行任务，有些任务被标记了 <code>UP-TO-DATE</code>，这意味着 <strong>这个任务被跳过了</strong>，因为 Gradle <strong>支持增量式构建</strong>，不会运行不需要运行的任务，以下会介绍该概念。</p>
 <h2 id="3-构建产生的文件"><a href="#3-构建产生的文件" class="headerlink" title="3. 构建产生的文件"></a>3. 构建产生的文件</h2><p>执行以上命令后，可以发现在根目录生成了一个 <code>build</code> 目录，该目录包含了构建运行时的所有输出，包括 jar 文件、测试报告和 class 文件，还有一些像类似清单、对构建有用的临时文件。</p>
-<p>构建输出的目录的名字是可以通过 Gradle 的相关属性进行配置修改的，但是不建议自定义。</p>
-<p>对 Java 项目完成构建后，可以运行该项目：</p>
+<p>其中关于 Android 项目构建完成后，项目中还会创建 .gradle 和 .idea 文件夹，其中存放 Gradle 和 AS 对于当前工程的缓存，在点击 sync 后，AS 还会生成 .iml 文件，他们与 .gradle、.idea 配合为我们提供了代码提示等常见功能，具体内容可以参见 <a href="https://mp.weixin.qq.com/s/HdCrhiY3VSsEjmu0FKLlyg" target="_blank" rel="noopener">Gradle 与 Android 构建入门</a>。</p>
+<p>构建输出的目录的名字是可以通过 Gradle 的相关属性进行配置修改的，但是不建议自定义.对 Java 项目完成构建后，可以运行该项目：</p>
 <blockquote>
 <p>java -cp build/classes.main com.xxx.xx.Main</p>
 </blockquote>
 <p>-cp: 即为 -classpath，告诉 Java 运行时去哪里找到 class 文件。</p>
 <h2 id="4-解析依赖"><a href="#4-解析依赖" class="headerlink" title="4. 解析依赖"></a>4. 解析依赖</h2><p>在构建脚本中添加依赖，如果依赖库没有被解挂过（成功下载过），那么就会在使用时去下载它，以下图片展示了依赖继续传递性依赖的过程：</p>
-<p><img src="./Gradle%E5%AE%9E%E6%88%98-%E9%9B%B6/2020_01_16_05.png" alt></p>
-<!-- <img class="2020_01_16_05.png"> -->
-
-
+<p><img src="/public/2020/01/16/Gradle%E5%AE%9E%E6%88%98-%E9%9B%B6/2020_01_16_05.png" alt></p>
 <h2 id="5-Gradle-包装器"><a href="#5-Gradle-包装器" class="headerlink" title="5. Gradle  包装器"></a>5. Gradle  包装器</h2><p>Gradle 包装器是 Gradle 的核心特性，能够让机器在没有安装 Gradle 运行时的的情况下，运行 Gradle 构建。</p>
 <p>在项目中配置包装器，需要两步操作：</p>
 <ol>
@@ -238,12 +216,12 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gradle wrapper</span><br></pre></td></tr></table></figure>
 
 <p>下载的文件目录如下：</p>
-<p><img src="./Gradle%E5%AE%9E%E6%88%98-%E9%9B%B6/2020_01_16_06.png" alt></p>
+<p><img src="/public/2020/01/16/Gradle%E5%AE%9E%E6%88%98-%E9%9B%B6/2020_01_16_06.png" alt></p>
 <p>其中的 gradle-wrapper.properties 文件内容大致如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">distributionBase=GRADLE_USER_HOME</span><br><span class="line">distributionPath=wrapper/dists</span><br><span class="line">zipStoreBase=GRADLE_USER_HOME</span><br><span class="line">zipStorePath=wrapper/dists</span><br><span class="line">distributionUrl=https\://services.gradle.org/distributions/gradle-5.4.1-all.zip</span><br></pre></td></tr></table></figure>
 
 <p>此时，就可以使用包装器的脚本执行构建类。</p>
-<h2 id="6-定制包装器"><a href="#6-定制包装器" class="headerlink" title="6. 定制包装器"></a>6. 定制包装器</h2><p>包装器是可以被重新配置的，指向运行有发布文件的企业内部服务器，同时还可以指定本地存储路径.</p>
+<h2 id="6-定制包装器"><a href="#6-定制包装器" class="headerlink" title="6. 定制包装器"></a>6. 定制包装器</h2><p>包装器是可以被重新配置的，可以指向运行有发布文件的企业内部服务器，同时还可以指定本地存储路径.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">task wrapper(type:Wrapper)&#123;</span><br><span class="line">    gradleVersion = &apos;5.4.1&apos;</span><br><span class="line">    distributionUrl = ’http://companycenter.com/gradle/dists‘</span><br><span class="line">    distributionPath = &apos;gradle-dists&apos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
 
@@ -527,7 +505,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
+                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -539,11 +517,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Dagger2</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DI</a>
+                <a href="javascript:void(0)" class="js-tag color5">焦点机制</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -551,7 +525,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">CPU 架构</a>
+                <a href="javascript:void(0)" class="js-tag color3">Dagger2</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">DI</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -567,6 +545,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Gradle 基本原理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Gradle in action</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
               </li>
              
@@ -579,43 +565,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">动画</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">AIDL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">EventBus APT</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle 基本原理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle in action</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Java 多线程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -628,6 +578,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">工具</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">内存分区</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Java 多线程</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -655,7 +617,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
+                <a href="javascript:void(0)" class="js-tag color4">Map</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -663,7 +625,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Map</a>
+                <a href="javascript:void(0)" class="js-tag color1">Queue</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -707,15 +669,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Kotlin 核心编程</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Singleton</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -787,15 +749,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Java 异常</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">堆栈轨迹</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -807,23 +769,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">计算机基础</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">数据压缩</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Gradle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">极客时间笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">浮点型精度问题</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -839,6 +797,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">极客时间笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">浮点型精度问题</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">三方库</a>
               </li>
              
@@ -851,15 +817,27 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">设计模式六大原则</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">OOP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">动画</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">AIDL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">EventBus APT</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -891,15 +869,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">LeakCanary</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">内存优化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Okhttp3</a>
               </li>
              
               <li class="article-tag-list-item">
