@@ -30,9 +30,8 @@ Gradle 使用领域驱动设计（DDD）的原理为自己的领域构建软件�
 在 Gradle 中，**一个 project 代表一个正在构建的组件，或者一个想要完成的目标**,比如需要部署的应用程序。每个 Gradle 构建脚本至少定义一个 Project。
 当构建进程启动后，Gradle 基于 `build.gradle` 中的配置,实例化 `org.gradle.api.Project` 类，并且能够通过 `project` 变量使其隐式使用，可以通过查看 Project 类查看其中可用的方法.
 
-![](/source/images/2020_01_16_07.png)
+![](Gradle实战-一/2020_01_16_07.png)
 
-{% /source/images/2020_01_16_07.png project %}
 
 具体可以查看 Project 的 API：[Package org.gradle.api](https://docs.gradle.org/current/javadoc/org/gradle/api/package-summary.html) 和 [Project](https://docs.gradle.org/current/javadoc/org/gradle/api/Project.html)。
 
@@ -43,8 +42,7 @@ Gradle 使用领域驱动设计（DDD）的原理为自己的领域构建软件�
 
 task 对应的 Gradle API：org.gradle.api.Task 接口：
 
-![](/source/images/2020_01_16_08.png)
-{% /source/images/2020_01_16_08.png task %}
+![](Gradle实战-一/2020_01_16_08.png)
 
 具体可查看 Task 的 API 描述: [Interface Task](https://docs.gradle.org/current/javadoc/org/gradle/api/Task.html) 。
 

@@ -12,7 +12,7 @@ tags: [Gradle 基本原理,Gradle in action]
 
 依赖管理器通过运行以上两个配置，从中央仓库下载项目中所需要的库，并将它们存储在本地缓存中,具体可以参见以下示意图：从 Maven 远端仓库下载构建依赖。
 
-![](/source/images/2020_02_28_01.png)
+![](Gradle实战-四/2020_02_28_01.png)
 
 ## 1. 依赖配置
 
@@ -31,7 +31,7 @@ tags: [Gradle 基本原理,Gradle in action]
 
 具体 API 具体如下：
 
-![](/source/images/2020_03_02_01.png)
+![](Gradle实战-四/2020_03_02_01.png)
 
 可以看到配置对象 (Configuration) 含有一些属性，比如 name、description 等。
 
@@ -126,7 +126,7 @@ DSL 配置块 `dependencies` 通常用来将一个或者多个依赖指派给配
 
 具体 API 关系如下：
 
-![](/source/images/2020_03_02_02.png)
+![](Gradle实战-四/2020_03_02_02.png)
 
 ### 外部模块依赖
 
@@ -178,7 +178,7 @@ dependencies{
 `./gralew app:dependencies` 或者 `gradle app:dependencies`。
 
 
-![](/source/images/2020_03_02_03.png)
+![](Gradle实战-四/2020_03_02_03.png)
 
 在依赖树中，**标有星号的依赖被排除了**，这意味依赖管理器使用的是 **另外一个版本** 的类库，因为他被声明 *另外一个顶层依赖* 的传递性依赖。
 
@@ -261,7 +261,7 @@ dependencies{
 
 在项目中定义仓库的关键是 `RespositoryHandler` 接口，**该接口提供了添加各种类型仓库的方法**，这些方法可以在 respositories 配置块中被调用。
 
-![](/source/images/2020_01_14_01.png)
+![](Gradle实战-四/2020_01_14_01.png)
 
 通过上图可以看，不同类型的仓库提供了不同方法来进行相关配置，以下展示每种仓库的具体配置。
 
@@ -271,7 +271,7 @@ dependencies{
 
 Maven 仓库下所有类库的内容会被存储在一个预定义的目录结构中，在声明一个依赖时，依赖的属性（group、name、version）来确认它在仓库中的位置。
 
-![](/source/images/2020_01_14_02.png)
+![](Gradle实战-四/2020_01_14_02.png)
 
 Maven 提供了两个方法用来配置 Maven 仓库：
 
@@ -493,7 +493,7 @@ dependencyInsight:显示原因
 使用 `gradle dependencies` 生成的依赖报告，是从顶层依赖开始的，而此处的依赖观察报告则与之相反，是从 **低层到顶层的**。
 
 
-![](/source/images/2020_03_02_04.png)
+![](Gradle实战-四/2020_03_02_04.png)
 
 
 图片显示了需要和选择的 xml-apis:xml-apis 的版本以及原有

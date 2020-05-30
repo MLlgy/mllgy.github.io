@@ -1,6 +1,7 @@
 ---
 title: 使用 Hexo 搭建 GitPage 静态博客
 tags: [Hexo,GitPage]
+date: 2019-08-19 16:07:38
 ---
 ## 必要工具的安装(Mac)
 

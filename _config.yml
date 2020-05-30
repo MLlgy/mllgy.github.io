@@ -100,7 +100,7 @@ disqus_shortname:
 #  - hexo-generator-baidu-sitemap
 #  - hexo-generator-sitemap
 
-theme: yilia
+theme: landscape
 exclude_generator:
 
 

@@ -43,3 +43,8 @@ Codorvar
 
 
 [](https://blog.csdn.net/weixin_37730482/article/details/73920722?depth_1-utm_source=distribute.pc_relevant.none-task&utm_source=distribute.pc_relevant.none-task)
+
+
+
+
+[RN与原生交互（二）——数据传递](https://juejin.im/post/5b20ceb16fb9a01e4f47cd49)(关于交互的数据类型的对应关系 )

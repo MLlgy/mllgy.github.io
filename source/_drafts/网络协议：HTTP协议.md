@@ -6,7 +6,7 @@ tags:
 
 ## HTTP 请求准备
 
-DNS 接下域名。
+DNS 解析域名。
 
 HTTP 是基于 TCP 协议的，所以首先要进行 TCP 连接。
 

@@ -91,7 +91,7 @@ SystemServer 进程的名字为 system_server，为 Zygote 进程 fork 产生的
 
 常见的客户有 Activity、Service 等，此处以 Activity 的启动为例，分析 zygote 的无性繁殖。
 
-若启动的 Activity 所在的进程尚未启动，那么就会首先创建进程，然后才会启动相应的 Activity。在以下过程中需要注意的是：AMS 是允许在 system_server 进程中的服务，所以 zygote 的分裂是有 system_server 控制的。
+若启动的 Activity 所在的进程尚未启动，那么就会首先创建进程，然后才会启动相应的 Activity。在以下过程中需要注意的是：AMS 是允许在 system_server 进程中运行的服务，所以 zygote 的分裂是由 system_server 控制的。
 
 
 1. AMS 发送请求

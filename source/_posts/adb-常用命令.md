@@ -176,7 +176,26 @@ db shell dumpsys window | grep init
 8. ACTIVITY MANAGER LAST ANR (dumpsys activity lastanr)
 9. ACTIVITY MANAGER STARTER (dumpsys activity starter)
 10. ACTIVITY MANAGER ACTIVITIES (dumpsys activity activities)
+
+    查看 Activity 的调用栈。
+    
 11. ACTIVITY MANAGER RUNNING PROCESSES (dumpsys activity processes)
 
 
 使用 `adb shell dumpsys activity activities | sed -En -e '/Running activities/,/Run #0/p'` 限制仅输出 "Running activities" 列表。
+
+
+
+----
+
+
+[adb shell下提示read-only file system解决办法](https://blog.csdn.net/zhangqunshuai/article/details/81284371)
+
+
+具体命令：
+
+```
+mount -o remount -o rw 文件夹
+```
+
+[Linux mount命令](https://www.runoob.com/linux/linux-comm-mount.html)

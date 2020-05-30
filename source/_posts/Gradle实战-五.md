@@ -1,10 +1,8 @@
 ---
 title: Gadle实战(五)：扩展 Gradle
 date: 2020-01-19 16:09:48
-tags:
+tags: [Gradle 基本原理,Gradle in action]
 ---
-
-
 
 ## 1.从零构建插件
 
@@ -33,7 +31,6 @@ Gradle 中有多种定制 Task 的方式，最简单的一种是把它和构建�
 
 Gradle 提供了一个可以通过继承的默认实现：`org.gradle.api.DefaultTask`。
 
-
 ```
 class customTask implements DefaultTask{
     xxxx
@@ -61,26 +58,19 @@ task test(type:CustomeTask){
 
 打包定制的 Task 实现为 Jar 的方式的优缺点,具体参见 Gradle in Action 一书。
 
-
 **对象插件** 可以灵活去封装高度复杂的逻辑，并且提供强大的扩展机制可以在构建脚本中定制它的行为。和定制 Task 一样，可以完全访问 Gradle 的公共 API 和工程模型。
 
 Gradle 提供了开箱即用的插件，称为 **标准插件**，也可以通过 **第三方插件** 进行扩展。许多插件都是自包含的，这意味着它们要么依赖 Gradle 的核心 API，要么通过包装代码提供功能。更复杂的插件依赖于其他类库、工具或者插件提供的特性。
 
 下图展示了插件在 Gradle 架构的位置:
 
-
-![Gradle 插件架构](/source/images/2020_01_15_02.png)
-
+![Gradle 插件架构](Gradle实战-五/2020_01_15_02.png)
 
 在平常的开发中，我们经常使用 Java 插件来扩展项目功能。如下图 Java 插件特性所示，插件可以提供一个 Task 集合，并且整合到执行生命周期中，引入新的项目布局并提供有意义的默认值，添加属性来定制化它的行为，给依赖管理暴露对应的配置（比如平时使用到的 compile）。
 
-
-![Java 插件特性](/source/images/2020_01_15_03.png)
-
-
+![Java 插件特性](Gradle实战-五/2020_01_15_03.png)
 
 **通过一行代码引入 Java 插件，就可以使用 Java 插件相应的功能来编译源代码、运行单元测试、生成报告，并将项目打包为Jar**。
-
 
 标准插件也提供了很多通用功能，大部分能够满足开发者的需求。由社区或这开源组织开发的三方插件，可以用来给构建脚本增强非标准功能。
 
@@ -132,14 +122,11 @@ buildScript{
 
 以下图片显示了实现一个插件的几种选择：
 
-
-![](/source/images/2020_01_16_01.png)
-
+![](Gradle实战-五/2020_01_16_01.png)
 
 对于实现一个对象插件，有四个元素是十分重要的：
 
 * 放置插件实现的位置
-
 
 Gradle 在这方式十分灵活，代码可以发在构建脚本中，可以放在 `buildSrc` 目录下，也可以作为一个 **独立的工程** 被开发并且以 Jar 包的形式发布。
 
@@ -158,15 +145,14 @@ Gradle 在这方式十分灵活，代码可以发在构建脚本中，可以放�
 
 ## 5. 编写对象插件并运用到项目
 
-
 编写一个插件的最低要求是提供 org.gradle.api.Plugin<Project> 接口的一个实现类，该接口仅有一个方法：apply(Project)。
 
 
 ### 5.1 通过 buildSrc 的形式编写对象插件
 
-使用 buildSrc 的方式定义对象插件的好处是，在早期开发插件阶段，不需要打包插件代码，可以得到一个快速的反馈，能够让开发者能够专心通过 Gradle Api 实现业务逻辑。
+使用 `buildSrc` 的方式定义对象插件的好处是，在早期开发插件阶段，不需要打包插件代码，可以得到一个快速的反馈，能够让开发者能够专心通过 Gradle Api 实现业务逻辑。
 
-在 buildSrc 工程下的指定包目录中创建一个插件的实现类，
+在 `buildSrc` 工程下的指定包目录中创建一个插件的实现类，
 
 ```
 class CustomPlugin implements Plugin<Project>{
@@ -176,6 +162,7 @@ class CustomPlugin implements Plugin<Project>{
     }
 }
 ```
+
 想要在项目中使用该插件，则在 build.gradle  中使用插件的实现类型：
 
 ```
@@ -187,11 +174,10 @@ apply plugin: xxxx.xxx.CustomPlugin
 
 通过 —P 和 —D 可以在执行 Gradle 命令行时提供参数，为 Task 提供输入，但这种方式不总是可取的。
 
+
 Gradle 允许通过暴露一个带有唯一命名空间的 DSL 来建立自己的构建语言，下面展示一个名为 cloudBees 的闭包，允许从构建脚本中给 task 所需要的属性设置值。
 
-
 ```
-
 cloudBees{
     apiUrl = 'https://xxx'
     apiKey = project.apiKey
@@ -199,6 +185,7 @@ cloudBees{
 ```
 
 Gradle 会将语言结构模型化为扩展，扩展是可以被添加到 Gradle 对象中，比如 Project或者Task。
+
 
 如果一个类实现了 org.gradle.api.plugins.ExtensionAware 接口，就认为它是可扩展的，每种扩展都是一种数据结构，它是扩展的基础。
 
@@ -249,7 +236,7 @@ apply plugin 'nuwa'
 书中例子：假设其他项目想要使用该插件，那么在该项目的构建脚本中定义本地仓库，声明插件作为依赖，使用插件中的 Task 与 CloudBees 后端服务交互。
 
 
-![](/source/images/2020_01_16_02.png)
+![](Gradle实战-五/2020_01_16_02.png)
 
 
 其中 plugin 为定义插件的模块。
@@ -264,7 +251,7 @@ apply plugin 'nuwa'
 
 通过 Maven 插件，可以为插件生成的 POM 文件和将插件发布到 Maven 库中。配置 Maven 部署器将 POM 和 插件上传到本地目录中，为了更好的管理插件的版本，需要为插件指定 group、name\version.
 
-![](/source/images/2020_01_16_03.png)
+![](Gradle实战-五/2020_01_16_03.png)
 
 
 在插件被使用之前，需要先执行 `gradle uploadArchives` 命令，使用 Maven 插件相关 task 帮助下上传该插件。
@@ -276,7 +263,7 @@ apply plugin 'nuwa'
 
 在项目中构建脚本中添加如下配置：
 
-![](/source/images/2020_01_16_04.png)
+![](Gradle实战-五/2020_01_16_04.png)
 
 对本地 Maven 库的声明也可以使用相对路径：
 

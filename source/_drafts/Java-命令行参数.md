@@ -12,6 +12,13 @@ tags:
 java -cp xxx.xxx.jar xxx.Main（类名） xxxx,xxx (main函数参数)
 
 
+
+
+* -Xms
+
+初始分配 JVM 运行时的内存大小
+
+
 ---
 
 https://www.cnblogs.com/z-sm/p/5674684.html
