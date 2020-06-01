@@ -7,19 +7,19 @@
   
   <title>Gadle实战(二)：声明 Task | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="1. Gradle API 中的 Task在默认情况下，每个创建的 Task 为 org.gradle.api.DefaultTask 类型的，为 org.gradle.api.Task 的实现类。 2. 声明 Task 的动作动作（action）就是 在 task 中合适的地方放置构建逻辑。 Task 提供了两个相关的方法来声明动作：doFirst(Closure)、doLast(Closure">
+  <meta name="description" content="定义显示和隐式的 task 依赖 添加增量式构建支持 使用 Gradle 的内置 task 类型 Gradle 的构建生命周期 编写使用闭包和监听器，实现的生命周期钩子  1. Gradle API 中的 Task在默认情况下，每个创建的 Task 为 org.gradle.api.DefaultTask 类型的，为 org.gradle.api.Task 的实现类。 2. 声明 Task 的动">
 <meta name="keywords" content="Gradle 基本原理,Gradle in action">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Gadle实战(二)：声明 Task">
 <meta property="og:url" content="/2020/01/16/Gradle实战-二/index.html">
 <meta property="og:site_name" content="GY">
-<meta property="og:description" content="1. Gradle API 中的 Task在默认情况下，每个创建的 Task 为 org.gradle.api.DefaultTask 类型的，为 org.gradle.api.Task 的实现类。 2. 声明 Task 的动作动作（action）就是 在 task 中合适的地方放置构建逻辑。 Task 提供了两个相关的方法来声明动作：doFirst(Closure)、doLast(Closure">
+<meta property="og:description" content="定义显示和隐式的 task 依赖 添加增量式构建支持 使用 Gradle 的内置 task 类型 Gradle 的构建生命周期 编写使用闭包和监听器，实现的生命周期钩子  1. Gradle API 中的 Task在默认情况下，每个创建的 Task 为 org.gradle.api.DefaultTask 类型的，为 org.gradle.api.Task 的实现类。 2. 声明 Task 的动">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/2020/01/16/Gradle实战-二/2020_01_17_01.png">
-<meta property="og:updated_time" content="2020-05-30T14:15:40.484Z">
+<meta property="og:updated_time" content="2020-06-01T09:10:52.261Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Gadle实战(二)：声明 Task">
-<meta name="twitter:description" content="1. Gradle API 中的 Task在默认情况下，每个创建的 Task 为 org.gradle.api.DefaultTask 类型的，为 org.gradle.api.Task 的实现类。 2. 声明 Task 的动作动作（action）就是 在 task 中合适的地方放置构建逻辑。 Task 提供了两个相关的方法来声明动作：doFirst(Closure)、doLast(Closure">
+<meta name="twitter:description" content="定义显示和隐式的 task 依赖 添加增量式构建支持 使用 Gradle 的内置 task 类型 Gradle 的构建生命周期 编写使用闭包和监听器，实现的生命周期钩子  1. Gradle API 中的 Task在默认情况下，每个创建的 Task 为 org.gradle.api.DefaultTask 类型的，为 org.gradle.api.Task 的实现类。 2. 声明 Task 的动">
 <meta name="twitter:image" content="/2020/01/16/Gradle实战-二/2020_01_17_01.png">
   
   
@@ -89,7 +89,14 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="1-Gradle-API-中的-Task"><a href="#1-Gradle-API-中的-Task" class="headerlink" title="1. Gradle API 中的 Task"></a>1. Gradle API 中的 Task</h2><p>在默认情况下，每个创建的 Task 为 <code>org.gradle.api.DefaultTask</code> 类型的，为 <code>org.gradle.api.Task</code> 的实现类。</p>
+        <ol start="4">
+<li>定义显示和隐式的 task 依赖</li>
+<li>添加增量式构建支持</li>
+<li>使用 Gradle 的内置 task 类型</li>
+<li>Gradle 的构建生命周期</li>
+<li>编写使用闭包和监听器，实现的生命周期钩子</li>
+</ol>
+<h2 id="1-Gradle-API-中的-Task"><a href="#1-Gradle-API-中的-Task" class="headerlink" title="1. Gradle API 中的 Task"></a>1. Gradle API 中的 Task</h2><p>在默认情况下，每个创建的 Task 为 <code>org.gradle.api.DefaultTask</code> 类型的，为 <code>org.gradle.api.Task</code> 的实现类。</p>
 <h2 id="2-声明-Task-的动作"><a href="#2-声明-Task-的动作" class="headerlink" title="2. 声明 Task 的动作"></a>2. 声明 Task 的动作</h2><p>动作（action）就是 <strong>在 task 中合适的地方放置构建逻辑</strong>。</p>
 <p>Task 提供了两个相关的方法来声明动作：<code>doFirst(Closure)</code>、<code>doLast(Closure)</code>，当 Task 被执行<br>时，动作逻辑被定义为的闭包参数，被依次执行。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">task helle&#123;</span><br><span class="line">    // 具体动作被封装在闭包中</span><br><span class="line">    doLast&#123;</span><br><span class="line">        println &apos;last&apos;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -103,8 +110,9 @@
 <p>为 Java 插件的 <code>compileJava</code> 添加一个 doFirst 动作：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">compileJava.doFirst&#123;</span><br><span class="line">    println &quot;add action&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>compileJava 为 Java 插件实现的一个 Task，可以为该 Task 添加自己的动作，执行相应的逻辑。</p>
-<h2 id="3-访问-DefaultTask-属性"><a href="#3-访问-DefaultTask-属性" class="headerlink" title="3. 访问 DefaultTask 属性"></a>3. 访问 DefaultTask 属性</h2><p>Task 有两个属性：</p>
+<p>compileJava 为 Java 插件实现的一个 Task，可以为该 Task 添加自己的动作，可以在 compileJava 任务执行前执行自定义的逻辑。</p>
+<p>doLast 可以使用 <code>&lt;&lt;</code> 替代，但是自己发现在更高的版本中无法使用。</p>
+<h2 id="3-访问-DefaultTask-属性"><a href="#3-访问-DefaultTask-属性" class="headerlink" title="3. 访问 DefaultTask 属性"></a>3. 访问 DefaultTask 属性</h2><p>在 <a href="https://leegyplus.github.io/2020/01/16/Gradle%E5%AE%9E%E6%88%98-%E4%B8%80/" target="_blank" rel="noopener">Gradle 实战二</a> 中的 Task API 知：Task 有两个属性：</p>
 <ul>
 <li>group(定义 Task 的逻辑分组) </li>
 <li>description（描述Task 的作用)</li>
@@ -128,24 +136,25 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">task test&#123;</span><br><span class="line">    dest = one.output.file</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>则依赖关系为： test 依赖 one。</p>
-<p>task 依赖的执行顺序：<strong>被依赖项先于依赖项先执行</strong>。</p>
-<h2 id="5-Task-终结器"><a href="#5-Task-终结器" class="headerlink" title="5. Task 终结器"></a>5. Task 终结器</h2><p>有时候需要在 Task或者依赖的 Task 执行完毕后，需要清理资源，Gradle 提供了 终结器 Task。</p>
-<p>Task 终结器即使在终接器失败了，Task 也会按照预期执行。</p>
+<p>task 依赖的执行顺序：<strong>被依赖项先于依赖项先执行</strong>，即 one 会优先于 test 执行。</p>
+<h2 id="5-Task-终结器"><a href="#5-Task-终结器" class="headerlink" title="5. Task 终结器"></a>5. Task 终结器</h2><p>有时候需要在 Task或者依赖的 Task 执行完毕后，需要清理资源，Gradle 提供了 终结器 Task。Task 终结器即使在终接器失败了，Task 也会按照预期执行。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">task first&#123;</span><br><span class="line">    doFirst&#123;</span><br><span class="line">        sout &apos;first&apos;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">task second&#123;</span><br><span class="line">     doFirst&#123;</span><br><span class="line">         sout &apos;second&apos;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br><span class="line">first.finalizedBy second</span><br></pre></td></tr></table></figure>
 
 <p>执行 first 会自动触发 second：</p>
-<blockquote>
-<p>./gradlew first</p>
-</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./gradlew first</span><br></pre></td></tr></table></figure>
+
+<p>执行结果为：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">first</span><br><span class="line">second</span><br></pre></td></tr></table></figure>
 
+<p>如其定义，即使在 first 执行失败，second 任务也会被执行。</p>
 <h2 id="6-可以在-Gradle-构建脚本中添加-Groovy-代码"><a href="#6-可以在-Gradle-构建脚本中添加-Groovy-代码" class="headerlink" title="6. 可以在 Gradle 构建脚本中添加 Groovy 代码"></a>6. 可以在 Gradle 构建脚本中添加 Groovy 代码</h2><p>build.gradle 文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">version = new ProjectVersion(0,1)</span><br><span class="line">class ProjectVersion&#123;</span><br><span class="line">    Integer major</span><br><span class="line">    Integer manor</span><br><span class="line"></span><br><span class="line">    ProjectVersion(Integer major,Integer manor)&#123;</span><br><span class="line">        this.major = major</span><br><span class="line">        this.minor = minor</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">...</span><br><span class="line">// Groovy 代码</span><br><span class="line">version = new ProjectVersion(0,1)</span><br><span class="line">class ProjectVersion&#123;</span><br><span class="line">    Integer major</span><br><span class="line">    Integer manor</span><br><span class="line"></span><br><span class="line">    ProjectVersion(Integer major,Integer manor)&#123;</span><br><span class="line">        this.major = major</span><br><span class="line">        this.minor = minor</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">...</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 
+<p>当然，也可使用其他 JVM 语言，如 Java、Kotlin、Scala 等。</p>
 <h2 id="7-Task-配置块"><a href="#7-Task-配置块" class="headerlink" title="7. Task 配置块"></a>7. Task 配置块</h2><p>当定义的 Task 不存在动作（action）时，则称为 <strong>Task 配置</strong>，比如：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">task test&#123;</span><br><span class="line">    println &apos;test&apos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>但是需要注意的一点是：<strong>Task 配置永远在 Task 动作执行之前执行</strong>,这牵涉到 Gradle 的生命周期阶段：初始化、配置、执行阶段，具体见下文。</p>
+<p>但是需要注意的一点是：<strong>Task 配置永远在 Task 动作执行之前执行</strong>，这牵涉到 Gradle 的生命周期阶段：<strong>初始化</strong>、<strong>配置</strong>、<strong>执行阶段</strong>，具体见下文。</p>
 <h2 id="8-Gradle-构建生命周期阶段"><a href="#8-Gradle-构建生命周期阶段" class="headerlink" title="8. Gradle 构建生命周期阶段"></a>8. Gradle 构建生命周期阶段</h2><p>无论何时执行 Gradle 构建，都会运作三个不同的生命周期阶段：<strong>初始化、配置、执行</strong>，其其执行顺序如下：</p>
 <p><img src="/2020/01/16/Gradle实战-二/2020_01_17_01.png" alt></p>
 <ul>
@@ -160,9 +169,9 @@
 <ul>
 <li>执行阶段</li>
 </ul>
-<p>执行 Gradle 命令执行，这一阶段 Task 会按照正确的顺序执行，其顺序有 Task 之间的依赖关系决定的， taskA 依赖与 taskB，那么执行顺序为 taskB -&gt; taskA 。</p>
+<p>执行 Gradle 命令执行，这一阶段 Task 动作会按照正确的顺序执行，其顺序有 Task 之间的依赖关系决定的， taskA 依赖与 taskB，那么执行顺序为 taskB -&gt; taskA 。</p>
 <h2 id="9-通过声明-Task-的-inputs-和-outputs-属性的方式，引入增量式构建特性"><a href="#9-通过声明-Task-的-inputs-和-outputs-属性的方式，引入增量式构建特性" class="headerlink" title="9. 通过声明 Task 的 inputs 和 outputs 属性的方式，引入增量式构建特性"></a>9. 通过声明 Task 的 inputs 和 outputs 属性的方式，引入增量式构建特性</h2><p>增量式更新在 Gradle 中十分重要，该特性充分提高构建性能。</p>
-<p>Gradle 通过比较两个构建的 Task 的 <code>inputs</code> 和 <code>outputs</code> 是否变化，来判断这个 Task 是否是最新的。如果自最后一个 Task 执行以来，如果 <code>inputs</code> 和 <code>outputs</code> 没有发生变化，那么认为该 Task 为最新的，则不会执行；反之则该 Task 会执行。</p>
+<p>Gradle 通过比较两个构建的 Task 的 <code>inputs</code> 和 <code>outputs</code> 是否变化，来判断这个 Task 是否是最新的。如果自从最后一个 Task 执行以来，<code>inputs</code> 和 <code>outputs</code> 均没有发生变化，那么认为该 Task 为最新的，该任务被标记为 <code>UP-To-DATE</code>，则不会执行；反之则该 Task 会执行。</p>
 <p>inputs 可以为一个目录、一个或者多个文件、一个或者多个属性，一个 Task 的 output 可以是一个目录或者任意个文件，对应于 Gradle API，inputs 和 outputs 被定义 DefaultTask 的属性，其对应类分别为 TaskInputs、TaskOutputs。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">task printVersion&#123;</span><br><span class="line">    inputs.property(&apos;release&apos;,version.release)</span><br><span class="line">    outputs.file versionFile</span><br><span class="line"></span><br><span class="line">    doLast&#123;</span><br><span class="line">        version.release = true</span><br><span class="line">        // 通过 ant 修改文件属性值</span><br><span class="line">        ant.propertyfile(file:versionFile)&#123;</span><br><span class="line">            entry(key:&apos;release&apos;,type:&apos;string&apos;,operation:&apos;=&apos;,value:&apos;true&apos;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -172,7 +181,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/01/16/Gradle实战-二/" data-id="ckatro9s80070ov2py3ui884p" class="article-share-link">分享</a>
+      <a data-url="/2020/01/16/Gradle实战-二/" data-id="ckawajd7d000g3lfy87zj772d" class="article-share-link">分享</a>
       
       
       
@@ -184,19 +193,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2020/01/16/Gradle实战-三/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2020/01/19/Gradle实战-四/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">这些东西可能太新了</strong>
       <div class="article-nav-title">
         
-          Gadle实战(三)：自定义 Task 类
+          Gadle实战(四）：依赖管理、版本冲突、理解缓存
         
       </div>
     </a>
   
   
-    <a href="/2020/01/16/Gradle实战-一/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2020/01/16/Gradle实战-三/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">这些东西可能过时了</strong>
-      <div class="article-nav-title">Gradle实战(一)：Project、Task、Property 的基本了解</div>
+      <div class="article-nav-title">Gadle实战(三)：自定义 Task 类</div>
     </a>
   
 </nav>
@@ -254,7 +263,7 @@
           </li>
         
           <li>
-            <a href="/2020/01/16/Gradle实战-三/">Gadle实战(三)：自定义 Task 类</a>
+            <a href="/2020/01/16/Gradle实战-二/">Gadle实战(二)：声明 Task</a>
           </li>
         
       </ul>

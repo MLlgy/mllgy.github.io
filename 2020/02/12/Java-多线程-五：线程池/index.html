@@ -16,7 +16,7 @@
 <meta property="og:description" content="为什么使用线程池有了 Thread，可以凭此开启子线程，执行耗时操作，那么为什么还有 Java 还有线程池这种类存在呢？ 这是因为当业务需要我们频繁创建多个线程并进行耗时操作时，每次通过 new Thread 的方式来创建线程的方式是十分不好的。虽然线程是十分轻量的，但是新建和销毁消耗线程成本是系统操作，是十分消耗资源的，同时通过 new Thread 创建的大量线程是难以统一管理的，线程间相互竞">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/2020/02/12/Java-多线程-五：线程池/2019_08_22_01.png">
-<meta property="og:updated_time" content="2020-05-30T15:03:36.985Z">
+<meta property="og:updated_time" content="2020-06-01T05:24:30.199Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java 多线程五：线程池">
 <meta name="twitter:description" content="为什么使用线程池有了 Thread，可以凭此开启子线程，执行耗时操作，那么为什么还有 Java 还有线程池这种类存在呢？ 这是因为当业务需要我们频繁创建多个线程并进行耗时操作时，每次通过 new Thread 的方式来创建线程的方式是十分不好的。虽然线程是十分轻量的，但是新建和销毁消耗线程成本是系统操作，是十分消耗资源的，同时通过 new Thread 创建的大量线程是难以统一管理的，线程间相互竞">
@@ -205,13 +205,12 @@ of a set of tasks, you might use</p>
 <p>由构建方法可知，SingleThreadPool 中只有一个核心线程，这意味着所有的任务都会被顺序执行。SingleThreadExecutor 的意义在于统一所有的外界任务到一个线程中，这使得在这些任务之间不需要处理线程同步的问题。</p>
 <hr>
 <p><strong>知识链接</strong></p>
-<p><a href="https://www.cnblogs.com/MOBIN/p/5436482.html" target="_blank" rel="noopener">java并发编程–Executor框架
-</a></p>
+<p><a href="https://www.cnblogs.com/MOBIN/p/5436482.html" target="_blank" rel="noopener">java并发编程–Executor框架</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/02/12/Java-多线程-五：线程池/" data-id="ckatroa2m00gpov2pdk23jy3e" class="article-share-link">分享</a>
+      <a data-url="/2020/02/12/Java-多线程-五：线程池/" data-id="ckawajdj600gb3lfy1h99dqa5" class="article-share-link">分享</a>
       
       
       
@@ -293,7 +292,7 @@ of a set of tasks, you might use</p>
           </li>
         
           <li>
-            <a href="/2020/01/16/Gradle实战-三/">Gadle实战(三)：自定义 Task 类</a>
+            <a href="/2020/01/16/Gradle实战-二/">Gadle实战(二)：声明 Task</a>
           </li>
         
       </ul>

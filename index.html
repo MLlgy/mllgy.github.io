@@ -96,7 +96,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/02/24/Android-Logcat-基本信息细述/" data-id="ckatro9rm006fov2p9bxfx7sr" class="article-share-link">分享</a>
+      <a data-url="/2020/02/24/Android-Logcat-基本信息细述/" data-id="ckawajd6g00003lfyszc4cycc" class="article-share-link">分享</a>
       
       
       
@@ -142,7 +142,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/02/12/Java-多线程-五：线程池/" data-id="ckatroa2m00gpov2pdk23jy3e" class="article-share-link">分享</a>
+      <a data-url="/2020/02/12/Java-多线程-五：线程池/" data-id="ckawajdj600gb3lfy1h99dqa5" class="article-share-link">分享</a>
       
       
       
@@ -192,7 +192,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/01/19/Gradle实战-五/" data-id="ckatro9zx00gjov2p9mi9ydgb" class="article-share-link">分享</a>
+      <a data-url="/2020/01/19/Gradle实战-五/" data-id="ckawajdj000g33lfy6j9j6rdt" class="article-share-link">分享</a>
       
       
       
@@ -238,7 +238,62 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/01/19/Gradle实战-四/" data-id="ckatroa5h00iyov2p801m3zwi" class="article-share-link">分享</a>
+      <a data-url="/2020/01/19/Gradle实战-四/" data-id="ckawajdny00ir3lfytnaon4eg" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Gradle-in-action/">Gradle in action</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Gradle-基本原理/">Gradle 基本原理</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Gradle实战-二" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/01/16/Gradle实战-二/" class="article-date">
+  <time datetime="2020-01-16T11:02:23.000Z" itemprop="datePublished">2020-01-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/01/16/Gradle实战-二/">Gadle实战(二)：声明 Task</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol start="4">
+<li>定义显示和隐式的 task 依赖</li>
+<li>添加增量式构建支持</li>
+<li>使用 Gradle 的内置 task 类型</li>
+<li>Gradle 的构建生命周期</li>
+<li>编写使用闭包和监听器，实现的生命周期钩子</li>
+</ol>
+<h2 id="1-Gradle-API-中的-Task"><a href="#1-Gradle-API-中的-Task" class="headerlink" title="1. Gradle API 中的 Task"></a>1. Gradle API 中的 Task</h2><p>在默认情况下，每个创建的 Task 为 <code>org.gradle.api.DefaultTask</code> 类型的，为 <code>org.gradle.api.Task</code> 的实现类。</p>
+<h2 id="2-声明-Task-的动作"><a href="#2-声明-Task-的动作" class="headerlink" title="2. 声明 Task 的动作"></a>2. 声明 Task 的动作</h2><p>动作（action）就是 <strong>在 task 中合适的地方放置构建逻辑</strong>。</p>
+<p>Task 提供了两个相关的方法来声明动作：<code>doFirst(Closure)</code>、<code>doLast(Closure)</code>，当 Task 被执行<br>时，动作逻辑被定义为的闭包参数，被依次执行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">task helle&#123;</span><br><span class="line">    // 具体动作被封装在闭包中</span><br><span class="line">    doLast&#123;</span><br><span class="line">        println &apos;last&apos;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2020/01/16/Gradle实战-二/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="/2020/01/16/Gradle实战-二/" data-id="ckawajd7d000g3lfy87zj772d" class="article-share-link">分享</a>
       
       
       
@@ -284,55 +339,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/01/16/Gradle实战-三/" data-id="ckatro9s6006zov2pn2fzso63" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Gradle-in-action/">Gradle in action</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Gradle-基本原理/">Gradle 基本原理</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Gradle实战-二" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/01/16/Gradle实战-二/" class="article-date">
-  <time datetime="2020-01-16T11:02:23.000Z" itemprop="datePublished">2020-01-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/01/16/Gradle实战-二/">Gadle实战(二)：声明 Task</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-Gradle-API-中的-Task"><a href="#1-Gradle-API-中的-Task" class="headerlink" title="1. Gradle API 中的 Task"></a>1. Gradle API 中的 Task</h2><p>在默认情况下，每个创建的 Task 为 <code>org.gradle.api.DefaultTask</code> 类型的，为 <code>org.gradle.api.Task</code> 的实现类。</p>
-<h2 id="2-声明-Task-的动作"><a href="#2-声明-Task-的动作" class="headerlink" title="2. 声明 Task 的动作"></a>2. 声明 Task 的动作</h2><p>动作（action）就是 <strong>在 task 中合适的地方放置构建逻辑</strong>。</p>
-<p>Task 提供了两个相关的方法来声明动作：<code>doFirst(Closure)</code>、<code>doLast(Closure)</code>，当 Task 被执行<br>时，动作逻辑被定义为的闭包参数，被依次执行。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">task helle&#123;</span><br><span class="line">    // 具体动作被封装在闭包中</span><br><span class="line">    doLast&#123;</span><br><span class="line">        println &apos;last&apos;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-        
-          <p class="article-more-link">
-            <a href="/2020/01/16/Gradle实战-二/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="/2020/01/16/Gradle实战-二/" data-id="ckatro9s80070ov2py3ui884p" class="article-share-link">分享</a>
+      <a data-url="/2020/01/16/Gradle实战-三/" data-id="ckawajd7e000i3lfyl2i9row1" class="article-share-link">分享</a>
       
       
       
@@ -368,21 +375,15 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
-<p>最基础的 Gradle构建块(project、task、property)，以及它们是如何映射到 Gradle 的 API 上面的。</p>
-</blockquote>
+        <p>本文可以学到：最基础的 Gradle构建块(project、task、property)，以及它们是如何映射到 Gradle 的 API 上面的。</p>
+
 <p>本篇涉及到的内容：</p>
 <ol>
 <li>声明简单的 task</li>
 <li>编写自定义的 task 类</li>
 <li>如何获取 task 属性</li>
-<li>定义显示和隐式的 task 依赖</li>
-<li>添加增量式构建支持</li>
-<li>使用 Gradle 的内置 task 类型</li>
-<li>Gradle 的构建生命周期</li>
-<li>编写使用闭包和监听器 实现的生命周期钩子</li>
 </ol>
-<h2 id="1-构建块"><a href="#1-构建块" class="headerlink" title="1. 构建块"></a>1. 构建块</h2><p>Gradle 构建包括三个基本的构建块: <code>project</code>、<code>task</code>、<code>property</code>。每个构建中至少包含一个 <code>project</code>，进而又包含一个或者多个 <code>task</code> 。<code>project</code> 和 <code>task</code> 暴露的属性可以控制构建过程。</p>
+<h2 id="1-构建块"><a href="#1-构建块" class="headerlink" title="1. 构建块"></a>1. 构建块</h2><p>Gradle 构建包括三个基本的构建块: <code>project</code>、<code>task</code>、<code>property</code>。每个构建中至少包含一个 <code>project</code>，进而又包含一个或者多个 <code>task</code> 。<code>project</code> 和 <code>task</code> 暴露的 <code>属性(property)</code> 可以控制 Gradle 构建过程。</p>
         
           <p class="article-more-link">
             <a href="/2020/01/16/Gradle实战-一/#more">Read More</a>
@@ -391,7 +392,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/01/16/Gradle实战-一/" data-id="ckatro9s3006sov2pfumwqq6o" class="article-share-link">分享</a>
+      <a data-url="/2020/01/16/Gradle实战-一/" data-id="ckawajd7f000k3lfy09htx7p8" class="article-share-link">分享</a>
       
       
       
@@ -427,7 +428,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="1-Java-项目引入-Gradle-插件"><a href="#1-Java-项目引入-Gradle-插件" class="headerlink" title="1. Java 项目引入 Gradle 插件"></a>1. Java 项目引入 Gradle 插件</h2><p>当我们不通过 IDE 的方式构建 Java 项目，那么在编写完成后，运行项目就需要使用 javac 、jar 等这样的工具来帮我们运行项目，无疑在开发过程中这是十分痛苦的。而 Gradle 插件具体自动化执行编译、运行等过程。Gradle 通过引入特定领域的约定和 Task 来扩展项目。而 Java 插件是 Gradle 自身装载的一个插件，可以实现很多的功能，比如定义标准的项目布局、有顺序的执行任务。</p>
+        <h2 id="1-Java-项目引入-Gradle-插件"><a href="#1-Java-项目引入-Gradle-插件" class="headerlink" title="1. Java 项目引入 Gradle 插件"></a>1. Java 项目引入 Gradle 插件</h2><p>当我们不通过 IDE 的方式构建 Java 项目，那么在编写完成后，运行项目就需要使用 javac 、jar 等这样的工具来帮我们运行项目，无疑在开发过程中这是十分痛苦的。使用 Gradle 插件具体自动化执行编译、运行等过程。Gradle 通过引入特定领域的约定和 Task 来扩展项目。而 Java 插件是 Gradle 自身装载的一个插件，可以实现很多的功能，比如定义标准的项目布局、有顺序的执行任务。</p>
         
           <p class="article-more-link">
             <a href="/2020/01/16/Gradle实战-零/#more">Read More</a>
@@ -436,7 +437,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/01/16/Gradle实战-零/" data-id="ckatro9sa0074ov2pck3sysne" class="article-share-link">分享</a>
+      <a data-url="/2020/01/16/Gradle实战-零/" data-id="ckawajd7i000p3lfyd5s6dgug" class="article-share-link">分享</a>
       
       
       
@@ -483,7 +484,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/01/06/Flutter核心技术与实战-二/" data-id="ckatro9s4006uov2p66xxnon9" class="article-share-link">分享</a>
+      <a data-url="/2020/01/06/Flutter核心技术与实战-二/" data-id="ckawajd74000c3lfyoyda3rbf" class="article-share-link">分享</a>
       
       
       
@@ -527,7 +528,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/01/06/Flutter核心技术与实战-一/" data-id="ckatro9s5006wov2p305poibk" class="article-share-link">分享</a>
+      <a data-url="/2020/01/06/Flutter核心技术与实战-一/" data-id="ckawajd7a000f3lfynqsfswiy" class="article-share-link">分享</a>
       
       
       
@@ -597,7 +598,7 @@
           </li>
         
           <li>
-            <a href="/2020/01/16/Gradle实战-三/">Gadle实战(三)：自定义 Task 类</a>
+            <a href="/2020/01/16/Gradle实战-二/">Gadle实战(二)：声明 Task</a>
           </li>
         
       </ul>

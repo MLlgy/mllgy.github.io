@@ -7,20 +7,20 @@
   
   <title>Gradle实战(一)：Project、Task、Property 的基本了解 | GY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="最基础的 Gradle构建块(project、task、property)，以及它们是如何映射到 Gradle 的 API 上面的。  本篇涉及到的内容：  声明简单的 task 编写自定义的 task 类 如何获取 task 属性 定义显示和隐式的 task 依赖 添加增量式构建支持 使用 Gradle 的内置 task 类型 Gradle 的构建生命周期 编写使用闭包和监听器 实现的生命周期">
+  <meta name="description" content="本文可以学到：最基础的 Gradle构建块(project、task、property)，以及它们是如何映射到 Gradle 的 API 上面的。  本篇涉及到的内容：  声明简单的 task 编写自定义的 task 类 如何获取 task 属性  1. 构建块Gradle 构建包括三个基本的构建块: project、task、property。每个构建中至少包含一个 project，进而又包含一">
 <meta name="keywords" content="Gradle 基本原理,Gradle in action">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Gradle实战(一)：Project、Task、Property 的基本了解">
 <meta property="og:url" content="/2020/01/16/Gradle实战-一/index.html">
 <meta property="og:site_name" content="GY">
-<meta property="og:description" content="最基础的 Gradle构建块(project、task、property)，以及它们是如何映射到 Gradle 的 API 上面的。  本篇涉及到的内容：  声明简单的 task 编写自定义的 task 类 如何获取 task 属性 定义显示和隐式的 task 依赖 添加增量式构建支持 使用 Gradle 的内置 task 类型 Gradle 的构建生命周期 编写使用闭包和监听器 实现的生命周期">
+<meta property="og:description" content="本文可以学到：最基础的 Gradle构建块(project、task、property)，以及它们是如何映射到 Gradle 的 API 上面的。  本篇涉及到的内容：  声明简单的 task 编写自定义的 task 类 如何获取 task 属性  1. 构建块Gradle 构建包括三个基本的构建块: project、task、property。每个构建中至少包含一个 project，进而又包含一">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/2020/01/16/Gradle实战-一/2020_01_16_07.png">
 <meta property="og:image" content="/2020/01/16/Gradle实战-一/2020_01_16_08.png">
-<meta property="og:updated_time" content="2020-05-30T14:14:20.678Z">
+<meta property="og:updated_time" content="2020-06-01T07:56:29.854Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Gradle实战(一)：Project、Task、Property 的基本了解">
-<meta name="twitter:description" content="最基础的 Gradle构建块(project、task、property)，以及它们是如何映射到 Gradle 的 API 上面的。  本篇涉及到的内容：  声明简单的 task 编写自定义的 task 类 如何获取 task 属性 定义显示和隐式的 task 依赖 添加增量式构建支持 使用 Gradle 的内置 task 类型 Gradle 的构建生命周期 编写使用闭包和监听器 实现的生命周期">
+<meta name="twitter:description" content="本文可以学到：最基础的 Gradle构建块(project、task、property)，以及它们是如何映射到 Gradle 的 API 上面的。  本篇涉及到的内容：  声明简单的 task 编写自定义的 task 类 如何获取 task 属性  1. 构建块Gradle 构建包括三个基本的构建块: project、task、property。每个构建中至少包含一个 project，进而又包含一">
 <meta name="twitter:image" content="/2020/01/16/Gradle实战-一/2020_01_16_07.png">
   
   
@@ -90,37 +90,43 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
-<p>最基础的 Gradle构建块(project、task、property)，以及它们是如何映射到 Gradle 的 API 上面的。</p>
-</blockquote>
+        <p>本文可以学到：最基础的 Gradle构建块(project、task、property)，以及它们是如何映射到 Gradle 的 API 上面的。</p>
+
 <p>本篇涉及到的内容：</p>
 <ol>
 <li>声明简单的 task</li>
 <li>编写自定义的 task 类</li>
 <li>如何获取 task 属性</li>
-<li>定义显示和隐式的 task 依赖</li>
-<li>添加增量式构建支持</li>
-<li>使用 Gradle 的内置 task 类型</li>
-<li>Gradle 的构建生命周期</li>
-<li>编写使用闭包和监听器 实现的生命周期钩子</li>
 </ol>
-<h2 id="1-构建块"><a href="#1-构建块" class="headerlink" title="1. 构建块"></a>1. 构建块</h2><p>Gradle 构建包括三个基本的构建块: <code>project</code>、<code>task</code>、<code>property</code>。每个构建中至少包含一个 <code>project</code>，进而又包含一个或者多个 <code>task</code> 。<code>project</code> 和 <code>task</code> 暴露的属性可以控制构建过程。</p>
+<h2 id="1-构建块"><a href="#1-构建块" class="headerlink" title="1. 构建块"></a>1. 构建块</h2><p>Gradle 构建包括三个基本的构建块: <code>project</code>、<code>task</code>、<code>property</code>。每个构建中至少包含一个 <code>project</code>，进而又包含一个或者多个 <code>task</code> 。<code>project</code> 和 <code>task</code> 暴露的 <code>属性(property)</code> 可以控制 Gradle 构建过程。</p>
 <a id="more"></a>
 
-<p>Gradle 使用领域驱动设计（DDD）的原理为自己的领域构建软件模型，因此 Gradle API 中有  <strong>相应的类</strong> 来表示 project 和 task。</p>
-<h3 id="1-1-project"><a href="#1-1-project" class="headerlink" title="1.1 project"></a>1.1 project</h3><p>在 Gradle 中，<strong>一个 project 代表一个正在构建的组件，或者一个想要完成的目标</strong>,比如需要部署的应用程序。每个 Gradle 构建脚本至少定义一个 Project。<br>当构建进程启动后，Gradle 基于 <code>build.gradle</code> 中的配置,实例化 <code>org.gradle.api.Project</code> 类，并且能够通过 <code>project</code> 变量使其隐式使用，可以通过查看 Project 类查看其中可用的方法.</p>
-<p><img src="/2020/01/16/Gradle实战-一/2020_01_16_07.png" alt></p>
+<p>Gradle 使用领域驱动设计（DDD）的原理为自己的领域构建软件模型，因此 Gradle API 中有  <strong>相应的类</strong> 来表示 project 和 task，具体什么是 DDD，抱歉，我也没理解。</p>
+<h3 id="1-1-project"><a href="#1-1-project" class="headerlink" title="1.1 project"></a>1.1 project</h3><p>在 Gradle 中，<strong>一个 project 代表一个正在构建的组件，或者一个想要完成的目标</strong>,比如需要部署的应用程序。每个 Gradle 构建脚本至少定义一个 Project。</p>
+<p>当构建进程启动后，Gradle 基于 <code>build.gradle</code> 中的配置,实例化 <code>org.gradle.api.Project</code> 类，并且能够通过 <code>project</code> 变量使其隐式使用，可以通过查看 Project 类查看其中可用的方法.</p>
+<p><img src="/2020/01/16/Gradle实战-一/2020_01_16_07.png" alt="Project 相关 API"></p>
+<p>通过上图 Project 的 API ，可以看到在脚本内可以进行脚本配置、依赖管理、读写属性值、创建文件、创建 Task 操作。</p>
+<p>在 Android 项目中，在构建过程中构建脚本 build.gradle 将会被实例化为 Project 对象，而在 build.gradle 中的相关设定则是调用 Project 的相关方法，比如以下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apply plugin: &apos;com.android.application&apos;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>其中 apply 则是调用了如上图所示的 Project 中的 apply 方法，同时也可以在 build.gradle 使用 JVM 语言进行相关编码，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">//使用 Groovy 语言</span><br><span class="line">final def log = project.logger</span><br><span class="line">final def variants = project.android.applicationVariants</span><br><span class="line">//使用 Java 语言</span><br><span class="line">final String name;</span><br><span class="line">private String showName()&#123;</span><br><span class="line">    return name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>具体可以查看 Project 的 API：<a href="https://docs.gradle.org/current/javadoc/org/gradle/api/package-summary.html" target="_blank" rel="noopener">Package org.gradle.api</a> 和 <a href="https://docs.gradle.org/current/javadoc/org/gradle/api/Project.html" target="_blank" rel="noopener">Project</a>。</p>
-<h3 id="1-2-Task"><a href="#1-2-Task" class="headerlink" title="1.2 Task"></a>1.2 Task</h3><p>任务有两个重要功能：<strong>任务动作</strong> 和 <strong>任务依赖</strong>。任务动作（<code>Action</code>）定义了一个任务执行时 <strong>最小的工作单位</strong>。</p>
-<p>task 对应的 Gradle API：org.gradle.api.Task 接口：</p>
-<p><img src="/2020/01/16/Gradle实战-一/2020_01_16_08.png" alt></p>
+<h3 id="1-2-Task"><a href="#1-2-Task" class="headerlink" title="1.2 Task"></a>1.2 Task</h3><p>Task 意为任务，任务有两个重要功能：<strong>任务动作</strong> 和 <strong>任务依赖</strong>。任务动作（<code>Action</code>）定义了一个任务执行时 <strong>最小的工作单位</strong>。</p>
+<p>以下为定义一个 Task：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">task clean(type: Delete) &#123;</span><br><span class="line">    delete rootProject.buildDir</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>该代码块在构建过程中，会被映射为 Task 类的一个实例，当然也可以在 Task 内(比如 clean 闭包)向 Project 一样使用相应的 API。</p>
+<p>Task 对应的 Gradle API：org.gradle.api.Task 接口，可以使用相关方法，为 Task 定义动作或者依赖。</p>
+<p><img src="/2020/01/16/Gradle实战-一/2020_01_16_08.png" alt="Task 相关 API"></p>
 <p>具体可查看 Task 的 API 描述: <a href="https://docs.gradle.org/current/javadoc/org/gradle/api/Task.html" target="_blank" rel="noopener">Interface Task</a> 。</p>
-<h3 id="1-3-属性"><a href="#1-3-属性" class="headerlink" title="1.3 属性"></a><strong>1.3 属性</strong></h3><p>每个 Project 和 Task 实例都提供了很多可以通过 setter 和 getter 方法访问的属性，一个属性可能是一个任务的描述或者是项目的版本。</p>
+<h3 id="1-3-属性"><a href="#1-3-属性" class="headerlink" title="1.3 属性"></a><strong>1.3 属性</strong></h3><p>每个 Project 和 Task 实例都提供了很多可以通过 setter 和 getter 方法访问的属性，属性可能是任务的描述或者是项目的版本号，也可能表示其他含义。</p>
 <p>在项目开发中，可以自定义属性，并可以对该属性进行读写操作。自定义属性的操作，可以通过 <strong>扩展属性</strong> 和 <strong>在gradle.properties 中定义</strong> 的方式实现。</p>
 <ol>
 <li><strong>扩展属性</strong></li>
 </ol>
-<p>使用命名空间 <code>ext</code> 自定义属性，具体如下：</p>
+<p>使用 <strong>命名空间</strong> <code>ext</code> 自定义属性，可以使用任意 JVM 语言，具体 Groovy 如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 定义只读属性</span><br><span class="line">project.ext.name = &apos;name&apos;</span><br><span class="line">// 定义可、读写属性</span><br><span class="line">ext&#123;</span><br><span class="line">    age = 1</span><br><span class="line">&#125;</span><br><span class="line">// 对扩展属性的修改</span><br><span class="line">ext.age = 2</span><br></pre></td></tr></table></figure>
 
 <ol start="2">
@@ -129,7 +135,7 @@
 <p>可以在 <code>gradle.properties</code> 文件中可以添加 Gradle 属性。</p>
 <ul>
 <li>在 <code>&lt;USER_HOME&gt;/.gradle</code> 文件下的 <code>gradle.properties</code> 中添加的 Gradle 属性，所有的项目都可以使用。</li>
-<li>在项目下的 <code>gradle.properties</code> 中添加的 Gradle 属性，可以在项目中所有的模块中使用。</li>
+<li>在项目下的 <code>gradle.properties</code> 中添加的 Gradle 属性，该属性所属 Project，可以在项目中所有的模块中使用。</li>
 </ul>
 <p>在 gradle.properties 中声明属性：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">name = &apos;tom&apos;</span><br><span class="line">age = 1</span><br></pre></td></tr></table></figure>
@@ -140,36 +146,36 @@
 <ol start="3">
 <li>声明属性的其他方式</li>
 </ol>
-<pre><code>1. 在命令行模式下通过 `-P` 命令选项提供项目属性
-
-        gradle -Pname = &apos;tom&apos;
-
-2. 在命令行模式下通过 `-D` 命令选项提供系统属性
-
-        gradle -Dname = &apos;tom&apos;</code></pre><p>使用这种方式我们可以执行 test，具体如下：</p>
-<blockquote>
-<p>./gradlew -Pname=Mike test</p>
-</blockquote>
-<p>那么该 Task 则打印新的 name 值 – Mike。</p>
+<ul>
+<li><p>在命令行模式下通过 <code>-P</code> 命令选项提供 <strong>项目属性</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gradle -Pname = &apos;tom&apos;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在命令行模式下通过 <code>-D</code> 命令选项提供 <strong>系统属性</strong></p>
+</li>
+</ul>
+<p><code>gradle -Dname = &#39;tom&#39;</code></p>
+<p>使用这种方式我们可以执行 test 任务，并且传入相应属性值，具体如下：</p>
+<p><code>./gradlew -Pname=Mike test</code></p>
+<p>那么该 Task 则打印新的 name 值为 Mike。</p>
 <ol start="4">
 <li>在 gradle 脚本中定义属性</li>
 </ol>
-<p>也可以在 Gradle 脚本中定义变量，通过 apply 的方式引入</p>
+<p>Gradle 也可以在 Gradle 脚本中定义变量，通过 apply 的方式引入脚本，并在另外一个脚本中使用。</p>
 <p>比如在 version.gradle 中定义了一些变量以及方法，大致如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ext.name = &quot;Mike&quot;</span><br><span class="line">def addRepos(RepositoryHandler handler) &#123;</span><br><span class="line">    handler.google()</span><br><span class="line">    handler.jcenter()</span><br><span class="line">    handler.mavenCentral()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ext.addRepos = this.&amp;addRepos</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">def addRepos(RepositoryHandler handler) &#123;</span><br><span class="line">    handler.google()</span><br><span class="line">    handler.jcenter()</span><br><span class="line">    handler.mavenCentral()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 定义了一个 Map</span><br><span class="line">def kotlin = [:]</span><br><span class="line">// 设置其 key-vaule</span><br><span class="line">kotlin.plugin = &quot;org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin&quot;</span><br><span class="line">//使用其方式，暴露脚本中的自定义方法</span><br><span class="line">ext.addRepos = this.&amp;addRepos</span><br></pre></td></tr></table></figure>
 
-<p>那么在项目目录的 build.gradle 中通过 apply from 的方式引入该文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">buildscript &#123;</span><br><span class="line">    apply from: &quot;version.gradle&quot;</span><br><span class="line">    // 调用自定义方法</span><br><span class="line">    addRepos(repositories)</span><br><span class="line">    dependencies &#123;</span><br><span class="line">        // 调用自定义变量</span><br><span class="line">        classpath deps.android_gradle_plugin</span><br><span class="line">        classpath deps.kotlin.plugin</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么在 <strong>项目根目录</strong> 的 build.gradle 中通过 <code>apply from</code> 的方式引入该文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">buildscript &#123;</span><br><span class="line">    apply from: &quot;version.gradle&quot;</span><br><span class="line">    // 调用自定义方法</span><br><span class="line">    addRepos(repositories)</span><br><span class="line">    dependencies &#123;</span><br><span class="line">        // 调用自定义变量</span><br><span class="line">        classpath kotlin.plugin</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>可以了解一下 API 中对 <code>apply from</code> 的描述：</p>
-<blockquote>
-<p>Applies a plugin or script, using the given options provided as a map. Does nothing if the plugin has already been applied.</p>
-</blockquote>
+<p>Applies a plugin or script, using the given options provided as a map. Does nothing if the plugin has already been applied.</p><p>
+
+</p><p>可以看到 apply 不仅可以引入插件，也可以引入脚本。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/01/16/Gradle实战-一/" data-id="ckatro9s3006sov2pfumwqq6o" class="article-share-link">分享</a>
+      <a data-url="/2020/01/16/Gradle实战-一/" data-id="ckawajd7f000k3lfy09htx7p8" class="article-share-link">分享</a>
       
       
       
@@ -181,11 +187,11 @@
     
 <nav id="article-nav">
   
-    <a href="/2020/01/16/Gradle实战-二/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2020/01/16/Gradle实战-三/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">这些东西可能太新了</strong>
       <div class="article-nav-title">
         
-          Gadle实战(二)：声明 Task
+          Gadle实战(三)：自定义 Task 类
         
       </div>
     </a>
@@ -251,7 +257,7 @@
           </li>
         
           <li>
-            <a href="/2020/01/16/Gradle实战-三/">Gadle实战(三)：自定义 Task 类</a>
+            <a href="/2020/01/16/Gradle实战-二/">Gadle实战(二)：声明 Task</a>
           </li>
         
       </ul>

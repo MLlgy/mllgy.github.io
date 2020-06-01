@@ -15,12 +15,12 @@
 <meta property="og:site_name" content="GY">
 <meta property="og:description" content="在构建脚本中可以编写 Task 的动作（Action），从而操作相关逻辑，这在 Gradle 中是十分简单的。但是当项目增长需要添加更多的逻辑时，维护起来就十分的麻烦，如果可以编程式结构实现对逻辑的编写，类似对类和方法编写，按照日常开发的思维编写代码，这对于程序开发是十分友好的，而 Gradle 提供了这种支持，开发者可以使用任意 JVM 语言，比如 Java、Groovy、Kotlin，在构建脚">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="/source/images/2020_01_17_02.png">
-<meta property="og:updated_time" content="2020-03-16T11:14:05.213Z">
+<meta property="og:image" content="/2020/01/16/Gradle实战-三/2020_01_17_02.png">
+<meta property="og:updated_time" content="2020-06-01T09:28:08.475Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Gadle实战(三)：自定义 Task 类">
 <meta name="twitter:description" content="在构建脚本中可以编写 Task 的动作（Action），从而操作相关逻辑，这在 Gradle 中是十分简单的。但是当项目增长需要添加更多的逻辑时，维护起来就十分的麻烦，如果可以编程式结构实现对逻辑的编写，类似对类和方法编写，按照日常开发的思维编写代码，这对于程序开发是十分友好的，而 Gradle 提供了这种支持，开发者可以使用任意 JVM 语言，比如 Java、Groovy、Kotlin，在构建脚">
-<meta name="twitter:image" content="/source/images/2020_01_17_02.png">
+<meta name="twitter:image" content="/2020/01/16/Gradle实战-三/2020_01_17_02.png">
   
   
     <link rel="icon" href="/favicon.png">
@@ -119,9 +119,9 @@
 <p>Zip 和 Copy 都继承与 AbstractCopyTask，具体可以查看相应的 API。</p>
 <h2 id="5-Task-规则"><a href="#5-Task-规则" class="headerlink" title="5. Task 规则"></a>5. Task 规则</h2><p>Gradle 引入了 Task 规则的概念，可以根据 Task 名称模式执行相应的逻辑，该模式是有两部分组成：Task 名称的静态部分和一个占位符，它们联合组成动态的 Task 名称。</p>
 <p>根据 Task名称模式执行相关逻辑，并不意味着你可以不做任何工作只通过 Task 名称来执行相关的逻辑，你需要自定义 Tast 规则，至于如何定义 Task 规则，参见 《Gradle in action》一书中第 98 页。 </p>
-<h2 id="6-在-buildSrc-目录下构建代码"><a href="#6-在-buildSrc-目录下构建代码" class="headerlink" title="6. 在 buildSrc 目录下构建代码"></a>6. 在 buildSrc 目录下构建代码</h2><p>buildSrc 目录被视为 Gradle 项目的指定目录。</p>
+<h2 id="6-在-buildSrc-目录下构建代码"><a href="#6-在-buildSrc-目录下构建代码" class="headerlink" title="6. 在 buildSrc 目录下构建代码"></a>6. 在 buildSrc 目录下构建代码</h2><p><strong>buildSrc 目录被视为 Gradle 项目的指定目录</strong>，这个目录是十分重要。</p>
 <p>在构建脚本中编写的 Groovy 类最适合的位置为项目的 buildSrc 目录下。将 Java 代码放在 src/main/java 目录下，将 Groovy 代码放在 src/main/groovy 目录下，<strong>位于这些目录下的代码会被自动编译，并且会被加入到 Gradle 构建脚本的 classpath 中</strong>，所以说 buildSrc 目录是组织代码的最佳方式。</p>
-<p>在 buildSrc 中构建代码的用途是十分重要的，我们常见的一个需求：开发一个本地插件，我们不需要将开发的插件发布到第三方库中，只需要在该项目中使用，那么我们就可以在 buildSrc 进行编码，如上面所说该目录下得文件是可以被 Gradle 自动识别的。</p>
+<p>在 buildSrc 中构建代码的用途是十分重要的，我们常见的一个需求：开发一个本地插件，我们不需要将开发的插件发布到第三方库中，只需要在该项目中使用新建 buildSrc 目录，那么我们就可以在该目录内进行编码，如上面所说该目录下得文件是可以被 Gradle 自动识别的。</p>
 <h2 id="7-挂接到构建生命周期过程中"><a href="#7-挂接到构建生命周期过程中" class="headerlink" title="7. 挂接到构建生命周期过程中"></a>7. 挂接到构建生命周期过程中</h2><p>Task <strong>的动作和配置代码是在构建生命的不同阶段执行的</strong>。</p>
 <p>在构建阶段执行的 Task 配置逻辑，或者在执行阶段执行的 Task 动作的操作，在很多时候是存在局限的，很多时候需要在特定的生命周期事件发生时执行指定的代码，比如在某个构建之间、期间或者之后。对于这种要求 Gradle 提供了两种方式可以编写回调生命周期的事件：</p>
 <ul>
@@ -129,8 +129,8 @@
 <li>通过 Gradle API 提供的监听器接口实现</li>
 </ul>
 <p>许多生命周期的回调方法被定义在 Project 和 Gradle 的接口中。</p>
-<p>Task 执行图是一个有向无环图(DAG)，<strong>一个执行过的 Task 永远不会再次执行</strong>,以下展示了 Task 执行图的相关接口和方法：</p>
-<p><img src="/source/images/2020_01_17_02.png" alt="Task 接口"></p>
+<p>Task 执行图是一个 <strong>有向无环图 (DAG)</strong>，<strong>一个执行过的 Task 永远不会再次执行</strong>,以下展示了 Task 执行图的相关接口和方法：</p>
+<p><img src="/2020/01/16/Gradle实战-三/2020_01_17_02.png" alt="Task 接口"></p>
 <h3 id="7-1-在闭包中调用生命周期钩子"><a href="#7-1-在闭包中调用生命周期钩子" class="headerlink" title="7.1 在闭包中调用生命周期钩子"></a>7.1 在闭包中调用生命周期钩子</h3><p>以 whenReady 为例，whenReady 方法会在 task 图生成完成后，该函数会立即被执行。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 注册的生命周期钩子函数在 Task 图生成后被调用</span><br><span class="line">gradle.taskGraph.whenReady&#123; TaskExecutionGraph taskGraph -&gt;</span><br><span class="line">    // 查看Task 执行图中是否含有 release Task</span><br><span class="line">    if(taskGraph.hasTask(release))&#123;</span><br><span class="line">            // 执行相关的逻辑</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -140,18 +140,17 @@
 </ol>
 <p>用于监听 Task 执行图的事件的接口是 TaskExectionGraphListener 接口提供：</p>
 <ol start="2">
-<li>注册监听器的实现</li>
+<li>注册监听器，实现监听</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">// 实现相应的接口</span><br><span class="line">class ReleaseVersionListener implements TaskExecutionGraphListener &#123;</span><br><span class="line"></span><br><span class="line">    final static String releaseTaskGraph = &apos;:release&apos;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    void graphPopulated(TaskExecutionGraph graph) &#123;</span><br><span class="line">        // release task 在执行图中</span><br><span class="line">        if (graph.hasTask(releaseTaskGraph)) &#123;</span><br><span class="line">            List&lt;Task&gt; allTasks = graph.allTasks</span><br><span class="line">            // 从一系列的执行图中找到 release Task</span><br><span class="line">            Task releaseTask = allTasks.find&#123;it.path == releaseTaskGraph&#125;</span><br><span class="line">            // 每个 Task 都知道自己所云的 project</span><br><span class="line">            Project project = releaseTask.project</span><br><span class="line">            if (!project.version.release) &#123;</span><br><span class="line">                println &quot;i am in listener&quot;</span><br><span class="line">                // 显式的调用getProject</span><br><span class="line">                project.version.release = true</span><br><span class="line">                project.ant.propertyfile(file: versionFile) &#123;</span><br><span class="line">                    entry(key: &apos;release&apos;, type: &apos;string&apos;, operation: &apos;=&apos;, value: true)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 注册接口的实现</span><br><span class="line">def releaseVersionListener = new ReleaseVersionListener()</span><br><span class="line">// 将注册对象添加到检测列表中</span><br><span class="line">gradle.taskGraph.addTaskExecutionGraphListener(releaseVersionListener)</span><br></pre></td></tr></table></figure>
 
-<hr>
-<p><strong>知识来源</strong>：</p>
-<p><a href="https://e.jd.com/30505980.html" target="_blank" rel="noopener">实战 Gradle </a>，一本翻译 “感人” 的书。</p>
+<h2 id="那么在-Gradle-在v监听到-release-任务后，会执行自定义逻辑。"><a href="#那么在-Gradle-在v监听到-release-任务后，会执行自定义逻辑。" class="headerlink" title="那么在 Gradle 在v监听到 :release 任务后，会执行自定义逻辑。"></a>那么在 Gradle 在v监听到 :release 任务后，会执行自定义逻辑。</h2><p><strong>知识来源</strong>：</p>
+<p><a href="https://e.jd.com/30505980.html" target="_blank" rel="noopener">实战 Gradle </a>，一本翻译 “感人” 的书，都是泪。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/01/16/Gradle实战-三/" data-id="ckatro9s6006zov2pn2fzso63" class="article-share-link">分享</a>
+      <a data-url="/2020/01/16/Gradle实战-三/" data-id="ckawajd7e000i3lfyl2i9row1" class="article-share-link">分享</a>
       
       
       
@@ -163,19 +162,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2020/01/19/Gradle实战-四/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2020/01/16/Gradle实战-二/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">这些东西可能太新了</strong>
       <div class="article-nav-title">
         
-          Gadle实战(四）：依赖管理、版本冲突、理解缓存
+          Gadle实战(二)：声明 Task
         
       </div>
     </a>
   
   
-    <a href="/2020/01/16/Gradle实战-二/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2020/01/16/Gradle实战-一/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">这些东西可能过时了</strong>
-      <div class="article-nav-title">Gadle实战(二)：声明 Task</div>
+      <div class="article-nav-title">Gradle实战(一)：Project、Task、Property 的基本了解</div>
     </a>
   
 </nav>
@@ -233,7 +232,7 @@
           </li>
         
           <li>
-            <a href="/2020/01/16/Gradle实战-三/">Gadle实战(三)：自定义 Task 类</a>
+            <a href="/2020/01/16/Gradle实战-二/">Gadle实战(二)：声明 Task</a>
           </li>
         
       </ul>
