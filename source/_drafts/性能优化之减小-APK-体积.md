@@ -451,3 +451,5 @@ Redex
 
 
 [Android拆分与加载Dex的多种方案对比](https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207151651&idx=1&sn=9eab282711f4eb2b4daf2fbae5a5ca9a&3rd=MzA3MDU4NTYzMw==&scene=6#rd)
+
+[抖音包大小优化：资源优化](https://www.infoq.cn/article/ITVEfvGD5Uv6r07NHssx)

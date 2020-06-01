@@ -229,6 +229,5 @@ public static ExecutorService newSingleThreadExecutor() {
 
 **知识链接**
 
-[java并发编程--Executor框架
-](https://www.cnblogs.com/MOBIN/p/5436482.html)
+[java并发编程--Executor框架](https://www.cnblogs.com/MOBIN/p/5436482.html)
 
