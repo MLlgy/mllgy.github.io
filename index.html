@@ -5,15 +5,15 @@
   
 
   
-  <title>GY</title>
+  <title>玛斯特・布兰迪</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta property="og:type" content="website">
-<meta property="og:title" content="GY">
+<meta property="og:title" content="玛斯特・布兰迪">
 <meta property="og:url" content="/index.html">
-<meta property="og:site_name" content="GY">
+<meta property="og:site_name" content="玛斯特・布兰迪">
 <meta property="og:locale" content="zh-CN">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="GY">
+<meta name="twitter:title" content="玛斯特・布兰迪">
   
   
     <link rel="icon" href="/favicon.png">
@@ -32,7 +32,7 @@
   <div id="header-outer" class="outer">
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">GY</a>
+        <a href="/" id="logo">玛斯特・布兰迪</a>
       </h1>
       
         <h2 id="subtitle-wrap">
@@ -61,6 +61,208 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-性能优化工具-一-TraceView" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/15/性能优化工具-一-TraceView/" class="article-date">
+  <time datetime="2020-06-15T07:25:57.000Z" itemprop="datePublished">2020-06-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/15/性能优化工具-一-TraceView/">性能优化工具(一):TraceView</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="0x0001-TraceView-是什么？"><a href="#0x0001-TraceView-是什么？" class="headerlink" title="0x0001 TraceView 是什么？"></a>0x0001 TraceView 是什么？</h3><p>一个图形化的工具, 用来 <strong>展示和分析方法的执行时间</strong>.</p>
+<p>在发现某个页面或者操作会卡顿时，可以使用 TraceView 定位问题代码，<br>比如启动，加载图片列表卡顿等情况。</p>
+<p>用途：检测卡顿(通过查看方法执行的时间来发现卡顿原因，以此进行解决)。</p>
+        
+          <p class="article-more-link">
+            <a href="/2020/06/15/性能优化工具-一-TraceView/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="/2020/06/15/性能优化工具-一-TraceView/" data-id="ckbg6fr33009xxzfyehui8omu" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TraceView/">TraceView</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能优化工具/">性能优化工具</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-CMake-常用的-API以及-Gradle-关联到原生库" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/08/CMake-常用的-API以及-Gradle-关联到原生库/" class="article-date">
+  <time datetime="2020-06-08T08:08:43.000Z" itemprop="datePublished">2020-06-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/08/CMake-常用的-API以及-Gradle-关联到原生库/">CMake 常用的 API以及 Gradle 关联到原生库</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-创建一个静态-动态库"><a href="#1-创建一个静态-动态库" class="headerlink" title="1. 创建一个静态/动态库"></a>1. 创建一个静态/动态库</h3><ul>
+<li><strong>add_library 命令：</strong> 创建一个动态库/静态库<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">add_library(hello-libs // 指定库名</span><br><span class="line">		 SHARED // 指定构建出来库的属性 -- SHARED：动态库、STATIC：静态库</span><br><span class="line">            	  hello-libs.cpp // 指定源码文件</span><br><span class="line">                   )</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>根据源码构建动态/静态库。</p>
+<ul>
+<li><strong>find_library() 命令：</strong> 添加到您的 CMake 构建脚本中以定位 NDK 库，并将其路径存储为一个变量<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">find_library( # Defines the name of the path variable that stores the</span><br><span class="line">              # location of the NDK library.</span><br><span class="line">              log-lib // 为 NDK 中库指定本地名称</span><br><span class="line"></span><br><span class="line">              # Specifies the name of the NDK library that</span><br><span class="line">              # CMake needs to locate. // 指定链接 NDK 中的库</span><br><span class="line">              log )</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>这个 Api 是为了引入 NDK 中的库，需要注意的是本部操作只是单纯的将库引入到项目中，但是现在并不能合法的使用，如果想要合法的使用，需要v下面的一个 API 。</p>
+<ul>
+<li><p><strong>target_link_libraries() 命令：</strong> 关联库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># Links your native library against one or more other native libraries.</span><br><span class="line">target_link_libraries( // Specifies the target library. 指定本地库</span><br><span class="line">					  hello-libs</span><br><span class="line">						</span><br><span class="line">					// 指定一个/多个关联到上面指定本地库的库</span><br><span class="line">                      android</span><br><span class="line">                      lib_gmath</span><br><span class="line">                      lib_gperf</span><br><span class="line">                      log)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>target_include_directories 命令：</strong> 指定编译给定目标时要使用的包含目录或目标 。[^1] </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">target_include_directories(hello-libs PRIVATE</span><br><span class="line">                           $&#123;distribution_DIR&#125;/gmath/include</span><br><span class="line">                           $&#123;distribution_DIR&#125;/gperf/include)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>以上命令表明 <code>hello-libs</code> 库中会使用到  <code>${distribution_DIR}/gmath/include</code> 、<code>${distribution_DIR}/gperf/include</code> 中的源文件。</p>
+<h3 id="2-添加其他预构建库"><a href="#2-添加其他预构建库" class="headerlink" title="2. 添加其他预构建库"></a>2. 添加其他预构建库</h3><p>由于想要添加的库已经事先完成了构建，那么为了实现使用它们的目的需要使用 <code>IMPORTED</code> 标志告知 CMake 您只希望将库导入到项目中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">// 添加其他预构建库</span><br><span class="line">add_library(# 要添加的库</span><br><span class="line">			lib_gperf</span><br><span class="line">			# 库的属性(静态/动态)</span><br><span class="line">		    SHARED </span><br><span class="line">		    # IMPORT 标识</span><br><span class="line">		    IMPORTED // import 标识)</span><br><span class="line">		    </span><br><span class="line">// 指定库的路径				   </span><br><span class="line">set_target_properties(</span><br><span class="line">				   # 指定目标库</span><br><span class="line">				    lib_gperf </span><br><span class="line"></span><br><span class="line">					# Specifies the parameter you want to define.</span><br><span class="line">				    PROPERTIES IMPORTED_LOCATION</span><br><span class="line">				    </span><br><span class="line">				    # Provides the path to the library you want to import</span><br><span class="line">				    // 提供想要 import 的库的路径</span><br><span class="line">				    // 在 Cmake 构建时添加依赖库的多个 ABI 版本，而不必为每个版本编写相同的命令，使用 ANDROID_ABI 路径变量，此变量为 NDK 默认的一组 ABI，或在 Gradle 手动配置</span><br><span class="line">  				    $&#123;distribution_DIR&#125;/gperf/lib/$&#123;ANDROID_ABI&#125;/libgperf.so)</span><br><span class="line">  				    </span><br><span class="line">// 为了确保 CMake 可以在编译时定位您的标头文件，您需要使用 include_directories() 命令，并包含标头文件的路径：</span><br><span class="line">include_directories( imported-lib/include/ )</span><br><span class="line"></span><br><span class="line">// 同上边描述，使用以下命令关联到自己的原生库</span><br><span class="line">target_link_libraries( native-lib imported-lib app-glue $&#123;log-lib&#125; )</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-CMake-关联到-Gradle"><a href="#3-CMake-关联到-Gradle" class="headerlink" title="3. CMake 关联到 Gradle"></a>3. CMake 关联到 Gradle</h3><h4 id="3-1-配置-Gradle-关联到本地库"><a href="#3-1-配置-Gradle-关联到本地库" class="headerlink" title="3.1 配置 Gradle 关联到本地库"></a>3.1 配置 Gradle 关联到本地库</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">  ...</span><br><span class="line">  defaultConfig &#123;...&#125;</span><br><span class="line">  buildTypes &#123;...&#125;</span><br><span class="line"></span><br><span class="line">  // 外部本地构建配置闭包</span><br><span class="line">  externalNativeBuild &#123;</span><br><span class="line"></span><br><span class="line">    // CMake 构建配置闭包.</span><br><span class="line">    cmake &#123;</span><br><span class="line"></span><br><span class="line">      // 提供 CMakeLists.txt 的路径</span><br><span class="line">      path &quot;CMakeLists.txt&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-指定可选配置"><a href="#3-2-指定可选配置" class="headerlink" title="3.2 指定可选配置"></a>3.2 指定可选配置</h4><ul>
+<li>您可以在模块级 build.gradle 文件的 defaultConfig {} 块中配置另一个 externalNativeBuild {} 块，为 CMake  指定可选参数和标志。</li>
+<li>构建配置中为每个产品风味重写这些属性<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">  ...</span><br><span class="line">  defaultConfig &#123;</span><br><span class="line">    ...</span><br><span class="line">    externalNativeBuild &#123;</span><br><span class="line">      cmake &#123;    </span><br><span class="line">        arguments &quot;-DANDROID_ARM_NEON=TRUE&quot;, &quot;-DANDROID_TOOLCHAIN=clang&quot;</span><br><span class="line"></span><br><span class="line">        // Sets optional flags for the C compiler.</span><br><span class="line">        cFlags &quot;-D_EXAMPLE_C_FLAG1&quot;, &quot;-D_EXAMPLE_C_FLAG2&quot;</span><br><span class="line"></span><br><span class="line">        // Sets a flag to enable format macro constants for the C++ compiler.</span><br><span class="line">        cppFlags &quot;-D__STDC_FORMAT_MACROS&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  buildTypes &#123;...&#125;</span><br><span class="line"></span><br><span class="line">// 每个版本针对的本地库的版本不同，构建多个产品</span><br><span class="line">  productFlavors &#123;</span><br><span class="line">    ...</span><br><span class="line">    demo &#123;</span><br><span class="line">      ...</span><br><span class="line">      externalNativeBuild &#123;</span><br><span class="line">        cmake &#123;</span><br><span class="line">         ...</span><br><span class="line">          targets &quot;native-lib-demo&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    paid &#123;</span><br><span class="line">      ...</span><br><span class="line">      externalNativeBuild &#123;</span><br><span class="line">        cmake &#123;</span><br><span class="line">          ...</span><br><span class="line">          targets &quot;native-lib-paid&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // Use this block to link Gradle to your CMake or ndk-build script.</span><br><span class="line">  externalNativeBuild &#123;</span><br><span class="line">    cmake &#123;...&#125;</span><br><span class="line">    // or ndkBuild &#123;...&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="3-3-指定-ABI-打包到-APK-中"><a href="#3-3-指定-ABI-打包到-APK-中" class="headerlink" title="3.3 指定 ABI 打包到 APK 中"></a>3.3 指定 ABI 打包到 APK 中</h4><p>配置 <code>defaultConfig.ndk.abiFilters</code> 属性</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">  ...</span><br><span class="line">  defaultConfig &#123;</span><br><span class="line">    ...</span><br><span class="line">    externalNativeBuild &#123;</span><br><span class="line">      cmake &#123;...&#125;</span><br><span class="line">      // or ndkBuild &#123;...&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ndk &#123;</span><br><span class="line">      abiFilters &apos;x86&apos;, &apos;x86_64&apos;, &apos;armeabi&apos;, &apos;armeabi-v7a&apos;,</span><br><span class="line">                   &apos;arm64-v8a&apos;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  buildTypes &#123;...&#125;</span><br><span class="line">  externalNativeBuild &#123;...&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><p><a href="https://developer.android.com/studio/projects/add-native-code" target="_blank" rel="noopener">Developer – JNI</a><br>以上实例来自官方 demo：<a href="https://github.com/googlesamples/android-ndk/tree/master/hello-libs" target="_blank" rel="noopener">hello-libs</a><br>[^1]: 具体解释参见 ： <a href="https://cmake.org/cmake/help/v3.0/command/target_include_directories.html" target="_blank" rel="noopener">CMake  官网</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="/2020/06/08/CMake-常用的-API以及-Gradle-关联到原生库/" data-id="ckbg6fr16006axzfyhw0321kj" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CMake/">CMake</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-装饰模式" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/08/装饰模式/" class="article-date">
+  <time datetime="2020-06-08T08:00:18.000Z" itemprop="datePublished">2020-06-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/08/装饰模式/">装饰模式</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="/2020/06/08/装饰模式/" data-id="ckbg6fr3n00aixzfy3l8lzm1d" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-iTerm2常用快捷键" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/03/iTerm2常用快捷键/" class="article-date">
+  <time datetime="2020-06-03T02:54:58.000Z" itemprop="datePublished">2020-06-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/03/iTerm2常用快捷键/">iTerm2常用快捷键</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="/2020/06/03/iTerm2常用快捷键/" data-id="ckbg6fr2r009dxzfyq02t450o" class="article-share-link">分享</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
   
     <article id="post-Android-Logcat-基本信息细述" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -96,7 +298,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/02/24/Android-Logcat-基本信息细述/" data-id="ckawajd6g00003lfyszc4cycc" class="article-share-link">分享</a>
+      <a data-url="/2020/02/24/Android-Logcat-基本信息细述/" data-id="ckbg6fr4100axxzfyx0gaxpzb" class="article-share-link">分享</a>
       
       
       
@@ -142,7 +344,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/02/12/Java-多线程-五：线程池/" data-id="ckawajdj600gb3lfy1h99dqa5" class="article-share-link">分享</a>
+      <a data-url="/2020/02/12/Java-多线程-五：线程池/" data-id="ckbg6fr6z00gxxzfy3oig3fi4" class="article-share-link">分享</a>
       
       
       
@@ -192,7 +394,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/01/19/Gradle实战-五/" data-id="ckawajdj000g33lfy6j9j6rdt" class="article-share-link">分享</a>
+      <a data-url="/2020/01/19/Gradle实战-五/" data-id="ckbg6fr6v00gpxzfyyiio43hw" class="article-share-link">分享</a>
       
       
       
@@ -238,7 +440,53 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/01/19/Gradle实战-四/" data-id="ckawajdny00ir3lfytnaon4eg" class="article-share-link">分享</a>
+      <a data-url="/2020/01/19/Gradle实战-四/" data-id="ckbg6fre400j9xzfyejbatpok" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Gradle-in-action/">Gradle in action</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Gradle-基本原理/">Gradle 基本原理</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Gradle实战-三" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/01/16/Gradle实战-三/" class="article-date">
+  <time datetime="2020-01-16T11:02:23.000Z" itemprop="datePublished">2020-01-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/01/16/Gradle实战-三/">Gadle实战(三)：自定义 Task 类</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在构建脚本中可以编写 Task 的动作（Action），从而操作相关逻辑，这在 Gradle 中是十分简单的。但是当项目增长需要添加更多的逻辑时，维护起来就十分的麻烦，如果可以编程式结构实现对逻辑的编写，类似对类和方法编写，按照日常开发的思维编写代码，这对于程序开发是十分友好的，而 Gradle 提供了这种支持，开发者可以使用任意 JVM 语言，比如 Java、Groovy、Kotlin，在构建脚本中进行编码。</p>
+<h2 id="1-自定义-Task"><a href="#1-自定义-Task" class="headerlink" title="1. 自定义 Task"></a>1. 自定义 Task</h2><p>自定义 Task 包含两个组件：</p>
+        
+          <p class="article-more-link">
+            <a href="/2020/01/16/Gradle实战-三/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="/2020/01/16/Gradle实战-三/" data-id="ckbg6fr1c006qxzfy3bo7cu0g" class="article-share-link">分享</a>
       
       
       
@@ -293,246 +541,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/01/16/Gradle实战-二/" data-id="ckawajd7d000g3lfy87zj772d" class="article-share-link">分享</a>
+      <a data-url="/2020/01/16/Gradle实战-二/" data-id="ckbg6fr1d006rxzfyon2n4mh5" class="article-share-link">分享</a>
       
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Gradle-in-action/">Gradle in action</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Gradle-基本原理/">Gradle 基本原理</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Gradle实战-三" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/01/16/Gradle实战-三/" class="article-date">
-  <time datetime="2020-01-16T11:02:23.000Z" itemprop="datePublished">2020-01-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/01/16/Gradle实战-三/">Gadle实战(三)：自定义 Task 类</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在构建脚本中可以编写 Task 的动作（Action），从而操作相关逻辑，这在 Gradle 中是十分简单的。但是当项目增长需要添加更多的逻辑时，维护起来就十分的麻烦，如果可以编程式结构实现对逻辑的编写，类似对类和方法编写，按照日常开发的思维编写代码，这对于程序开发是十分友好的，而 Gradle 提供了这种支持，开发者可以使用任意 JVM 语言，比如 Java、Groovy、Kotlin，在构建脚本中进行编码。</p>
-<h2 id="1-自定义-Task"><a href="#1-自定义-Task" class="headerlink" title="1. 自定义 Task"></a>1. 自定义 Task</h2><p>自定义 Task 包含两个组件：</p>
-        
-          <p class="article-more-link">
-            <a href="/2020/01/16/Gradle实战-三/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="/2020/01/16/Gradle实战-三/" data-id="ckawajd7e000i3lfyl2i9row1" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Gradle-in-action/">Gradle in action</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Gradle-基本原理/">Gradle 基本原理</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Gradle实战-一" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/01/16/Gradle实战-一/" class="article-date">
-  <time datetime="2020-01-16T10:44:39.000Z" itemprop="datePublished">2020-01-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/01/16/Gradle实战-一/">Gradle实战(一)：Project、Task、Property 的基本了解</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>本文可以学到：最基础的 Gradle构建块(project、task、property)，以及它们是如何映射到 Gradle 的 API 上面的。</p>
-
-<p>本篇涉及到的内容：</p>
-<ol>
-<li>声明简单的 task</li>
-<li>编写自定义的 task 类</li>
-<li>如何获取 task 属性</li>
-</ol>
-<h2 id="1-构建块"><a href="#1-构建块" class="headerlink" title="1. 构建块"></a>1. 构建块</h2><p>Gradle 构建包括三个基本的构建块: <code>project</code>、<code>task</code>、<code>property</code>。每个构建中至少包含一个 <code>project</code>，进而又包含一个或者多个 <code>task</code> 。<code>project</code> 和 <code>task</code> 暴露的 <code>属性(property)</code> 可以控制 Gradle 构建过程。</p>
-        
-          <p class="article-more-link">
-            <a href="/2020/01/16/Gradle实战-一/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="/2020/01/16/Gradle实战-一/" data-id="ckawajd7f000k3lfy09htx7p8" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Gradle-in-action/">Gradle in action</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Gradle-基本原理/">Gradle 基本原理</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Gradle实战-零" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/01/16/Gradle实战-零/" class="article-date">
-  <time datetime="2020-01-16T10:04:11.000Z" itemprop="datePublished">2020-01-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/01/16/Gradle实战-零/">Gradle实战(零)：Gradle 的基本使用</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-Java-项目引入-Gradle-插件"><a href="#1-Java-项目引入-Gradle-插件" class="headerlink" title="1. Java 项目引入 Gradle 插件"></a>1. Java 项目引入 Gradle 插件</h2><p>当我们不通过 IDE 的方式构建 Java 项目，那么在编写完成后，运行项目就需要使用 javac 、jar 等这样的工具来帮我们运行项目，无疑在开发过程中这是十分痛苦的。使用 Gradle 插件具体自动化执行编译、运行等过程。Gradle 通过引入特定领域的约定和 Task 来扩展项目。而 Java 插件是 Gradle 自身装载的一个插件，可以实现很多的功能，比如定义标准的项目布局、有顺序的执行任务。</p>
-        
-          <p class="article-more-link">
-            <a href="/2020/01/16/Gradle实战-零/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="/2020/01/16/Gradle实战-零/" data-id="ckawajd7i000p3lfyd5s6dgug" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Gradle-in-action/">Gradle in action</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Gradle-基本原理/">Gradle 基本原理</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Flutter核心技术与实战-二" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/01/06/Flutter核心技术与实战-二/" class="article-date">
-  <time datetime="2020-01-06T08:01:28.000Z" itemprop="datePublished">2020-01-06</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/01/06/Flutter核心技术与实战-二/">Flutter核心技术与实战(二)：Widget 是什么？</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="Widget-是什么？"><a href="#Widget-是什么？" class="headerlink" title="Widget 是什么？"></a>Widget 是什么？</h2><p> Flutter 的核心思想是：一切皆为 Widget，那么什么是 Widget 呢？</p>
-<p> Widget 是 Flutter <strong>功能的抽象描述</strong>，是 <strong>视图的配置信息</strong>，是数据的映射。</p>
-<h2 id="Widget-的渲染过程"><a href="#Widget-的渲染过程" class="headerlink" title="Widget 的渲染过程"></a>Widget 的渲染过程</h2><p> Flutter 如何结构化的组织数据，提供给渲染引擎，最终完成界面显示。</p>
-<p> Flutter 将视图树的概念进行扩展，把视图数据的 <strong>组织</strong> 和 <strong>渲染</strong> 分为三部分，即 <code>Widget、Element、RenderObject。</code></p>
-<p><img src="/source/images/2020_01_06_01.png" alt="Widget、Element、RenderObject 的关系"></p>
-<h3 id="Widget"><a href="#Widget" class="headerlink" title="Widget"></a>Widget</h3><p>Widget 是在 Flutter 世界里对视图的一种结构化的描述，可以类比 Android 中的控件的概念，Widget 里面存储的是有关视图渲染的配额制信息，包括布局、渲染属性、事件响应信息等。</p>
-<p>Flutter 将 Widget 设计成不可变的，当视图渲染的配置信息发生改变时，Flutter 会选择重建 Widget 树的方式进行数据更新，以数据驱动 UI 的构建方式控制视图显示。 Flutter<br>这样的设计会存在大量的数据的销毁和重建，会对垃圾回收造成压力。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="/2020/01/06/Flutter核心技术与实战-二/" data-id="ckawajd74000c3lfyoyda3rbf" class="article-share-link">分享</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Flutter核心技术与实战-一" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/01/06/Flutter核心技术与实战-一/" class="article-date">
-  <time datetime="2020-01-06T07:45:58.000Z" itemprop="datePublished">2020-01-06</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/01/06/Flutter核心技术与实战-一/">Flutter核心技术与实战(一)：Dart语言基础</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-Dart的变量与类型"><a href="#1-Dart的变量与类型" class="headerlink" title="1. Dart的变量与类型"></a>1. Dart的变量与类型</h2><p>在 Dart 中，可以使用 var 或者具体的类型来声明一个变量，当使用 var 定义变量时，表示类型交由编译器推断决定。Dart 是 <strong>类型安全</strong> 的语言，所以的类型均继承与 Object，因此所有的类型都是对象类型，默认情况下，<strong>未初始化的变量的值为 null</strong>。</p>
-<h3 id="1-1-num、bool与-String"><a href="#1-1-num、bool与-String" class="headerlink" title="1.1 num、bool与 String"></a>1.1 num、bool与 String</h3><p>num 为 Dart 的数据类型，只有两种子类：int 和 double，使用 bool 表示布尔值，有 false 和 true 两种状态，它们均是编译时常量。在 Dart 中字符串可以通过单引号、双引号、嵌入表达式、多行字符串的形式表示。</p>
-        
-          <p class="article-more-link">
-            <a href="/2020/01/06/Flutter核心技术与实战-一/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="/2020/01/06/Flutter核心技术与实战-一/" data-id="ckawajd7a000f3lfynqsfswiy" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Dart/">Dart</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Flutter/">Flutter</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/极客时间专栏/">极客时间专栏</a></li></ul>
 
     </footer>
   </div>
@@ -560,7 +573,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/AIDL/" style="font-size: 10px;">AIDL</a> <a href="/tags/Android/" style="font-size: 13.75px;">Android</a> <a href="/tags/Android-刷机/" style="font-size: 10px;">Android 刷机</a> <a href="/tags/Binder/" style="font-size: 10px;">Binder</a> <a href="/tags/C/" style="font-size: 10px;">C</a> <a href="/tags/CPU-Profiler，Android-性能优化/" style="font-size: 10px;">CPU Profiler，Android 性能优化</a> <a href="/tags/CPU-架构/" style="font-size: 10px;">CPU 架构</a> <a href="/tags/Collections/" style="font-size: 10px;">Collections</a> <a href="/tags/Coroutines/" style="font-size: 11.25px;">Coroutines</a> <a href="/tags/Coroutines协程/" style="font-size: 10px;">Coroutines协程</a> <a href="/tags/DI/" style="font-size: 10px;">DI</a> <a href="/tags/Dagger2/" style="font-size: 10px;">Dagger2</a> <a href="/tags/Dart/" style="font-size: 10px;">Dart</a> <a href="/tags/EventBus/" style="font-size: 13.75px;">EventBus</a> <a href="/tags/EventBus-APT/" style="font-size: 10px;">EventBus APT</a> <a href="/tags/Exception/" style="font-size: 11.25px;">Exception</a> <a href="/tags/Flutter/" style="font-size: 10px;">Flutter</a> <a href="/tags/Future/" style="font-size: 10px;">Future</a> <a href="/tags/FutureTask/" style="font-size: 10px;">FutureTask</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/GitPage/" style="font-size: 10px;">GitPage</a> <a href="/tags/Gradle/" style="font-size: 10px;">Gradle</a> <a href="/tags/Gradle-in-action/" style="font-size: 16.25px;">Gradle in action</a> <a href="/tags/Gradle-基本原理/" style="font-size: 16.25px;">Gradle 基本原理</a> <a href="/tags/Hexo/" style="font-size: 11.25px;">Hexo</a> <a href="/tags/Hprof/" style="font-size: 10px;">Hprof</a> <a href="/tags/IO-流/" style="font-size: 10px;">IO 流</a> <a href="/tags/Inflection/" style="font-size: 10px;">Inflection</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Java/" style="font-size: 13.75px;">Java</a> <a href="/tags/Java-Basic/" style="font-size: 20px;">Java Basic</a> <a href="/tags/Java-Collection/" style="font-size: 16.25px;">Java Collection</a> <a href="/tags/Java-多线程/" style="font-size: 16.25px;">Java 多线程</a> <a href="/tags/Java-异常/" style="font-size: 10px;">Java 异常</a> <a href="/tags/Java-继承，对象，类初始化/" style="font-size: 10px;">Java 继承，对象，类初始化</a> <a href="/tags/Jetpack/" style="font-size: 16.25px;">Jetpack</a> <a href="/tags/JobScheduler/" style="font-size: 10px;">JobScheduler</a> <a href="/tags/Kindle/" style="font-size: 10px;">Kindle</a> <a href="/tags/Kotlin/" style="font-size: 11.25px;">Kotlin</a> <a href="/tags/Kotlin-协程/" style="font-size: 15px;">Kotlin 协程</a> <a href="/tags/Kotlin-官方文档/" style="font-size: 11.25px;">Kotlin 官方文档</a> <a href="/tags/Kotlin-核心编程/" style="font-size: 17.5px;">Kotlin 核心编程</a> <a href="/tags/Kotlin-泛型/" style="font-size: 10px;">Kotlin 泛型</a> <a href="/tags/LeakCanary/" style="font-size: 10px;">LeakCanary</a> <a href="/tags/Lifecycle/" style="font-size: 10px;">Lifecycle</a> <a href="/tags/Linux/" style="font-size: 16.25px;">Linux</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/LiveData/" style="font-size: 10px;">LiveData</a> <a href="/tags/Logcat-日志格式/" style="font-size: 10px;">Logcat 日志格式</a> <a href="/tags/Map/" style="font-size: 10px;">Map</a> <a href="/tags/OOP/" style="font-size: 10px;">OOP</a> <a href="/tags/Okhttp3/" style="font-size: 11.25px;">Okhttp3</a> <a href="/tags/Okhttp3-缓存文件/" style="font-size: 10px;">Okhttp3 缓存文件</a> <a href="/tags/Queue/" style="font-size: 10px;">Queue</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Rxjava-源码分析/" style="font-size: 13.75px;">Rxjava 源码分析</a> <a href="/tags/Set/" style="font-size: 10px;">Set</a> <a href="/tags/Shell/" style="font-size: 15px;">Shell</a> <a href="/tags/Singleton/" style="font-size: 11.25px;">Singleton</a> <a href="/tags/Sticky-Event/" style="font-size: 10px;">Sticky Event</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/Thread/" style="font-size: 10px;">Thread</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/VIM/" style="font-size: 10px;">VIM</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/ViewModle/" style="font-size: 10px;">ViewModle</a> <a href="/tags/WorkManager/" style="font-size: 12.5px;">WorkManager</a> <a href="/tags/adb/" style="font-size: 10px;">adb</a> <a href="/tags/《深入理解-Java-虚拟机》读书笔记/" style="font-size: 10px;">《深入理解 Java 虚拟机》读书笔记</a> <a href="/tags/三方库/" style="font-size: 10px;">三方库</a> <a href="/tags/事件分发机制/" style="font-size: 10px;">事件分发机制</a> <a href="/tags/内存优化/" style="font-size: 10px;">内存优化</a> <a href="/tags/内存分区/" style="font-size: 10px;">内存分区</a> <a href="/tags/内存泄漏/" style="font-size: 11.25px;">内存泄漏</a> <a href="/tags/内部类/" style="font-size: 10px;">内部类</a> <a href="/tags/图解-HTTP/" style="font-size: 11.25px;">图解 HTTP</a> <a href="/tags/堆栈轨迹/" style="font-size: 10px;">堆栈轨迹</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a> <a href="/tags/对象拷贝/" style="font-size: 10px;">对象拷贝</a> <a href="/tags/工具/" style="font-size: 11.25px;">工具</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/数据压缩/" style="font-size: 10px;">数据压缩</a> <a href="/tags/极客时间专栏/" style="font-size: 10px;">极客时间专栏</a> <a href="/tags/极客时间笔记/" style="font-size: 10px;">极客时间笔记</a> <a href="/tags/泛型/" style="font-size: 12.5px;">泛型</a> <a href="/tags/浮点型精度问题/" style="font-size: 10px;">浮点型精度问题</a> <a href="/tags/深入浅出计算机组成原理-徐文浩/" style="font-size: 11.25px;">深入浅出计算机组成原理(徐文浩)</a> <a href="/tags/深入理解-Android-读书笔记/" style="font-size: 10px;">深入理解 Android 读书笔记</a> <a href="/tags/源码解析/" style="font-size: 10px;">源码解析</a> <a href="/tags/焦点机制/" style="font-size: 10px;">焦点机制</a> <a href="/tags/百度地图黑影/" style="font-size: 10px;">百度地图黑影</a> <a href="/tags/硬件加速/" style="font-size: 10px;">硬件加速</a> <a href="/tags/编译技术/" style="font-size: 10px;">编译技术</a> <a href="/tags/网络协议/" style="font-size: 12.5px;">网络协议</a> <a href="/tags/计算机基础/" style="font-size: 10px;">计算机基础</a> <a href="/tags/设计模式六大原则/" style="font-size: 10px;">设计模式六大原则</a> <a href="/tags/读书笔记/" style="font-size: 18.75px;">读书笔记</a> <a href="/tags/趣谈网络协议-刘超/" style="font-size: 10px;">趣谈网络协议(刘超)</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+      <a href="/tags/AIDL/" style="font-size: 10px;">AIDL</a> <a href="/tags/Android/" style="font-size: 13.75px;">Android</a> <a href="/tags/Android-刷机/" style="font-size: 10px;">Android 刷机</a> <a href="/tags/Binder/" style="font-size: 10px;">Binder</a> <a href="/tags/C/" style="font-size: 10px;">C</a> <a href="/tags/CMake/" style="font-size: 10px;">CMake</a> <a href="/tags/CPU-Profiler，Android-性能优化/" style="font-size: 10px;">CPU Profiler，Android 性能优化</a> <a href="/tags/CPU-架构/" style="font-size: 10px;">CPU 架构</a> <a href="/tags/Collections/" style="font-size: 10px;">Collections</a> <a href="/tags/Coroutines/" style="font-size: 11.25px;">Coroutines</a> <a href="/tags/Coroutines协程/" style="font-size: 10px;">Coroutines协程</a> <a href="/tags/DI/" style="font-size: 10px;">DI</a> <a href="/tags/Dagger2/" style="font-size: 10px;">Dagger2</a> <a href="/tags/Dart/" style="font-size: 10px;">Dart</a> <a href="/tags/EventBus/" style="font-size: 13.75px;">EventBus</a> <a href="/tags/EventBus-APT/" style="font-size: 10px;">EventBus APT</a> <a href="/tags/Exception/" style="font-size: 11.25px;">Exception</a> <a href="/tags/Flutter/" style="font-size: 10px;">Flutter</a> <a href="/tags/Future/" style="font-size: 10px;">Future</a> <a href="/tags/FutureTask/" style="font-size: 10px;">FutureTask</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/GitPage/" style="font-size: 10px;">GitPage</a> <a href="/tags/Gradle/" style="font-size: 10px;">Gradle</a> <a href="/tags/Gradle-in-action/" style="font-size: 16.25px;">Gradle in action</a> <a href="/tags/Gradle-基本原理/" style="font-size: 16.25px;">Gradle 基本原理</a> <a href="/tags/Hexo/" style="font-size: 11.25px;">Hexo</a> <a href="/tags/Hprof/" style="font-size: 10px;">Hprof</a> <a href="/tags/IO-流/" style="font-size: 10px;">IO 流</a> <a href="/tags/Inflection/" style="font-size: 10px;">Inflection</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Java/" style="font-size: 13.75px;">Java</a> <a href="/tags/Java-Basic/" style="font-size: 20px;">Java Basic</a> <a href="/tags/Java-Collection/" style="font-size: 16.25px;">Java Collection</a> <a href="/tags/Java-多线程/" style="font-size: 16.25px;">Java 多线程</a> <a href="/tags/Java-异常/" style="font-size: 10px;">Java 异常</a> <a href="/tags/Java-继承，对象，类初始化/" style="font-size: 10px;">Java 继承，对象，类初始化</a> <a href="/tags/Jetpack/" style="font-size: 16.25px;">Jetpack</a> <a href="/tags/JobScheduler/" style="font-size: 10px;">JobScheduler</a> <a href="/tags/Kindle/" style="font-size: 10px;">Kindle</a> <a href="/tags/Kotlin/" style="font-size: 11.25px;">Kotlin</a> <a href="/tags/Kotlin-协程/" style="font-size: 15px;">Kotlin 协程</a> <a href="/tags/Kotlin-官方文档/" style="font-size: 11.25px;">Kotlin 官方文档</a> <a href="/tags/Kotlin-核心编程/" style="font-size: 17.5px;">Kotlin 核心编程</a> <a href="/tags/Kotlin-泛型/" style="font-size: 10px;">Kotlin 泛型</a> <a href="/tags/LeakCanary/" style="font-size: 10px;">LeakCanary</a> <a href="/tags/Lifecycle/" style="font-size: 10px;">Lifecycle</a> <a href="/tags/Linux/" style="font-size: 16.25px;">Linux</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/LiveData/" style="font-size: 10px;">LiveData</a> <a href="/tags/Logcat-日志格式/" style="font-size: 10px;">Logcat 日志格式</a> <a href="/tags/Map/" style="font-size: 10px;">Map</a> <a href="/tags/OOP/" style="font-size: 10px;">OOP</a> <a href="/tags/Okhttp3/" style="font-size: 11.25px;">Okhttp3</a> <a href="/tags/Okhttp3-缓存文件/" style="font-size: 10px;">Okhttp3 缓存文件</a> <a href="/tags/Queue/" style="font-size: 10px;">Queue</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Rxjava-源码分析/" style="font-size: 13.75px;">Rxjava 源码分析</a> <a href="/tags/Set/" style="font-size: 10px;">Set</a> <a href="/tags/Shell/" style="font-size: 15px;">Shell</a> <a href="/tags/Singleton/" style="font-size: 11.25px;">Singleton</a> <a href="/tags/Sticky-Event/" style="font-size: 10px;">Sticky Event</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/Thread/" style="font-size: 10px;">Thread</a> <a href="/tags/TraceView/" style="font-size: 10px;">TraceView</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/VIM/" style="font-size: 10px;">VIM</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/ViewModle/" style="font-size: 10px;">ViewModle</a> <a href="/tags/WorkManager/" style="font-size: 12.5px;">WorkManager</a> <a href="/tags/adb/" style="font-size: 10px;">adb</a> <a href="/tags/《深入理解-Java-虚拟机》读书笔记/" style="font-size: 10px;">《深入理解 Java 虚拟机》读书笔记</a> <a href="/tags/三方库/" style="font-size: 10px;">三方库</a> <a href="/tags/事件分发机制/" style="font-size: 10px;">事件分发机制</a> <a href="/tags/内存优化/" style="font-size: 10px;">内存优化</a> <a href="/tags/内存分区/" style="font-size: 10px;">内存分区</a> <a href="/tags/内存泄漏/" style="font-size: 11.25px;">内存泄漏</a> <a href="/tags/内部类/" style="font-size: 10px;">内部类</a> <a href="/tags/图解-HTTP/" style="font-size: 11.25px;">图解 HTTP</a> <a href="/tags/堆栈轨迹/" style="font-size: 10px;">堆栈轨迹</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a> <a href="/tags/对象拷贝/" style="font-size: 10px;">对象拷贝</a> <a href="/tags/工具/" style="font-size: 11.25px;">工具</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/性能优化工具/" style="font-size: 10px;">性能优化工具</a> <a href="/tags/数据压缩/" style="font-size: 10px;">数据压缩</a> <a href="/tags/极客时间专栏/" style="font-size: 10px;">极客时间专栏</a> <a href="/tags/极客时间笔记/" style="font-size: 10px;">极客时间笔记</a> <a href="/tags/泛型/" style="font-size: 12.5px;">泛型</a> <a href="/tags/浮点型精度问题/" style="font-size: 10px;">浮点型精度问题</a> <a href="/tags/深入浅出计算机组成原理-徐文浩/" style="font-size: 11.25px;">深入浅出计算机组成原理(徐文浩)</a> <a href="/tags/深入理解-Android-读书笔记/" style="font-size: 10px;">深入理解 Android 读书笔记</a> <a href="/tags/源码解析/" style="font-size: 10px;">源码解析</a> <a href="/tags/焦点机制/" style="font-size: 10px;">焦点机制</a> <a href="/tags/百度地图黑影/" style="font-size: 10px;">百度地图黑影</a> <a href="/tags/硬件加速/" style="font-size: 10px;">硬件加速</a> <a href="/tags/编译技术/" style="font-size: 10px;">编译技术</a> <a href="/tags/网络协议/" style="font-size: 12.5px;">网络协议</a> <a href="/tags/计算机基础/" style="font-size: 10px;">计算机基础</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/设计模式六大原则/" style="font-size: 10px;">设计模式六大原则</a> <a href="/tags/读书笔记/" style="font-size: 18.75px;">读书笔记</a> <a href="/tags/趣谈网络协议-刘超/" style="font-size: 10px;">趣谈网络协议(刘超)</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
     </div>
   </div>
 
@@ -569,7 +582,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a></li></ul>
     </div>
   </div>
 
@@ -582,23 +595,23 @@
       <ul>
         
           <li>
+            <a href="/2020/06/15/性能优化工具-一-TraceView/">性能优化工具(一):TraceView</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/08/CMake-常用的-API以及-Gradle-关联到原生库/">CMake 常用的 API以及 Gradle 关联到原生库</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/08/装饰模式/">装饰模式</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/03/iTerm2常用快捷键/">iTerm2常用快捷键</a>
+          </li>
+        
+          <li>
             <a href="/2020/02/24/Android-Logcat-基本信息细述/">Android Logcat 基本信息细述</a>
-          </li>
-        
-          <li>
-            <a href="/2020/02/12/Java-多线程-五：线程池/">Java 多线程五：线程池</a>
-          </li>
-        
-          <li>
-            <a href="/2020/01/19/Gradle实战-五/">Gadle实战(五)：扩展 Gradle</a>
-          </li>
-        
-          <li>
-            <a href="/2020/01/19/Gradle实战-四/">Gadle实战(四）：依赖管理、版本冲突、理解缓存</a>
-          </li>
-        
-          <li>
-            <a href="/2020/01/16/Gradle实战-二/">Gadle实战(二)：声明 Task</a>
           </li>
         
       </ul>
@@ -613,7 +626,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2020 GY<br>
+      &copy; 2020 玛斯特・布兰迪<br>
       巨大能量来源 <a href="https://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
