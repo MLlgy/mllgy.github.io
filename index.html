@@ -95,7 +95,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/06/15/性能优化工具-一-TraceView/" data-id="ckbg6fr33009xxzfyehui8omu" class="article-share-link">分享</a>
+      <a data-url="/2020/06/15/性能优化工具-一-TraceView/" data-id="ckbg6j95000419mfyisyy7t2j" class="article-share-link">分享</a>
       
       
       
@@ -137,42 +137,15 @@
 </li>
 </ul>
 <p>根据源码构建动态/静态库。</p>
-<ul>
-<li><strong>find_library() 命令：</strong> 添加到您的 CMake 构建脚本中以定位 NDK 库，并将其路径存储为一个变量<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">find_library( # Defines the name of the path variable that stores the</span><br><span class="line">              # location of the NDK library.</span><br><span class="line">              log-lib // 为 NDK 中库指定本地名称</span><br><span class="line"></span><br><span class="line">              # Specifies the name of the NDK library that</span><br><span class="line">              # CMake needs to locate. // 指定链接 NDK 中的库</span><br><span class="line">              log )</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p>这个 Api 是为了引入 NDK 中的库，需要注意的是本部操作只是单纯的将库引入到项目中，但是现在并不能合法的使用，如果想要合法的使用，需要v下面的一个 API 。</p>
-<ul>
-<li><p><strong>target_link_libraries() 命令：</strong> 关联库</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># Links your native library against one or more other native libraries.</span><br><span class="line">target_link_libraries( // Specifies the target library. 指定本地库</span><br><span class="line">					  hello-libs</span><br><span class="line">						</span><br><span class="line">					// 指定一个/多个关联到上面指定本地库的库</span><br><span class="line">                      android</span><br><span class="line">                      lib_gmath</span><br><span class="line">                      lib_gperf</span><br><span class="line">                      log)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>target_include_directories 命令：</strong> 指定编译给定目标时要使用的包含目录或目标 。[^1] </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">target_include_directories(hello-libs PRIVATE</span><br><span class="line">                           $&#123;distribution_DIR&#125;/gmath/include</span><br><span class="line">                           $&#123;distribution_DIR&#125;/gperf/include)</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p>以上命令表明 <code>hello-libs</code> 库中会使用到  <code>${distribution_DIR}/gmath/include</code> 、<code>${distribution_DIR}/gperf/include</code> 中的源文件。</p>
-<h3 id="2-添加其他预构建库"><a href="#2-添加其他预构建库" class="headerlink" title="2. 添加其他预构建库"></a>2. 添加其他预构建库</h3><p>由于想要添加的库已经事先完成了构建，那么为了实现使用它们的目的需要使用 <code>IMPORTED</code> 标志告知 CMake 您只希望将库导入到项目中</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">// 添加其他预构建库</span><br><span class="line">add_library(# 要添加的库</span><br><span class="line">			lib_gperf</span><br><span class="line">			# 库的属性(静态/动态)</span><br><span class="line">		    SHARED </span><br><span class="line">		    # IMPORT 标识</span><br><span class="line">		    IMPORTED // import 标识)</span><br><span class="line">		    </span><br><span class="line">// 指定库的路径				   </span><br><span class="line">set_target_properties(</span><br><span class="line">				   # 指定目标库</span><br><span class="line">				    lib_gperf </span><br><span class="line"></span><br><span class="line">					# Specifies the parameter you want to define.</span><br><span class="line">				    PROPERTIES IMPORTED_LOCATION</span><br><span class="line">				    </span><br><span class="line">				    # Provides the path to the library you want to import</span><br><span class="line">				    // 提供想要 import 的库的路径</span><br><span class="line">				    // 在 Cmake 构建时添加依赖库的多个 ABI 版本，而不必为每个版本编写相同的命令，使用 ANDROID_ABI 路径变量，此变量为 NDK 默认的一组 ABI，或在 Gradle 手动配置</span><br><span class="line">  				    $&#123;distribution_DIR&#125;/gperf/lib/$&#123;ANDROID_ABI&#125;/libgperf.so)</span><br><span class="line">  				    </span><br><span class="line">// 为了确保 CMake 可以在编译时定位您的标头文件，您需要使用 include_directories() 命令，并包含标头文件的路径：</span><br><span class="line">include_directories( imported-lib/include/ )</span><br><span class="line"></span><br><span class="line">// 同上边描述，使用以下命令关联到自己的原生库</span><br><span class="line">target_link_libraries( native-lib imported-lib app-glue $&#123;log-lib&#125; )</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-CMake-关联到-Gradle"><a href="#3-CMake-关联到-Gradle" class="headerlink" title="3. CMake 关联到 Gradle"></a>3. CMake 关联到 Gradle</h3><h4 id="3-1-配置-Gradle-关联到本地库"><a href="#3-1-配置-Gradle-关联到本地库" class="headerlink" title="3.1 配置 Gradle 关联到本地库"></a>3.1 配置 Gradle 关联到本地库</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">  ...</span><br><span class="line">  defaultConfig &#123;...&#125;</span><br><span class="line">  buildTypes &#123;...&#125;</span><br><span class="line"></span><br><span class="line">  // 外部本地构建配置闭包</span><br><span class="line">  externalNativeBuild &#123;</span><br><span class="line"></span><br><span class="line">    // CMake 构建配置闭包.</span><br><span class="line">    cmake &#123;</span><br><span class="line"></span><br><span class="line">      // 提供 CMakeLists.txt 的路径</span><br><span class="line">      path &quot;CMakeLists.txt&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="3-2-指定可选配置"><a href="#3-2-指定可选配置" class="headerlink" title="3.2 指定可选配置"></a>3.2 指定可选配置</h4><ul>
-<li>您可以在模块级 build.gradle 文件的 defaultConfig {} 块中配置另一个 externalNativeBuild {} 块，为 CMake  指定可选参数和标志。</li>
-<li>构建配置中为每个产品风味重写这些属性<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">  ...</span><br><span class="line">  defaultConfig &#123;</span><br><span class="line">    ...</span><br><span class="line">    externalNativeBuild &#123;</span><br><span class="line">      cmake &#123;    </span><br><span class="line">        arguments &quot;-DANDROID_ARM_NEON=TRUE&quot;, &quot;-DANDROID_TOOLCHAIN=clang&quot;</span><br><span class="line"></span><br><span class="line">        // Sets optional flags for the C compiler.</span><br><span class="line">        cFlags &quot;-D_EXAMPLE_C_FLAG1&quot;, &quot;-D_EXAMPLE_C_FLAG2&quot;</span><br><span class="line"></span><br><span class="line">        // Sets a flag to enable format macro constants for the C++ compiler.</span><br><span class="line">        cppFlags &quot;-D__STDC_FORMAT_MACROS&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  buildTypes &#123;...&#125;</span><br><span class="line"></span><br><span class="line">// 每个版本针对的本地库的版本不同，构建多个产品</span><br><span class="line">  productFlavors &#123;</span><br><span class="line">    ...</span><br><span class="line">    demo &#123;</span><br><span class="line">      ...</span><br><span class="line">      externalNativeBuild &#123;</span><br><span class="line">        cmake &#123;</span><br><span class="line">         ...</span><br><span class="line">          targets &quot;native-lib-demo&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    paid &#123;</span><br><span class="line">      ...</span><br><span class="line">      externalNativeBuild &#123;</span><br><span class="line">        cmake &#123;</span><br><span class="line">          ...</span><br><span class="line">          targets &quot;native-lib-paid&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // Use this block to link Gradle to your CMake or ndk-build script.</span><br><span class="line">  externalNativeBuild &#123;</span><br><span class="line">    cmake &#123;...&#125;</span><br><span class="line">    // or ndkBuild &#123;...&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h4 id="3-3-指定-ABI-打包到-APK-中"><a href="#3-3-指定-ABI-打包到-APK-中" class="headerlink" title="3.3 指定 ABI 打包到 APK 中"></a>3.3 指定 ABI 打包到 APK 中</h4><p>配置 <code>defaultConfig.ndk.abiFilters</code> 属性</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">  ...</span><br><span class="line">  defaultConfig &#123;</span><br><span class="line">    ...</span><br><span class="line">    externalNativeBuild &#123;</span><br><span class="line">      cmake &#123;...&#125;</span><br><span class="line">      // or ndkBuild &#123;...&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ndk &#123;</span><br><span class="line">      abiFilters &apos;x86&apos;, &apos;x86_64&apos;, &apos;armeabi&apos;, &apos;armeabi-v7a&apos;,</span><br><span class="line">                   &apos;arm64-v8a&apos;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  buildTypes &#123;...&#125;</span><br><span class="line">  externalNativeBuild &#123;...&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><p><a href="https://developer.android.com/studio/projects/add-native-code" target="_blank" rel="noopener">Developer – JNI</a><br>以上实例来自官方 demo：<a href="https://github.com/googlesamples/android-ndk/tree/master/hello-libs" target="_blank" rel="noopener">hello-libs</a><br>[^1]: 具体解释参见 ： <a href="https://cmake.org/cmake/help/v3.0/command/target_include_directories.html" target="_blank" rel="noopener">CMake  官网</a></p>
-
+        
+          <p class="article-more-link">
+            <a href="/2020/06/08/CMake-常用的-API以及-Gradle-关联到原生库/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/06/08/CMake-常用的-API以及-Gradle-关联到原生库/" data-id="ckbg6fr16006axzfyhw0321kj" class="article-share-link">分享</a>
+      <a data-url="/2020/06/08/CMake-常用的-API以及-Gradle-关联到原生库/" data-id="ckbg6j91500089mfy1um8txrj" class="article-share-link">分享</a>
       
       
       
@@ -212,7 +185,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/06/08/装饰模式/" data-id="ckbg6fr3n00aixzfy3l8lzm1d" class="article-share-link">分享</a>
+      <a data-url="/2020/06/08/装饰模式/" data-id="ckbg6j95f004h9mfygq6l0r32" class="article-share-link">分享</a>
       
       
       
@@ -252,7 +225,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/06/03/iTerm2常用快捷键/" data-id="ckbg6fr2r009dxzfyq02t450o" class="article-share-link">分享</a>
+      <a data-url="/2020/06/03/iTerm2常用快捷键/" data-id="ckbg6j94800389mfy40ksjz61" class="article-share-link">分享</a>
       
       
       
@@ -298,7 +271,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/02/24/Android-Logcat-基本信息细述/" data-id="ckbg6fr4100axxzfyx0gaxpzb" class="article-share-link">分享</a>
+      <a data-url="/2020/02/24/Android-Logcat-基本信息细述/" data-id="ckbg6j90o00019mfyai7zz1qg" class="article-share-link">分享</a>
       
       
       
@@ -344,7 +317,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/02/12/Java-多线程-五：线程池/" data-id="ckbg6fr6z00gxxzfy3oig3fi4" class="article-share-link">分享</a>
+      <a data-url="/2020/02/12/Java-多线程-五：线程池/" data-id="ckbg6j9j200go9mfy5hg5rflz" class="article-share-link">分享</a>
       
       
       
@@ -394,7 +367,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/01/19/Gradle实战-五/" data-id="ckbg6fr6v00gpxzfyyiio43hw" class="article-share-link">分享</a>
+      <a data-url="/2020/01/19/Gradle实战-五/" data-id="ckbg6j9f600gg9mfydc8xgjok" class="article-share-link">分享</a>
       
       
       
@@ -440,53 +413,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/01/19/Gradle实战-四/" data-id="ckbg6fre400j9xzfyejbatpok" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Gradle-in-action/">Gradle in action</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Gradle-基本原理/">Gradle 基本原理</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Gradle实战-三" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/01/16/Gradle实战-三/" class="article-date">
-  <time datetime="2020-01-16T11:02:23.000Z" itemprop="datePublished">2020-01-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/01/16/Gradle实战-三/">Gadle实战(三)：自定义 Task 类</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在构建脚本中可以编写 Task 的动作（Action），从而操作相关逻辑，这在 Gradle 中是十分简单的。但是当项目增长需要添加更多的逻辑时，维护起来就十分的麻烦，如果可以编程式结构实现对逻辑的编写，类似对类和方法编写，按照日常开发的思维编写代码，这对于程序开发是十分友好的，而 Gradle 提供了这种支持，开发者可以使用任意 JVM 语言，比如 Java、Groovy、Kotlin，在构建脚本中进行编码。</p>
-<h2 id="1-自定义-Task"><a href="#1-自定义-Task" class="headerlink" title="1. 自定义 Task"></a>1. 自定义 Task</h2><p>自定义 Task 包含两个组件：</p>
-        
-          <p class="article-more-link">
-            <a href="/2020/01/16/Gradle实战-三/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="/2020/01/16/Gradle实战-三/" data-id="ckbg6fr1c006qxzfy3bo7cu0g" class="article-share-link">分享</a>
+      <a data-url="/2020/01/19/Gradle实战-四/" data-id="ckbg6j9my00j99mfylgf04tjq" class="article-share-link">分享</a>
       
       
       
@@ -541,7 +468,53 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2020/01/16/Gradle实战-二/" data-id="ckbg6fr1d006rxzfyon2n4mh5" class="article-share-link">分享</a>
+      <a data-url="/2020/01/16/Gradle实战-二/" data-id="ckbg6j91q000m9mfyfrfka7cg" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Gradle-in-action/">Gradle in action</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Gradle-基本原理/">Gradle 基本原理</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Gradle实战-三" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/01/16/Gradle实战-三/" class="article-date">
+  <time datetime="2020-01-16T11:02:23.000Z" itemprop="datePublished">2020-01-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/01/16/Gradle实战-三/">Gadle实战(三)：自定义 Task 类</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在构建脚本中可以编写 Task 的动作（Action），从而操作相关逻辑，这在 Gradle 中是十分简单的。但是当项目增长需要添加更多的逻辑时，维护起来就十分的麻烦，如果可以编程式结构实现对逻辑的编写，类似对类和方法编写，按照日常开发的思维编写代码，这对于程序开发是十分友好的，而 Gradle 提供了这种支持，开发者可以使用任意 JVM 语言，比如 Java、Groovy、Kotlin，在构建脚本中进行编码。</p>
+<h2 id="1-自定义-Task"><a href="#1-自定义-Task" class="headerlink" title="1. 自定义 Task"></a>1. 自定义 Task</h2><p>自定义 Task 包含两个组件：</p>
+        
+          <p class="article-more-link">
+            <a href="/2020/01/16/Gradle实战-三/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="/2020/01/16/Gradle实战-三/" data-id="ckbg6j91p000l9mfyuo2urdhr" class="article-share-link">分享</a>
       
       
       
