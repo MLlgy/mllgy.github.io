@@ -1,7 +1,7 @@
 ---
 title: Java Basic One
 date: 2019-03-06 14:31:33
-tags: [Java Basic,Java 继承，对象，类初始化]
+tags: [Java,Java 继承，对象，类初始化]
 ---
 
 ### 对象的三大特征

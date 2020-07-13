@@ -1,6 +1,6 @@
 ---
 title: 线程的 wait、sleep、join、yeild 方法
-tags: [Thread]
+tags: [Thread,Java]
 date: 2019-09-05 15:53:17
 ---
 

@@ -3,14 +3,9 @@ title: HttpURLConnection 源码相关
 tags:
 ---
 
-
-https://blog.csdn.net/ming54ming/article/details/85089066
-
-http://frodoking.github.io/2015/03/12/android-okhttp/
-
-
-
 ## 实例代码
+
+在 Android6.0 版本 HttpClient 已经被移除。
 
 实例代码：
 
@@ -26,9 +21,6 @@ InputStream in = urlConnection.getInputStream();
 其中 url.openConnection 其实是调用了 com.android.okhttp.HttpHandler.openConnection() 的方法，但是 HttpHandler 的源代码为 `/external/okhttp/android/main/java/com/squareup/okhttp/HttpHandler.java`，AOSP 项目对其做了映射，虽然包不相同，但是执行同一个文件。
 
 ## 具体流程
-
-
-
 
 ### 2.1 HttpHandler.openConnection()
 
@@ -410,3 +402,13 @@ private Response readNetworkResponse() throws IOException {
 ```
 
 写入响应报文，并从从 HttpStream 中获得响应数据。
+
+
+---
+
+[HttpURLConnection源码解析](https://blog.csdn.net/ming54ming/article/details/85089066)
+
+[OKHttp源码解析](http://frodoking.github.io/2015/03/12/android-okhttp/)
+
+
+[从缓存文件的角度帮你理解 Okhttp3 缓存原理](https://leegyplus.github.io/2019/08/19/%E4%BB%8E%E7%BC%93%E5%AD%98%E6%96%87%E4%BB%B6%E7%9A%84%E8%A7%92%E5%BA%A6%E5%B8%AE%E4%BD%A0%E7%90%86%E8%A7%A3-Okhttp3-%E7%BC%93%E5%AD%98%E5%8E%9F%E7%90%86/)

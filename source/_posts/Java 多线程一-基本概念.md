@@ -1,7 +1,7 @@
 ---
 title: Java 多线程(一):基本概念
 date: 2019-08-19 15:12:30
-tags: [Java 多线程]
+tags: [Java 多线程,Java]
 ---
 
 ### 线程

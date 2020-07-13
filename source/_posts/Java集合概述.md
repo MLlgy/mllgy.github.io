@@ -1,7 +1,7 @@
 ---
 title: Java 集合概述
 date: 2019-05-09 11:06:58
-tags: [Java Basic,Java Collection]
+tags: [Java,Java Collection]
 ---
 Java 集合在日常的开发中的使用频率是很高的，我们可以通过 Java
  集合来实现常见的数据结构，如堆、栈等。

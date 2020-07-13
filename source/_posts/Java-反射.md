@@ -1,7 +1,7 @@
 ---
 title: 简单理解 Java 反射机制
 date: 2019-04-30 10:35:03
-tags: [Java Basic,Inflection]
+tags: [Java,Inflection]
 ---
 
 

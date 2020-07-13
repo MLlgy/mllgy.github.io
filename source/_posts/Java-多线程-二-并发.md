@@ -1,7 +1,7 @@
 ---
 title: 'Java 多线程(二):多线程并发'
 date: 2019-08-19 15:12:35
-tags: [Java 多线程]
+tags: [Java 多线程,Java]
 ---
 
 ### synchronized 同步方法

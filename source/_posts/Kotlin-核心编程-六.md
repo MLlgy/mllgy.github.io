@@ -54,7 +54,6 @@ Java 中存在 Optional 包装类，而 Kotin 中可空类型使用 `类型？` 
 var name:String? = null
 ```
 
-
 **Kotlin 中的安全调用 ?.**
 
 在 Java 这么写：

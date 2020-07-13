@@ -1,7 +1,7 @@
 ---
 title: 'Java 多线程(三):同步代码块'
 date: 2019-08-19 15:12:40
-tags: [Java 多线程]
+tags: [Java 多线程,Java]
 ---
 
 

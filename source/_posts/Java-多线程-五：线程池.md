@@ -1,6 +1,6 @@
 ---
 title: Java 多线程五：线程池
-tags: [Java 多线程]
+tags: [Java 多线程,Java]
 date: 2020-02-12 14:56:44
 ---
 

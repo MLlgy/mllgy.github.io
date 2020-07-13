@@ -1,7 +1,7 @@
 ---
 title: AIDL 浅析
 date: 2019-08-07 18:01:49
-tags: [AIDL,Android]
+tags: [AIDL,JNI,Android]
 ---
 
 AIDL 是理解 Android 系统不可避免的知识点。
@@ -22,12 +22,9 @@ AIDL 是理解 Android 系统不可避免的知识点。
 
 ![](/public/images/2019_08_06_01.png)
 
-1. 自定义 Aidl 文件
+2. 自定义 Aidl 文件
 
-建立与 java 目录相同的包层级结构。
-
-
-定义该该过程使用到的 Java 实体类，由于类对象会在 IPC 中使用，所以 **类需要实现序列化**。
+建立与 java 目录相同的包层级结构。定义该过程使用到的 Java 实体类，由于类对象会在 IPC 中使用，所以 **定义的类需要实现序列化**，即跨进程中使用的类需要进行序列化操作。
 
 ```
 public class Book implements Parcelable {
@@ -38,7 +35,7 @@ public class Book implements Parcelable {
 }
 ```
 
-定义 Book.aidl(需要保证 Book.java 和 Book.aidl 在相同的包层级结构)
+定义与 Java 类对应的 Aidl 文件(需要保证 Book.java 和 Book.aidl **在相同的包层级结构**)。
 ```
 parcelable Book;
 ```
@@ -58,7 +55,7 @@ interface IBookManager {
 
 ![](/public/images/2019_08_06_02.png)
 
-3. AS build 目录下生成对应的 Java 文件
+3. 项目编译，AS build 目录下生成对应的 Java 文件
 
 此处不会生成 Book.aidl 的 Java 文件，因为已经有 Book 类。
 
@@ -67,7 +64,7 @@ interface IBookManager {
 
 ![](/public/images/2019_08_06_03.png)
 
-将 build 文件中的 IBookManager.java 拷贝出来,新建 IBookManager2.java，源码如下:[IBookManager.java](https://github.com/leeGYPlus/AidlDemo/blob/master/app/src/main/java/com/mk/aidldemo/server/IBookManager2.java)
+为了查看 IBookManager 的内容，将 build 文件中的 IBookManager.java 拷贝出来,新建 IBookManager2.java，源码如下:[IBookManager.java](https://github.com/leeGYPlus/AidlDemo/blob/master/app/src/main/java/com/mk/aidldemo/server/IBookManager2.java)
 
 
 IBookManager 的内部层级结构：
@@ -78,9 +75,24 @@ public interface IBookManager extends android.os.IInterface {
     ......
 
     public static abstract class Stub extends android.os.Binder implements com.mk.aidldemo.IBookManager {
-        
-        ......
-        ......
+        /**
+         * Cast an IBinder object into an com.mk.aidldemo.IBookManager interface,
+         * generating a proxy if needed.
+         */
+        public static IBookManager2 asInterface(android.os.IBinder obj) {
+            if ((obj == null)) {
+                return null;
+            }
+            /**
+             * 对于这个绑定对象,尝试检索本地接口的实现.如果为 null，你需要初始化一个代理类，
+             * 用它来调用 transact() 方法。
+             */
+            android.os.IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
+            if (((iin != null) && (iin instanceof IBookManager2))) {
+                return ((IBookManager2) iin);
+            }
+            return new Stub.Proxy(obj);
+        }
 
         private static class Proxy implements com.mk.aidldemo.IBookManager {
             ......
@@ -101,10 +113,10 @@ IBookManager 的成员方法如下：
 
 为什么不生成 3 个文件(一个接口、两个类)，而是放在了一个文件中，这是因为当多个 AIDL 类时， Stub 和  Proxy 就会重名或者多个类会显得比较繁杂，而把它们放在各自的 AIDL 类中，就会比较容易区分。
 
-下面分析如何进行跨进程通信。
+### 0x0003 分析如何进行跨进程通信
 
 
-起决定性作用的是 Stub 的 asInterface 方法和 onTranscact 方法，首先通过一个示意图大致了解其过程。
+起决定性作用的是 Stub 的 `asInterface` 方法和 `onTranscact` 方法，首先通过一个示意图大致了解其过程。
 
 <img src="/../images/2019_08_08_02.png" width="80%" height = "80%">
 
@@ -116,22 +128,21 @@ IBookManager 的成员方法如下：
 IBookManager.asInterface(IBinder 对象).addBook(Book(countId, "Book $countId"))
 ```
 
-> 这个 Binder 对象就是在 bindService 时 Service 中的 onBinder 方法返回的 IBinder 对象。
-> ```
->  override fun onBind(intent: Intent?): IBinder? {
->      return mBinder
->  }
-> ```
+其中 Binder 对象就是在 bindService 时 Service 中的 onBinder 方法返回的 IBinder 对象。
 
-该方法用于将服务端的 Binder 对象转换成客户端所需的 AIDL 接口类型的对象，这种转换过程是区分进程的，如果客户端和服务端位于同一进程，那么此方法返回的就是服务端的 Stub 对象本身，否则返回的是系统封装后的 Stub.Proxy 。
+```
+ override fun onBind(intent: Intent?): IBinder? {
+    return mBinder
+}
+```
 
-
-
-asInterface 方法主要是判断参数，也就是 IBinder 对象，**是和与自己同处一个进程**：
+该方法用于将服务端的 Binder 对象转换成客户端所需的 AIDL 接口类型的对象，这种转换过程是区分进程的。`asInterface` 方法主要是判断参数，也就是 IBinder 对象，**是和与自己同处一个进程**：
 
 * 是，则直接转换、直接使用，则接下来的操作与 Binder 跨进程无关。
 * 否，则会把这个 IBinder 对象包装成一个 Proxy 对象，这时调用的 Stub 的方法，间接调用 Proxy 的相应方法。
 
+
+如果客户端和服务端位于同一进程，那么此方法返回的就是服务端的 Stub 对象本身，否则返回的是系统封装后的 Stub.Proxy 。
 
 此处为两者位于不同进程。
 
@@ -148,7 +159,55 @@ public static IBookManager2 asInterface(android.os.IBinder obj) {
 }
 ```
 
-2. 在 Proxy 中调用相关的方法，会使用 Pracelable 数据来准备数据，把函数名、函数的参数都写入 _data,使用 _reply 来接收函数的返回值，使用 Binder 的 transact 方法，把数据传给 Binder 的 Server 端。
+到这里为止，大致可以看到，是否位于同一个进程取决于 asInterface 传入的 Binder 对象，那么究其原因，是因为初始化该 Binder 对象的 Service 在其他进程中，具体 Service 代码如下：
+
+
+```
+class MyServer : Service() {
+
+    var list = mutableListOf<Book>()
+
+    private val mBinder = object : IBookManager2.Stub() {
+        //具体逻辑
+        override fun getBookList(): MutableList<Book> {
+            Log.e("process service getList",ProcessUtils.getCurrentProcessName())
+            return list
+        }
+        override fun addBook(book: Book?) {
+            Log.e("process service addBook",ProcessUtils.getCurrentProcessName())
+            list.add(book!!)
+        }
+    }
+
+    override fun onBind(intent: Intent?): IBinder? {
+        return mBinder
+    }
+}
+```
+位于其他进程中的 Service，可以在 AndroidManifest.xml 看到其设置：
+
+```
+<service
+    android:name=".server.MyServer"
+    android:enabled="true"
+    android:process=":remote"
+    android:exported="true">
+</service>
+```
+
+
+这也就是 AIDL 的用法了，要想实现跨进程业务调用，那么就需要在 asInterface 方法中传入另外一个进程的 IBinder 对象，在 Android 8.0 之前中跨进程启动 Activity 就是这样，现在贴一下代码，加深理解。
+
+<img src="/../images/2019_08_08_02_01.png" width="80%" height = "80%">
+
+![](/public/images/2019_08_08_02_01.png)
+
+
+<img src="/../images/2019_08_08_02_02.png" width="80%" height = "80%">
+
+![](/public/images/2019_08_08_02_02.png)
+
+2. 调用相关的方法进行业务操作，会使用 Pracelable 数据来准备数据，把函数名、函数的参数都写入 _data,使用 _reply 来接收函数的返回值，使用 Binder 的 transact 方法，把数据传给 Binder 的 Server 端。
 
 ```
 public void addBook(com.mk.aidldemo.Book book) throws android.os.RemoteException {
@@ -220,7 +279,7 @@ public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel re
 ```
 
 
-### 0x0003 具体分析
+### 0x0004 具体分析
 
 针对 Binder 跨进程通信机制，在每次通信过程中都需要有 Binder Client 端和 Binder Server 端。
 
@@ -247,7 +306,7 @@ E/process onTransact add: com.mk.aidldemo:remote
 可以看到在进程 `com.mk.aidldemo:remote` 中执行的操作有：onTransact 和 Server 中实例化 Binder 中的方法，即为 Binder Server 端，其他均处于 Binder Client 端。
 
 
-### 关键方法
+### 0x0005 关键方法
 
 这其中的关键方法有 `mRemote.transact`  和 `onTransact`。
 
@@ -281,7 +340,7 @@ E/process onTransact add: com.mk.aidldemo:remote
 
 ----
 
-知识链接：
+**知识链接**：
 
 [Android 插件化开发指南](http://product.dangdang.com/25325752.html)
 

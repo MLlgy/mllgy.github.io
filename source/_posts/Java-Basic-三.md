@@ -1,7 +1,7 @@
 ---
 title: Java Basic Three
 date: 2019-03-15 17:08:48
-tags: [Java Basic]
+tags: [Java]
 ---
 
 ### 抽象类

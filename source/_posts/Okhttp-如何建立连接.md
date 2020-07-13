@@ -1,12 +1,16 @@
 ---
 title: Okhttp 如何建立连接
-tags:
+date: 2020-06-15 15:42:02
+tags: [Okhttp3,源码解析]
 ---
 
 # 1. ConnectInterceptor
 
-在 Okhttp 中，有拦截器组成的链，在 Okhttp 发起请求、响应过程中启动驱动作用，<!-- more --> 而 ConnectInterceptor 在作为链中的一员，起到建立网络连接的作用。
+在 Okhttp 中，由拦截器组成的链，在 Okhttp 发起请求、响应过程中启动驱动作用，而 ConnectInterceptor 在作为链中的一员，起到建立网络连接的作用，此篇主要阐述 Okhttp 是如何建立连接的。
 
+<!-- more --> 
+
+以下为代码分析。
 
 # 2. ConnectInterceptor 实现细节
 
@@ -26,7 +30,6 @@ public final class ConnectInterceptor implements Interceptor {
         Request request = realChain.request();
         // StreamAllocation 对象在执行拦截器之前为 null，在第一个拦截器中实例化 StreamAllocation 对象，并在接下来的拦截器中传递
         StreamAllocation streamAllocation = realChain.streamAllocation();
-
         // We need the network to satisfy this request. Possibly for validating a conditional GET.
         boolean doExtensiveHealthChecks = !request.method().equals("GET");
         // 见 2.1
@@ -110,6 +113,8 @@ private RealConnection findConnection(int connectTimeout, int readTimeout, int w
         }
         selectedRoute = route;
     }
+    // 如果上面的两步皆拿不到 RealConnection 对象，则进行接下来的操作。
+
     // 如果需要路由选择，那么进行一次路由选择后，再次寻找可用的连接对象。
     if (selectedRoute == null) {
         selectedRoute = routeSelector.next();
@@ -258,7 +263,7 @@ RouteException routeException = null;
                 // 见 2.9 
                 connectSocket(connectTimeout, readTimeout);
             }
-            // 在经过以上步骤后，判断是否建立 SSL 连接，见 2.11，至此连接建立成功
+            // 在经过以上步骤后，建立了连接，判断是否建立 SSL 连接，见 2.11，至此连接建立成功
             establishProtocol(connectionSpecSelector);
             break;
         } catch (IOException e) {
@@ -335,6 +340,15 @@ private void connectTunnel(int connectTimeout, int readTimeout, int writeTimeout
 ```
 通过隧道建立 HTTPS 连接，代理服务器可以校验请求的授权，并且可以关闭连接。
 
+至于什么是隧道，《网络是怎么连接的》 有这样的解释：
+
+所谓隧道，就类似于套接字之间建立的TCP连接。在TCP连接中，我们从一侧的出口（套接字）放入数据，数据就会原封不动地从另一个出口出来，隧道也是如此。也就是说，我们将包含头部在内的整个包从隧道的一头扔进去，这个包就会原封不动地从隧道的另一头出来，就好像在网络中挖了一条地道，网络包从这个地道里穿过去一样。
+
+隧道有几种实现方式， TCP 连接是一种方式，基于封装也是一种方式，具体可以查看《网络是怎么连接的》- 4.3 接入网中使用的 PPP 和隧道。
+
+
+可以看到建立隧道的过程也是基于 Socket 完成的，在此过程建立起连接，获得 source、sink 属性，从而在 createTunnel 设置相应的属性，从而完成隧道的建立，具体可以查看 2.8。
+
 ## 2.7 RealConnection#createTunnelRequest
 
 ```
@@ -347,9 +361,7 @@ private Request createTunnelRequest() {
             .build();
 }
 ```
-返回通过 HTTP 代理创建 TLS 隧道的请求。隧道请求中的所有内容
-未加密发送到代理服务器，因此隧道仅包含最小标头集。
-这样可以避免将潜在的敏感数据（如 HTTP Cookie）发送到未加密的代理。
+返回通过 HTTP 代理创建 TLS 隧道的请求。隧道请求中的所有内容。未加密发送到代理服务器，因此隧道仅包含最小标头集。这样可以避免将潜在的敏感数据（如 HTTP Cookie）发送到未加密的代理。
 
 ## 2.8 createTunnel
 
@@ -401,6 +413,7 @@ private Request createTunnel(int readTimeout, int writeTimeout, Request tunnelRe
     }
 }
 ```
+
 
 ## 2.9 RealConnection#connectSocket
 
@@ -471,7 +484,8 @@ private void establishProtocol(ConnectionSpecSelector connectionSpecSelector) th
 ```
 private void connectTls(ConnectionSpecSelector connectionSpecSelector) throws IOException {
     Address address = route.address();
-    // 获得设置的 SSLSocketFactory，若没有设置 SSLSocketFactory 则使用系统默认的 SSLSocketFactory，见 2.13
+    // 获得设置的 SSLSocketFactory，若没有设置 SSLSocketFactory，
+    //则使用系统默认的 SSLSocketFactory，见 2.13
     SSLSocketFactory sslSocketFactory = address.sslSocketFactory();
     boolean success = false;
     SSLSocket sslSocket = null;
@@ -578,5 +592,9 @@ private SSLSocketFactory systemDefaultSslSocketFactory(X509TrustManager trustMan
 此次 Okhttp 建立网络请求的一步步操作算是明了了，但是这只是牵涉到具体流程，具体细节还需要根据需要仔细研究。
 
 可以看到的是最终网络连接的建立还是需要 Socket ，这是网络连接的基础。
+
+后补：
+
+TCP、UDP 协议也是对 Socket 的封装，具体可以查看 《网络是怎么连接的》 这本书。
 
 

@@ -1,7 +1,7 @@
 ---
 title: Java Basic Four
 date: 2019-04-04 14:47:26
-tags: [Java Basic,内部类]
+tags: [Java,内部类]
 ---
 ### 1. 概要
 

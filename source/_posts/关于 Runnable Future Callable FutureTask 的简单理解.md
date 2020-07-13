@@ -1,7 +1,7 @@
 ---
 title: 关于 Runnable Future Callable FutureTask 的简单理解
 date: 2019-10-20 16:02:26
-tags: [多线程, Future,FutureTask]
+tags: [多线程, Future,FutureTask,Java]
 ---
 
 

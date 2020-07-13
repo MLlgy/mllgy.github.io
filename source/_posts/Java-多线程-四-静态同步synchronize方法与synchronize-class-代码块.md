@@ -1,7 +1,7 @@
 ---
 title: 'Java 多线程(四):静态同步synchronize方法与synchronize(class)代码块'
 date: 2019-08-19 15:12:45
-tags: [Java 多线程]
+tags: [Java 多线程,Java]
 ---
 ### 静态同步 synchronize 方法 
 

@@ -1,7 +1,7 @@
 ---
 title: Java集合之List
 date: 2019-05-10 16:59:47
-tags: [Java Collection,List,Java Basic]
+tags: [Java Collection,List,Java]
 ---
 
 ### 概述

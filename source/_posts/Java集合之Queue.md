@@ -1,7 +1,7 @@
 ---
 title: Java集合之Queue
 date: 2019-05-10 17:57:03
-tags: [Java Collection,Queue,Java Basic]
+tags: [Java Collection,Queue,Java]
 ---
 ### 概述
 
