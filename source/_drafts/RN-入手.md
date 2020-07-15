@@ -147,4 +147,9 @@ route的配置对象是route name到route config的映射(译者:这才是重点
 ----
 
 
-[React navigation的NavigationActions的一些属性使用](https://www.jianshu.com/p/b6387ea89b4d)
+[React navigation的NavigationActions的一些属性使用](https://www.jianshu.com/p/b6387ea89b4d):关于对 Action 的理解
+
+[CommonActions reference](https://reactnavigation.org/docs/navigation-actions/)
+
+[SwitchActions reference](https://reactnavigation.org/docs/4.x/switch-actions/)
+
