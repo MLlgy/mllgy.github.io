@@ -1,7 +1,7 @@
 ---
 title: 'Kotlin 核心编程(六):空安全'
 date: 2019-12-02 18:53:55
-tags: [Kotlin 核心编程,读书笔记]
+tags: [Kotlin 核心编程,读书笔记,Kotlin]
 ---
 
 ### 0x0001 Java 中存在歧义的 null 

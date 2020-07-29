@@ -1,7 +1,7 @@
 ---
 title: ' Kotlin 核心编程(七):Kotlin 泛型，让类型更加安全'
 date: 2019-12-03 11:32:19
-tags: [Kotlin 核心编程,读书笔记,泛型]
+tags: [Kotlin 核心编程,读书笔记,,Kotlin]
 ---
 
 

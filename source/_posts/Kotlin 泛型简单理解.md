@@ -1,7 +1,7 @@
 ---
 title: Kotlin 泛型简单理解
 date: 2019-10-07 15:50:47
-tags: [Kotlin 泛型]
+tags: [Kotlin,泛型]
 ---
 
 ### 1. Java 中的泛型

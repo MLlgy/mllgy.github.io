@@ -347,9 +347,35 @@ val stringList = Gson().fromJson<String::class.java>(json,rType)
 ](https://www.jianshu.com/p/8cc857583ff4)
 
 
+[JsonReader]()
+
 UnsafeAllocator#create()#
 
 
 UnsafeAllocator : 可以不通过构造函数分配对象
 
   Unsafe：allocateInstance 方法
+
+
+
+
+  ------
+
+
+
+
+
+
+
+
+## TypeToken
+
+ 表示泛型类型，在 Java 中没有提供表示泛型类型的方法，使用此类可以实现该目的。强制客户端创建该类的子类，它会检索类型信息，即使在运行期也可以做到。
+
+
+> TypeToken 如何保存泛型类型？
+
+ 
+
+
+客户端会创建一个空的匿名内部类，这样做可以将类型参数嵌入到匿名类的类型层次结构中，在代码运行期，即使存在类型擦除也会获取泛型的类型参数。
