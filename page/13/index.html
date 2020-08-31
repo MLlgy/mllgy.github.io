@@ -62,6 +62,296 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Java-异常机制浅析" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/26/Java-异常机制浅析/" class="article-date">
+  <time datetime="2019-01-26T10:23:46.000Z" itemprop="datePublished">2019-01-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/26/Java-异常机制浅析/">Java 异常机制浅析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="处理错误"><a href="#处理错误" class="headerlink" title="处理错误"></a>处理错误</h3><h4 id="异常分类"><a href="#异常分类" class="headerlink" title="异常分类"></a>异常分类</h4><p>所有的异常都是继承于 Throwable</p>
+<p><img src="/images/2019_01_26.jpg" alt="运行时内存区域"></p>
+<p> Error 类层次结构描述了 Java 运行时内部的错误以及资源耗尽错误，应用程序不应该抛出这种类型的对象，而是让程序来处理，一般情况下程序会直接中断，并报出错误以及堆栈信息。</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/01/26/Java-异常机制浅析/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="/2019/01/26/Java-异常机制浅析/" data-id="ckehw32ai00ldnyfyzs7s6utp" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Exception/">Exception</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-RxJava 使用 Transformer 进行变换" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/17/RxJava 使用 Transformer 进行变换/" class="article-date">
+  <time datetime="2019-01-17T09:26:13.000Z" itemprop="datePublished">2019-01-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/17/RxJava 使用 Transformer 进行变换/">RxJava Transformer</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="0x81-Observable、Observer-线程切换"><a href="#0x81-Observable、Observer-线程切换" class="headerlink" title="0x81 Observable、Observer 线程切换"></a>0x81 Observable、Observer 线程切换</h3><p>在 Retrofit 结合 RxJava 进行开发时，我们可以通过 subscribeOn()、observeOn() 分别设置被订阅者和订阅者的线程。在此场景中，我们要在应用中的所有请求中执行上面操作，这下重复工作就需要 Transformer 来优化。</p>
+<h3 id="0x82-Transformer-实现对调用链的处理"><a href="#0x82-Transformer-实现对调用链的处理" class="headerlink" title="0x82 Transformer 实现对调用链的处理"></a>0x82 Transformer 实现对调用链的处理</h3><p>我们可能有以下实现方式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">abstract class SchedulerTransformer&lt;T&gt; protected constructor(private val subscribeOnScheduler: Scheduler = Schedulers.io(), </span><br><span class="line">                                                      private val observeOnScheduler: Scheduler = AndroidSchedulers.mainThread()) : ObservableTransformer&lt;T, T&gt;,</span><br><span class="line">        SingleTransformer&lt;T, T&gt;,</span><br><span class="line">        MaybeTransformer&lt;T, T&gt;,</span><br><span class="line">        CompletableTransformer,</span><br><span class="line">        FlowableTransformer&lt;T, T&gt; &#123;</span><br><span class="line"></span><br><span class="line">    override fun apply(upstream: Completable): CompletableSource &#123;</span><br><span class="line">        return upstream.subscribeOn(subscribeOnScheduler)</span><br><span class="line">                .observeOn(observeOnScheduler)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun apply(upstream: Flowable&lt;T&gt;): Publisher&lt;T&gt; &#123;</span><br><span class="line">        return upstream.subscribeOn(subscribeOnScheduler)</span><br><span class="line">                .observeOn(observeOnScheduler)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun apply(upstream: Maybe&lt;T&gt;): MaybeSource&lt;T&gt; &#123;</span><br><span class="line">        return upstream.subscribeOn(subscribeOnScheduler)</span><br><span class="line">                .observeOn(observeOnScheduler)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun apply(upstream: Observable&lt;T&gt;): ObservableSource&lt;T&gt; &#123;</span><br><span class="line">        return upstream.subscribeOn(subscribeOnScheduler)</span><br><span class="line">                .observeOn(observeOnScheduler)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun apply(upstream: Single&lt;T&gt;): SingleSource&lt;T&gt; &#123;</span><br><span class="line">        return upstream.subscribeOn(subscribeOnScheduler)</span><br><span class="line">                .observeOn(observeOnScheduler)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2019/01/17/RxJava 使用 Transformer 进行变换/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="/2019/01/17/RxJava 使用 Transformer 进行变换/" data-id="ckehw31qa002xnyfyy4b3rbek" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RxJava/">RxJava</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Transformer/">Transformer</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Dagger2 前奏篇：依赖注入概念" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/17/Dagger2 前奏篇：依赖注入概念/" class="article-date">
+  <time datetime="2019-01-17T06:57:56.000Z" itemprop="datePublished">2019-01-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/17/Dagger2 前奏篇：依赖注入概念/">Dagger2 前奏篇:依赖注入概念</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="一、What-is-Dagger2"><a href="#一、What-is-Dagger2" class="headerlink" title="一、What is Dagger2 ?"></a>一、What is Dagger2 ?</h2><p> <a href="https://github.com/google/dagger" target="_blank" rel="noopener">Dagger2</a> 是一个谷歌开源的依赖注入(<code>Dependency Injection</code>)框架，简称<code>DI</code>。Dagger2 是 Google 出的依赖注入框架。肯定有小伙伴疑问，为什么会有个 <strong>2</strong> 呢。该框架是基于 Square 开发的 Dagger 基础上开发的。<br> 那么 <strong>什么是 <code>依赖注入</code></strong> 呢？</p>
+<h3 id="1-1-何为依赖注入（控制反转-–-IOC（Inversion-of-Control））"><a href="#1-1-何为依赖注入（控制反转-–-IOC（Inversion-of-Control））" class="headerlink" title="1.1 何为依赖注入（控制反转 – IOC（Inversion of Control））"></a>1.1 何为依赖注入（控制反转 – IOC（Inversion of Control））</h3><p>我在网上搜索了相关内容，觉得以下解释相对容易理解（自定义后）：</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/01/17/Dagger2 前奏篇：依赖注入概念/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="/2019/01/17/Dagger2 前奏篇：依赖注入概念/" data-id="ckehw31ob000anyfyu5ex9igi" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DI/">DI</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Dagger2/">Dagger2</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-OKhttp3 系统拦截器简介" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/17/OKhttp3 系统拦截器简介/" class="article-date">
+  <time datetime="2019-01-17T06:31:26.000Z" itemprop="datePublished">2019-01-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/17/OKhttp3 系统拦截器简介/">OKhttp3 核心拦截器、应用拦截器、网络拦截器</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>2019-12-10 更新，见文末。</p>
+<h3 id="RetryAndFollowUpInterceptor"><a href="#RetryAndFollowUpInterceptor" class="headerlink" title="RetryAndFollowUpInterceptor"></a>RetryAndFollowUpInterceptor</h3><p>功能：实现重试、跟踪</p>
+<p>实现原理： </p>
+<p>while(true) 死循环，如果发生重定向则构建 Request，进入下一次循环，从新发起网络请求，但是最大重定向次数为 20 次。</p>
+<ul>
+<li><p>检验返回的 Response ，如果没有异常（包括请求失败、重定向等），那么执行 <code>return Response</code>, return 会直接结束循环操作，将结果返回到下一个拦截器中进行处理。</p>
+</li>
+<li><p>检验返回的 Response ，如果出现异常情况，那么会根据 Response 新建 Request，并且执行一些必要的检查（是否为同一个 connnetion ，是的话抛出异常，不是的话是否旧的 connection 的资源，并新建一个 connection）<br>，在构建重定向请求时，从 Response 中取出 <code>Location</code> 字段，构建重定向后的 Request。下一次循环时，将进行新一轮的拦截器的处理。</p>
+</li>
+</ul>
+        
+          <p class="article-more-link">
+            <a href="/2019/01/17/OKhttp3 系统拦截器简介/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="/2019/01/17/OKhttp3 系统拦截器简介/" data-id="ckehw31zk00jcnyfy3287pkz1" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Okhttp3/">Okhttp3</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Hexo 博客维护" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/17/Hexo 博客维护/" class="article-date">
+  <time datetime="2019-01-17T02:26:43.000Z" itemprop="datePublished">2019-01-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/17/Hexo 博客维护/">hexo 博客维护</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="关于-Hexo-博客建站"><a href="#关于-Hexo-博客建站" class="headerlink" title="关于 Hexo 博客建站"></a>关于 Hexo 博客建站</h3><p>自己在 2016 基于 Hexo + GitPage 搭建个人博客，但是看到推到 Github 上的代码是 hexo g 生成的 public 文件夹下文件，那我日后怎么维护。自己看到别人上传的代码却是真正的 source 文件。</p>
+<p>今日自己才知道，需要维护两套代码，一套真正的 source 文件，一套部署到 github 的代码，真是废柴。</p>
+<h3 id="关于-Hexo-主题"><a href="#关于-Hexo-主题" class="headerlink" title="关于 Hexo 主题"></a>关于 Hexo 主题</h3><p>自己在网上搜索了一部分主题，有的页面概念过于繁杂，有的页面过于花哨，自己的主要目的是博客记录，搭建时默认的 Hexo 主题已经满足要求，就不再更换主题(于今日有效，万一哪天遇到称心得主题)。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="/2019/01/17/Hexo 博客维护/" data-id="ckehw31p5000ynyfyuyb7m6sq" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Java 内存空间类别" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/16/Java 内存空间类别/" class="article-date">
+  <time datetime="2019-01-16T07:23:17.000Z" itemprop="datePublished">2019-01-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/16/Java 内存空间类别/">JVM 运行时内存分布</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h2><p>Java 不像 C/C++ 需要程序员自己管理内存，Java 把内存控制的权利交给类 Java 虚拟机。</p>
+<h2 id="2-运行时数据区域"><a href="#2-运行时数据区域" class="headerlink" title="2. 运行时数据区域"></a>2. 运行时数据区域</h2><p>JVM 在 Java 程序运行时把它所管理的内存划分为几个不同的数据区域。</p>
+<p><img src="/public/images/2019_01_16.jpg" alt></p>
+<!-- (https://img-blog.csdnimg.cn/20190111154945144.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1N0cmFuZ2VfTW9ua2V5,size_16,color_FFFFFF,t_70) -->
+
+<h3 id="2-1-程序计数器"><a href="#2-1-程序计数器" class="headerlink" title="2.1 程序计数器"></a>2.1 程序计数器</h3><p>程序计数器是一块较小的内存，它可以看作 <strong>当前线程</strong> 所执行的 <strong>字节码的行号指示器</strong>。<strong>在虚拟机的概念模型里，字节码解释器的工作就是通过改变这个计数器的值</strong> 来选取下一条需要执行的字节码，分支、循环、跳转、异常处理、线程恢复等基础功能都需要这个计数器来完成。</p>
+<p>如上图所示，程序计数器是线程私有的。</p>
+<p><strong>如何执行工作</strong></p>
+<p>如果线程正在执行一个 Java 方法，这个计数器记录的正是执行的虚拟机字节码指令的地址，如果执行的是 Native 方法，这个计数器值为空。</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/01/16/Java 内存空间类别/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="/2019/01/16/Java 内存空间类别/" data-id="ckehw31p70013nyfyu1slxvbv" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/内存分区/">内存分区</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-Java-泛型-深入理解通配符" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/11/25/Java-泛型-深入理解通配符/" class="article-date">
@@ -93,7 +383,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2018/11/25/Java-泛型-深入理解通配符/" data-id="ckckbg7dp001gz9fybi1txct1" class="article-share-link">分享</a>
+      <a data-url="/2018/11/25/Java-泛型-深入理解通配符/" data-id="ckehw31ph001nnyfyrsco78lx" class="article-share-link">分享</a>
       
       
       
@@ -138,7 +428,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2018/11/20/Java-泛型-深入理解泛型类型擦除/" data-id="ckckbg7n500g5z9fyp9xh2m21" class="article-share-link">分享</a>
+      <a data-url="/2018/11/20/Java-泛型-深入理解泛型类型擦除/" data-id="ckehw31z400ilnyfyswefeak7" class="article-share-link">分享</a>
       
       
       
@@ -170,7 +460,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/AIDL/" style="font-size: 11.25px;">AIDL</a> <a href="/tags/Android/" style="font-size: 13.75px;">Android</a> <a href="/tags/Android-刷机/" style="font-size: 10px;">Android 刷机</a> <a href="/tags/Android绘制机制/" style="font-size: 10px;">Android绘制机制</a> <a href="/tags/Binder/" style="font-size: 10px;">Binder</a> <a href="/tags/C/" style="font-size: 10px;">C</a> <a href="/tags/CMake/" style="font-size: 10px;">CMake</a> <a href="/tags/CPU-Profiler，Android-性能优化/" style="font-size: 10px;">CPU Profiler，Android 性能优化</a> <a href="/tags/CPU-架构/" style="font-size: 10px;">CPU 架构</a> <a href="/tags/Collections/" style="font-size: 10px;">Collections</a> <a href="/tags/Coroutines/" style="font-size: 11.25px;">Coroutines</a> <a href="/tags/Coroutines协程/" style="font-size: 10px;">Coroutines协程</a> <a href="/tags/DI/" style="font-size: 10px;">DI</a> <a href="/tags/Dagger2/" style="font-size: 10px;">Dagger2</a> <a href="/tags/Dart/" style="font-size: 10px;">Dart</a> <a href="/tags/EventBus/" style="font-size: 13.75px;">EventBus</a> <a href="/tags/EventBus-APT/" style="font-size: 10px;">EventBus APT</a> <a href="/tags/Exception/" style="font-size: 11.25px;">Exception</a> <a href="/tags/Flutter/" style="font-size: 10px;">Flutter</a> <a href="/tags/Future/" style="font-size: 10px;">Future</a> <a href="/tags/FutureTask/" style="font-size: 10px;">FutureTask</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/GitPage/" style="font-size: 10px;">GitPage</a> <a href="/tags/Gradle/" style="font-size: 10px;">Gradle</a> <a href="/tags/Gradle-in-action/" style="font-size: 16.25px;">Gradle in action</a> <a href="/tags/Gradle-基本原理/" style="font-size: 16.25px;">Gradle 基本原理</a> <a href="/tags/Hexo/" style="font-size: 11.25px;">Hexo</a> <a href="/tags/Hprof/" style="font-size: 10px;">Hprof</a> <a href="/tags/IO-流/" style="font-size: 10px;">IO 流</a> <a href="/tags/Inflection/" style="font-size: 10px;">Inflection</a> <a href="/tags/JNI/" style="font-size: 11.25px;">JNI</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Java-Collection/" style="font-size: 16.25px;">Java Collection</a> <a href="/tags/Java-多线程/" style="font-size: 16.25px;">Java 多线程</a> <a href="/tags/Java-异常/" style="font-size: 10px;">Java 异常</a> <a href="/tags/Java-继承，对象，类初始化/" style="font-size: 10px;">Java 继承，对象，类初始化</a> <a href="/tags/Jetpack/" style="font-size: 16.25px;">Jetpack</a> <a href="/tags/JobScheduler/" style="font-size: 10px;">JobScheduler</a> <a href="/tags/Kindle/" style="font-size: 10px;">Kindle</a> <a href="/tags/Kotlin/" style="font-size: 11.25px;">Kotlin</a> <a href="/tags/Kotlin-协程/" style="font-size: 15px;">Kotlin 协程</a> <a href="/tags/Kotlin-官方文档/" style="font-size: 11.25px;">Kotlin 官方文档</a> <a href="/tags/Kotlin-核心编程/" style="font-size: 17.5px;">Kotlin 核心编程</a> <a href="/tags/Kotlin-泛型/" style="font-size: 10px;">Kotlin 泛型</a> <a href="/tags/LeakCanary/" style="font-size: 10px;">LeakCanary</a> <a href="/tags/Lifecycle/" style="font-size: 10px;">Lifecycle</a> <a href="/tags/Linux/" style="font-size: 16.25px;">Linux</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/LiveData/" style="font-size: 10px;">LiveData</a> <a href="/tags/Logcat-日志格式/" style="font-size: 10px;">Logcat 日志格式</a> <a href="/tags/Map/" style="font-size: 10px;">Map</a> <a href="/tags/OOP/" style="font-size: 10px;">OOP</a> <a href="/tags/Okhttp3/" style="font-size: 12.5px;">Okhttp3</a> <a href="/tags/Okhttp3-缓存文件/" style="font-size: 10px;">Okhttp3 缓存文件</a> <a href="/tags/Queue/" style="font-size: 10px;">Queue</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Rxjava-源码分析/" style="font-size: 13.75px;">Rxjava 源码分析</a> <a href="/tags/Set/" style="font-size: 10px;">Set</a> <a href="/tags/Shell/" style="font-size: 15px;">Shell</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Sticky-Event/" style="font-size: 10px;">Sticky Event</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/Thread/" style="font-size: 10px;">Thread</a> <a href="/tags/TraceView/" style="font-size: 10px;">TraceView</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/VIM/" style="font-size: 10px;">VIM</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/ViewModle/" style="font-size: 10px;">ViewModle</a> <a href="/tags/WorkManager/" style="font-size: 12.5px;">WorkManager</a> <a href="/tags/adb/" style="font-size: 10px;">adb</a> <a href="/tags/《深入理解-Java-虚拟机》读书笔记/" style="font-size: 10px;">《深入理解 Java 虚拟机》读书笔记</a> <a href="/tags/三方库/" style="font-size: 10px;">三方库</a> <a href="/tags/事件分发机制/" style="font-size: 10px;">事件分发机制</a> <a href="/tags/内存优化/" style="font-size: 10px;">内存优化</a> <a href="/tags/内存分区/" style="font-size: 10px;">内存分区</a> <a href="/tags/内存泄漏/" style="font-size: 11.25px;">内存泄漏</a> <a href="/tags/内部类/" style="font-size: 10px;">内部类</a> <a href="/tags/单例/" style="font-size: 10px;">单例</a> <a href="/tags/图解-HTTP/" style="font-size: 11.25px;">图解 HTTP</a> <a href="/tags/堆栈轨迹/" style="font-size: 10px;">堆栈轨迹</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a> <a href="/tags/对象拷贝/" style="font-size: 10px;">对象拷贝</a> <a href="/tags/工具/" style="font-size: 11.25px;">工具</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/性能优化工具/" style="font-size: 10px;">性能优化工具</a> <a href="/tags/数据压缩/" style="font-size: 10px;">数据压缩</a> <a href="/tags/极客时间专栏/" style="font-size: 10px;">极客时间专栏</a> <a href="/tags/极客时间笔记/" style="font-size: 10px;">极客时间笔记</a> <a href="/tags/泛型/" style="font-size: 12.5px;">泛型</a> <a href="/tags/浮点型精度问题/" style="font-size: 10px;">浮点型精度问题</a> <a href="/tags/深入浅出计算机组成原理-徐文浩/" style="font-size: 11.25px;">深入浅出计算机组成原理(徐文浩)</a> <a href="/tags/深入理解-Android-读书笔记/" style="font-size: 10px;">深入理解 Android 读书笔记</a> <a href="/tags/源码解析/" style="font-size: 11.25px;">源码解析</a> <a href="/tags/焦点机制/" style="font-size: 10px;">焦点机制</a> <a href="/tags/百度地图黑影/" style="font-size: 10px;">百度地图黑影</a> <a href="/tags/硬件加速/" style="font-size: 10px;">硬件加速</a> <a href="/tags/编译技术/" style="font-size: 10px;">编译技术</a> <a href="/tags/网络协议/" style="font-size: 12.5px;">网络协议</a> <a href="/tags/计算机基础/" style="font-size: 10px;">计算机基础</a> <a href="/tags/设计模式六大原则/" style="font-size: 10px;">设计模式六大原则</a> <a href="/tags/读书笔记/" style="font-size: 18.75px;">读书笔记</a> <a href="/tags/趣谈网络协议-刘超/" style="font-size: 10px;">趣谈网络协议(刘超)</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+      <a href="/tags/AIDL/" style="font-size: 11.11px;">AIDL</a> <a href="/tags/Alfred/" style="font-size: 10px;">Alfred</a> <a href="/tags/Android/" style="font-size: 15.56px;">Android</a> <a href="/tags/Android-刷机/" style="font-size: 10px;">Android 刷机</a> <a href="/tags/Android绘制机制/" style="font-size: 10px;">Android绘制机制</a> <a href="/tags/Binder/" style="font-size: 10px;">Binder</a> <a href="/tags/C/" style="font-size: 10px;">C</a> <a href="/tags/CMake/" style="font-size: 10px;">CMake</a> <a href="/tags/CPU-Profiler，Android-性能优化/" style="font-size: 10px;">CPU Profiler，Android 性能优化</a> <a href="/tags/CPU-架构/" style="font-size: 10px;">CPU 架构</a> <a href="/tags/Charles/" style="font-size: 10px;">Charles</a> <a href="/tags/Collections/" style="font-size: 10px;">Collections</a> <a href="/tags/Coroutines/" style="font-size: 11.11px;">Coroutines</a> <a href="/tags/Coroutines协程/" style="font-size: 10px;">Coroutines协程</a> <a href="/tags/DI/" style="font-size: 10px;">DI</a> <a href="/tags/Dagger2/" style="font-size: 10px;">Dagger2</a> <a href="/tags/Dart/" style="font-size: 10px;">Dart</a> <a href="/tags/EventBus/" style="font-size: 13.33px;">EventBus</a> <a href="/tags/EventBus-APT/" style="font-size: 10px;">EventBus APT</a> <a href="/tags/Exception/" style="font-size: 11.11px;">Exception</a> <a href="/tags/Flutter/" style="font-size: 10px;">Flutter</a> <a href="/tags/Future/" style="font-size: 10px;">Future</a> <a href="/tags/FutureTask/" style="font-size: 10px;">FutureTask</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/GitPage/" style="font-size: 10px;">GitPage</a> <a href="/tags/Gradle/" style="font-size: 10px;">Gradle</a> <a href="/tags/Gradle-in-action/" style="font-size: 15.56px;">Gradle in action</a> <a href="/tags/Gradle-基本原理/" style="font-size: 15.56px;">Gradle 基本原理</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 11.11px;">Hexo</a> <a href="/tags/Hprof/" style="font-size: 10px;">Hprof</a> <a href="/tags/IO-流/" style="font-size: 10px;">IO 流</a> <a href="/tags/Inflection/" style="font-size: 10px;">Inflection</a> <a href="/tags/JNI/" style="font-size: 11.11px;">JNI</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Java-Collection/" style="font-size: 15.56px;">Java Collection</a> <a href="/tags/Java-多线程/" style="font-size: 15.56px;">Java 多线程</a> <a href="/tags/Java-异常/" style="font-size: 10px;">Java 异常</a> <a href="/tags/Java-继承，对象，类初始化/" style="font-size: 10px;">Java 继承，对象，类初始化</a> <a href="/tags/Jetpack/" style="font-size: 15.56px;">Jetpack</a> <a href="/tags/JobScheduler/" style="font-size: 10px;">JobScheduler</a> <a href="/tags/Kindle/" style="font-size: 10px;">Kindle</a> <a href="/tags/Kotin/" style="font-size: 11.11px;">Kotin</a> <a href="/tags/Kotlin/" style="font-size: 18.89px;">Kotlin</a> <a href="/tags/Kotlin-协程/" style="font-size: 14.44px;">Kotlin 协程</a> <a href="/tags/Kotlin-核心编程/" style="font-size: 16.67px;">Kotlin 核心编程</a> <a href="/tags/LeakCanary/" style="font-size: 10px;">LeakCanary</a> <a href="/tags/Lifecycle/" style="font-size: 10px;">Lifecycle</a> <a href="/tags/Linux/" style="font-size: 15.56px;">Linux</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/LiveData/" style="font-size: 10px;">LiveData</a> <a href="/tags/Logcat-日志格式/" style="font-size: 10px;">Logcat 日志格式</a> <a href="/tags/Mac/" style="font-size: 10px;">Mac</a> <a href="/tags/Map/" style="font-size: 10px;">Map</a> <a href="/tags/OOP/" style="font-size: 10px;">OOP</a> <a href="/tags/Okhttp3/" style="font-size: 12.22px;">Okhttp3</a> <a href="/tags/Okhttp3-缓存文件/" style="font-size: 10px;">Okhttp3 缓存文件</a> <a href="/tags/Queue/" style="font-size: 10px;">Queue</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Rxjava-源码分析/" style="font-size: 13.33px;">Rxjava 源码分析</a> <a href="/tags/Set/" style="font-size: 10px;">Set</a> <a href="/tags/Shell/" style="font-size: 14.44px;">Shell</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Sticky-Event/" style="font-size: 10px;">Sticky Event</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/Thread/" style="font-size: 10px;">Thread</a> <a href="/tags/TraceView/" style="font-size: 10px;">TraceView</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/VIM/" style="font-size: 10px;">VIM</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/ViewModle/" style="font-size: 10px;">ViewModle</a> <a href="/tags/WorkManager/" style="font-size: 12.22px;">WorkManager</a> <a href="/tags/adb/" style="font-size: 10px;">adb</a> <a href="/tags/《深入理解-Java-虚拟机》读书笔记/" style="font-size: 10px;">《深入理解 Java 虚拟机》读书笔记</a> <a href="/tags/三方库/" style="font-size: 10px;">三方库</a> <a href="/tags/事件分发机制/" style="font-size: 10px;">事件分发机制</a> <a href="/tags/内存优化/" style="font-size: 10px;">内存优化</a> <a href="/tags/内存分区/" style="font-size: 10px;">内存分区</a> <a href="/tags/内存泄漏/" style="font-size: 11.11px;">内存泄漏</a> <a href="/tags/内部类/" style="font-size: 10px;">内部类</a> <a href="/tags/单例/" style="font-size: 10px;">单例</a> <a href="/tags/图解-HTTP/" style="font-size: 11.11px;">图解 HTTP</a> <a href="/tags/堆栈轨迹/" style="font-size: 10px;">堆栈轨迹</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a> <a href="/tags/对象拷贝/" style="font-size: 10px;">对象拷贝</a> <a href="/tags/工具/" style="font-size: 11.11px;">工具</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/性能优化工具/" style="font-size: 10px;">性能优化工具</a> <a href="/tags/数据压缩/" style="font-size: 10px;">数据压缩</a> <a href="/tags/极客时间专栏/" style="font-size: 10px;">极客时间专栏</a> <a href="/tags/极客时间笔记/" style="font-size: 10px;">极客时间笔记</a> <a href="/tags/泛型/" style="font-size: 12.22px;">泛型</a> <a href="/tags/浮点型精度问题/" style="font-size: 10px;">浮点型精度问题</a> <a href="/tags/深入浅出计算机组成原理-徐文浩/" style="font-size: 11.11px;">深入浅出计算机组成原理(徐文浩)</a> <a href="/tags/深入理解-Android-读书笔记/" style="font-size: 10px;">深入理解 Android 读书笔记</a> <a href="/tags/源码解析/" style="font-size: 11.11px;">源码解析</a> <a href="/tags/焦点机制/" style="font-size: 10px;">焦点机制</a> <a href="/tags/百度地图黑影/" style="font-size: 10px;">百度地图黑影</a> <a href="/tags/硬件加速/" style="font-size: 10px;">硬件加速</a> <a href="/tags/编译技术/" style="font-size: 10px;">编译技术</a> <a href="/tags/网络协议/" style="font-size: 12.22px;">网络协议</a> <a href="/tags/网络安全/" style="font-size: 10px;">网络安全</a> <a href="/tags/计算机基础/" style="font-size: 10px;">计算机基础</a> <a href="/tags/设计模式六大原则/" style="font-size: 10px;">设计模式六大原则</a> <a href="/tags/读书笔记/" style="font-size: 17.78px;">读书笔记</a> <a href="/tags/趣谈网络协议-刘超/" style="font-size: 10px;">趣谈网络协议(刘超)</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
     </div>
   </div>
 
@@ -179,7 +469,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a></li></ul>
     </div>
   </div>
 
@@ -192,23 +482,23 @@
       <ul>
         
           <li>
-            <a href="/2020/07/02/Gradle-依赖冲突拾遗/">Gradle 依赖冲突拾遗</a>
+            <a href="/2020/08/07/Git命令/">Git命令</a>
           </li>
         
           <li>
-            <a href="/2020/06/26/git-reset-指令/">git reset 指令</a>
+            <a href="/2020/07/31/Google-搜索技巧/">Google 搜索技巧</a>
           </li>
         
           <li>
-            <a href="/2020/06/16/adb-shell-top/">adb shell top </a>
+            <a href="/2020/07/30/记一次-Charles-抓包-Android-10-0-HTTPS-请求/">记一次 Charles 抓包 Android 10.0 HTTPS 请求</a>
           </li>
         
           <li>
-            <a href="/2020/06/16/性能优化之卡顿优化/">性能优化之卡顿优化</a>
+            <a href="/2020/07/29/HTTPS-防止被抓包/">Https 如何反抓包</a>
           </li>
         
           <li>
-            <a href="/2020/06/16/深入理解-Android-屏幕绘制原理/">深入理解 Android 屏幕绘制原理</a>
+            <a href="/2020/07/19/Kotlin-之-Backing-Field/">Kotlin 之对 Backing Field 的理解</a>
           </li>
         
       </ul>

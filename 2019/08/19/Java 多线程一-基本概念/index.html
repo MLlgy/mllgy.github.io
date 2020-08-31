@@ -7,18 +7,18 @@
   
   <title>Java 多线程(一):基本概念 | 玛斯特・布兰迪</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="线程线程可以理解为在进程中独立运行的子任务，使用多线程后可以最大限度的利用 CPU 的空闲时间来处理其他任务。 多线程的执行是异步的。 Thread 的常用 APIcurrentThread()(静态方法)  currentThread() 方法返回的 代码段正在被哪个线程调用。  getName()：获得线程的 Name 注意 currentThread().getName() 与 getNam">
+  <meta name="description" content="0x0001 线程概述线程可以理解为在进程中独立运行的子任务，使用多线程后可以最大限度的利用 CPU 的空闲时间来处理其他任务。多线程的执行是异步的。 0x0002 Thread 的常用 API currentThread()(静态方法)  currentThread() 方法返回的 代码段正在被哪个线程调用。  getName()：获得线程的 Name  注意 currentThread().g">
 <meta name="keywords" content="Java,Java 多线程">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java 多线程(一):基本概念">
 <meta property="og:url" content="/2019/08/19/Java 多线程一-基本概念/index.html">
 <meta property="og:site_name" content="玛斯特・布兰迪">
-<meta property="og:description" content="线程线程可以理解为在进程中独立运行的子任务，使用多线程后可以最大限度的利用 CPU 的空闲时间来处理其他任务。 多线程的执行是异步的。 Thread 的常用 APIcurrentThread()(静态方法)  currentThread() 方法返回的 代码段正在被哪个线程调用。  getName()：获得线程的 Name 注意 currentThread().getName() 与 getNam">
+<meta property="og:description" content="0x0001 线程概述线程可以理解为在进程中独立运行的子任务，使用多线程后可以最大限度的利用 CPU 的空闲时间来处理其他任务。多线程的执行是异步的。 0x0002 Thread 的常用 API currentThread()(静态方法)  currentThread() 方法返回的 代码段正在被哪个线程调用。  getName()：获得线程的 Name  注意 currentThread().g">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-07-13T09:29:09.900Z">
+<meta property="og:updated_time" content="2020-07-15T08:26:19.629Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java 多线程(一):基本概念">
-<meta name="twitter:description" content="线程线程可以理解为在进程中独立运行的子任务，使用多线程后可以最大限度的利用 CPU 的空闲时间来处理其他任务。 多线程的执行是异步的。 Thread 的常用 APIcurrentThread()(静态方法)  currentThread() 方法返回的 代码段正在被哪个线程调用。  getName()：获得线程的 Name 注意 currentThread().getName() 与 getNam">
+<meta name="twitter:description" content="0x0001 线程概述线程可以理解为在进程中独立运行的子任务，使用多线程后可以最大限度的利用 CPU 的空闲时间来处理其他任务。多线程的执行是异步的。 0x0002 Thread 的常用 API currentThread()(静态方法)  currentThread() 方法返回的 代码段正在被哪个线程调用。  getName()：获得线程的 Name  注意 currentThread().g">
   
   
     <link rel="icon" href="/favicon.png">
@@ -87,28 +87,32 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h3><p>线程可以理解为在进程中独立运行的子任务，使用多线程后可以最大限度的利用 CPU 的空闲时间来处理其他任务。</p>
-<p>多线程的执行是异步的。</p>
-<h3 id="Thread-的常用-API"><a href="#Thread-的常用-API" class="headerlink" title="Thread 的常用 API"></a>Thread 的常用 API</h3><p>currentThread()(静态方法)</p>
-<blockquote>
+        <h3 id="0x0001-线程概述"><a href="#0x0001-线程概述" class="headerlink" title="0x0001 线程概述"></a>0x0001 线程概述</h3><p>线程可以理解为在进程中独立运行的子任务，使用多线程后可以最大限度的利用 CPU 的空闲时间来处理其他任务。多线程的执行是异步的。</p>
+<h3 id="0x0002-Thread-的常用-API"><a href="#0x0002-Thread-的常用-API" class="headerlink" title="0x0002 Thread 的常用 API"></a>0x0002 Thread 的常用 API</h3><ul>
+<li>currentThread()(静态方法)</li>
+</ul>
 <p>currentThread() 方法返回的 <strong>代码段正在被哪个线程调用</strong>。</p>
-</blockquote>
-<p>getName()：获得线程的 Name</p>
+<ul>
+<li>getName()：获得线程的 Name</li>
+</ul>
 <p>注意 <code>currentThread().getName()</code> 与 <code>getName()</code> 的不同。</p>
 <a id="more"></a>
-<p>isAlive()：判断当前线程是否处于活动状态。</p>
-<p>sleep():在指定的毫秒内让当前“正在执行的线程” 休眠，这个 “正在执行的线程” 的是指 <code>currentThread()</code> 返回的线程。</p>
-<h3 id="实现多线程"><a href="#实现多线程" class="headerlink" title="实现多线程"></a>实现多线程</h3><ul>
+<ul>
+<li><p>isAlive()：判断当前线程是否处于活动状态。</p>
+</li>
+<li><p>sleep():在指定的毫秒内让当前“正在执行的线程” 休眠，这个 “正在执行的线程” 的是指 <code>currentThread()</code> 返回的线程。</p>
+</li>
+</ul>
+<h3 id="0x0003-实现多线程"><a href="#0x0003-实现多线程" class="headerlink" title="0x0003 实现多线程"></a>0x0003 实现多线程</h3><ul>
 <li>继承 Thread</li>
 <li>实现 Runnable</li>
 </ul>
-<p>继承 Thread 最大的局限就是不支持多继承，为了实现多继承可以通过实现 Runnable 的方式，但是两者本质上没有区别。</p>
-<h3 id="线程调用"><a href="#线程调用" class="headerlink" title="线程调用"></a>线程调用</h3><p><strong>随机性</strong></p>
-<p>使用多线程技术时，<strong>代码的运行的结果与代码的执行顺序或者调用顺序无关的</strong>，即 Thread 对象调用 start 的顺序并不代表 run 方法的执行顺序。线程是一个子任务， CPU 以不确定的方式，或者以随机的时间调用线程中的 run 方法。</p>
+<p>继承 Thread 最大的局限就是不支持多继承，通过 <code>implement Runnable</code> 的方式可以实现多继承，但是两者本质上没有区别。</p>
+<h3 id="0x0004-线程调用"><a href="#0x0004-线程调用" class="headerlink" title="0x0004 线程调用"></a>0x0004 线程调用</h3><p><strong>随机性</strong></p>
+<p>使用多线程技术时，<strong>代码的运行的结果与代码的执行顺序或者调用顺序无关的</strong>，即 Thread 对象调用 start 的顺序并不代表 run 方法的执行顺序。线程是一个子任务， CPU 执行 run 中的代码是随机的。</p>
 <p><strong>线程的调用</strong></p>
-<p>Thread 类中的 start() 方法通知 “线程规划器” 此线程已经准备就绪，等待调用线程对象的 run 方法。</p>
-<p>线程的执行其实是让系统安排一个时间来调用 run 方法，但是系统何时执行是随机的，也就印证了线程调用的随机性。</p>
-<h3 id="实例变量与线程安全"><a href="#实例变量与线程安全" class="headerlink" title="实例变量与线程安全"></a>实例变量与线程安全</h3><p><strong>当多个线程可以同时访问一个变量时，容易发生数据线程安全问题。</strong></p>
+<p>Thread 类中的 start() 方法通知 “线程规划器” 此线程已经准备就绪，等待调用线程对象的 run 方法。线程的执行其实是让系统安排一个时间来调用 run 方法，但是系统何时执行是随机的，也就印证了线程调用的随机性。</p>
+<h3 id="0x0005-实例变量与线程安全"><a href="#0x0005-实例变量与线程安全" class="headerlink" title="0x0005 实例变量与线程安全"></a>0x0005 实例变量与线程安全</h3><p><strong>当多个线程可以同时访问一个变量时，容易发生数据线程安全问题。</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class MyThread extends Thread &#123;</span><br><span class="line">    private int count = 5;</span><br><span class="line">    public MyThread() &#123;</span><br><span class="line">        System.out.println(&quot;MyThread 当前的 Thread 的 name: &quot; + this.getName());</span><br><span class="line">        System.out.println(&quot;MyThread 代码执行的 Thread：&quot; + Thread.currentThread().getName());</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        super.run();</span><br><span class="line">        System.out.println(&quot;代码调用的 Thread&quot; + currentThread().getName());</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;当前的 Thread 的 Name  &quot; + this.getName());</span><br><span class="line">        count--;</span><br><span class="line">        System.out.println(&quot;Thread is：&quot; + currentThread().getName()+&quot;,计算结果是：&quot; + &quot;count is &quot; + count);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>在调用过程如下(过滤无用信息)：</p>
@@ -117,17 +121,11 @@
 <p>打印日志的一种情况：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Thread is：A,计算结果是：count is 3</span><br><span class="line">Thread is：B,计算结果是：count is 3</span><br><span class="line">Thread is：C,计算结果是：count is 2</span><br><span class="line">Thread is：D,计算结果是：count is 1</span><br><span class="line">Thread is：E,计算结果是：count is 0</span><br></pre></td></tr></table></figure>
 
-<p>很明显，线程 A 和 B 同时对 count 进行处理，获得了相同的打印 count，这是不想得到的结果，这就是所谓的 “非线程安全” 问题。</p>
-<p>在本例中，产生线程不安全的原因为: <code>count--</code>:</p>
-<p>在虚拟机中 count– 分为以下 3 步：</p>
-<pre><code>1. 取得 count。
-2. 计算 count - 1。
-3. 对 count 赋值。</code></pre><p>以上 3 个步骤中，如果有多个线程同时访问，容易产生线程安全问题。</p>
-<h3 id="非线程安全"><a href="#非线程安全" class="headerlink" title="非线程安全"></a>非线程安全</h3><p>什么是非线程安全？</p>
-<blockquote>
-<p>非线程安全是指 <strong>多个线程</strong> 对 <strong>同一个对象</strong> 中的 <strong>同一个实例变量</strong> 进行操作时会出现值被更改、值不同步的情况，影响程序的正常执行。</p>
-</blockquote>
-<p>上面这种一个线程在操作中读取实例变量时，此值已经被其他线程更改过的情况被称为 <strong>脏读</strong>。</p>
+<p>很明显，线程 A 和 B 同时对 count 进行处理，获得了相同的打印 count，这是不想得到的结果，这就是所谓的 “非线程安全” 问题。在本例中，产生线程不安全的原因为: <code>count--</code>，在虚拟机中 count– 分为以下 3 步：</p>
+<pre><code>1. 取得 count;
+2. 计算 count - 1;
+3. 对 count 赋值;</code></pre><p>以上 3 个步骤中，如果有多个线程同时访问，容易产生线程安全问题。</p>
+<h3 id="0x0006-非线程安全"><a href="#0x0006-非线程安全" class="headerlink" title="0x0006 非线程安全"></a>0x0006 非线程安全</h3><p>非线程安全是指 <strong>多个线程</strong> 对 <strong>同一个对象</strong> 中的 <strong>同一个实例变量</strong> 进行操作时,出现的值被更改、值不同步的情况，影响程序的正常执行。这种线程在操作中读取实例变量时，此值已经被其他线程更改过的情况被称为 <strong>脏读</strong>。</p>
 <hr>
 <p><strong>知识链接：</strong></p>
 <p><a href="http://product.dangdang.com/23711315.html" target="_blank" rel="noopener">Java多线程编程核心技术</a></p>
@@ -135,7 +133,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2019/08/19/Java 多线程一-基本概念/" data-id="ckckbg7di0012z9fyp9b021tc" class="article-share-link">分享</a>
+      <a data-url="/2019/08/19/Java 多线程一-基本概念/" data-id="ckehw31p90018nyfyn3jcemeh" class="article-share-link">分享</a>
       
       
       
@@ -179,7 +177,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/AIDL/" style="font-size: 11.25px;">AIDL</a> <a href="/tags/Android/" style="font-size: 13.75px;">Android</a> <a href="/tags/Android-刷机/" style="font-size: 10px;">Android 刷机</a> <a href="/tags/Android绘制机制/" style="font-size: 10px;">Android绘制机制</a> <a href="/tags/Binder/" style="font-size: 10px;">Binder</a> <a href="/tags/C/" style="font-size: 10px;">C</a> <a href="/tags/CMake/" style="font-size: 10px;">CMake</a> <a href="/tags/CPU-Profiler，Android-性能优化/" style="font-size: 10px;">CPU Profiler，Android 性能优化</a> <a href="/tags/CPU-架构/" style="font-size: 10px;">CPU 架构</a> <a href="/tags/Collections/" style="font-size: 10px;">Collections</a> <a href="/tags/Coroutines/" style="font-size: 11.25px;">Coroutines</a> <a href="/tags/Coroutines协程/" style="font-size: 10px;">Coroutines协程</a> <a href="/tags/DI/" style="font-size: 10px;">DI</a> <a href="/tags/Dagger2/" style="font-size: 10px;">Dagger2</a> <a href="/tags/Dart/" style="font-size: 10px;">Dart</a> <a href="/tags/EventBus/" style="font-size: 13.75px;">EventBus</a> <a href="/tags/EventBus-APT/" style="font-size: 10px;">EventBus APT</a> <a href="/tags/Exception/" style="font-size: 11.25px;">Exception</a> <a href="/tags/Flutter/" style="font-size: 10px;">Flutter</a> <a href="/tags/Future/" style="font-size: 10px;">Future</a> <a href="/tags/FutureTask/" style="font-size: 10px;">FutureTask</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/GitPage/" style="font-size: 10px;">GitPage</a> <a href="/tags/Gradle/" style="font-size: 10px;">Gradle</a> <a href="/tags/Gradle-in-action/" style="font-size: 16.25px;">Gradle in action</a> <a href="/tags/Gradle-基本原理/" style="font-size: 16.25px;">Gradle 基本原理</a> <a href="/tags/Hexo/" style="font-size: 11.25px;">Hexo</a> <a href="/tags/Hprof/" style="font-size: 10px;">Hprof</a> <a href="/tags/IO-流/" style="font-size: 10px;">IO 流</a> <a href="/tags/Inflection/" style="font-size: 10px;">Inflection</a> <a href="/tags/JNI/" style="font-size: 11.25px;">JNI</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Java-Collection/" style="font-size: 16.25px;">Java Collection</a> <a href="/tags/Java-多线程/" style="font-size: 16.25px;">Java 多线程</a> <a href="/tags/Java-异常/" style="font-size: 10px;">Java 异常</a> <a href="/tags/Java-继承，对象，类初始化/" style="font-size: 10px;">Java 继承，对象，类初始化</a> <a href="/tags/Jetpack/" style="font-size: 16.25px;">Jetpack</a> <a href="/tags/JobScheduler/" style="font-size: 10px;">JobScheduler</a> <a href="/tags/Kindle/" style="font-size: 10px;">Kindle</a> <a href="/tags/Kotlin/" style="font-size: 11.25px;">Kotlin</a> <a href="/tags/Kotlin-协程/" style="font-size: 15px;">Kotlin 协程</a> <a href="/tags/Kotlin-官方文档/" style="font-size: 11.25px;">Kotlin 官方文档</a> <a href="/tags/Kotlin-核心编程/" style="font-size: 17.5px;">Kotlin 核心编程</a> <a href="/tags/Kotlin-泛型/" style="font-size: 10px;">Kotlin 泛型</a> <a href="/tags/LeakCanary/" style="font-size: 10px;">LeakCanary</a> <a href="/tags/Lifecycle/" style="font-size: 10px;">Lifecycle</a> <a href="/tags/Linux/" style="font-size: 16.25px;">Linux</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/LiveData/" style="font-size: 10px;">LiveData</a> <a href="/tags/Logcat-日志格式/" style="font-size: 10px;">Logcat 日志格式</a> <a href="/tags/Map/" style="font-size: 10px;">Map</a> <a href="/tags/OOP/" style="font-size: 10px;">OOP</a> <a href="/tags/Okhttp3/" style="font-size: 12.5px;">Okhttp3</a> <a href="/tags/Okhttp3-缓存文件/" style="font-size: 10px;">Okhttp3 缓存文件</a> <a href="/tags/Queue/" style="font-size: 10px;">Queue</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Rxjava-源码分析/" style="font-size: 13.75px;">Rxjava 源码分析</a> <a href="/tags/Set/" style="font-size: 10px;">Set</a> <a href="/tags/Shell/" style="font-size: 15px;">Shell</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Sticky-Event/" style="font-size: 10px;">Sticky Event</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/Thread/" style="font-size: 10px;">Thread</a> <a href="/tags/TraceView/" style="font-size: 10px;">TraceView</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/VIM/" style="font-size: 10px;">VIM</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/ViewModle/" style="font-size: 10px;">ViewModle</a> <a href="/tags/WorkManager/" style="font-size: 12.5px;">WorkManager</a> <a href="/tags/adb/" style="font-size: 10px;">adb</a> <a href="/tags/《深入理解-Java-虚拟机》读书笔记/" style="font-size: 10px;">《深入理解 Java 虚拟机》读书笔记</a> <a href="/tags/三方库/" style="font-size: 10px;">三方库</a> <a href="/tags/事件分发机制/" style="font-size: 10px;">事件分发机制</a> <a href="/tags/内存优化/" style="font-size: 10px;">内存优化</a> <a href="/tags/内存分区/" style="font-size: 10px;">内存分区</a> <a href="/tags/内存泄漏/" style="font-size: 11.25px;">内存泄漏</a> <a href="/tags/内部类/" style="font-size: 10px;">内部类</a> <a href="/tags/单例/" style="font-size: 10px;">单例</a> <a href="/tags/图解-HTTP/" style="font-size: 11.25px;">图解 HTTP</a> <a href="/tags/堆栈轨迹/" style="font-size: 10px;">堆栈轨迹</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a> <a href="/tags/对象拷贝/" style="font-size: 10px;">对象拷贝</a> <a href="/tags/工具/" style="font-size: 11.25px;">工具</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/性能优化工具/" style="font-size: 10px;">性能优化工具</a> <a href="/tags/数据压缩/" style="font-size: 10px;">数据压缩</a> <a href="/tags/极客时间专栏/" style="font-size: 10px;">极客时间专栏</a> <a href="/tags/极客时间笔记/" style="font-size: 10px;">极客时间笔记</a> <a href="/tags/泛型/" style="font-size: 12.5px;">泛型</a> <a href="/tags/浮点型精度问题/" style="font-size: 10px;">浮点型精度问题</a> <a href="/tags/深入浅出计算机组成原理-徐文浩/" style="font-size: 11.25px;">深入浅出计算机组成原理(徐文浩)</a> <a href="/tags/深入理解-Android-读书笔记/" style="font-size: 10px;">深入理解 Android 读书笔记</a> <a href="/tags/源码解析/" style="font-size: 11.25px;">源码解析</a> <a href="/tags/焦点机制/" style="font-size: 10px;">焦点机制</a> <a href="/tags/百度地图黑影/" style="font-size: 10px;">百度地图黑影</a> <a href="/tags/硬件加速/" style="font-size: 10px;">硬件加速</a> <a href="/tags/编译技术/" style="font-size: 10px;">编译技术</a> <a href="/tags/网络协议/" style="font-size: 12.5px;">网络协议</a> <a href="/tags/计算机基础/" style="font-size: 10px;">计算机基础</a> <a href="/tags/设计模式六大原则/" style="font-size: 10px;">设计模式六大原则</a> <a href="/tags/读书笔记/" style="font-size: 18.75px;">读书笔记</a> <a href="/tags/趣谈网络协议-刘超/" style="font-size: 10px;">趣谈网络协议(刘超)</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+      <a href="/tags/AIDL/" style="font-size: 11.11px;">AIDL</a> <a href="/tags/Alfred/" style="font-size: 10px;">Alfred</a> <a href="/tags/Android/" style="font-size: 15.56px;">Android</a> <a href="/tags/Android-刷机/" style="font-size: 10px;">Android 刷机</a> <a href="/tags/Android绘制机制/" style="font-size: 10px;">Android绘制机制</a> <a href="/tags/Binder/" style="font-size: 10px;">Binder</a> <a href="/tags/C/" style="font-size: 10px;">C</a> <a href="/tags/CMake/" style="font-size: 10px;">CMake</a> <a href="/tags/CPU-Profiler，Android-性能优化/" style="font-size: 10px;">CPU Profiler，Android 性能优化</a> <a href="/tags/CPU-架构/" style="font-size: 10px;">CPU 架构</a> <a href="/tags/Charles/" style="font-size: 10px;">Charles</a> <a href="/tags/Collections/" style="font-size: 10px;">Collections</a> <a href="/tags/Coroutines/" style="font-size: 11.11px;">Coroutines</a> <a href="/tags/Coroutines协程/" style="font-size: 10px;">Coroutines协程</a> <a href="/tags/DI/" style="font-size: 10px;">DI</a> <a href="/tags/Dagger2/" style="font-size: 10px;">Dagger2</a> <a href="/tags/Dart/" style="font-size: 10px;">Dart</a> <a href="/tags/EventBus/" style="font-size: 13.33px;">EventBus</a> <a href="/tags/EventBus-APT/" style="font-size: 10px;">EventBus APT</a> <a href="/tags/Exception/" style="font-size: 11.11px;">Exception</a> <a href="/tags/Flutter/" style="font-size: 10px;">Flutter</a> <a href="/tags/Future/" style="font-size: 10px;">Future</a> <a href="/tags/FutureTask/" style="font-size: 10px;">FutureTask</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/GitPage/" style="font-size: 10px;">GitPage</a> <a href="/tags/Gradle/" style="font-size: 10px;">Gradle</a> <a href="/tags/Gradle-in-action/" style="font-size: 15.56px;">Gradle in action</a> <a href="/tags/Gradle-基本原理/" style="font-size: 15.56px;">Gradle 基本原理</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 11.11px;">Hexo</a> <a href="/tags/Hprof/" style="font-size: 10px;">Hprof</a> <a href="/tags/IO-流/" style="font-size: 10px;">IO 流</a> <a href="/tags/Inflection/" style="font-size: 10px;">Inflection</a> <a href="/tags/JNI/" style="font-size: 11.11px;">JNI</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Java-Collection/" style="font-size: 15.56px;">Java Collection</a> <a href="/tags/Java-多线程/" style="font-size: 15.56px;">Java 多线程</a> <a href="/tags/Java-异常/" style="font-size: 10px;">Java 异常</a> <a href="/tags/Java-继承，对象，类初始化/" style="font-size: 10px;">Java 继承，对象，类初始化</a> <a href="/tags/Jetpack/" style="font-size: 15.56px;">Jetpack</a> <a href="/tags/JobScheduler/" style="font-size: 10px;">JobScheduler</a> <a href="/tags/Kindle/" style="font-size: 10px;">Kindle</a> <a href="/tags/Kotin/" style="font-size: 11.11px;">Kotin</a> <a href="/tags/Kotlin/" style="font-size: 18.89px;">Kotlin</a> <a href="/tags/Kotlin-协程/" style="font-size: 14.44px;">Kotlin 协程</a> <a href="/tags/Kotlin-核心编程/" style="font-size: 16.67px;">Kotlin 核心编程</a> <a href="/tags/LeakCanary/" style="font-size: 10px;">LeakCanary</a> <a href="/tags/Lifecycle/" style="font-size: 10px;">Lifecycle</a> <a href="/tags/Linux/" style="font-size: 15.56px;">Linux</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/LiveData/" style="font-size: 10px;">LiveData</a> <a href="/tags/Logcat-日志格式/" style="font-size: 10px;">Logcat 日志格式</a> <a href="/tags/Mac/" style="font-size: 10px;">Mac</a> <a href="/tags/Map/" style="font-size: 10px;">Map</a> <a href="/tags/OOP/" style="font-size: 10px;">OOP</a> <a href="/tags/Okhttp3/" style="font-size: 12.22px;">Okhttp3</a> <a href="/tags/Okhttp3-缓存文件/" style="font-size: 10px;">Okhttp3 缓存文件</a> <a href="/tags/Queue/" style="font-size: 10px;">Queue</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Rxjava-源码分析/" style="font-size: 13.33px;">Rxjava 源码分析</a> <a href="/tags/Set/" style="font-size: 10px;">Set</a> <a href="/tags/Shell/" style="font-size: 14.44px;">Shell</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Sticky-Event/" style="font-size: 10px;">Sticky Event</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/Thread/" style="font-size: 10px;">Thread</a> <a href="/tags/TraceView/" style="font-size: 10px;">TraceView</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/VIM/" style="font-size: 10px;">VIM</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/ViewModle/" style="font-size: 10px;">ViewModle</a> <a href="/tags/WorkManager/" style="font-size: 12.22px;">WorkManager</a> <a href="/tags/adb/" style="font-size: 10px;">adb</a> <a href="/tags/《深入理解-Java-虚拟机》读书笔记/" style="font-size: 10px;">《深入理解 Java 虚拟机》读书笔记</a> <a href="/tags/三方库/" style="font-size: 10px;">三方库</a> <a href="/tags/事件分发机制/" style="font-size: 10px;">事件分发机制</a> <a href="/tags/内存优化/" style="font-size: 10px;">内存优化</a> <a href="/tags/内存分区/" style="font-size: 10px;">内存分区</a> <a href="/tags/内存泄漏/" style="font-size: 11.11px;">内存泄漏</a> <a href="/tags/内部类/" style="font-size: 10px;">内部类</a> <a href="/tags/单例/" style="font-size: 10px;">单例</a> <a href="/tags/图解-HTTP/" style="font-size: 11.11px;">图解 HTTP</a> <a href="/tags/堆栈轨迹/" style="font-size: 10px;">堆栈轨迹</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a> <a href="/tags/对象拷贝/" style="font-size: 10px;">对象拷贝</a> <a href="/tags/工具/" style="font-size: 11.11px;">工具</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/性能优化工具/" style="font-size: 10px;">性能优化工具</a> <a href="/tags/数据压缩/" style="font-size: 10px;">数据压缩</a> <a href="/tags/极客时间专栏/" style="font-size: 10px;">极客时间专栏</a> <a href="/tags/极客时间笔记/" style="font-size: 10px;">极客时间笔记</a> <a href="/tags/泛型/" style="font-size: 12.22px;">泛型</a> <a href="/tags/浮点型精度问题/" style="font-size: 10px;">浮点型精度问题</a> <a href="/tags/深入浅出计算机组成原理-徐文浩/" style="font-size: 11.11px;">深入浅出计算机组成原理(徐文浩)</a> <a href="/tags/深入理解-Android-读书笔记/" style="font-size: 10px;">深入理解 Android 读书笔记</a> <a href="/tags/源码解析/" style="font-size: 11.11px;">源码解析</a> <a href="/tags/焦点机制/" style="font-size: 10px;">焦点机制</a> <a href="/tags/百度地图黑影/" style="font-size: 10px;">百度地图黑影</a> <a href="/tags/硬件加速/" style="font-size: 10px;">硬件加速</a> <a href="/tags/编译技术/" style="font-size: 10px;">编译技术</a> <a href="/tags/网络协议/" style="font-size: 12.22px;">网络协议</a> <a href="/tags/网络安全/" style="font-size: 10px;">网络安全</a> <a href="/tags/计算机基础/" style="font-size: 10px;">计算机基础</a> <a href="/tags/设计模式六大原则/" style="font-size: 10px;">设计模式六大原则</a> <a href="/tags/读书笔记/" style="font-size: 17.78px;">读书笔记</a> <a href="/tags/趣谈网络协议-刘超/" style="font-size: 10px;">趣谈网络协议(刘超)</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
     </div>
   </div>
 
@@ -188,7 +186,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a></li></ul>
     </div>
   </div>
 
@@ -201,23 +199,23 @@
       <ul>
         
           <li>
-            <a href="/2020/07/02/Gradle-依赖冲突拾遗/">Gradle 依赖冲突拾遗</a>
+            <a href="/2020/08/07/Git命令/">Git命令</a>
           </li>
         
           <li>
-            <a href="/2020/06/26/git-reset-指令/">git reset 指令</a>
+            <a href="/2020/07/31/Google-搜索技巧/">Google 搜索技巧</a>
           </li>
         
           <li>
-            <a href="/2020/06/16/adb-shell-top/">adb shell top </a>
+            <a href="/2020/07/30/记一次-Charles-抓包-Android-10-0-HTTPS-请求/">记一次 Charles 抓包 Android 10.0 HTTPS 请求</a>
           </li>
         
           <li>
-            <a href="/2020/06/16/性能优化之卡顿优化/">性能优化之卡顿优化</a>
+            <a href="/2020/07/29/HTTPS-防止被抓包/">Https 如何反抓包</a>
           </li>
         
           <li>
-            <a href="/2020/06/16/深入理解-Android-屏幕绘制原理/">深入理解 Android 屏幕绘制原理</a>
+            <a href="/2020/07/19/Kotlin-之-Backing-Field/">Kotlin 之对 Backing Field 的理解</a>
           </li>
         
       </ul>
