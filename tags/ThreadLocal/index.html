@@ -5,20 +5,15 @@
   
 
   
-  <title>Java 多线程(四):静态同步synchronize方法与synchronize(class)代码块 | 玛斯特・布兰迪</title>
+  <title>标签: ThreadLocal | 玛斯特・布兰迪</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="静态同步 synchronize 方法关键字 synchronize 可以添加到静态方法上，这样的写法是对所属的 Class 进行加锁，从而可以实现同步效果。 虽然静态同步 synchronize 方法 和 非同步 synchronize 方法 的同步效果是一样的，但是其本质是不同的： 静态同步 synchronize 方法为添加在 static 方法的上，是给 Class 类上锁。  非静态同步">
-<meta name="keywords" content="Java,Java 多线程">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Java 多线程(四):静态同步synchronize方法与synchronize(class)代码块">
-<meta property="og:url" content="/2019/08/19/Java-多线程-四-静态同步synchronize方法与synchronize-class-代码块/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="玛斯特・布兰迪">
+<meta property="og:url" content="/tags/ThreadLocal/index.html">
 <meta property="og:site_name" content="玛斯特・布兰迪">
-<meta property="og:description" content="静态同步 synchronize 方法关键字 synchronize 可以添加到静态方法上，这样的写法是对所属的 Class 进行加锁，从而可以实现同步效果。 虽然静态同步 synchronize 方法 和 非同步 synchronize 方法 的同步效果是一样的，但是其本质是不同的： 静态同步 synchronize 方法为添加在 static 方法的上，是给 Class 类上锁。  非静态同步">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-07-13T09:28:32.498Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java 多线程(四):静态同步synchronize方法与synchronize(class)代码块">
-<meta name="twitter:description" content="静态同步 synchronize 方法关键字 synchronize 可以添加到静态方法上，这样的写法是对所属的 Class 进行加锁，从而可以实现同步效果。 虽然静态同步 synchronize 方法 和 非同步 synchronize 方法 的同步效果是一样的，但是其本质是不同的： 静态同步 synchronize 方法为添加在 static 方法的上，是给 Class 类上锁。  非静态同步">
+<meta name="twitter:title" content="玛斯特・布兰迪">
   
   
     <link rel="icon" href="/favicon.png">
@@ -65,80 +60,39 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-Java-多线程-四-静态同步synchronize方法与synchronize-class-代码块" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/08/19/Java-多线程-四-静态同步synchronize方法与synchronize-class-代码块/" class="article-date">
-  <time datetime="2019-08-19T07:12:45.000Z" itemprop="datePublished">2019-08-19</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
+        <section id="main">
   
-    <h1 class="article-title" itemprop="name">
-      Java 多线程(四):静态同步synchronize方法与synchronize(class)代码块
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2019" class="archive-year">2019</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      <a href="/2019/09/19/ThreadLocal(Jdk1.8) 使用及源码分析/" class="archive-article-date">
+  <time datetime="2019-09-19T06:30:16.000Z" itemprop="datePublished">9月 19</time>
+</a>
+      
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2019/09/19/ThreadLocal(Jdk1.8) 使用及源码分析/">ThreadLocal(Jdk1.8) 使用及源码分析</a>
     </h1>
   
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="静态同步-synchronize-方法"><a href="#静态同步-synchronize-方法" class="headerlink" title="静态同步 synchronize 方法"></a>静态同步 synchronize 方法</h3><p>关键字 synchronize 可以添加到静态方法上，这样的写法是对所属的 Class 进行加锁，从而可以实现同步效果。</p>
-<p>虽然静态同步 synchronize 方法 和 非同步 synchronize 方法 的同步效果是一样的，但是其本质是不同的：</p>
-<pre><code>静态同步 synchronize 方法为添加在 static 方法的上，是给 Class 类上锁。
-
-非静态同步 synchronize 方法是给对象加锁。</code></pre><p>Class 锁可以对类的所有对象实例起作用，多线程中其所有该类的实例对象调用 <strong>静态同步 synchronize 方法</strong> 都是同步的，但是与非静态同步 synchronize 方法间是异步的。</p>
-<a id="more"></a>
-
-
-<p><a href="https://github.com/leeGYPlus/JavaCode/blob/master/src/thread/StaticSynchronziedMethodMain.kt" target="_blank" rel="noopener">StaticSynchronziedMethodMain</a> 的验证方法：</p>
-<pre><code>one:验证同步方法与同步静态方法间的异步性
-two:同一个对象的同步静态方法的同步性
-three:多对象间的静态同步方法的同步性</code></pre><h3 id="synchronize-class-代码块"><a href="#synchronize-class-代码块" class="headerlink" title="synchronize(class)代码块"></a>synchronize(class)代码块</h3><p>synchronize(class)代码块与静态同步 synchronize 方法的作用是一样的。</p>
-<p><a href="https://github.com/leeGYPlus/JavaCode/blob/master/src/thread/StaticSynchronziedMethodMain.kt" target="_blank" rel="noopener">StaticSynchronziedMethodMain</a> 的验证方法：</p>
-<pre><code>four:验证同一个对象 synchronize(class)代码块 间的同步性
-five:验证多个对象 synchronize(class)代码块 间的同步性</code></pre><hr>
-<p><strong>知识链接：</strong></p>
-<p><a href="http://product.dangdang.com/23711315.html" target="_blank" rel="noopener">Java多线程编程核心技术</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="/2019/08/19/Java-多线程-四-静态同步synchronize方法与synchronize-class-代码块/" data-id="ckewgga5z0083y0fy4u3z3c8j" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java-多线程/">Java 多线程</a></li></ul>
-
-    </footer>
+    </header>
   </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2019/08/19/使用 Hexo 搭建 GitPage 静态博客/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">这些东西可能太新了</strong>
-      <div class="article-nav-title">
-        
-          使用 Hexo 搭建 GitPage 静态博客
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2019/08/19/Java 多线程(三):同步代码块/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">这些东西可能过时了</strong>
-      <div class="article-nav-title">Java 多线程(三):同步代码块</div>
-    </a>
-  
-</nav>
-
-  
 </article>
+  
+  
+    </div></section>
+  
 
 
 </section>
