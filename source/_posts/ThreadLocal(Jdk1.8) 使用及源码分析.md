@@ -1,7 +1,7 @@
 ---
 title: ThreadLocal(Jdk1.8) 使用及源码分析
 date: 2019-09-19 14:30:16
-tags: [Java,Java 多线程]
+tags: [Java,Java 多线程,ThreadLocal]
 ---
 
 
@@ -33,21 +33,20 @@ static class Entry extends WeakReference<ThreadLocal<?>> {
 }
 ```
 在类中以下是对 Entry 的介绍：
-
-> The entries in this hash map extend WeakReference, using
+```
+The entries in this hash map extend WeakReference, using
 its main ref field as the key (which is always a
 ThreadLocal object).  Note that null keys (i.e. entry.get()
 == null) mean that the key is no longer referenced, so the
 entry can be expunged from table.  Such entries are referred to
 as "stale entries" in the code that follows.
 
-> Entry 继承了 WeakReference，使用 Entry 对象的引用作为 ThreadLocalMap 存储元素的 key。当通过 entry.get() 获得为 null 时，说明不再引用该 key，因此可以从表中删除该条目。
-
+Entry 继承了 WeakReference，使用 Entry 对象的引用作为 ThreadLocalMap 存储元素的 key。当通过 entry.get() 获得为 null 时，说明不再引用该 key，因此可以从表中删除该条目。
+```
 
 ### 0x0003 ThreadLocal 实现的关键
 
 这也是 ThreadLocal 可以存储线程相关的变量的关键，这是 **因为 ThreadLocalMap 的对象是在 Thread 中维护的**。
-
 
 在通过 set 存储变量时：
 1. 首先会获得所在线程对象
@@ -131,7 +130,6 @@ private void set(ThreadLocal<?> key, Object value) {
 int i = key.threadLocalHashCode & (len-1);
 ```
 在通过 ThreadLocal 对象 set 值时，其实是通过一系列的算法，用来初始化、添加或者更新数组中指定索引的元素。
-
 
 ### 0x0005 ThreadLocal#get 方法
 
@@ -221,14 +219,11 @@ private Entry getEntryAfterMiss(ThreadLocal<?> key, int i,  Entrye) {
 
 * 情景一：同一个 ThreadLocal 对象，维护不同线程的变量
 
-明白了 ThreadLocal 原理，这个问题就不难理解了，因为每一个线程都维护者自己的 ThreadLocalMap 对象，不同所存储的变量在各自 ThreadLocalMap 对象中，所以即使同一个 ThreadLocal 对象，在不同线程中会多次存储，所以可以实现在各自线程获取属于各自存储的变量。
-
+明白了 ThreadLocal 原理，这个问题就不难理解了，因为每一个线程都维护者自己的 ThreadLocalMap 对象，不同线程所存储的变量在各自 ThreadLocalMap 对象中，所以即使同一个 ThreadLocal 对象，在不同线程中会多次存储，实现了在各自线程获取属于各自存储的变量。
 
 在存储元素时，ThreadLocalMap 内部维护一个数组，以 ThreadLocal 对象的哈希值(一系列操作的 hash)经过一系列算法后得出的 index 索引，将 value 存储在数组中的索引处，所以在同一个线程中对同一个 ThreadLocal 对象进行多次 set 的调用，那么会对值进行覆盖。
 
-
 * 情景二：同一线程下，使用多个 ThreadLocal 对象进行变量存储
-
 
 同样根据对象计算的索引值是唯一的，所以多个 ThreadLocal 对象获取的变量一定是自己存储的。
 
@@ -237,7 +232,6 @@ private Entry getEntryAfterMiss(ThreadLocal<?> key, int i,  Entrye) {
 #### 1. 线程内单例
 
 我们平时使用到的单例为进程为单例，而通过 ThreadLocal 可实现线程内同步，具体代码如下：
-
 
 ```
 public class User {
@@ -257,12 +251,9 @@ public class User {
 }
 ```
 
-
 #### 2. 变量的作用域为线程
 
 当一些数据是以线程为作用域，并且不同线程拥有数据的不同副本的时候，就可以考虑使用 ThreadLocal。
-
-
 
 在子线程中初始化 Handler 需要手动的创建 Looper，因为 Looper 是线程相关的，那么 Looper 是怎样实现线程相关的呢？本质就是使用了 ThreadLocal。
 
@@ -329,15 +320,9 @@ mHandler.sendEmptyMessage(1);
 
 而使用 ThreadLocal 则完全不会遇到上面问题。
 
-
-
-
 ---
 **知识链接**
 
-
 [Android 开发艺术探索](https://item.jd.com/11760209.html)
-
 [带你了解源码中的 ThreadLocal](https://www.jianshu.com/p/4167d7ff5ec1)
-
 [ThreadLocal类及应用技巧](https://www.bilibili.com/video/av7592261?from=search&seid=7861472405873308618) : 视频建议 2 倍速看完，没什么营养，但可以向你展示如何使用 ThreadLocal 

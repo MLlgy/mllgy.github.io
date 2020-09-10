@@ -56,3 +56,10 @@ MM test.txt
 显示引用对应的提交 ID。
 
 >$ git rev-parse master
+
+
+
+---
+
+[Git 官方文档](https://git-scm.com/docs)
+[Git 配置官方文档](https://git-scm.com/docs/git-config)

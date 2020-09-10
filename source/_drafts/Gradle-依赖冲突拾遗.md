@@ -34,10 +34,12 @@ That is when the dependency graph contains module that provide the same implemen
 
 Gradle 的处理方法：Gradle 不关心该依赖出自依赖图的何处，它会考虑所有的版本，在这些版本中选择最高版本。
 
-如何选择最高版本？
+如何选择最高版本？具体参见知识链接
 
-如果
 
+## 解决实现冲突
+
+这个没接触过，接触后再做了解。
 
 
 --

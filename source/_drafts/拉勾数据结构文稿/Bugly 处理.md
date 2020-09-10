@@ -1,4 +1,9 @@
-
+---
+title: Gradle 依赖冲突拾遗
+date: 2020-07-02 14:06:43
+tags:
+---
+gd
 |Bugly 异常日志|可能原因|
 |--|--
 |[619611 java.lang.IllegalArgumentException](https://bugly.qq.com/v2/crash-reporting/crashes/e19cf1d736/619611?pid=1&crashDataType=unSystemExit)|Dialog 宿主 Activity 被销毁
