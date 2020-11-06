@@ -62,6 +62,219 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-性能优化之优化-App-启动速度" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/06/11/性能优化之优化-App-启动速度/" class="article-date">
+  <time datetime="2019-06-11T09:13:48.000Z" itemprop="datePublished">2019-06-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/11/性能优化之优化-App-启动速度/">性能优化之优化 App 启动速度</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>主要面临的问题：<br> APP 冷启动白屏。</p>
+<p>针对于这个问题，基本上主流的解决方法存在两个：</p>
+<pre><code>1. 主题替换。
+2. 减少冷启动时主线程的工作量。</code></pre><p>本文的重点不在解决问题方法，而在于解决问题的过程，包括影响启动速度的因素、时间统计工具、解决思路。</p>
+<p>优化 App 启动速度主要是优化冷启动时的 App 启动速度，官方文档 (<a href="https://developer.android.com/topic/performance/vitals/launch-time" target="_blank" rel="noopener">App startup time</a>) 中指出优化冷启动方式的同时，温启动和热启动也会得到改善。</p>
+<p>在分析过程之前，首先了解启动方式。</p>
+<h3 id="冷启动、温启动、热启动"><a href="#冷启动、温启动、热启动" class="headerlink" title="冷启动、温启动、热启动"></a>冷启动、温启动、热启动</h3><ul>
+<li><p>冷启动</p>
+<p>App 安装后第一次启动或者杀死 App 进程后重新启动称为冷启动。冷启动的启动成本较高，一切都要重新建立，包括新建应用进程、初始化应用以及首页的布局、渲染等操作。</p>
+</li>
+</ul>
+<ul>
+<li><p>热启动</p>
+<p>  App 所在进程存活，并且所有 Activity 均未被销毁，热启动做的只是把应用从后台切换至前台，如果 Activity 实例中的被回收的实例变量会重新创建。</p>
+<p>  具体场景为在微信中切换到桌面，后马上回到微信。</p>
+</li>
+<li><p>温启动</p>
+<p>  Activity 被杀死但是 App 所在的进程在内存中依然存在。</p>
+</li>
+</ul>
+<h4 id="启动时间组成"><a href="#启动时间组成" class="headerlink" title="启动时间组成"></a>启动时间组成</h4><p>很多时候解决问题需要我们拥有上帝视角，全面把控事态的发展，跳出事件本身，以俯视的角度看待整个流程，找出问题的关键点。总的来说我们需要纵观全局来看待问题、解决问题。</p>
+<p>从在 Launcher 中点击 App 的 icon 到 App 的第一面展示的时间差称为冷启动时间，那么这段时间整个系统都经历了什么。用上帝之眼看待整个流程，从而寻找解决问题的切入点，首先我们分析一下整个过程都经历了什么。</p>
+<p>在 Launcher 中我们点击 App 图标，经过一系列过程，涉及 AMS、 Binder、IPC 等组件和过程。</p>
+<p>在启动 App 的主页面之前，系统操作如下：</p>
+<ol>
+<li>创建并启动 App 所在应用</li>
+<li>启动 App 后会马上展示系统的 start window</li>
+<li>创建 App 进程</li>
+</ol>
+<p>在系统创建完成 App 所在的进程后，App 进程负责完成下列一系列步骤：</p>
+<ol>
+<li>创建 App 对象</li>
+<li>启动 App 主线程</li>
+<li>创建主 Activity</li>
+<li>加载 View 视图</li>
+<li>布局屏幕</li>
+<li>执行初始化绘制 View</li>
+</ol>
+<p>在 App 进程完成第一帧的绘制后，start window 会被替换，此时在屏幕上展示的就是在主 Activity 加载的布局。</p>
+<p><img src="/../images/2019_06_01_01.png" alt="App 页面替换"></p>
+<p>根据 <a href="https://www.youtube.com/watch?v=Vw1G1s73DsY" target="_blank" rel="noopener">Colt McAnlis</a> 在 Yutobe 上的关于 App 启动时间的描述，以上过程可以形象的图形化表示如下：</p>
+<p><img src="/../images/2019_06_01_02.png" alt="App 启动时间"></p>
+<h4 id="为什么是白屏或黑屏"><a href="#为什么是白屏或黑屏" class="headerlink" title="为什么是白屏或黑屏"></a>为什么是白屏或黑屏</h4><p>在清单文件中我们需要设置 Application 的 Theme，比如自己设置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;application</span><br><span class="line">        ...</span><br><span class="line">        android:theme=&quot;@style/sixcatTheme&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+
+<p>我们需要查看 sixcatTheme 主题的继承关系</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">1. &lt;style name=&quot;sixcatTheme&quot; parent=&quot;Theme.AppCompat.Light.NoActionBar&quot;&gt;</span><br><span class="line"></span><br><span class="line">2. &lt;style name=&quot;Theme.AppCompat.Light&quot; parent=&quot;Base.Theme.AppCompat.Light&quot;/&gt;</span><br><span class="line"></span><br><span class="line">3. &lt;style name=&quot;Base.Theme.AppCompat.Light&quot; parent=&quot;Base.V7.Theme.AppCompat.Light&quot;&gt;</span><br><span class="line"></span><br><span class="line">4. &lt;style name=&quot;Base.V7.Theme.AppCompat.Light&quot; parent=&quot;Platform.AppCompat.Light&quot;&gt;</span><br><span class="line"></span><br><span class="line">5. &lt;style name=&quot;Platform.AppCompat.Light&quot; parent=&quot;android:Theme.Holo.Light&quot;&gt;</span><br><span class="line"></span><br><span class="line">6. &lt;style name=&quot;Theme.Holo.Light&quot; parent=&quot;Theme.Light&quot;&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">7. &lt;style name=&quot;Theme.Light&quot;&gt;</span><br><span class="line">      &lt;item name=&quot;windowBackground&quot;&gt;@drawable/screen_background_selector_light&lt;/item&gt;</span><br><span class="line">   &lt;/style&gt;</span><br><span class="line"></span><br><span class="line">8. &lt;style name=&quot;Theme&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>层级自 1~8 自上而下具有继承关系。</p>
+<p>可以看到在第 7 层中存在 windowBackground 属性，这是一路下来与背景唯一相关属性。</p>
+<p>看一下 windowBackground 的 drawable 显示如何：</p>
+<p><img src="/../images/2019_06_11_01.jpg" alt="drawable"></p>
+<p>事实证明确实是这个属性决定着点击 App 后显示的白屏或黑屏，当然这也为解决此问题提供了一个思路。</p>
+<p>官方图</p>
+<p>拆解为两部分。</p>
+<p>分析、找出优化点</p>
+<h4 id="启动时间统计"><a href="#启动时间统计" class="headerlink" title="启动时间统计"></a>启动时间统计</h4><h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><p>更换主题</p>
+<p>截图 + 解决方法 + 截图</p>
+<p>延时加载</p>
+<p>CPU profile<br>trace 文件<br>命令行<br>Displayed Time</p>
+<p>方法一</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;item name=&quot;android:windowIsTranslucent&quot;&gt;true&lt;/item&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在原来的 MainActivity 设定的主题中添加以上代码。</p>
+<p>带来的效果：<br>透明效果，即点击 App icon 后的白屏时间变为 透明 状态，避免了白屏，但是两者的时间几乎相同。给人的错觉时点击 icon 后一段时间后，app 才调起，给人的印象不好。</p>
+<p>方法二 主题替换</p>
+<p>在 App 启动时</p>
+<hr>
+<p>App 启动时间统计</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell am start -W package/activity</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://www.youtube.com/watch?v=Vw1G1s73DsY" target="_blank" rel="noopener">Google Developer</a></p>
+<p><a href="https://www.youtube.com/watch?v=Vw1G1s73DsY" target="_blank" rel="noopener">Youtube 性能优化视频</a></p>
+<p><a href="https://www.zhihu.com/question/35487841" target="_blank" rel="noopener">https://www.zhihu.com/question/35487841</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="/2019/06/11/性能优化之优化-App-启动速度/" data-id="ckh5wefu400bcujfy5gqtuqvi" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能优化/">性能优化</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Binder基本原理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/06/05/Binder基本原理/" class="article-date">
+  <time datetime="2019-06-05T05:33:02.000Z" itemprop="datePublished">2019-06-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/05/Binder基本原理/">Binder基本原理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Binder 机制是 Android 特有的跨进程通信机制，本文为 <a href>Android 插件化开发</a> 相关章节的阅读笔记。</p>
+<h4 id="00x01"><a href="#00x01" class="headerlink" title="00x01"></a>00x01</h4><p>Binder 分为 Client 端和 Server 端，在进行跨进程通信时，两端分别为两个不同的进程。发消息者为 Client，相应的接收消息者为 Server。根据消息的流向，一端可以同时为 Client 和 Server。</p>
+<h4 id="00x02"><a href="#00x02" class="headerlink" title="00x02"></a>00x02</h4><p>Binder 组成：</p>
+<ul>
+<li>Client</li>
+<li>Server</li>
+<li>ServerManager(管理 Server )</li>
+</ul>
+        
+          <p class="article-more-link">
+            <a href="/2019/06/05/Binder基本原理/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="/2019/06/05/Binder基本原理/" data-id="ckh5wefpq007fujfy0a85labd" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Binder/">Binder</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Kindle-资源集" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/05/30/Kindle-资源集/" class="article-date">
+  <time datetime="2019-05-30T02:28:29.000Z" itemprop="datePublished">2019-05-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/30/Kindle-资源集/">Kindle 资源网站集</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="http://www.kaka3.com/" target="_blank" rel="noopener">kaka</a></p>
+<p><a href="http://www.ireadweek.com/index.php/Index/index.html" target="_blank" rel="noopener">行行</a></p>
+        
+          <p class="article-more-link">
+            <a href="/2019/05/30/Kindle-资源集/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="/2019/05/30/Kindle-资源集/" data-id="ckh5wefri0094ujfyfrx07bsu" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kindle/">Kindle</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-Java集合工具类-Collections" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/05/29/Java集合工具类-Collections/" class="article-date">
@@ -94,7 +307,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2019/05/29/Java集合工具类-Collections/" data-id="ckewgga600087y0fyia1axf2c" class="article-share-link">分享</a>
+      <a data-url="/2019/05/29/Java集合工具类-Collections/" data-id="ckh5wefqq008yujfyi81hfthu" class="article-share-link">分享</a>
       
       
       
@@ -150,7 +363,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2019/05/25/Shell-基础学习五-条件判断/" data-id="ckewgga6r009oy0fywx0nn59d" class="article-share-link">分享</a>
+      <a data-url="/2019/05/25/Shell-基础学习五-条件判断/" data-id="ckh5weftl00abujfyv4acgcra" class="article-share-link">分享</a>
       
       
       
@@ -199,7 +412,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2019/05/25/Shell-基础学习四-字符处理命令/" data-id="ckewgga6s009sy0fyrpjb5fud" class="article-share-link">分享</a>
+      <a data-url="/2019/05/25/Shell-基础学习四-字符处理命令/" data-id="ckh5weftl00a9ujfyfnpbq40m" class="article-share-link">分享</a>
       
       
       
@@ -407,7 +620,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2019/05/25/Shell-基础学习三-正则表达式一/" data-id="ckewgga6q009ny0fyec3o6b1i" class="article-share-link">分享</a>
+      <a data-url="/2019/05/25/Shell-基础学习三-正则表达式一/" data-id="ckh5weftk00a6ujfyqaeg6bgu" class="article-share-link">分享</a>
       
       
       
@@ -457,7 +670,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2019/05/24/Kotlin-单例模式的实现/" data-id="ckewgga6c008ty0fyd7ne34iy" class="article-share-link">分享</a>
+      <a data-url="/2019/05/24/Kotlin-单例模式的实现/" data-id="ckh5weft0009eujfydkisn4vc" class="article-share-link">分享</a>
       
       
       
@@ -498,7 +711,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2019/05/23/随笔/" data-id="ckewgga7p00bgy0fy30g896yl" class="article-share-link">分享</a>
+      <a data-url="/2019/05/23/随笔/" data-id="ckh5wefuk00c7ujfy6y2bvyd2" class="article-share-link">分享</a>
       
       
       
@@ -547,175 +760,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="/2019/05/15/深入浅出计算机组成原理-二-CPU是如何执行指令的/" data-id="ckewgga7m00b7y0fy4p4fq3e9" class="article-share-link">分享</a>
+      <a data-url="/2019/05/15/深入浅出计算机组成原理-二-CPU是如何执行指令的/" data-id="ckh5wefuf00bxujfy8xsnlfv5" class="article-share-link">分享</a>
       
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/深入浅出计算机组成原理-徐文浩/">深入浅出计算机组成原理(徐文浩)</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-深入浅出计算机组成原理-一-计算机指令" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/05/15/深入浅出计算机组成原理-一-计算机指令/" class="article-date">
-  <time datetime="2019-05-15T02:21:30.000Z" itemprop="datePublished">2019-05-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/15/深入浅出计算机组成原理-一-计算机指令/">深入浅出计算机组成原理(一)--计算机指令</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>因为计算机或者说 CPU 本身，并没有能力理解这些高级语言，计算机只能理解 “机器码”，即一连串的 “0” 和 “1” 这样的数字。</p>
-<h3 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h3><p>CPU 是计算机的大脑，Central Processing Unit，中文为 <strong>中央处理器</strong>。</p>
-<p>从硬件角度： CPU 是一个超大规模的集成电路，通过电路实现加法、减法、乘法等逻辑运算。</p>
-<p>从软件角度：CPU 是一个执行 计算机指令的逻辑电器。这里的计算机指令是指 CPU 能够听懂的语言，可以把它看做 <strong>机器语言</strong>。</p>
-<p>每种 CPU 能够听懂的语言是不同的，例如个人 PC 中的 Intel 的 CPU， IPhone 中的 ARM 的 CPU。每种 CPU 有自己能够支持的 <strong>计算机指令</strong>。不同 CPU 间的计算机指令是不可互通的，例如你不能把运行在计算机上的程序复制到手机上，这是没有办法运行的。</p>
-<p>一个计算机程序编译后，有很多的计算机指令。<br></p>
-        
-          <p class="article-more-link">
-            <a href="/2019/05/15/深入浅出计算机组成原理-一-计算机指令/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="/2019/05/15/深入浅出计算机组成原理-一-计算机指令/" data-id="ckewgga7m00b9y0fyuk9a68kp" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/深入浅出计算机组成原理-徐文浩/">深入浅出计算机组成原理(徐文浩)</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Jetpack之WorkManager笔记" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/05/14/Jetpack之WorkManager笔记/" class="article-date">
-  <time datetime="2019-05-14T07:15:58.000Z" itemprop="datePublished">2019-05-14</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/14/Jetpack之WorkManager笔记/">Jetpack之WorkManager基本了解</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="0x0000-概述"><a href="#0x0000-概述" class="headerlink" title="0x0000 概述"></a>0x0000 概述</h3><p>通过WorkManager API，可以轻松安排即使应用程序退出或设备重新启动也可以运行的可延迟的异步任务。</p>
-<h3 id="0x0001-feature"><a href="#0x0001-feature" class="headerlink" title="0x0001 feature"></a>0x0001 feature</h3><ul>
-<li><p>向后兼容到 API 14</p>
-<ul>
-<li>在 API 23+ 的设备上使用 JobScheduler。</li>
-<li>在 API 14-22 的设备上使用 BroadcastReceiver 以及 AlarmManager。</li>
-</ul>
-</li>
-<li><p>为网络或获取充电状态添加约束</p>
-</li>
-<li><p>安排一次性异步任务或定期任务  </p>
-</li>
-<li><p>监控和管理计划任务</p>
-</li>
-<li><p>链接多个任务</p>
-</li>
-<li><p>即使应用程序或设备重新启动，也可确保任务执行</p>
-</li>
-<li><p>坚持Doze模式等省电模式</p>
-</li>
-</ul>
-        
-          <p class="article-more-link">
-            <a href="/2019/05/14/Jetpack之WorkManager笔记/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="/2019/05/14/Jetpack之WorkManager笔记/" data-id="ckewgga6d008uy0fywl1c373d" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Jetpack/">Jetpack</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/WorkManager/">WorkManager</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Java集合之Map" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/05/10/Java集合之Map/" class="article-date">
-  <time datetime="2019-05-10T10:17:08.000Z" itemprop="datePublished">2019-05-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/10/Java集合之Map/">Java集合之Map</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>Map 用于保存具有 <strong>映射关系</strong> 的数据，因此 Map 集合内保存着两组数据，一组保存 Map 的 key，一组保存 Map 的 value，并且 key 和 value 可以是任何类型的数据。</p>
-<p><img src="/../images/2019_05_09_02.jpg" alt="Map"></p>
-<p>可以把 Map 里的 Key 放在一起，它们组成一个 <strong>Set 集合</strong>(Key 没有顺序、不可重复)，其实Map 的内部的 keySet() 方法确实是返回的所有的 key 组成的 Set 集合对象。而把 Map 内的 Value 放在一起，它们类似一个 <strong>List 集合</strong>(可重复，此时的索引为 key)。</p>
-<p>如果抽象的看 Map 的 key 可以看作为 Set 集合(即无序、不可重复)，而 value 可以看作为 Array 集合(可重复)</p>
-<h3 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h3><p>向 Map 中添加数据中，如果 Map 中有存在 key，那么新添加的 value 会覆盖原来的 value。</p>
-        
-          <p class="article-more-link">
-            <a href="/2019/05/10/Java集合之Map/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="/2019/05/10/Java集合之Map/" data-id="ckewgga65008ey0fyrcsxynwm" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java-Collection/">Java Collection</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Map/">Map</a></li></ul>
 
     </footer>
   </div>
@@ -743,7 +792,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/AIDL/" style="font-size: 11.11px;">AIDL</a> <a href="/tags/Alfred/" style="font-size: 10px;">Alfred</a> <a href="/tags/Android/" style="font-size: 15.56px;">Android</a> <a href="/tags/Android-刷机/" style="font-size: 10px;">Android 刷机</a> <a href="/tags/Android绘制机制/" style="font-size: 10px;">Android绘制机制</a> <a href="/tags/Binder/" style="font-size: 10px;">Binder</a> <a href="/tags/C/" style="font-size: 10px;">C</a> <a href="/tags/CMake/" style="font-size: 10px;">CMake</a> <a href="/tags/CPU-Profiler，Android-性能优化/" style="font-size: 10px;">CPU Profiler，Android 性能优化</a> <a href="/tags/CPU-架构/" style="font-size: 10px;">CPU 架构</a> <a href="/tags/Charles/" style="font-size: 10px;">Charles</a> <a href="/tags/Collections/" style="font-size: 10px;">Collections</a> <a href="/tags/Coroutines/" style="font-size: 11.11px;">Coroutines</a> <a href="/tags/Coroutines协程/" style="font-size: 10px;">Coroutines协程</a> <a href="/tags/DI/" style="font-size: 10px;">DI</a> <a href="/tags/Dagger2/" style="font-size: 10px;">Dagger2</a> <a href="/tags/Dart/" style="font-size: 10px;">Dart</a> <a href="/tags/EventBus/" style="font-size: 13.33px;">EventBus</a> <a href="/tags/EventBus-APT/" style="font-size: 10px;">EventBus APT</a> <a href="/tags/Exception/" style="font-size: 11.11px;">Exception</a> <a href="/tags/Flutter/" style="font-size: 10px;">Flutter</a> <a href="/tags/Future/" style="font-size: 10px;">Future</a> <a href="/tags/FutureTask/" style="font-size: 10px;">FutureTask</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/GitPage/" style="font-size: 10px;">GitPage</a> <a href="/tags/Gradle/" style="font-size: 10px;">Gradle</a> <a href="/tags/Gradle-in-action/" style="font-size: 15.56px;">Gradle in action</a> <a href="/tags/Gradle-基本原理/" style="font-size: 15.56px;">Gradle 基本原理</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 11.11px;">Hexo</a> <a href="/tags/Hprof/" style="font-size: 10px;">Hprof</a> <a href="/tags/IO-流/" style="font-size: 10px;">IO 流</a> <a href="/tags/Inflection/" style="font-size: 10px;">Inflection</a> <a href="/tags/JNI/" style="font-size: 11.11px;">JNI</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Java-Collection/" style="font-size: 15.56px;">Java Collection</a> <a href="/tags/Java-多线程/" style="font-size: 15.56px;">Java 多线程</a> <a href="/tags/Java-异常/" style="font-size: 10px;">Java 异常</a> <a href="/tags/Java-继承，对象，类初始化/" style="font-size: 10px;">Java 继承，对象，类初始化</a> <a href="/tags/Jetpack/" style="font-size: 15.56px;">Jetpack</a> <a href="/tags/JobScheduler/" style="font-size: 10px;">JobScheduler</a> <a href="/tags/Kindle/" style="font-size: 10px;">Kindle</a> <a href="/tags/Kotin/" style="font-size: 11.11px;">Kotin</a> <a href="/tags/Kotlin/" style="font-size: 18.89px;">Kotlin</a> <a href="/tags/Kotlin-协程/" style="font-size: 14.44px;">Kotlin 协程</a> <a href="/tags/Kotlin-核心编程/" style="font-size: 16.67px;">Kotlin 核心编程</a> <a href="/tags/LeakCanary/" style="font-size: 10px;">LeakCanary</a> <a href="/tags/Lifecycle/" style="font-size: 10px;">Lifecycle</a> <a href="/tags/Linux/" style="font-size: 15.56px;">Linux</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/LiveData/" style="font-size: 10px;">LiveData</a> <a href="/tags/Logcat-日志格式/" style="font-size: 10px;">Logcat 日志格式</a> <a href="/tags/Mac/" style="font-size: 10px;">Mac</a> <a href="/tags/Map/" style="font-size: 10px;">Map</a> <a href="/tags/OOP/" style="font-size: 10px;">OOP</a> <a href="/tags/Okhttp3/" style="font-size: 12.22px;">Okhttp3</a> <a href="/tags/Okhttp3-缓存文件/" style="font-size: 10px;">Okhttp3 缓存文件</a> <a href="/tags/Queue/" style="font-size: 10px;">Queue</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Rxjava-源码分析/" style="font-size: 13.33px;">Rxjava 源码分析</a> <a href="/tags/Set/" style="font-size: 10px;">Set</a> <a href="/tags/Shell/" style="font-size: 14.44px;">Shell</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Sticky-Event/" style="font-size: 10px;">Sticky Event</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/Thread/" style="font-size: 10px;">Thread</a> <a href="/tags/ThreadLocal/" style="font-size: 10px;">ThreadLocal</a> <a href="/tags/TraceView/" style="font-size: 10px;">TraceView</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/VIM/" style="font-size: 10px;">VIM</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/ViewModle/" style="font-size: 10px;">ViewModle</a> <a href="/tags/WorkManager/" style="font-size: 12.22px;">WorkManager</a> <a href="/tags/adb/" style="font-size: 10px;">adb</a> <a href="/tags/《深入理解-Java-虚拟机》读书笔记/" style="font-size: 10px;">《深入理解 Java 虚拟机》读书笔记</a> <a href="/tags/三方库/" style="font-size: 10px;">三方库</a> <a href="/tags/事件分发机制/" style="font-size: 10px;">事件分发机制</a> <a href="/tags/内存优化/" style="font-size: 10px;">内存优化</a> <a href="/tags/内存分区/" style="font-size: 10px;">内存分区</a> <a href="/tags/内存泄漏/" style="font-size: 11.11px;">内存泄漏</a> <a href="/tags/内部类/" style="font-size: 10px;">内部类</a> <a href="/tags/单例/" style="font-size: 10px;">单例</a> <a href="/tags/图解-HTTP/" style="font-size: 11.11px;">图解 HTTP</a> <a href="/tags/堆栈轨迹/" style="font-size: 10px;">堆栈轨迹</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a> <a href="/tags/对象拷贝/" style="font-size: 10px;">对象拷贝</a> <a href="/tags/工具/" style="font-size: 11.11px;">工具</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/性能优化工具/" style="font-size: 10px;">性能优化工具</a> <a href="/tags/数据压缩/" style="font-size: 10px;">数据压缩</a> <a href="/tags/极客时间专栏/" style="font-size: 10px;">极客时间专栏</a> <a href="/tags/极客时间笔记/" style="font-size: 10px;">极客时间笔记</a> <a href="/tags/泛型/" style="font-size: 12.22px;">泛型</a> <a href="/tags/浮点型精度问题/" style="font-size: 10px;">浮点型精度问题</a> <a href="/tags/深入浅出计算机组成原理-徐文浩/" style="font-size: 11.11px;">深入浅出计算机组成原理(徐文浩)</a> <a href="/tags/深入理解-Android-读书笔记/" style="font-size: 10px;">深入理解 Android 读书笔记</a> <a href="/tags/源码解析/" style="font-size: 11.11px;">源码解析</a> <a href="/tags/焦点机制/" style="font-size: 10px;">焦点机制</a> <a href="/tags/百度地图黑影/" style="font-size: 10px;">百度地图黑影</a> <a href="/tags/硬件加速/" style="font-size: 10px;">硬件加速</a> <a href="/tags/编译技术/" style="font-size: 10px;">编译技术</a> <a href="/tags/网络协议/" style="font-size: 12.22px;">网络协议</a> <a href="/tags/网络安全/" style="font-size: 10px;">网络安全</a> <a href="/tags/计算机基础/" style="font-size: 10px;">计算机基础</a> <a href="/tags/设计模式六大原则/" style="font-size: 10px;">设计模式六大原则</a> <a href="/tags/读书笔记/" style="font-size: 17.78px;">读书笔记</a> <a href="/tags/趣谈网络协议-刘超/" style="font-size: 10px;">趣谈网络协议(刘超)</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+      <a href="/tags/AIDL/" style="font-size: 11.11px;">AIDL</a> <a href="/tags/Alfred/" style="font-size: 10px;">Alfred</a> <a href="/tags/Android/" style="font-size: 15.56px;">Android</a> <a href="/tags/Android-刷机/" style="font-size: 10px;">Android 刷机</a> <a href="/tags/Android-性能优化/" style="font-size: 11.11px;">Android 性能优化</a> <a href="/tags/Android绘制机制/" style="font-size: 10px;">Android绘制机制</a> <a href="/tags/Binder/" style="font-size: 10px;">Binder</a> <a href="/tags/C/" style="font-size: 10px;">C</a> <a href="/tags/CMake/" style="font-size: 10px;">CMake</a> <a href="/tags/CPU-Profiler，Android-性能优化/" style="font-size: 10px;">CPU Profiler，Android 性能优化</a> <a href="/tags/CPU-架构/" style="font-size: 10px;">CPU 架构</a> <a href="/tags/Charles/" style="font-size: 10px;">Charles</a> <a href="/tags/Collections/" style="font-size: 10px;">Collections</a> <a href="/tags/Coroutines/" style="font-size: 11.11px;">Coroutines</a> <a href="/tags/Coroutines协程/" style="font-size: 10px;">Coroutines协程</a> <a href="/tags/DI/" style="font-size: 10px;">DI</a> <a href="/tags/Dagger2/" style="font-size: 10px;">Dagger2</a> <a href="/tags/Dart/" style="font-size: 10px;">Dart</a> <a href="/tags/EventBus/" style="font-size: 13.33px;">EventBus</a> <a href="/tags/EventBus-APT/" style="font-size: 10px;">EventBus APT</a> <a href="/tags/Exception/" style="font-size: 11.11px;">Exception</a> <a href="/tags/Flutter/" style="font-size: 10px;">Flutter</a> <a href="/tags/Future/" style="font-size: 10px;">Future</a> <a href="/tags/FutureTask/" style="font-size: 10px;">FutureTask</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/GitPage/" style="font-size: 10px;">GitPage</a> <a href="/tags/Gradle/" style="font-size: 10px;">Gradle</a> <a href="/tags/Gradle-in-action/" style="font-size: 15.56px;">Gradle in action</a> <a href="/tags/Gradle-基本原理/" style="font-size: 15.56px;">Gradle 基本原理</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 11.11px;">Hexo</a> <a href="/tags/Hprof/" style="font-size: 10px;">Hprof</a> <a href="/tags/IO-流/" style="font-size: 10px;">IO 流</a> <a href="/tags/Inflection/" style="font-size: 10px;">Inflection</a> <a href="/tags/JNI/" style="font-size: 11.11px;">JNI</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Java-Collection/" style="font-size: 15.56px;">Java Collection</a> <a href="/tags/Java-多线程/" style="font-size: 15.56px;">Java 多线程</a> <a href="/tags/Java-异常/" style="font-size: 10px;">Java 异常</a> <a href="/tags/Java-继承，对象，类初始化/" style="font-size: 10px;">Java 继承，对象，类初始化</a> <a href="/tags/Jetpack/" style="font-size: 15.56px;">Jetpack</a> <a href="/tags/JobScheduler/" style="font-size: 10px;">JobScheduler</a> <a href="/tags/Kindle/" style="font-size: 10px;">Kindle</a> <a href="/tags/Kotin/" style="font-size: 11.11px;">Kotin</a> <a href="/tags/Kotlin/" style="font-size: 18.89px;">Kotlin</a> <a href="/tags/Kotlin-协程/" style="font-size: 14.44px;">Kotlin 协程</a> <a href="/tags/Kotlin-核心编程/" style="font-size: 16.67px;">Kotlin 核心编程</a> <a href="/tags/LeakCanary/" style="font-size: 10px;">LeakCanary</a> <a href="/tags/Lifecycle/" style="font-size: 10px;">Lifecycle</a> <a href="/tags/Linux/" style="font-size: 15.56px;">Linux</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/LiveData/" style="font-size: 10px;">LiveData</a> <a href="/tags/Logcat-日志格式/" style="font-size: 10px;">Logcat 日志格式</a> <a href="/tags/Mac/" style="font-size: 10px;">Mac</a> <a href="/tags/Map/" style="font-size: 10px;">Map</a> <a href="/tags/OOP/" style="font-size: 10px;">OOP</a> <a href="/tags/Okhttp3/" style="font-size: 12.22px;">Okhttp3</a> <a href="/tags/Okhttp3-缓存文件/" style="font-size: 10px;">Okhttp3 缓存文件</a> <a href="/tags/Queue/" style="font-size: 10px;">Queue</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Rxjava-源码分析/" style="font-size: 13.33px;">Rxjava 源码分析</a> <a href="/tags/Set/" style="font-size: 10px;">Set</a> <a href="/tags/Shell/" style="font-size: 14.44px;">Shell</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Sticky-Event/" style="font-size: 10px;">Sticky Event</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/Thread/" style="font-size: 10px;">Thread</a> <a href="/tags/ThreadLocal/" style="font-size: 10px;">ThreadLocal</a> <a href="/tags/TraceView/" style="font-size: 10px;">TraceView</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/VIM/" style="font-size: 10px;">VIM</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/ViewModle/" style="font-size: 10px;">ViewModle</a> <a href="/tags/WorkManager/" style="font-size: 12.22px;">WorkManager</a> <a href="/tags/adb/" style="font-size: 10px;">adb</a> <a href="/tags/《深入理解-Java-虚拟机》读书笔记/" style="font-size: 10px;">《深入理解 Java 虚拟机》读书笔记</a> <a href="/tags/三方库/" style="font-size: 10px;">三方库</a> <a href="/tags/事件分发机制/" style="font-size: 10px;">事件分发机制</a> <a href="/tags/内存优化/" style="font-size: 10px;">内存优化</a> <a href="/tags/内存分区/" style="font-size: 10px;">内存分区</a> <a href="/tags/内存泄漏/" style="font-size: 11.11px;">内存泄漏</a> <a href="/tags/内部类/" style="font-size: 10px;">内部类</a> <a href="/tags/单例/" style="font-size: 10px;">单例</a> <a href="/tags/图解-HTTP/" style="font-size: 11.11px;">图解 HTTP</a> <a href="/tags/堆栈轨迹/" style="font-size: 10px;">堆栈轨迹</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a> <a href="/tags/对象拷贝/" style="font-size: 10px;">对象拷贝</a> <a href="/tags/工具/" style="font-size: 11.11px;">工具</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/性能优化工具/" style="font-size: 10px;">性能优化工具</a> <a href="/tags/数据压缩/" style="font-size: 10px;">数据压缩</a> <a href="/tags/极客时间专栏/" style="font-size: 10px;">极客时间专栏</a> <a href="/tags/极客时间笔记/" style="font-size: 10px;">极客时间笔记</a> <a href="/tags/泛型/" style="font-size: 12.22px;">泛型</a> <a href="/tags/浮点型精度问题/" style="font-size: 10px;">浮点型精度问题</a> <a href="/tags/深入浅出计算机组成原理-徐文浩/" style="font-size: 11.11px;">深入浅出计算机组成原理(徐文浩)</a> <a href="/tags/深入理解-Android-读书笔记/" style="font-size: 10px;">深入理解 Android 读书笔记</a> <a href="/tags/源码解析/" style="font-size: 11.11px;">源码解析</a> <a href="/tags/焦点机制/" style="font-size: 10px;">焦点机制</a> <a href="/tags/百度地图黑影/" style="font-size: 10px;">百度地图黑影</a> <a href="/tags/硬件加速/" style="font-size: 10px;">硬件加速</a> <a href="/tags/编译技术/" style="font-size: 10px;">编译技术</a> <a href="/tags/网络协议/" style="font-size: 12.22px;">网络协议</a> <a href="/tags/网络安全/" style="font-size: 10px;">网络安全</a> <a href="/tags/计算机基础/" style="font-size: 10px;">计算机基础</a> <a href="/tags/设计模式六大原则/" style="font-size: 10px;">设计模式六大原则</a> <a href="/tags/读书笔记/" style="font-size: 17.78px;">读书笔记</a> <a href="/tags/趣谈网络协议-刘超/" style="font-size: 10px;">趣谈网络协议(刘超)</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
     </div>
   </div>
 
@@ -752,7 +801,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a></li></ul>
     </div>
   </div>
 
@@ -763,6 +812,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/10/11/Okio/">Okio</a>
+          </li>
         
           <li>
             <a href="/2020/07/30/记一次-Charles-抓包-Android-10-0-HTTPS-请求/">记一次 Charles 抓包 Android 10.0 HTTPS 请求</a>
@@ -778,10 +831,6 @@
         
           <li>
             <a href="/2020/07/17/Alfred4-使用/">Alfred4 使用</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/14/Linux常用命令/">Linux</a>
           </li>
         
       </ul>

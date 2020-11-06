@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>性能优化之包体积优化 | 玛斯特・布兰迪</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="0x0000 打包流程： 从图上可知，引入的 Jar 包经过混淆，移除无用的代码，也会被打包到 dex 文件中。 或者参考这张简化版的打包流程图：  0x0001 包体积与应用性能 安装时间  文件拷贝、Library 解压、编译 ODEX、签名校验，特别对于 Android 5.0 和 6.0 系统来说（Android 7.0 之后有了混合编译），微信 13 个 Dex 光是编译 ODEX 的时">
+<meta name="keywords" content="Android 性能优化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="性能优化之包体积优化">
+<meta property="og:url" content="/2019/11/06/性能优化之减小-APK-体积/index.html">
+<meta property="og:site_name" content="玛斯特・布兰迪">
+<meta property="og:description" content="0x0000 打包流程： 从图上可知，引入的 Jar 包经过混淆，移除无用的代码，也会被打包到 dex 文件中。 或者参考这张简化版的打包流程图：  0x0001 包体积与应用性能 安装时间  文件拷贝、Library 解压、编译 ODEX、签名校验，特别对于 Android 5.0 和 6.0 系统来说（Android 7.0 之后有了混合编译），微信 13 个 Dex 光是编译 ODEX 的时">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="/2019/11/06/性能优化之减小-APK-体积/2019_11_11_03.png">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2019/12/29/16f502591367b0f4?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="/2019/11/06/性能优化之减小-APK-体积/2019_11_21_02.png">
+<meta property="og:image" content="/2019/11/06/性能优化之减小-APK-体积/2019_11_21_03.png">
+<meta property="og:image" content="/2019/11/06/性能优化之减小-APK-体积/2019_11_06_01.png">
+<meta property="og:image" content="/2019/11/06/性能优化之减小-APK-体积/2019_11_06_02.png">
+<meta property="og:image" content="/2019/11/06/性能优化之减小-APK-体积/2019_11_07_01.png">
+<meta property="og:image" content="/2019/11/06/性能优化之减小-APK-体积/2019_11_07_02.png">
+<meta property="og:image" content="/2019/11/06/性能优化之减小-APK-体积/2019_11_07_03.png">
+<meta property="og:image" content="/2019/11/06/性能优化之减小-APK-体积/2019_11_07_04.png">
+<meta property="og:image" content="/2019/11/06/性能优化之减小-APK-体积/2019_11_07_05.png">
+<meta property="og:updated_time" content="2020-11-06T06:47:56.237Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="性能优化之包体积优化">
+<meta name="twitter:description" content="0x0000 打包流程： 从图上可知，引入的 Jar 包经过混淆，移除无用的代码，也会被打包到 dex 文件中。 或者参考这张简化版的打包流程图：  0x0001 包体积与应用性能 安装时间  文件拷贝、Library 解压、编译 ODEX、签名校验，特别对于 Android 5.0 和 6.0 系统来说（Android 7.0 之后有了混合编译），微信 13 个 Dex 光是编译 ODEX 的时">
+<meta name="twitter:image" content="/2019/11/06/性能优化之减小-APK-体积/2019_11_11_03.png">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.proxy.ustclug.org/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">玛斯特・布兰迪</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Enjoy the life, enjoy the code.</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">主页</a>
+        
+          <a class="main-nav-link" href="/archives/">文章</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value=""></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-性能优化之减小-APK-体积" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/06/性能优化之减小-APK-体积/" class="article-date">
+  <time datetime="2019-11-06T06:44:49.000Z" itemprop="datePublished">2019-11-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      性能优化之包体积优化
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="0x0000-打包流程："><a href="#0x0000-打包流程：" class="headerlink" title="0x0000 打包流程："></a>0x0000 打包流程：</h2><p><img src="/2019/11/06/性能优化之减小-APK-体积/2019_11_11_03.png" alt></p>
+<p>从图上可知，引入的 Jar 包经过混淆，移除无用的代码，也会被打包到 dex 文件中。</p>
+<p>或者参考这张简化版的打包流程图：</p>
+<p><img src="https://user-gold-cdn.xitu.io/2019/12/29/16f502591367b0f4?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt></p>
+<h2 id="0x0001-包体积与应用性能"><a href="#0x0001-包体积与应用性能" class="headerlink" title="0x0001 包体积与应用性能"></a>0x0001 包体积与应用性能</h2><ul>
+<li>安装时间</li>
+</ul>
+<p>文件拷贝、Library 解压、编译 ODEX、签名校验，特别对于 Android 5.0 和 6.0 系统来说（Android 7.0 之后有了混合编译），微信 13 个 Dex 光是编译 ODEX 的时间可能就要 5 分钟。</p>
+<ul>
+<li>运行内存</li>
+</ul>
+<p>Resource 资源、Library 以及 Dex 类加载这些都会占用不少的内存。</p>
+<ul>
+<li>ROM 空间</li>
+</ul>
+<p>100MB 的安装包，启动解压之后很有可能就超过 200MB 了。对低端机用户来说，也会有很大的压力。如果闪存空间不足，非常容易出现写入放大的情况。</p>
+<h2 id="0x0002-Dex-分包导致包体积增大"><a href="#0x0002-Dex-分包导致包体积增大" class="headerlink" title="0x0002 Dex 分包导致包体积增大"></a>0x0002 Dex 分包导致包体积增大</h2><p>使用 AS 查看 APK 的 dex 文件时，可以看到如下所示的信息：</p>
+<p><img src="/2019/11/06/性能优化之减小-APK-体积/2019_11_21_02.png" alt></p>
+<ul>
+<li>“define classes and methods”是指真正在这个 Dex 中定义的类以及它们的方法。</li>
+<li>“reference methods”指的是 define methods 以及 define methods 引用到的方法。</li>
+</ul>
+<p>举一个浅显的例子：如果将 Class A 与 Class B 分别编译到不同的 Dex 中，由于 method a 调用了 method b，所以 classes2.dex 文件中也需要加上 method b 的id，如下图所示：</p>
+<p><img src="/2019/11/06/性能优化之减小-APK-体积/2019_11_21_03.png" alt></p>
+<p>如图所示，由于跨 Dex 调用的存在，导致有些 Dex 文件中存在一些冗余信息，比如图中 classes2.dex  中的 method id。此现象的存在对 Dex 的大小的影响：</p>
+<ul>
+<li>method id 爆表</li>
+</ul>
+<p>我们都知道每个 Dex 的 method id 的数量需要小于 65536，<strong>因为 method id 的大量冗余导致每个 Dex 真正可以放的 Class 变少</strong>，这是造成最终编译的 Dex 数量增多。</p>
+<ul>
+<li>冗余信息</li>
+</ul>
+<p>因为我们 <strong>需要记录跨 Dex 调用的方法的详细信息</strong>，所以在 classes2.dex 我们还需要记录 Class B 以及 method b 的定义，造成 string_ids、type_ids、proto_ids 这几部分信息的冗余。</p>
+<p>很明显提升 Dex 中 define methods 中的比重，会减少 dex 的体积，那么 APK 的体积也会减少。那么如何提高 Dex 中 define methods 中的比重呢？<strong>将有调用关系的类和方法分配到同一个 Dex，即减少跨 Dex 调用的情况</strong>。但是针对此的优化只能达到局部最优解，因为需要在编译速度和效果之间找一个平衡点。</p>
+<h2 id="0x0003-包体积优化措施：压缩代码"><a href="#0x0003-包体积优化措施：压缩代码" class="headerlink" title="0x0003 包体积优化措施：压缩代码"></a>0x0003 包体积优化措施：压缩代码</h2><p><strong>1. 使用 minifyEnabled 属性</strong></p>
+<p>开启 minifyEnabled true 属性，会进行 <strong>无用代码的裁切</strong>。</p>
+<p><strong>2. 进行混淆</strong></p>
+<p>除了启用 minifyEnabled 属性，还可以在 <code>proguard-rules.pro</code> 文件中配置混淆规则，把相关类和方法混淆成短路径，比如混淆方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void show()  -&gt; void a()</span><br></pre></td></tr></table></figure>
+
+<p><strong>将类和方法混淆成短路径</strong>，那么构建的 Dex 文件的大小也会减小。</p>
+<h2 id="0x0004-包体积优化措施：移除无用的资源"><a href="#0x0004-包体积优化措施：移除无用的资源" class="headerlink" title="0x0004 包体积优化措施：移除无用的资源"></a>0x0004 包体积优化措施：移除无用的资源</h2><p>Android 官方早就为我们考虑好了，以下为关于无用资源优化方案的演进：</p>
+<p><strong>第一阶段: Lint：移除无用的资源</strong></p>
+<p>Lint 是一款静态代码扫描工具，其中有一项关于 Unused Resources 的扫描，然后直接选择 <code>Remove All Unused Resources</code>，这样就可以直接删除所有无用的资源。</p>
+<p>但是 Lint 作为第一阶段的方案，在扫描过程中存在一些缺点：</p>
+<pre><code>由于 Lint 是静态代码扫描工具，其最大的问题是没有考虑到 ProGuard 的代码裁剪，在 ProGuard 过程中会 shrink 掉大量的无用代码，但是 Lint 工具并不会检查出这些无用代码引用的无用资源。</code></pre><p>当然 Lint 还有很多其他的特色功能：检查布局嵌套过深、存在的内存泄漏隐患等。</p>
+<p>虽然 Lint 移除了大量的无用资源，但是系统目前的做法并没有真正减少文件数量。这样 resources.arsc、签名信息以及 ZIP 文件信息这几个“大头”依然没有任何改善，具体可以查看实操篇中的阐述。</p>
+<blockquote>
+<p>resources.arsc、R.java 文件的资源 ID 是连续的。</p>
+</blockquote>
+<p><strong>Lint Unuse resource</strong></p>
+<p><img src="/2019/11/06/性能优化之减小-APK-体积/2019_11_06_01.png" alt></p>
+<p>此处的 APK 为 build 生产的包，Lint 移除无用资源后的 Apk 的变化。</p>
+<p><img src="/2019/11/06/性能优化之减小-APK-体积/2019_11_06_02.png" alt></p>
+<p><strong>第二阶段：shrinkResources： 移除没有被代码显式引用的资源</strong></p>
+<p>基于 Lint 的缺点，在第二阶段 Android 增加了 shrinkResources 的资源压缩功能，但是它需要和 ProGuard 的 minifyEnabled 功能配合使用，启用 minifyEnabled 功能会将部分无用的代码移除，而这些代码引用的资源也会被标记为无用资源，开启 shrinkResources 通过资源压缩功能将它们移除。</p>
+<p>要使用 shrinkResources，您必须启用代码压缩功能。在编译过程中，首先，ProGuard 会移除未使用的代码，但会保留未使用的资源。然后，Gradle 会移除未使用的资源</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    ...</span><br><span class="line">    buildTypes &#123;</span><br><span class="line">        release &#123;</span><br><span class="line">            minifyEnabled true</span><br><span class="line">            shrinkResources true</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是目前的 shrinkResources 在实现上还是存在以下缺陷：</p>
+<ol>
+<li>没有处理 resources.arsc 文件，导致大量无用的 String、Id、Attr、Dimen、Color 等资源并没有被删除。</li>
+</ol>
+<p><img src="/2019/11/06/性能优化之减小-APK-体积/2019_11_07_01.png" alt></p>
+<p>如上图，以 umeng 开头的 color 资源其实在应用中并没有被使用，但是还是存在于 resources.arsc。</p>
+<ol start="2">
+<li>没有真正的删除资源文件。</li>
+</ol>
+<p>对于 Drawable 、Layout 这些无用资源，shrinkResources 也没有把它们真正删掉，而仅仅替换为一个空文件，为什么不删除呢？由于 没有处理 resources.arsc 文件，所以 resources.arsc 中还有这些文件的路径。</p>
+<p><img src="/2019/11/06/性能优化之减小-APK-体积/2019_11_07_02.png" alt></p>
+<p>如上图，标记的文件在 Apk 中被替换为 空文件。</p>
+<p>同时在生成的 resources.txt 文件中也可以看到该文件被替换为空文件的的日志：<br><img src="/2019/11/06/性能优化之减小-APK-体积/2019_11_07_03.png" alt></p>
+<p>除了上述将无用的资源文件替换为空文件的情况，也存在对无用的资源文件不做任何处理的情况，如下图所示：</p>
+<p><img src="/2019/11/06/性能优化之减小-APK-体积/2019_11_07_04.png" alt></p>
+<p>可以看到 activity_edit_address.xml 在文件中没有被引用，该文件在 Apk 构建过程中也没有被替换为空文件，到 resources.txt 文件中去查看该文件的信息：</p>
+<p><img src="/2019/11/06/性能优化之减小-APK-体积/2019_11_07_05.png" alt></p>
+<p>那么为什么会出现这种情况呢，具体可以看 <a href="https://android.googlesource.com/platform/tools/base/+/studio-master-dev/build-system/gradle-core/src/main/java/com/android/build/gradle/tasks/ResourceUsageAnalyzer.java" target="_blank" rel="noopener">ResourceUsageAnalyzer.java</a> 中的相关代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">if (mFoundWebContent) &#123;</span><br><span class="line">                Resource resource = mModel.getResourceFromFilePath(string);</span><br><span class="line">                if (resource != null) &#123;</span><br><span class="line">                    ResourceUsageModel.markReachable(resource);</span><br><span class="line">                    continue;</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    int start = 0;</span><br><span class="line">                    int slash = string.lastIndexOf(&apos;/&apos;);</span><br><span class="line">                    if (slash != -1) &#123;</span><br><span class="line">                        start = slash + 1;</span><br><span class="line">                    &#125;</span><br><span class="line">                    int dot = string.indexOf(&apos;.&apos;, start);</span><br><span class="line">                    String name = string.substring(start, dot != -1 ? dot : string.length());</span><br><span class="line">                    if (names.contains(name)) &#123;</span><br><span class="line">                        for (Map&lt;String, Resource&gt; map : mModel.getResourceMaps()) &#123;</span><br><span class="line">                            resource = map.get(name);</span><br><span class="line">                            if (mDebug &amp;&amp; resource != null) &#123;</span><br><span class="line">                                mDebugPrinter.println(&quot;Marking &quot; + resource + &quot; used because it &quot;</span><br><span class="line">                                        + &quot;matches string pool constant &quot; + string);</span><br><span class="line">                            &#125;</span><br><span class="line">                            ResourceUsageModel.markReachable(resource);</span><br><span class="line">                            // 加入白名单</span><br><span class="line">                            mModel.addResourceToWhitelist(resource);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
+
+<p>大致意思资源文件名的前缀包含在 string pool 中，那么该文件会被包含在白名单中，在资源压缩、移除过程中，不会被置为空文件或者删除，在该项目中以 umeng 开头的 Layout 文件也不会被置空或删除，但是 string pool 是如何初始化的，自己没有进一步阅读源码，还不清楚，有空仔细阅读。</p>
+<p>针对此种情况，可以先使用 Lint 工具对项目进行 Unused Resources 的扫描，并且移除。</p>
+<hr>
+<p><a href="https://developer.android.google.cn/studio/build/shrink-code.html#top_of_page" target="_blank" rel="noopener">压缩、混淆和优化您的应用</a>，在 outputs/mapming 文件夹下会生成以下文件：</p>
+<ul>
+<li>dump.txt:描述apk文件中所有类文件间的内部结构.</li>
+<li>mapping.txt:列出了混淆过的类、方法和字段名称与原始名称的映射关系，能够通过该文件进行解码混淆过的堆栈轨迹，比如上传到 友盟统计平台，显示 bug 的堆栈轨迹。</li>
+<li>seeds.txt:项目的保留规则确定的入口点的报告(列出未进行混淆的类和成员)。</li>
+<li>usage.txt:移除的代码的报告。</li>
+<li>resources.txt：此文件包含一些详细信息，如哪些资源引用了其他资源以及使用或移除了哪些资源。</li>
+</ul>
+<hr>
+<p><strong>第三阶段：realShrinkResources</strong></p>
+<p>目前 Android 还没有提供这套方案的实现，故不详述。</p>
+<hr>
+<p><a href="https://developer.android.google.cn/topic/performance/reduce-apk-size" target="_blank" rel="noopener">缩减应用大小</a></p>
+<p><a href="https://developer.android.google.cn/studio/build/shrink-code.html#top_of_page" target="_blank" rel="noopener">压缩、混淆和优化您的应用</a>:</p>
+<p><a href="https://developer.android.google.cn/studio/build/apk-analyzer?hl=zh_cn" target="_blank" rel="noopener">使用 APK 分析器分析您的编译版本</a></p>
+<p><a href="https://developer.android.google.cn/studio/build/shrink-code?hl=zh_cn" target="_blank" rel="noopener">压缩您的应用</a></p>
+<h2 id="0x0005-包体积优化措施：移除未使用的语言以及-so-库"><a href="#0x0005-包体积优化措施：移除未使用的语言以及-so-库" class="headerlink" title="0x0005 包体积优化措施：移除未使用的语言以及 so 库"></a>0x0005 包体积优化措施：移除未使用的语言以及 so 库</h2><p>如果您希望只保留应用正式支持的语言，可以使用 <code>resConfig</code> 属性指定这些语言。系统会移除未指定语言的所有资源。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    defaultConfig &#123;</span><br><span class="line">        // 只保留两种语言相关的资源文件</span><br><span class="line">        resConfigs &quot;en&quot;, &quot;zh&quot;</span><br><span class="line">        // 只保留 armeabi 下的 so 库</span><br><span class="line">        ndk&#123;</span><br><span class="line">            abiFilters &apos;armeabi&apos;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>关于 Android CPU 架构的基础知识可以查看 <a href="https://leegyplus.github.io/2019/11/12/Android-CPU-%E6%9E%B6%E6%9E%84/" target="_blank" rel="noopener">Android CPU 架构</a>，正如该文所说， armeabi 指令集能够兼容其他大部分 CPU 架构，但是也是有一定代价的，比如文中所说的会生成相应的模拟层，相应的会对性能产生一定的影响。</p>
+<p>有些大佬是强烈反对仅仅为了减少 APK 体积而仅仅保留 armeabi 的 so 文件，比如刘皇叔在 <a href="https://www.jianshu.com/p/cb05698a1968" target="_blank" rel="noopener">关于Android的.so文件你所需要知道的</a> 中的观点，但是大部份针对 APK 体积的优化还是都会采取此措施，然后针对性测试，毕竟其优化效果是十分显著的。如果引入的库(手动添加的 so 库 + 三方依赖中的 so 库)较多的话，基本上可以得到 M 级别的优化空间。</p>
+<p>项目中 so 库的来源：</p>
+<ul>
+<li>在项目中手动添加的 so 库</li>
+<li>三方依赖库中依赖的 so 库</li>
+</ul>
+<p>在上面的 apk 打包流程图中也可以看到，此图真实细致入微。 </p>
+<hr>
+<p><strong>知识链接</strong></p>
+<p><a href="https://devblogs.microsoft.com/xamarin/shrinking-android-app-size/" target="_blank" rel="noopener">Shrinking Your Android App Size</a></p>
+<p><a href="https://v.youku.com/v_show/id_XNDQxMzE4MTgyOA==.html?spm=a2hzp.8253869.0.0&utm_source=androidweekly.io&utm_medium=website" target="_blank" rel="noopener">Shrinking Your App with R8</a></p>
+<p><a href="https://www.cnblogs.com/alisecurity/p/5341218.html" target="_blank" rel="noopener">APK瘦身记，如何实现高达53%的压缩效果</a></p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207151651&idx=1&sn=9eab282711f4eb2b4daf2fbae5a5ca9a&3rd=MzA3MDU4NTYzMw==&scene=6#rd" target="_blank" rel="noopener">Android拆分与加载Dex的多种方案对比</a></p>
+<p><a href="https://www.infoq.cn/article/ITVEfvGD5Uv6r07NHssx" target="_blank" rel="noopener">抖音包大小优化：资源优化</a></p>
+<p><a href="https://juejin.im/post/5d4407baf265da03f04caf59" target="_blank" rel="noopener">Android 可能你想要的APK瘦身笔记</a></p>
+<p><a href="https://developer.android.google.cn/studio/build/shrink-code.html" target="_blank" rel="noopener">官方文档：压缩、混淆和优化您的应用</a></p>
+<p><a href="https://developer.android.google.cn/topic/performance/reduce-apk-size" target="_blank" rel="noopener">缩减应用大小</a></p>
+<p><a href="https://developer.android.google.cn/guide/topics/resources/providing-resources.html#AlternativeResources" target="_blank" rel="noopener">Android 中资源文件概览</a></p>
+<p><a href="http://jayfeng.com/2016/03/01/Android-APP%E7%BB%88%E6%9E%81%E7%98%A6%E8%BA%AB%E6%8C%87%E5%8D%97/" target="_blank" rel="noopener">Android APP终极瘦身指南</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="/2019/11/06/性能优化之减小-APK-体积/" data-id="ckh5wegaq00k8ujfywt8gqnr5" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android-性能优化/">Android 性能优化</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/11/06/性能优化之减小-APK-体积(实操篇)/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">这些东西可能太新了</strong>
+      <div class="article-nav-title">
+        
+          性能优化之包体积优化(实操篇)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/11/05/git-submodule-使用/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">这些东西可能过时了</strong>
+      <div class="article-nav-title">git submodule 使用</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AIDL/" style="font-size: 11.11px;">AIDL</a> <a href="/tags/Alfred/" style="font-size: 10px;">Alfred</a> <a href="/tags/Android/" style="font-size: 15.56px;">Android</a> <a href="/tags/Android-刷机/" style="font-size: 10px;">Android 刷机</a> <a href="/tags/Android-性能优化/" style="font-size: 11.11px;">Android 性能优化</a> <a href="/tags/Android绘制机制/" style="font-size: 10px;">Android绘制机制</a> <a href="/tags/Binder/" style="font-size: 10px;">Binder</a> <a href="/tags/C/" style="font-size: 10px;">C</a> <a href="/tags/CMake/" style="font-size: 10px;">CMake</a> <a href="/tags/CPU-Profiler，Android-性能优化/" style="font-size: 10px;">CPU Profiler，Android 性能优化</a> <a href="/tags/CPU-架构/" style="font-size: 10px;">CPU 架构</a> <a href="/tags/Charles/" style="font-size: 10px;">Charles</a> <a href="/tags/Collections/" style="font-size: 10px;">Collections</a> <a href="/tags/Coroutines/" style="font-size: 11.11px;">Coroutines</a> <a href="/tags/Coroutines协程/" style="font-size: 10px;">Coroutines协程</a> <a href="/tags/DI/" style="font-size: 10px;">DI</a> <a href="/tags/Dagger2/" style="font-size: 10px;">Dagger2</a> <a href="/tags/Dart/" style="font-size: 10px;">Dart</a> <a href="/tags/EventBus/" style="font-size: 13.33px;">EventBus</a> <a href="/tags/EventBus-APT/" style="font-size: 10px;">EventBus APT</a> <a href="/tags/Exception/" style="font-size: 11.11px;">Exception</a> <a href="/tags/Flutter/" style="font-size: 10px;">Flutter</a> <a href="/tags/Future/" style="font-size: 10px;">Future</a> <a href="/tags/FutureTask/" style="font-size: 10px;">FutureTask</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/GitPage/" style="font-size: 10px;">GitPage</a> <a href="/tags/Gradle/" style="font-size: 10px;">Gradle</a> <a href="/tags/Gradle-in-action/" style="font-size: 15.56px;">Gradle in action</a> <a href="/tags/Gradle-基本原理/" style="font-size: 15.56px;">Gradle 基本原理</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 11.11px;">Hexo</a> <a href="/tags/Hprof/" style="font-size: 10px;">Hprof</a> <a href="/tags/IO-流/" style="font-size: 10px;">IO 流</a> <a href="/tags/Inflection/" style="font-size: 10px;">Inflection</a> <a href="/tags/JNI/" style="font-size: 11.11px;">JNI</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Java-Collection/" style="font-size: 15.56px;">Java Collection</a> <a href="/tags/Java-多线程/" style="font-size: 15.56px;">Java 多线程</a> <a href="/tags/Java-异常/" style="font-size: 10px;">Java 异常</a> <a href="/tags/Java-继承，对象，类初始化/" style="font-size: 10px;">Java 继承，对象，类初始化</a> <a href="/tags/Jetpack/" style="font-size: 15.56px;">Jetpack</a> <a href="/tags/JobScheduler/" style="font-size: 10px;">JobScheduler</a> <a href="/tags/Kindle/" style="font-size: 10px;">Kindle</a> <a href="/tags/Kotin/" style="font-size: 11.11px;">Kotin</a> <a href="/tags/Kotlin/" style="font-size: 18.89px;">Kotlin</a> <a href="/tags/Kotlin-协程/" style="font-size: 14.44px;">Kotlin 协程</a> <a href="/tags/Kotlin-核心编程/" style="font-size: 16.67px;">Kotlin 核心编程</a> <a href="/tags/LeakCanary/" style="font-size: 10px;">LeakCanary</a> <a href="/tags/Lifecycle/" style="font-size: 10px;">Lifecycle</a> <a href="/tags/Linux/" style="font-size: 15.56px;">Linux</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/LiveData/" style="font-size: 10px;">LiveData</a> <a href="/tags/Logcat-日志格式/" style="font-size: 10px;">Logcat 日志格式</a> <a href="/tags/Mac/" style="font-size: 10px;">Mac</a> <a href="/tags/Map/" style="font-size: 10px;">Map</a> <a href="/tags/OOP/" style="font-size: 10px;">OOP</a> <a href="/tags/Okhttp3/" style="font-size: 12.22px;">Okhttp3</a> <a href="/tags/Okhttp3-缓存文件/" style="font-size: 10px;">Okhttp3 缓存文件</a> <a href="/tags/Queue/" style="font-size: 10px;">Queue</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Rxjava-源码分析/" style="font-size: 13.33px;">Rxjava 源码分析</a> <a href="/tags/Set/" style="font-size: 10px;">Set</a> <a href="/tags/Shell/" style="font-size: 14.44px;">Shell</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Sticky-Event/" style="font-size: 10px;">Sticky Event</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/Thread/" style="font-size: 10px;">Thread</a> <a href="/tags/ThreadLocal/" style="font-size: 10px;">ThreadLocal</a> <a href="/tags/TraceView/" style="font-size: 10px;">TraceView</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/VIM/" style="font-size: 10px;">VIM</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/ViewModle/" style="font-size: 10px;">ViewModle</a> <a href="/tags/WorkManager/" style="font-size: 12.22px;">WorkManager</a> <a href="/tags/adb/" style="font-size: 10px;">adb</a> <a href="/tags/《深入理解-Java-虚拟机》读书笔记/" style="font-size: 10px;">《深入理解 Java 虚拟机》读书笔记</a> <a href="/tags/三方库/" style="font-size: 10px;">三方库</a> <a href="/tags/事件分发机制/" style="font-size: 10px;">事件分发机制</a> <a href="/tags/内存优化/" style="font-size: 10px;">内存优化</a> <a href="/tags/内存分区/" style="font-size: 10px;">内存分区</a> <a href="/tags/内存泄漏/" style="font-size: 11.11px;">内存泄漏</a> <a href="/tags/内部类/" style="font-size: 10px;">内部类</a> <a href="/tags/单例/" style="font-size: 10px;">单例</a> <a href="/tags/图解-HTTP/" style="font-size: 11.11px;">图解 HTTP</a> <a href="/tags/堆栈轨迹/" style="font-size: 10px;">堆栈轨迹</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a> <a href="/tags/对象拷贝/" style="font-size: 10px;">对象拷贝</a> <a href="/tags/工具/" style="font-size: 11.11px;">工具</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/性能优化工具/" style="font-size: 10px;">性能优化工具</a> <a href="/tags/数据压缩/" style="font-size: 10px;">数据压缩</a> <a href="/tags/极客时间专栏/" style="font-size: 10px;">极客时间专栏</a> <a href="/tags/极客时间笔记/" style="font-size: 10px;">极客时间笔记</a> <a href="/tags/泛型/" style="font-size: 12.22px;">泛型</a> <a href="/tags/浮点型精度问题/" style="font-size: 10px;">浮点型精度问题</a> <a href="/tags/深入浅出计算机组成原理-徐文浩/" style="font-size: 11.11px;">深入浅出计算机组成原理(徐文浩)</a> <a href="/tags/深入理解-Android-读书笔记/" style="font-size: 10px;">深入理解 Android 读书笔记</a> <a href="/tags/源码解析/" style="font-size: 11.11px;">源码解析</a> <a href="/tags/焦点机制/" style="font-size: 10px;">焦点机制</a> <a href="/tags/百度地图黑影/" style="font-size: 10px;">百度地图黑影</a> <a href="/tags/硬件加速/" style="font-size: 10px;">硬件加速</a> <a href="/tags/编译技术/" style="font-size: 10px;">编译技术</a> <a href="/tags/网络协议/" style="font-size: 12.22px;">网络协议</a> <a href="/tags/网络安全/" style="font-size: 10px;">网络安全</a> <a href="/tags/计算机基础/" style="font-size: 10px;">计算机基础</a> <a href="/tags/设计模式六大原则/" style="font-size: 10px;">设计模式六大原则</a> <a href="/tags/读书笔记/" style="font-size: 17.78px;">读书笔记</a> <a href="/tags/趣谈网络协议-刘超/" style="font-size: 10px;">趣谈网络协议(刘超)</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/10/11/Okio/">Okio</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/30/记一次-Charles-抓包-Android-10-0-HTTPS-请求/">记一次 Charles 抓包 Android 10.0 HTTPS 请求</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/29/HTTPS-防止被抓包/">Https 如何反抓包</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/19/Kotlin-之-Backing-Field/">Kotlin 之对 Backing Field 的理解</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/17/Alfred4-使用/">Alfred4 使用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 玛斯特・布兰迪<br>
+      巨大能量来源 <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">主页</a>
+  
+    <a href="/archives/" class="mobile-nav-link">文章</a>
+  
+</nav>
+    
+
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

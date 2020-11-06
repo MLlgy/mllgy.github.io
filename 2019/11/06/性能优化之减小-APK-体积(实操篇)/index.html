@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>性能优化之包体积优化(实操篇) | 玛斯特・布兰迪</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="根据解压后的 Apk 的各个文件，可以看到占用空间最大的是代码和资源，那么减小 Apk 体积需要着重从这两方面出发。 代码部分： 冗余代码、无用功能、代码混淆、方法数缩减资源部分： 冗余资源、资源混淆、图片处理(压缩、图片转换、点9图化等)对整个安装包做 7zip 极限压缩 针对 7zip 的操作可以参见微信方案：[AndResGuard](https://github.com/shwenzhan">
+<meta name="keywords" content="Android 性能优化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="性能优化之包体积优化(实操篇)">
+<meta property="og:url" content="/2019/11/06/性能优化之减小-APK-体积(实操篇)/index.html">
+<meta property="og:site_name" content="玛斯特・布兰迪">
+<meta property="og:description" content="根据解压后的 Apk 的各个文件，可以看到占用空间最大的是代码和资源，那么减小 Apk 体积需要着重从这两方面出发。 代码部分： 冗余代码、无用功能、代码混淆、方法数缩减资源部分： 冗余资源、资源混淆、图片处理(压缩、图片转换、点9图化等)对整个安装包做 7zip 极限压缩 针对 7zip 的操作可以参见微信方案：[AndResGuard](https://github.com/shwenzhan">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="/2019/11/06/性能优化之减小-APK-体积(实操篇)/2019_11_11_01.png">
+<meta property="og:image" content="/2019/11/06/性能优化之减小-APK-体积(实操篇)/2019_11_11_02.png">
+<meta property="og:updated_time" content="2020-11-06T06:47:59.045Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="性能优化之包体积优化(实操篇)">
+<meta name="twitter:description" content="根据解压后的 Apk 的各个文件，可以看到占用空间最大的是代码和资源，那么减小 Apk 体积需要着重从这两方面出发。 代码部分： 冗余代码、无用功能、代码混淆、方法数缩减资源部分： 冗余资源、资源混淆、图片处理(压缩、图片转换、点9图化等)对整个安装包做 7zip 极限压缩 针对 7zip 的操作可以参见微信方案：[AndResGuard](https://github.com/shwenzhan">
+<meta name="twitter:image" content="/2019/11/06/性能优化之减小-APK-体积(实操篇)/2019_11_11_01.png">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.proxy.ustclug.org/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">玛斯特・布兰迪</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Enjoy the life, enjoy the code.</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">主页</a>
+        
+          <a class="main-nav-link" href="/archives/">文章</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value=""></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-性能优化之减小-APK-体积(实操篇)" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/06/性能优化之减小-APK-体积(实操篇)/" class="article-date">
+  <time datetime="2019-11-06T07:42:58.000Z" itemprop="datePublished">2019-11-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      性能优化之包体积优化(实操篇)
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>根据解压后的 Apk 的各个文件，可以看到占用空间最大的是代码和资源，那么减小 Apk 体积需要着重从这两方面出发。</p>
+<p><strong>代码部分：</strong></p>
+<pre><code>冗余代码、无用功能、代码混淆、方法数缩减</code></pre><p><strong>资源部分：</strong></p>
+<pre><code>冗余资源、资源混淆、图片处理(压缩、图片转换、点9图化等)</code></pre><p><strong>对整个安装包做 7zip 极限压缩</strong></p>
+<pre><code>针对 7zip 的操作可以参见微信方案：[AndResGuard](https://github.com/shwenzhang/AndResGuard)</code></pre><h2 id="0x0000-代码层面"><a href="#0x0000-代码层面" class="headerlink" title="0x0000 代码层面"></a>0x0000 代码层面</h2><h3 id="ProGuard"><a href="#ProGuard" class="headerlink" title="ProGuard"></a>ProGuard</h3><p>是否存在过度keep 的现象。</p>
+<p>以下表格为包体积的改变：</p>
+<table>
+<thead>
+<tr>
+<th>状态</th>
+<th>包大小</th>
+<th>lib</th>
+<th>res</th>
+<th>dex</th>
+<th>classes.dex</th>
+<th>classes2.dex</th>
+<th>assets</th>
+<th>resources.arsc</th>
+<th>META_INFO</th>
+<th>publicxx.gz</th>
+<th>AndroidManifest.xml</th>
+<th>总结</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>原始状态(无混淆)</td>
+<td>19.9M</td>
+<td>7.1M</td>
+<td>5.8M</td>
+<td>4.6M</td>
+<td>3.5M</td>
+<td>1.1M</td>
+<td>1.3M</td>
+<td>766.5K</td>
+<td>108.7K</td>
+<td>33.2K</td>
+<td>5.9K</td>
+<td></td>
+</tr>
+<tr>
+<td>使用 Lint 移除无用资源</td>
+<td>19.1M(-0.8M)</td>
+<td>7.1M</td>
+<td>5.1M(-0.7M)</td>
+<td>4.6M</td>
+<td>3.5M</td>
+<td>1.1M</td>
+<td>1.3M</td>
+<td>667.9K(-98.6K)</td>
+<td>94.6K</td>
+<td>33.2K</td>
+<td>5.9K</td>
+<td>减少资源文件，res 中的文件减少，同时 resources.arsc 中的字节码也会减少</td>
+</tr>
+<tr>
+<td>ProGuard 开启代码混淆及裁剪</td>
+<td>18.4M(-0.7M)</td>
+<td>7.1M</td>
+<td>5.1M</td>
+<td>3.91M(-0.69M)</td>
+<td>3.6M</td>
+<td>327.3K</td>
+<td>1.3M</td>
+<td>667.9K</td>
+<td>94.7K</td>
+<td>33.2K</td>
+<td>5.9K</td>
+<td>文件路径及方法名变短，那么 .dex 文件大小减小</td>
+</tr>
+<tr>
+<td>ProGuard 开启资源混淆进行压缩</td>
+<td>18.3M(-0.1M)</td>
+<td>同上</td>
+<td>同上</td>
+<td>同上</td>
+<td>同上</td>
+<td>同上</td>
+<td>同上</td>
+<td>同上</td>
+<td>94.2K</td>
+<td>同上</td>
+<td>同上</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>以上为通过 Lint 移除无用资源、ProGuard 代码混淆以及资源移除的 Apk 的变化，从以上图表可以看出对资源文件的处理可以大幅度的减少 Apk 的大小，那么还有什么方案可以对资源文件进一步处理？</p>
+<h2 id="0x0001-代码层面"><a href="#0x0001-代码层面" class="headerlink" title="0x0001 代码层面"></a>0x0001 代码层面</h2><h3 id="图片文件格式由-PNG-到-JPG-的转换"><a href="#图片文件格式由-PNG-到-JPG-的转换" class="headerlink" title="图片文件格式由 PNG 到 JPG 的转换"></a>图片文件格式由 PNG 到 JPG 的转换</h3><p>由于 PNG 为无损格式， JPG 为有损格式，JPG 在处理时会根据压缩率的不同会去掉部分识别差别较小的中间颜色，而 PNG 会严格保留所有的色彩，所以在尺寸大、色彩多的时候 PNG 的体积会明显大于 JPG。可以在小尺寸、色彩少，或者有 alpha 透明度通道的时候使用 PNG，在大尺寸、渐变色多的时候用 JPG，不过这一点需要跟设计师协商后决定。但是在可以使用 JPG 格式的图片情况下，最好不要从 PNG 转到 JPG，最好让设计师给出相应的图片，效果会更好一些。</p>
+<h3 id="图片压缩"><a href="#图片压缩" class="headerlink" title="图片压缩"></a>图片压缩</h3><p>对于 APK 来说，大于 5K 的图片就算是大的图片了，所以 95% 的图片应该小于 5K，在 APK 打包过程中，aapt 工具会采用 <a href="https://github.com/Unity-Technologies/crunch/tree/unity" target="_blank" rel="noopener">crunch</a> 对图片做预处理，但是其压缩率并不是最好的，采用 <a href="https://pnggauntlet.com/#more" target="_blank" rel="noopener">pnggauntlet</a> 对非 .9 图片进行压缩，可以得到更好的压缩率，而使用该工具对 .9 图进行压缩的话会有黑边，视觉效果不好。</p>
+<p>下面分别采用两种方式对同一个图片进行压缩：</p>
+<ul>
+<li>crunch</li>
+</ul>
+<p>使用命令对资源文件进行压缩： <code>aapt c[runch] [-v] -S resource-sources ... -C output-folder ...</code></p>
+<p>相关的 aapt 描述如下：</p>
+<pre><code>Do PNG preprocessing on one or several resource folders and store the results in the output folder.(对目标文件夹中的 PNG 图片进行预处理，并将处理结果存放在相应目录中。)</code></pre><p>使用 aapt 命令，采用 crunch 的图片进行预处理：</p>
+<blockquote>
+<p>aapt c -S crunch -C crunch_1</p>
+</blockquote>
+<p>其中 crunch 为原始图片所在的目录，crunch_1 为处理后输出的文件目录。</p>
+<p>以下为处理结果：</p>
+<p><img src="/2019/11/06/性能优化之减小-APK-体积(实操篇)/2019_11_11_01.png" alt></p>
+<ul>
+<li>pnggauntlet </li>
+</ul>
+<p>使用 pnggauntlet 对图片进行压缩需要 <strong>下载相应的软件</strong>，不过注意的是该工具会直接在原图片的基础上做压缩，所以应该做好图片的备份，防止意外情况。</p>
+<p><img src="/2019/11/06/性能优化之减小-APK-体积(实操篇)/2019_11_11_02.png" alt></p>
+<p>以下针对 crunch、pnggauntlet 的压缩率进行测试，首先以上文中处理后的 APk 为基础进行对照。</p>
+<ol>
+<li>由于在 APK 中的会默认使用 crunch 进行预处理，那么首先我们关闭该预处理项，观察 APK 会增大多少。</li>
+</ol>
+<p>关闭 crunch 预处理过程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">buildTypes &#123;</span><br><span class="line">    release &#123;</span><br><span class="line">        ...</span><br><span class="line">        crunchPngs false</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>使用 pnggaunlet 工具对图片资源进行压缩。默认情况下，该工具开启的为质量压缩(100%)，也可以开启 pnggaunlet 的有损压缩，设置相应的压缩比，这样可以获得更大的压缩率，但是可能会对图片造成影响。</li>
+</ol>
+<p>项目中居然存在由几百 K 的图片，多次压缩后不能继续优化。针对此时的情景，应该同 UI 设计师协商，综合多方面考虑能否给出更小的图片。</p>
+<p>同时，还存在其他的优秀的图片压缩工具，比如 <a href="https://tinypng.com/" target="_blank" rel="noopener">Tinypng</a> 等，可以根据需求进行相应的选择。</p>
+<ul>
+<li>AndResGuard 资源的资源混淆和极限压缩</li>
+</ul>
+<p>AndResGuard 的两个功能：资源混淆、资源的极限压缩，具体可以参考链接：<a href="https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=208135658&idx=1&sn=ac9bd6b4927e9e82f9fa14e396183a8f#rd" target="_blank" rel="noopener">安装包立减1M–微信Android资源混淆打包工具</a>、<a href="https://github.com/shwenzhang/AndResGuard/blob/master/doc/how_to_work.zh-cn.md" target="_blank" rel="noopener">如何使用资源混淆工具</a>、<a href="http://blog.rcant.com/2017/03/19/others/android-andresguard/" target="_blank" rel="noopener">Android Apk 7z压缩</a></p>
+<h3 id="Dex-压缩"><a href="#Dex-压缩" class="headerlink" title="Dex 压缩"></a>Dex 压缩</h3><p>Redex</p>
+<h3 id="Library-压缩"><a href="#Library-压缩" class="headerlink" title="Library 压缩"></a>Library 压缩</h3><p><strong>使用不同方法减少包体积以及具体效果</strong></p>
+<table>
+<thead>
+<tr>
+<th>状态</th>
+<th>包大小</th>
+<th>lib</th>
+<th>res</th>
+<th>dex</th>
+<th>classes.dex</th>
+<th>classes2.dex</th>
+<th>assets</th>
+<th>resources.arsc</th>
+<th>META_INFO</th>
+<th>publicxx.gz</th>
+<th>AndroidManifest.xml</th>
+<th>总结</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ProGuard 开启资源混淆进行压缩</td>
+<td>18.3M(-0.1M)</td>
+<td>7.1M</td>
+<td>5.1M</td>
+<td>3.91M(-0.69M)</td>
+<td>3.6M</td>
+<td>327.3K</td>
+<td>1.3M</td>
+<td>667.9K</td>
+<td>94.2K</td>
+<td>33.2K</td>
+<td>5.9K</td>
+<td></td>
+</tr>
+<tr>
+<td>取消默认的 crunch 预处理过程</td>
+<td>20.1M</td>
+<td>7.1M</td>
+<td>6.8M</td>
+<td>3.9M</td>
+<td>3.6M</td>
+<td>327.3K</td>
+<td>1.3M</td>
+<td>667.9K</td>
+<td>94.2K</td>
+<td>33.2K</td>
+<td>5.9K</td>
+<td>由于取消 crunch 预处理，所以 APK 包增大</td>
+</tr>
+<tr>
+<td>使用 pnggaunlet 工具对图片资源进行处理</td>
+<td>15.4M</td>
+<td>7.1MB</td>
+<td>2.1M</td>
+<td>3.9M</td>
+<td>3.6M</td>
+<td>327.3K</td>
+<td>1.3M</td>
+<td>667.9K</td>
+<td>94.2K</td>
+<td>33.2K</td>
+<td>5.9K</td>
+<td>减小了图片的大小，res 文件夹大小当然会减小</td>
+</tr>
+<tr>
+<td>开启 crunch 预处理，apk 大小几乎无变化</td>
+<td>15.4M</td>
+<td>7.1MB</td>
+<td>2.1M</td>
+<td>3.9M</td>
+<td>3.6M</td>
+<td>327.3K</td>
+<td>1.3M</td>
+<td>667.9K</td>
+<td>94.2K</td>
+<td>33.2K</td>
+<td>5.9K</td>
+<td>由于使用 pnggaunlet 获得更大的压缩率，此时开启 crunch 几乎无压缩效果</td>
+</tr>
+<tr>
+<td>仅保留 armeabi 中的 so 库</td>
+<td>10.4M</td>
+<td>2.2MB</td>
+<td>2.1M</td>
+<td>3.9M</td>
+<td>3.6M</td>
+<td>327.3K</td>
+<td>1.3M</td>
+<td>667.9K</td>
+<td>93.6K</td>
+<td>33.2K</td>
+<td>5.9K</td>
+<td>该优化措施后，进行针对性测试，在自己的测试机上 App 正常运行</td>
+</tr>
+<tr>
+<td>使用 AndResGuard 进行资源混淆和资源的极限压缩</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>在经过之前的步骤后，图片结果压缩操作，此操作对资源的极限压缩空间不大， APK 大小几乎不变(大约级别为百K 级别)，在对原始APK 进行此操作，APK 包体积大约减小 1 M</td>
+</tr>
+</tbody></table>
+<h3 id="图片-9-化"><a href="#图片-9-化" class="headerlink" title="图片 .9 化"></a>图片 .9 化</h3><p>点9图是 Android 平台开发的一种特殊的图片格式，扩展名为 .9.png。点9图相当于把一张 png 图片分成了 9 部分，</p>
+<table>
+<thead>
+<tr>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+</tr>
+<tr>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+</tr>
+</tbody></table>
+<p>四个角的位置(1、3、7、8)是不做拉伸的，两条水平部分(2、8)只做水平拉伸，两条垂直部分(4、6)只做垂直拉伸，所以不会出现四条边被拉粗的情况，而中间部分(5)用黑线指定区域进行拉伸。</p>
+<h3 id="删除项目中不会再用到的图片"><a href="#删除项目中不会再用到的图片" class="headerlink" title="删除项目中不会再用到的图片"></a>删除项目中不会再用到的图片</h3><p>比如某个布局的 visiable 为 GONE状态，并且项目中没有显示该布局的需求，那么就可以就该布局删除，并且将只在该布局引用的图片资源删除，还有其他类似的情况。</p>
+<hr>
+<p><strong>知识链接</strong></p>
+<p><a href="https://devblogs.microsoft.com/xamarin/shrinking-android-app-size/" target="_blank" rel="noopener">Shrinking Your Android App Size</a></p>
+<p><a href="https://v.youku.com/v_show/id_XNDQxMzE4MTgyOA==.html?spm=a2hzp.8253869.0.0&utm_source=androidweekly.io&utm_medium=website" target="_blank" rel="noopener">Shrinking Your App with R8</a></p>
+<p><a href="https://www.cnblogs.com/alisecurity/p/5341218.html" target="_blank" rel="noopener">APK瘦身记，如何实现高达53%的压缩效果</a></p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207151651&idx=1&sn=9eab282711f4eb2b4daf2fbae5a5ca9a&3rd=MzA3MDU4NTYzMw==&scene=6#rd" target="_blank" rel="noopener">Android拆分与加载Dex的多种方案对比</a></p>
+<p><a href="https://www.infoq.cn/article/ITVEfvGD5Uv6r07NHssx" target="_blank" rel="noopener">抖音包大小优化：资源优化</a></p>
+<p><a href="https://juejin.im/post/5d4407baf265da03f04caf59" target="_blank" rel="noopener">Android 可能你想要的APK瘦身笔记</a></p>
+<p><a href="https://developer.android.google.cn/studio/build/shrink-code.html" target="_blank" rel="noopener">官方文档：压缩、混淆和优化您的应用</a></p>
+<p><a href="https://developer.android.google.cn/topic/performance/reduce-apk-size" target="_blank" rel="noopener">缩减应用大小</a></p>
+<p><a href="https://developer.android.google.cn/guide/topics/resources/providing-resources.html#AlternativeResources" target="_blank" rel="noopener">Android 中资源文件概览</a></p>
+<p><a href="http://jayfeng.com/2016/03/01/Android-APP%E7%BB%88%E6%9E%81%E7%98%A6%E8%BA%AB%E6%8C%87%E5%8D%97/" target="_blank" rel="noopener">Android APP终极瘦身指南</a> – 指明了多个条例</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="/2019/11/06/性能优化之减小-APK-体积(实操篇)/" data-id="ckh5wegap00k6ujfyp110yy53" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android-性能优化/">Android 性能优化</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/11/12/Android-CPU-架构/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">这些东西可能太新了</strong>
+      <div class="article-nav-title">
+        
+          Android CPU 架构
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/11/06/性能优化之减小-APK-体积/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">这些东西可能过时了</strong>
+      <div class="article-nav-title">性能优化之包体积优化</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AIDL/" style="font-size: 11.11px;">AIDL</a> <a href="/tags/Alfred/" style="font-size: 10px;">Alfred</a> <a href="/tags/Android/" style="font-size: 15.56px;">Android</a> <a href="/tags/Android-刷机/" style="font-size: 10px;">Android 刷机</a> <a href="/tags/Android-性能优化/" style="font-size: 11.11px;">Android 性能优化</a> <a href="/tags/Android绘制机制/" style="font-size: 10px;">Android绘制机制</a> <a href="/tags/Binder/" style="font-size: 10px;">Binder</a> <a href="/tags/C/" style="font-size: 10px;">C</a> <a href="/tags/CMake/" style="font-size: 10px;">CMake</a> <a href="/tags/CPU-Profiler，Android-性能优化/" style="font-size: 10px;">CPU Profiler，Android 性能优化</a> <a href="/tags/CPU-架构/" style="font-size: 10px;">CPU 架构</a> <a href="/tags/Charles/" style="font-size: 10px;">Charles</a> <a href="/tags/Collections/" style="font-size: 10px;">Collections</a> <a href="/tags/Coroutines/" style="font-size: 11.11px;">Coroutines</a> <a href="/tags/Coroutines协程/" style="font-size: 10px;">Coroutines协程</a> <a href="/tags/DI/" style="font-size: 10px;">DI</a> <a href="/tags/Dagger2/" style="font-size: 10px;">Dagger2</a> <a href="/tags/Dart/" style="font-size: 10px;">Dart</a> <a href="/tags/EventBus/" style="font-size: 13.33px;">EventBus</a> <a href="/tags/EventBus-APT/" style="font-size: 10px;">EventBus APT</a> <a href="/tags/Exception/" style="font-size: 11.11px;">Exception</a> <a href="/tags/Flutter/" style="font-size: 10px;">Flutter</a> <a href="/tags/Future/" style="font-size: 10px;">Future</a> <a href="/tags/FutureTask/" style="font-size: 10px;">FutureTask</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/GitPage/" style="font-size: 10px;">GitPage</a> <a href="/tags/Gradle/" style="font-size: 10px;">Gradle</a> <a href="/tags/Gradle-in-action/" style="font-size: 15.56px;">Gradle in action</a> <a href="/tags/Gradle-基本原理/" style="font-size: 15.56px;">Gradle 基本原理</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 11.11px;">Hexo</a> <a href="/tags/Hprof/" style="font-size: 10px;">Hprof</a> <a href="/tags/IO-流/" style="font-size: 10px;">IO 流</a> <a href="/tags/Inflection/" style="font-size: 10px;">Inflection</a> <a href="/tags/JNI/" style="font-size: 11.11px;">JNI</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Java-Collection/" style="font-size: 15.56px;">Java Collection</a> <a href="/tags/Java-多线程/" style="font-size: 15.56px;">Java 多线程</a> <a href="/tags/Java-异常/" style="font-size: 10px;">Java 异常</a> <a href="/tags/Java-继承，对象，类初始化/" style="font-size: 10px;">Java 继承，对象，类初始化</a> <a href="/tags/Jetpack/" style="font-size: 15.56px;">Jetpack</a> <a href="/tags/JobScheduler/" style="font-size: 10px;">JobScheduler</a> <a href="/tags/Kindle/" style="font-size: 10px;">Kindle</a> <a href="/tags/Kotin/" style="font-size: 11.11px;">Kotin</a> <a href="/tags/Kotlin/" style="font-size: 18.89px;">Kotlin</a> <a href="/tags/Kotlin-协程/" style="font-size: 14.44px;">Kotlin 协程</a> <a href="/tags/Kotlin-核心编程/" style="font-size: 16.67px;">Kotlin 核心编程</a> <a href="/tags/LeakCanary/" style="font-size: 10px;">LeakCanary</a> <a href="/tags/Lifecycle/" style="font-size: 10px;">Lifecycle</a> <a href="/tags/Linux/" style="font-size: 15.56px;">Linux</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/LiveData/" style="font-size: 10px;">LiveData</a> <a href="/tags/Logcat-日志格式/" style="font-size: 10px;">Logcat 日志格式</a> <a href="/tags/Mac/" style="font-size: 10px;">Mac</a> <a href="/tags/Map/" style="font-size: 10px;">Map</a> <a href="/tags/OOP/" style="font-size: 10px;">OOP</a> <a href="/tags/Okhttp3/" style="font-size: 12.22px;">Okhttp3</a> <a href="/tags/Okhttp3-缓存文件/" style="font-size: 10px;">Okhttp3 缓存文件</a> <a href="/tags/Queue/" style="font-size: 10px;">Queue</a> <a href="/tags/RxJava/" style="font-size: 10px;">RxJava</a> <a href="/tags/Rxjava-源码分析/" style="font-size: 13.33px;">Rxjava 源码分析</a> <a href="/tags/Set/" style="font-size: 10px;">Set</a> <a href="/tags/Shell/" style="font-size: 14.44px;">Shell</a> <a href="/tags/Singleton/" style="font-size: 10px;">Singleton</a> <a href="/tags/Sticky-Event/" style="font-size: 10px;">Sticky Event</a> <a href="/tags/TCP/" style="font-size: 10px;">TCP</a> <a href="/tags/Thread/" style="font-size: 10px;">Thread</a> <a href="/tags/ThreadLocal/" style="font-size: 10px;">ThreadLocal</a> <a href="/tags/TraceView/" style="font-size: 10px;">TraceView</a> <a href="/tags/Transformer/" style="font-size: 10px;">Transformer</a> <a href="/tags/VIM/" style="font-size: 10px;">VIM</a> <a href="/tags/View/" style="font-size: 10px;">View</a> <a href="/tags/ViewModle/" style="font-size: 10px;">ViewModle</a> <a href="/tags/WorkManager/" style="font-size: 12.22px;">WorkManager</a> <a href="/tags/adb/" style="font-size: 10px;">adb</a> <a href="/tags/《深入理解-Java-虚拟机》读书笔记/" style="font-size: 10px;">《深入理解 Java 虚拟机》读书笔记</a> <a href="/tags/三方库/" style="font-size: 10px;">三方库</a> <a href="/tags/事件分发机制/" style="font-size: 10px;">事件分发机制</a> <a href="/tags/内存优化/" style="font-size: 10px;">内存优化</a> <a href="/tags/内存分区/" style="font-size: 10px;">内存分区</a> <a href="/tags/内存泄漏/" style="font-size: 11.11px;">内存泄漏</a> <a href="/tags/内部类/" style="font-size: 10px;">内部类</a> <a href="/tags/单例/" style="font-size: 10px;">单例</a> <a href="/tags/图解-HTTP/" style="font-size: 11.11px;">图解 HTTP</a> <a href="/tags/堆栈轨迹/" style="font-size: 10px;">堆栈轨迹</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a> <a href="/tags/对象拷贝/" style="font-size: 10px;">对象拷贝</a> <a href="/tags/工具/" style="font-size: 11.11px;">工具</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/性能优化工具/" style="font-size: 10px;">性能优化工具</a> <a href="/tags/数据压缩/" style="font-size: 10px;">数据压缩</a> <a href="/tags/极客时间专栏/" style="font-size: 10px;">极客时间专栏</a> <a href="/tags/极客时间笔记/" style="font-size: 10px;">极客时间笔记</a> <a href="/tags/泛型/" style="font-size: 12.22px;">泛型</a> <a href="/tags/浮点型精度问题/" style="font-size: 10px;">浮点型精度问题</a> <a href="/tags/深入浅出计算机组成原理-徐文浩/" style="font-size: 11.11px;">深入浅出计算机组成原理(徐文浩)</a> <a href="/tags/深入理解-Android-读书笔记/" style="font-size: 10px;">深入理解 Android 读书笔记</a> <a href="/tags/源码解析/" style="font-size: 11.11px;">源码解析</a> <a href="/tags/焦点机制/" style="font-size: 10px;">焦点机制</a> <a href="/tags/百度地图黑影/" style="font-size: 10px;">百度地图黑影</a> <a href="/tags/硬件加速/" style="font-size: 10px;">硬件加速</a> <a href="/tags/编译技术/" style="font-size: 10px;">编译技术</a> <a href="/tags/网络协议/" style="font-size: 12.22px;">网络协议</a> <a href="/tags/网络安全/" style="font-size: 10px;">网络安全</a> <a href="/tags/计算机基础/" style="font-size: 10px;">计算机基础</a> <a href="/tags/设计模式六大原则/" style="font-size: 10px;">设计模式六大原则</a> <a href="/tags/读书笔记/" style="font-size: 17.78px;">读书笔记</a> <a href="/tags/趣谈网络协议-刘超/" style="font-size: 10px;">趣谈网络协议(刘超)</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">二月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/10/11/Okio/">Okio</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/30/记一次-Charles-抓包-Android-10-0-HTTPS-请求/">记一次 Charles 抓包 Android 10.0 HTTPS 请求</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/29/HTTPS-防止被抓包/">Https 如何反抓包</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/19/Kotlin-之-Backing-Field/">Kotlin 之对 Backing Field 的理解</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/17/Alfred4-使用/">Alfred4 使用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 玛斯特・布兰迪<br>
+      巨大能量来源 <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">主页</a>
+  
+    <a href="/archives/" class="mobile-nav-link">文章</a>
+  
+</nav>
+    
+
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
