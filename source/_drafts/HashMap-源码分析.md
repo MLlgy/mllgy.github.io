@@ -3,8 +3,6 @@ title: JDK7 以及 JDK8 中 HashMap 源码实现
 tags:
 ---
 
-
-
 ### 0x0001 JDK7 中 HashMap 的实现原理
 HashMap 在 jdk7底层实现：数组 + 链表。
 
@@ -200,7 +198,9 @@ jdk7 在扩容时会出现死锁问题
 
 [HashMap扩容死循环问题](https://blog.csdn.net/Leon_cx/article/details/81911223)
 
+[HashMap? ConcurrentHashMap? 相信看完这篇没人能难住你！](https://crossoverjie.top/2018/07/23/java-senior/ConcurrentHashMap/)
 
+[一文读懂JDK1.7,JDK1.8,JDK1.9的hashmap，hashtable，concurrenthashmap及他们的区别](https://www.jianshu.com/p/682a29a8bfae)
 
 
 

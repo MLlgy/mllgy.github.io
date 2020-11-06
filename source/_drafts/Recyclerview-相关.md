@@ -15,3 +15,24 @@ https://www.jianshu.com/u/00b25c511dd3
 [RecyclerView 系列](https://blog.csdn.net/zxt0601/article/category/9267588)
 
 [RecyclerView 系列](https://blog.csdn.net/zxt0601/article/category/6398860)
+
+
+
+----
+
+1. rv.setAdapter
+
+    setAdapterInternal
+
+RecyclerViewDataObserver[]
+
+
+
+
+
+
+
+Recycler#tryBindViewHolderByDeadline(@NonNull ViewHolder holder, int offsetPosition,int position, long deadlineNs)
+Adapter#bindViewHolder(@NonNull VH holder, int position)
+    Adapter#onBindViewHolder
+        abstract onBindViewHolder

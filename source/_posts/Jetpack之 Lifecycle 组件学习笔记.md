@@ -13,7 +13,7 @@ tags: [Jetpack,Lifecycle]
 
 传统模式下，要想做的生命感知需要做的是实现其他组件的接口，并在 A/F 的生命周期函数中调用其他组件的方法。但是这样并不是好的代码组织方式，并且容易产生错误。而通过 生命周期感知组件(Lifecycle—aware component) 可以把这部分逻辑从 A/F 中移到组件自身中。
 
-` android.arch.lifecycle (androidx 下为 androidx.lifecycle )` 包下的类和接口允许你创建 生命周期感知组件(lifecycle-aware components),它们可以根据 A/F 的生命周期来调整自己的行为。
+` android.arch.lifecycle (androidx 下为 androidx.lifecycle )` 包下的类和接口允许你创建 生命周期感知组件(lifecycle-aware components),它们 **可以根据 A/F 的生命周期来调整自己的行为**。
 
 像 Activity、Service 等组件的生命周期均是由 Android Framework 管理，同样的，Lifecycle 也由运行的系统或者 Framework 中的进程管理，在编写 Andorid 程序时需要遵守相应的规则，不然会产生内存泄漏，甚至会导致应用奔溃。
 
@@ -31,35 +31,27 @@ Lifecycle 使用两个重要的枚举类来跟踪它所关联的组件的生命�
     从 Android Framework 层面和 Lifecycle 类调度的生命周期事件,这些事件映射到 A/F 中的回调事件。
 * State
 
-    Lifecycle 对象跟踪的组件的当前状态。
+    Lifecycle 对象所跟踪组件的当前状态。
 
 下图展示 Event 和 State 的关联关系
 
 ![Event和Statue](/source/images/2019_10_21_01.png)
 
-在图中 State 作为一个个结点，作为事件间的边缘。
-
-LifecycleObserver 通过在在其方法上添加注解来监听组件的状态，LifecycleOwner 通过 addObserver() 关联此 Observer 。
+在图中 State 作为一个个结点，通过调用 Event 改变 State 的状态。LifecycleObserver 通过在在其方法上 **添加注解来监听组件的状态** ，LifecycleOwner 通过 addObserver() 关联此 Observer 。
 
 ### 0x0002 LifecycleOwner 
 
-LifecycleOwner 是只有一个方法的接口：
+LifecycleOwner 是只有一个方法的接口，用来获取 Lifecycle 对象，
 
 ```
 public interface LifecycleOwner {
     /**
      * Returns the Lifecycle of the provider.
-     *
-     * @return The lifecycle of the provider.
      */
-    @NonNull
     Lifecycle getLifecycle();
 }
 ```
-
-LifecycleOwner 接口抽象出单个类的生命周期所有权，比如 A/F，并且允许编写其他组件和它配合。owner 可以提供生命周期的变化，而 observer 可以注册到 owner 并且监听其生命周期的变化。
-
-
+LifecycleOwner 接口抽象出单个类的生命周期所有权，比如 A/F，并且允许编写其他组件和它配合。**owner 可以提供生命周期的变化，而 observer 可以注册到 owner 并且监听其生命周期的变化**。
 
 通过实现 LifecycleOwner 接口来 **表明该类具有生命周期**，例如：
 
@@ -67,9 +59,7 @@ LifecycleOwner 接口抽象出单个类的生命周期所有权，比如 A/F，�
 public class ComponentActivity extends Activity
         implements LifecycleOwner, KeyEventDispatcher.Component
 ```
-LifecycleOwner 只有一个方法 getLifecycle()。
-
-可见我们最常使用的 AppCompatActivity 已经实现了 LifecycleOwner 。实现 LifecycleObserver 的类作为 `观察者` 监听实现 LifecycleOwner 接口的类，监听 LifecycleOwner(也就是 Activity) 生命周期的变化。
+LifecycleOwner 只有一个方法 getLifecycle()，我们最常使用的 AppCompatActivity 已经实现了 LifecycleOwner ，可以实现 LifecycleObserver 的类作为 `观察者` 监听实现 LifecycleOwner 接口的类，监听 LifecycleOwner(也就是 Activity) 生命周期的变化，从而在 Observer 中执行相关操作。
 
 **LiveData 的生命周期相关就是通过这种方式实现的。**
 

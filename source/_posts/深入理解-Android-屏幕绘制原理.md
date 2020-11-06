@@ -32,7 +32,7 @@ date: 2020-06-16 16:34:01
 
 从上图可以看到在第二个 16.6ms 开始一段时间后，才开始处理第二帧的数据，效率大打折扣，Android 为此加入了 Vsync 信号。
 
-我个人将 Vsync 理解为类似于时钟信号的中断信号，CPU 在收到 Vsync 信号后，马上开始处理下一帧的数据，这样就避免类上图中情况。
+我个人将 Vsync 理解为类似于时钟信号的中断信号，**CPU 在收到 Vsync 信号后，马上开始处理下一帧的数据**，这样就避免类上图中情况。
 
 <!-- ![](https://img-blog.csdn.net/20181019154238113?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTMxODM2MDg=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70) -->
 
@@ -73,10 +73,17 @@ date: 2020-06-16 16:34:01
 ---
 **知识链接：**
 [在 Android 上进行高刷新率渲染](https://mp.weixin.qq.com/s?__biz=MzAwODY4OTk2Mg==&mid=2652054054&idx=1&sn=fe3fbfc0ad36d0a9d6abfd012770c29c&chksm=808c8263b7fb0b751fccc803798951e4ad0cdcaba9162d8d5ae8d13b67a100fd4d2ff5b9a2ae&scene=21#wechat_redirect)
+
 [Android绘制优化：系统显示原理](https://blog.csdn.net/u010215167/article/details/90417761)
+
 [Android 性能优化之 —— 渲染篇](https://shoewann0402.github.io/2016/05/29/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E7%AF%87/)
+
 [Android优化——绘制优化之android系统显示原理(一)](https://blog.csdn.net/u013183608/article/details/83061593?utm_medium=distribute.pc_relevant_right.none-task-blog-BlogCommendFromMachineLearnPai2-3.nonecase&depth_1-utm_source=distribute.pc_relevant_right.none-task-blog-BlogCommendFromMachineLearnPai2-3.nonecase)
+
 [来聊聊Activity的显示原理](https://juejin.im/post/5e6640f0e51d4527021907f1)
+
 [WindowManager$BadTokenException-解决方案](https://www.jianshu.com/p/b6e058536087)
+
 [WindowManager$BadTokenException(WindowManager源码分析)](https://www.jianshu.com/p/39f469f1d117)
+
 [5 道刁钻的 Activity 生命周期面试题](https://chuansongme.com/n/3170197953023)

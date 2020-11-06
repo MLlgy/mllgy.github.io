@@ -109,7 +109,7 @@ public final class ObservableCreate<T> extends Observable<T> {
 
         private static final long serialVersionUID = -3434801548987643227L;
 
-        final Observer<? super T> observer;
+        final Observer<? super T> observer; // 下游的 Observer 对象
 
         CreateEmitter(Observer<? super T> observer) {
             this.observer = observer;
@@ -137,12 +137,18 @@ source.subscribe(parent);
 
 以上代码使 Obervable、Observer 与时间发射器分别产生关联，是事件流得以进行下去的关键。其实 `observer.onSubscribe(parent)` 即为在使用 Rxjava 过程的 Observer 中的 `onSubscribe(Disposable d)`，而 `source.subscribe(parent)` 即为 即为在使用 Rxjava 过程的 Observable 中的 `public void subscribe(ObservableEmitter<String> emitter)`，以上全是在方法 subscribeActual 中调用的，具体 subscribeActual 什么时候调用，查看下面的分析。
 
-综上分析，其实这一步仅仅是创建了 一个 Observerable 对象，其他的事情，比如产生订阅关系、创建事件发生器等都没有做，都会在产生订阅关系时才会进行，通观全局在调用 subscribe 方法前，所有的操作符都只是创建了该操作符下的 Observable 对象，其他什么事都没做，明白了这点就理解了 Rxjava 流程中一条主要的流程线。
+综上分析，其实这一步的具体工作：
+1. 仅仅是创建了 一个 Observerable 对象，
+2. 其他的事情，比如产生订阅关系、创建事件发生器等都没有做，都会在产生订阅关系时，即调用 subscribe(Observer observer) 时才会进行，
+
+通观全局 在调用 subscribe() 方法前，所有的操作符都 **只是创建了该操作符下的 Observable 对象**，其他什么事都没做，明白了这点就理解了 Rxjava 流程中一条主要的流程线。
 
 ### 3. 产生订阅关系
 
 
-Observable 对象通过 subscribe 与 Observer 产生调用关系。
+主要工作：
+1. 创建操作符对应的 Observer；
+2. Observable 对象通过 subscribe 与 Observer **产生订阅关系**；
 
 Observable#subscribe
 ```
@@ -164,6 +170,7 @@ public final void subscribe(Observer<? super T> observer) {
     }
 }
 ```
+subscribeActual 为整个事件流的核心方法，正是这个方法将各个操作符生成的 Observerable 和 Observer 关联在一起。
 
 就是在此时通过 ObservableOnSubscribe#subscribeActual 方法，从而使 Observer、Observable 分别与事件发生器发生关联。从上面知道 subscribeActual 中调用了 `source.subscribe(parent)`，其实为新建 ObservableOnSubscribe 对象的 subscribe 方法，从而完成回调 Rxjava 使用过程中自定义的事件发生器：
 
@@ -175,11 +182,47 @@ Observable.create(new ObservableOnSubscribe<String>() {
     public void subscribe(ObservableEmitter<String> emitter) throws Exception {
         emitter.onNext("one");
         emitter.onNext("two");
-        emitter.onComplete();
+        emitter.onComplete();// 
     }
 }).subscribe(new Observer<String>() {
     ...
 });
+```
+而在 ObservableEmitter 中的相关方法分中，会将发布的时间传递给 Observer，具体见源码，完成了在事件流中传递数据。
+
+```
+static final class CreateEmitter<T>
+extends AtomicReference<Disposable>
+implements ObservableEmitter<T>, Disposable {
+    private static final long serialVersionUID = -3434801548987643227L;
+    final Observer<? super T> observer;
+    CreateEmitter(Observer<? super T> observer) {
+        this.observer = observer;
+    }
+    @Override
+    public void onNext(T t) {
+        if (!isDisposed()) {
+            observer.onNext(t);
+        }
+    }
+    @Override
+    public void onError(Throwable t) {
+        if (!tryOnError(t)) {
+            RxJavaPlugins.onError(t);
+        }
+    }
+    @Override
+    public void onComplete() {
+        if (!isDisposed()) {
+            try {
+                observer.onComplete();
+            } finally {
+                dispose();
+            }
+        }
+    }
+    ....
+}
 ```
 
 产生订阅关系是 Rxjava 中的另外一条流程线，也是十分重要的，由于在第一步中只是创建了操作符下的 Observable 对象，执行流程方向为：上游到下游，而此时创建订阅关系是由最后一个 Observable 对象开始的，要想所有的 Observable 对象产生订阅链，那么订阅流程方向为：下游到上游。

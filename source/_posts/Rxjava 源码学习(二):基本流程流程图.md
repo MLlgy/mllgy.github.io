@@ -21,6 +21,24 @@ tags: [Rxjava 源码分析]
 
 ![](/../images/2019_10_18_01.png)
 
+
+核心逻辑：
+
+1. 开启订阅，即调用最后一个操作符生成的 Observerable(n) 和显式创建的 Observer(1)，并产生订阅关系 Observerable(n).subscribe(Observer(1))
+2. 在 Observerable(n).subscribe(Observer(1)) 方法中将生成第 n 操作符生成的 Observer，即为 Observer(2),同时生成的 Observer(2) 也持有 Observer(1) 的引用，因为 Observerable(n) 持有 Observerable(n - 1) 的引用，那么此时会调用 Observerable(n - 1).subscribeActual(Observer(2))，向上游传递订阅关系；
+3. 同时在 Observerable(n - 1).subscribeActual(Observer(2)) 也会调用 Observerable(n - 2).subscribe(Observer(3))，依次类推；
+
+所以核心方法 subscribeActual 的主要工作为两个：
+1. 生成本操作符下的 Observer
+2. 调用 subscribe 方法，将上一个操作符生成的 Observerable 与本操作符生成的 Observer 产生订阅关系。
+
+事件流的分发：
+
+1. 按照以上流程重复操作，直到起始 Observerable 与对应的 Observer 产生订阅关系；
+2. Observer 开始分发事件，由于订阅关系的存在，那么对应的 Observer 会收到对应事件；
+3. Observer 调用自己的方法对事件进行处理，比如 map、apply等，同时由于上游 Observer 持有下游 Observer 的引用，那么将本 Observer 处理后的事件分发给下游的 Observer；
+4. 以此类推，完成事件从上游到下游的传递；
+
 ### 1. 关于源码中的 upsteam 和 downstream
 
 从图上可以看到，在最终订阅 Observer 之前，执行每一个操作符并不会同时生成相应的 Observable 和 Observer，以调用 subscribe 为分界线，将整个事件流分成两部分：

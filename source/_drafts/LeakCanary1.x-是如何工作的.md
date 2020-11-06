@@ -144,9 +144,12 @@ private void ensureGoneAsync(final long watchStartNanoTime, final KeyedWeakRefer
 
   Retryable.Result ensureGone(final KeyedWeakReference reference, final long watchStartNanoTime) {
     ......
+    // 第一次删除无用的引用
     removeWeaklyReachableReferences();
     ......
+    // 触发 GC 操作
     gcTrigger.runGc();
+    // 第二次删除无用的引用
     removeWeaklyReachableReferences();
     // 如果 retainedKeys 包含 reference 则执行如下操作
     if (!gone(reference)) {
@@ -179,8 +182,19 @@ private void ensureGoneAsync(final long watchStartNanoTime, final KeyedWeakRefer
 
 在上面代码中可以看到该过程在触发 GC 前后分别执`removeWeaklyReachableReferences()`， 结合 ReferenceQueue(引用队列),确保回收应用内存中监测的对象中可以被正常回收的对象，最终根据 retainedKeys 中的元素是判定被监测的对象是否发生内存泄漏。
 
+```
+// 移除队列中的对象，以及在 retainedKeys 删除对应的 key
+private void removeWeaklyReachableReferences() {
+    while ((ref = (KeyedWeakReference) queue.poll()) != null) {
+      retainedKeys.remove(ref.key);
+    }
+  }
+```
+
 > 在此处会出现一个我们常见的面试题：为什么 LeakCanary 要进行两次删除无用引用？答案：第一次的原因就是回收程序中存在的无用引用，而第二次是因为 LeakCanary 进行了一次 GC 操作，那么此时应用中可能会出现新的无用引用，所以要进行第二次移除无用引用的操作。
 
+
+// retainedKeys 仍持有对应 key，说明相应的对象没有被回收添加的 Queue 中
 ```
 private boolean gone(KeyedWeakReference reference) {
     return !retainedKeys.contains(reference.key);
@@ -191,6 +205,37 @@ private boolean gone(KeyedWeakReference reference) {
 如果发生内存泄漏会通过以下代码获得堆转储文件：
 ```
 File heapDumpFile = heapDumper.dumpHeap();
+```
+具体实现为：AndroidHeapDumper#dumpHeap()
+
+```
+@Override public File dumpHeap() {
+    File heapDumpFile = leakDirectoryProvider.newHeapDumpFile();// 建立 dump File
+
+    if (heapDumpFile == RETRY_LATER) {
+      return RETRY_LATER;
+    }
+
+    FutureResult<Toast> waitingForToast = new FutureResult<>();
+    showToast(waitingForToast);
+
+    if (!waitingForToast.wait(5, SECONDS)) {
+      CanaryLog.d("Did not dump heap, too much time waiting for Toast.");
+      return RETRY_LATER;
+    }
+
+    Toast toast = waitingForToast.get();
+    try {
+      // 生成堆转储文件
+      Debug.dumpHprofData(heapDumpFile.getAbsolutePath());
+      cancelToast(toast);
+      return heapDumpFile;
+    } catch (Exception e) {
+      CanaryLog.d(e, "Could not dump heap");
+      // Abort heap dump
+      return RETRY_LATER;
+    }
+  }
 ```
 
 其中过程涉及一系列文件的新建、删除等步骤，但是关键获取堆转储文件代码为：
@@ -228,7 +273,43 @@ heapdumpListener.analyze(heapDump);
 }
 ```
 
-**由于分析过程比较耗时，所以该分析过程以及显示过程都运行在单独的线程:applicationId:leakcanary 。**
+**由于分析过程比较耗时，所以该分析过程以及显示过程都运行在单独的线程:applicationId:leakcanary ，** 具体 AndroidManifest.xml 文件如下：
+
+
+```
+<application>
+    <service
+        android:name="com.squareup.leakcanary.internal.HeapAnalyzerService"
+        android:enabled="false"
+        android:process=":leakcanary" />// 运行在新的进程中
+    <service
+        android:name="com.squareup.leakcanary.DisplayLeakService"
+        android:enabled="false"
+        android:process=":leakcanary" />// 运行在新的进程中
+    <activity
+        android:name="com.squareup.leakcanary.internal.DisplayLeakActivity"
+        android:enabled="false"// enable  为 false，开始时不会显示应用图标
+        android:icon="@drawable/leak_canary_icon"
+        android:label="@string/leak_canary_display_activity_label"
+        android:process=":leakcanary"
+        android:taskAffinity="com.squareup.leakcanary.${applicationId}"
+        android:theme="@style/leak_canary_LeakCanary.Base" >
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+    <activity
+        android:name="com.squareup.leakcanary.internal.RequestStoragePermissionActivity"
+        android:enabled="false"
+        android:excludeFromRecents="true"
+        android:icon="@drawable/leak_canary_icon"
+        android:label="@string/leak_canary_storage_permission_activity_label"
+        android:process=":leakcanary"
+        android:taskAffinity="com.squareup.leakcanary.${applicationId}"
+        android:theme="@style/leak_canary_Theme.Transparent" />
+</application>
+```
 
 
 `HeapAnalyzerService#runAnalysis()`
@@ -288,7 +369,7 @@ public @NonNull AnalysisResult checkForLeak(@NonNull File heapDumpFile,
       if (leakingRef == null) {
         return noLeak(since(analysisStartNanoTime));
       }
-      // findLeakTrace 获取内存泄漏的位置
+      // findLeakTrace 获取内存泄漏的位置的引用链
       return findLeakTrace(analysisStartNanoTime, snapshot, leakingRef, computeRetainedSize);
     } catch (Throwable e) {
       return failure(e, since(analysisStartNanoTime));
@@ -296,6 +377,26 @@ public @NonNull AnalysisResult checkForLeak(@NonNull File heapDumpFile,
   }
 ```
 
+HeapAnalyzer#findLeakTrace
+
+```
+private AnalysisResult findLeakTrace(long analysisStartNanoTime, Snapshot snapshot,
+      Instance leakingRef) {
+
+    ShortestPathFinder pathFinder = new ShortestPathFinder(excludedRefs);
+    ShortestPathFinder.Result result = pathFinder.findPath(snapshot, leakingRef);
+    // 没有发生内存泄漏，直接返回
+    if (result.leakingNode == null) {
+      return noLeak(since(analysisStartNanoTime));
+    }
+    // 建立泄漏引用的调用链
+    LeakTrace leakTrace = buildLeakTrace(result.leakingNode);
+    String className = leakingRef.getClassObj().getClassName();
+    .....
+    return leakDetected(result.excludingKnownLeaks, className, leakTrace, retainedSize,
+        since(analysisStartNanoTime));
+  }
+```
 经历以上过程，将内存泄漏的结果返回，传入指定函数，进行内存泄漏分析显示结果的阶段：
 
 ```
