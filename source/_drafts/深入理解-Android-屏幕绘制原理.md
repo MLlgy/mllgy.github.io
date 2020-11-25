@@ -72,7 +72,6 @@ Tripler  Buffer 会在 CPU 或者 GPU 空闲的时候提前准备好下一帧的
 
 [Android绘制优化：系统显示原理](https://blog.csdn.net/u010215167/article/details/90417761)
 
-
 [Android 性能优化之 —— 渲染篇](https://shoewann0402.github.io/2016/05/29/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E7%AF%87/)
 
 [Android优化——绘制优化之android系统显示原理(一)](https://blog.csdn.net/u013183608/article/details/83061593?utm_medium=distribute.pc_relevant_right.none-task-blog-BlogCommendFromMachineLearnPai2-3.nonecase&depth_1-utm_source=distribute.pc_relevant_right.none-task-blog-BlogCommendFromMachineLearnPai2-3.nonecase)

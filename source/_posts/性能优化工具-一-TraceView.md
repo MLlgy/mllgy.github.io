@@ -1,6 +1,6 @@
 ---
 title: '性能优化工具(一):TraceView'
-tags: [性能优化工具,TraceView]
+tags: [性能优化工具,性能优化,TraceView]
 date: 2020-06-15 15:25:57
 ---
 ### 0x0001 TraceView 是什么？
@@ -35,7 +35,7 @@ public class MainActivity extends Activity {
 }
 ```
 
-项目目录中会生成相应的 `.trace` 文件，使用 adb 将文件拉出来，使用工具打开进行分析。
+项目目录(/sdcard/xxxx/tmp)中会生成相应的 `.trace` 文件，使用 adb 将文件拉出来，使用工具打开进行分析。
 
 ### 0x0003 使用 Android Studio 生成 trace 文件
 
@@ -66,6 +66,7 @@ public class MainActivity extends Activity {
 同时也可以分析启动卡顿、列表加载卡顿等，不过像启动卡顿应该使用代码插桩的形式获得 trace 文件。
 
 ### 0x0007 使用 StrictMode(代码逻辑优化) 发现代码中的不规范操作
+
 
 为了在开发中发现这些容易忽略的问题，我们使用StrictMode，**系统检测出主线程违例的情况并做出相应的反应(弹窗或者崩溃)**，这样就可以通过相关日志定位代码中的不规范写法，最终帮助开发者优化和改善代码逻辑，可以用来检测在 UI 线程中执行的不规范操作，比如进行磁盘读写、网络操作等。
 
