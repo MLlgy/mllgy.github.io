@@ -18,7 +18,7 @@ tags: [Jetpack,Lifecycle]
 像 Activity、Service 等组件的生命周期均是由 Android Framework 管理，同样的，Lifecycle 也由运行的系统或者 Framework 中的进程管理，在编写 Andorid 程序时需要遵守相应的规则，不然会产生内存泄漏，甚至会导致应用奔溃。
 
 
-### 0x0001 Lifecycle
+### 0x0001
 
 **Lifecycle 持有 A/F 组件有关生命周期的信息，并且允许其他对象监听它的状态**。在 Android API 26.0.1以及其后 A/F实现了LifecycleOwner，可在 A/F 中通过 getLifecycle() 获得 A/F 的 Lifecycle 对象。
 

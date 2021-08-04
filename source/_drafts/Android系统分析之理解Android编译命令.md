@@ -123,5 +123,4 @@ Android NDK ndk-build 中关于 Android.mk 和 Application.mk  的编写的相�
 
 [理解 Android Build 系统](https://www.ibm.com/developerworks/cn/opensource/os-cn-android-build/)，该文更加详细的介绍了 Android 编译系统，在学习过程中可以不定时查看。
 
-
 [ndk-build 关于 .mk 文件的编写](https://developer.android.google.cn/ndk/guides/ndk-build?hl=zh_cn)

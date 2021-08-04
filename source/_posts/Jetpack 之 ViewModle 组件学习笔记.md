@@ -92,7 +92,7 @@ ViewModel 会在 Activity 第一次创建存在，直到该 Activity 被彻底�
 ### 0x0003 多 Fragment 间共享数据
 
 
-，一个 Activity 中包含多个 Fragment 并且 Fragment 间需要通信，这在日常开发中是十分常见的。
+一个 Activity 中包含多个 Fragment 并且 Fragment 间需要通信，这在日常开发中是十分常见的。
 
 看一下官方文档给出的案例：
 

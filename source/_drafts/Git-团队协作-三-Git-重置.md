@@ -14,8 +14,10 @@ master 分支在版本库的引用目录(.git/refs)中体现为一个引用文�
 
 ```
 git reset --hard commitId： 使用 commitid 对应的版本库内容覆盖暂存区和工作区。
-git reset --mixed commitId(默认)： 暂存区 恢复到 commitid 对应的版本库，工作区不变。
-git reset --soft commitId：恢复到对应的 commitID 的版本库，但是不会改变暂存区和工作区(将版本库恢复到提交指定commitId前的状态)。
+
+git reset --mixed commitId(默认)： 暂存区 恢复到 commitid 对应的版本库，工作区不变。（此时的状态为：最新的提交为 commitId，head~commitId 之间的提交被释放到工作区，原先工作区中的内容不变）（ **head ~ commitId 的提交移动工作区**）
+
+git reset --soft commitId：恢复到对应的 commitID 的版本库，但是不会改变暂存区和工作区(将版本库恢复到提交指定commitId前的状态)（此时的状态为：最新的提交为 commitId，head~commitId 之间的提交在暂存区，暂存区中内容还在暂存区，工作区内部不变）（**head ~ commitId 之间的提交移动到暂存区**）
 ```
 
 
